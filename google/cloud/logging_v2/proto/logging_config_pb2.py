@@ -1248,11 +1248,11 @@ LogSink = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_LOGSINK,
         __module__="google.cloud.logging_v2.proto.logging_config_pb2",
-        __doc__="""Describes a sink used to export log entries to one of the following
-  destinations in any project: a Cloud Storage bucket, a BigQuery dataset,
-  or a Cloud Pub/Sub topic. A logs filter controls which log entries are
-  exported. The sink must be created within a project, organization,
-  billing account, or folder.
+        __doc__="""Describes a sink used to export log entries to one of the
+  following destinations in any project: a Cloud Storage bucket, a
+  BigQuery dataset, or a Cloud Pub/Sub topic. A logs filter controls which
+  log entries are exported. The sink must be created within a project,
+  organization, billing account, or folder.
   
   
   Attributes:
@@ -1339,7 +1339,8 @@ BigQueryOptions = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_BIGQUERYOPTIONS,
         __module__="google.cloud.logging_v2.proto.logging_config_pb2",
-        __doc__="""Options that change functionality of a sink exporting data to BigQuery.
+        __doc__="""Options that change functionality of a sink exporting data
+  to BigQuery.
   
   
   Attributes:
@@ -1558,12 +1559,12 @@ LogExclusion = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_LOGEXCLUSION,
         __module__="google.cloud.logging_v2.proto.logging_config_pb2",
-        __doc__="""Specifies a set of log entries that are not to be stored in Logging. If
-  your GCP resource receives a large volume of logs, you can use
-  exclusions to reduce your chargeable logs. Exclusions are processed
-  after log sinks, so you can export log entries before they are excluded.
-  Note that organization-level and folder-level exclusions don't apply to
-  child resources, and that you can't exclude audit log entries.
+        __doc__="""Specifies a set of log entries that are not to be stored
+  in Logging. If your GCP resource receives a large volume of logs, you
+  can use exclusions to reduce your chargeable logs. Exclusions are
+  processed after log sinks, so you can export log entries before they are
+  excluded. Note that organization-level and folder-level exclusions don't
+  apply to child resources, and that you can't exclude audit log entries.
   
   
   Attributes:

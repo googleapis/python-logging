@@ -692,8 +692,9 @@ LogMetric = _reflection.GeneratedProtocolMessageType(
         ),
         DESCRIPTOR=_LOGMETRIC,
         __module__="google.cloud.logging_v2.proto.logging_metrics_pb2",
-        __doc__="""Describes a logs-based metric. The value of the metric is the number of
-  log entries that match a logs filter in a given time interval.
+        __doc__="""Describes a logs-based metric. The value of the metric is
+  the number of log entries that match a logs filter in a given time
+  interval.
   
   Logs-based metric can also be used to extract values from logs and
   create a a distribution of the values. The distribution records the

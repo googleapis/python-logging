@@ -997,6 +997,7 @@ WriteLogEntriesResponse = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_WRITELOGENTRIESRESPONSE,
         __module__="google.cloud.logging_v2.proto.logging_pb2",
         __doc__="""Result returned from WriteLogEntries. empty
+  
   """,
         # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesResponse)
     ),
