@@ -129,13 +129,14 @@ def system(session):
     # virtualenv's dist-packages.
     session.install('mock', 'pytest')
     systest_deps = [
-        '../bigquery/',
-        '../pubsub/',
-        '../storage/',
-        '../test_utils/',
+        'google-cloud-bigquery',
+        'google-cloud-pubsub',
+        'google-cloud-storage',
     ]
     for systest_dep in systest_deps:
-        session.install('-e', systest_dep)
+        session.install(systest_dep)
+
+    session.install('-e', 'test_utils/')
     session.install('-e', '.')
 
     # Run py.test against the system tests.
