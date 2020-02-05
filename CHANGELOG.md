@@ -4,6 +4,15 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [1.14.1](https://www.github.com/googleapis/python-logging/compare/v1.14.0...v1.14.1) (2020-02-05)
+
+
+### Bug Fixes
+
+* **logging:** deprecate resource name helper methods (via synth) ([#9837](https://www.github.com/googleapis/python-logging/issues/9837)) ([335af9e](https://www.github.com/googleapis/python-logging/commit/335af9e909eb7fb4696ba906a82176611653531d))
+* **logging:** update test assertion and core version pins ([#10087](https://www.github.com/googleapis/python-logging/issues/10087)) ([4aedea8](https://www.github.com/googleapis/python-logging/commit/4aedea80e2bccb5ba3c41fae7a0ee46cc07eefa9))
+* replace unsafe six.PY3 with PY2 for better future compatibility with Python 4 ([#10081](https://www.github.com/googleapis/python-logging/issues/10081)) ([c6eb601](https://www.github.com/googleapis/python-logging/commit/c6eb60179d674dfd5137d90d209094c9369b3581))
+
 ## 1.14.0
 
 10-15-2019 06:50 PDT
