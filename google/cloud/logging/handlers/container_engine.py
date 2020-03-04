@@ -20,12 +20,11 @@ metadata such as log level is properly captured.
 """
 
 import logging.handlers
-import os
 
 from google.cloud.logging.handlers._helpers import format_stackdriver_json, get_trace_id
 from google.cloud.logging._helpers import retrieve_metadata_server
 
-_TRACE_ID_LABEL = 'logging.googleapis.com/trace'
+_TRACE_ID_LABEL = "logging.googleapis.com/trace"
 _PROJECT_ID = "project/project-id"
 """Attribute in metadata server for the current project-id."""
 
@@ -63,7 +62,8 @@ class ContainerEngineHandler(logging.StreamHandler):
         trace_id = get_trace_id()
         if trace_id is not None:
             gke_labels[_TRACE_ID_LABEL] = "projects/{}/traces/{}".format(
-                self.project_id, trace_id)
+                self.project_id, trace_id
+            )
 
         return gke_labels
 

@@ -57,15 +57,16 @@ _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
 """Attribute in metadata server when in GKE environment."""
 
 _CLOUD_RUN_ENV_VARS = (
-    'PORT',
-    'K_SERVICE',
-    'K_REVISION',
-    'K_CONFIGURATION',
+    "PORT",
+    "K_SERVICE",
+    "K_REVISION",
+    "K_CONFIGURATION",
 )
 """The list of environment variables known to be set for a Cloud Run environment.
 
 See https://cloud.google.com/run/docs/reference/container-contract#env-vars
 """
+
 
 class Client(ClientWithProject):
     """Client to bundle configuration needed for API requests.
