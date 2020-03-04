@@ -56,6 +56,16 @@ _APPENGINE_INSTANCE_ID = "GAE_INSTANCE"
 _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
 """Attribute in metadata server when in GKE environment."""
 
+_CLOUD_RUN_ENV_VARS = (
+    'PORT',
+    'K_SERVICE',
+    'K_REVISION',
+    'K_CONFIGURATION',
+)
+"""The list of environment variables known to be set for a Cloud Run environment.
+
+See https://cloud.google.com/run/docs/reference/container-contract#env-vars
+"""
 
 class Client(ClientWithProject):
     """Client to bundle configuration needed for API requests.
@@ -362,13 +372,16 @@ class Client(ClientWithProject):
         :returns: The default log handler based on the environment
         """
         gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
+        is_cloud_run_service = all(
+            envvar in os.environ for envvar in _CLOUD_RUN_ENV_VARS
+        )
 
         if (
             _APPENGINE_FLEXIBLE_ENV_VM in os.environ
             or _APPENGINE_INSTANCE_ID in os.environ
         ):
             return AppEngineHandler(self, **kw)
-        elif gke_cluster_name is not None:
+        elif gke_cluster_name is not None or is_cloud_run_service:
             return ContainerEngineHandler(**kw)
         else:
             return CloudLoggingHandler(self, **kw)
