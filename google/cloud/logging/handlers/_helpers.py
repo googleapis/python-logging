@@ -34,7 +34,7 @@ except (ImportError, SyntaxError):  # pragma: NO COVER
 from google.cloud.logging.handlers.middleware.request import _get_django_request
 
 _DJANGO_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
-_FLASK_TRACE_HEADERS = ("X_CLOUD_TRACE_CONTEXT", "X-CLOUD-TRACE-CONTEXT")
+_FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
 _WEBAPP2_TRACE_HEADER = "X-CLOUD-TRACE-CONTEXT"
 
 
@@ -66,17 +66,14 @@ def get_trace_id_from_flask():
     if flask is None or not flask.request:
         return None
 
-    for header_name in _FLASK_TRACE_HEADERS:
-        header = flask.request.headers.get(header_name)
+    header = flask.request.headers.get(_FLASK_TRACE_HEADER)
 
-        if header is None:
-            continue
+    if header is None:
+        return None
 
-        trace_id = header.split("/", 1)[0]
+    trace_id = header.split("/", 1)[0]
 
-        return trace_id
-
-    return None
+    return trace_id
 
 
 def get_trace_id_from_webapp2():
