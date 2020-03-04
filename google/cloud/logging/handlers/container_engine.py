@@ -20,8 +20,14 @@ metadata such as log level is properly captured.
 """
 
 import logging.handlers
+import os
 
-from google.cloud.logging.handlers._helpers import format_stackdriver_json
+from google.cloud.logging.handlers._helpers import format_stackdriver_json, get_trace_id
+from google.cloud.logging._helpers import retrieve_metadata_server
+
+_TRACE_ID_LABEL = 'logging.googleapis.com/trace'
+_PROJECT_ID = "project/project-id"
+"""Attribute in metadata server for the current project-id."""
 
 
 class ContainerEngineHandler(logging.StreamHandler):
@@ -41,6 +47,26 @@ class ContainerEngineHandler(logging.StreamHandler):
         super(ContainerEngineHandler, self).__init__(stream=stream)
         self.name = name
 
+        self.project_id = retrieve_metadata_server(_PROJECT_ID)
+
+    def get_gke_labels(self):
+        """Return the labels for GKE app.
+
+        If the trace ID can be detected, it will be included as a label.
+        Currently, no other labels are included.
+
+        :rtype: dict
+        :returns: Labels for GKE app.
+        """
+        gke_labels = {}
+
+        trace_id = get_trace_id()
+        if trace_id is not None:
+            gke_labels[_TRACE_ID_LABEL] = "projects/{}/traces/{}".format(
+                self.project_id, trace_id)
+
+        return gke_labels
+
     def format(self, record):
         """Format the message into JSON expected by fluentd.
 
@@ -51,4 +77,5 @@ class ContainerEngineHandler(logging.StreamHandler):
         :returns: A JSON string formatted for GKE fluentd.
         """
         message = super(ContainerEngineHandler, self).format(record)
-        return format_stackdriver_json(record, message)
+        gke_labels = self.get_gke_labels()
+        return format_stackdriver_json(record, message, **gke_labels)

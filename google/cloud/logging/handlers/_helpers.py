@@ -34,11 +34,11 @@ except (ImportError, SyntaxError):  # pragma: NO COVER
 from google.cloud.logging.handlers.middleware.request import _get_django_request
 
 _DJANGO_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
-_FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
+_FLASK_TRACE_HEADERS = ("X_CLOUD_TRACE_CONTEXT", "X-CLOUD-TRACE-CONTEXT")
 _WEBAPP2_TRACE_HEADER = "X-CLOUD-TRACE-CONTEXT"
 
 
-def format_stackdriver_json(record, message):
+def format_stackdriver_json(record, message, **kwargs):
     """Helper to format a LogRecord in in Stackdriver fluentd format.
 
         :rtype: str
@@ -52,6 +52,7 @@ def format_stackdriver_json(record, message):
         "thread": record.thread,
         "severity": record.levelname,
     }
+    payload.update(**kwargs)
 
     return json.dumps(payload)
 
@@ -65,14 +66,17 @@ def get_trace_id_from_flask():
     if flask is None or not flask.request:
         return None
 
-    header = flask.request.headers.get(_FLASK_TRACE_HEADER)
+    for header_name in _FLASK_TRACE_HEADERS:
+        header = flask.request.headers.get(header_name)
 
-    if header is None:
-        return None
+        if header is None:
+            continue
 
-    trace_id = header.split("/", 1)[0]
+        trace_id = header.split("/", 1)[0]
 
-    return trace_id
+        return trace_id
+
+    return None
 
 
 def get_trace_id_from_webapp2():
