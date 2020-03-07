@@ -71,7 +71,7 @@ class TestLoggingServiceV2Client(object):
             client = logging_v2.LoggingServiceV2Client()
 
         # Setup Request
-        log_name = client.log_path("[PROJECT]", "[LOG]")
+        log_name = "logName2013526694"
 
         client.delete_log(log_name)
 
@@ -89,7 +89,7 @@ class TestLoggingServiceV2Client(object):
             client = logging_v2.LoggingServiceV2Client()
 
         # Setup request
-        log_name = client.log_path("[PROJECT]", "[LOG]")
+        log_name = "logName2013526694"
 
         with pytest.raises(CustomException):
             client.delete_log(log_name)

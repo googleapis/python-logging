@@ -116,6 +116,55 @@ class ConfigServiceV2GrpcTransport(object):
         return self._channel
 
     @property
+    def list_buckets(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_buckets`.
+
+        Lists buckets (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].ListBuckets
+
+    @property
+    def get_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.get_bucket`.
+
+        Gets a bucket (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].GetBucket
+
+    @property
+    def update_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_bucket`.
+
+        Updates a bucket. This method replaces the following fields in the
+        existing bucket with values from the new bucket: ``retention_period``
+
+        If the retention period is decreased and the bucket is locked,
+        FAILED\_PRECONDITION will be returned.
+
+        If the bucket has a LifecycleState of DELETE\_REQUESTED,
+        FAILED\_PRECONDITION will be returned.
+
+        A buckets region may not be modified after it is created. This method is
+        in Beta.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].UpdateBucket
+
+    @property
     def list_sinks(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_sinks`.
 

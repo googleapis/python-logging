@@ -35,7 +35,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
         "\n\025com.google.logging.v2B\023LoggingMetricsProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2"
     ),
     serialized_pb=_b(
-        '\n3google/cloud/logging_v2/proto/logging_metrics.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1dgoogle/api/distribution.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17google/api/metric.proto\x1a\x19google/api/resource.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto"\xdc\x04\n\tLogMetric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0e\n\x06\x66ilter\x18\x03 \x01(\t\x12\x37\n\x11metric_descriptor\x18\x05 \x01(\x0b\x32\x1c.google.api.MetricDescriptor\x12\x17\n\x0fvalue_extractor\x18\x06 \x01(\t\x12K\n\x10label_extractors\x18\x07 \x03(\x0b\x32\x31.google.logging.v2.LogMetric.LabelExtractorsEntry\x12>\n\x0e\x62ucket_options\x18\x08 \x01(\x0b\x32&.google.api.Distribution.BucketOptions\x12/\n\x0b\x63reate_time\x18\t \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12/\n\x0bupdate_time\x18\n \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12<\n\x07version\x18\x04 \x01(\x0e\x32\'.google.logging.v2.LogMetric.ApiVersionB\x02\x18\x01\x1a\x36\n\x14LabelExtractorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"\x1c\n\nApiVersion\x12\x06\n\x02V2\x10\x00\x12\x06\n\x02V1\x10\x01:G\xea\x41\x44\n\x1dlogging.googleapis.com/Metric\x12#projects/{project}/metrics/{metric}"\x83\x01\n\x15ListLogMetricsRequest\x12\x43\n\x06parent\x18\x01 \x01(\tB3\xe0\x41\x02\xfa\x41-\n+cloudresourcemanager.googleapis.com/Project\x12\x12\n\npage_token\x18\x02 \x01(\t\x12\x11\n\tpage_size\x18\x03 \x01(\x05"`\n\x16ListLogMetricsResponse\x12-\n\x07metrics\x18\x01 \x03(\x0b\x32\x1c.google.logging.v2.LogMetric\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"Q\n\x13GetLogMetricRequest\x12:\n\x0bmetric_name\x18\x01 \x01(\tB%\xe0\x41\x02\xfa\x41\x1f\n\x1dlogging.googleapis.com/Metric"\x82\x01\n\x16\x43reateLogMetricRequest\x12\x35\n\x06parent\x18\x01 \x01(\tB%\xe0\x41\x02\xfa\x41\x1f\n\x1dlogging.googleapis.com/Metric\x12\x31\n\x06metric\x18\x02 \x01(\x0b\x32\x1c.google.logging.v2.LogMetricB\x03\xe0\x41\x02"\x87\x01\n\x16UpdateLogMetricRequest\x12:\n\x0bmetric_name\x18\x01 \x01(\tB%\xe0\x41\x02\xfa\x41\x1f\n\x1dlogging.googleapis.com/Metric\x12\x31\n\x06metric\x18\x02 \x01(\x0b\x32\x1c.google.logging.v2.LogMetricB\x03\xe0\x41\x02"T\n\x16\x44\x65leteLogMetricRequest\x12:\n\x0bmetric_name\x18\x01 \x01(\tB%\xe0\x41\x02\xfa\x41\x1f\n\x1dlogging.googleapis.com/Metric2\xae\x08\n\x10MetricsServiceV2\x12\x97\x01\n\x0eListLogMetrics\x12(.google.logging.v2.ListLogMetricsRequest\x1a).google.logging.v2.ListLogMetricsResponse"0\x82\xd3\xe4\x93\x02!\x12\x1f/v2/{parent=projects/*}/metrics\xda\x41\x06parent\x12\x92\x01\n\x0cGetLogMetric\x12&.google.logging.v2.GetLogMetricRequest\x1a\x1c.google.logging.v2.LogMetric"<\x82\xd3\xe4\x93\x02(\x12&/v2/{metric_name=projects/*/metrics/*}\xda\x41\x0bmetric_name\x12\x9b\x01\n\x0f\x43reateLogMetric\x12).google.logging.v2.CreateLogMetricRequest\x1a\x1c.google.logging.v2.LogMetric"?\x82\xd3\xe4\x93\x02)"\x1f/v2/{parent=projects/*}/metrics:\x06metric\xda\x41\rparent,metric\x12\xa7\x01\n\x0fUpdateLogMetric\x12).google.logging.v2.UpdateLogMetricRequest\x1a\x1c.google.logging.v2.LogMetric"K\x82\xd3\xe4\x93\x02\x30\x1a&/v2/{metric_name=projects/*/metrics/*}:\x06metric\xda\x41\x12metric_name,metric\x12\x92\x01\n\x0f\x44\x65leteLogMetric\x12).google.logging.v2.DeleteLogMetricRequest\x1a\x16.google.protobuf.Empty"<\x82\xd3\xe4\x93\x02(*&/v2/{metric_name=projects/*/metrics/*}\xda\x41\x0bmetric_name\x1a\x8d\x02\xca\x41\x16logging.googleapis.com\xd2\x41\xf0\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.writeB\x9f\x01\n\x15\x63om.google.logging.v2B\x13LoggingMetricsProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2b\x06proto3'
+        '\n3google/cloud/logging_v2/proto/logging_metrics.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1dgoogle/api/distribution.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17google/api/metric.proto\x1a\x19google/api/resource.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto"\x8c\x05\n\tLogMetric\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x18\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x13\n\x06\x66ilter\x18\x03 \x01(\tB\x03\xe0\x41\x02\x12<\n\x11metric_descriptor\x18\x05 \x01(\x0b\x32\x1c.google.api.MetricDescriptorB\x03\xe0\x41\x01\x12\x1c\n\x0fvalue_extractor\x18\x06 \x01(\tB\x03\xe0\x41\x01\x12P\n\x10label_extractors\x18\x07 \x03(\x0b\x32\x31.google.logging.v2.LogMetric.LabelExtractorsEntryB\x03\xe0\x41\x01\x12\x43\n\x0e\x62ucket_options\x18\x08 \x01(\x0b\x32&.google.api.Distribution.BucketOptionsB\x03\xe0\x41\x01\x12\x34\n\x0b\x63reate_time\x18\t \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\n \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12<\n\x07version\x18\x04 \x01(\x0e\x32\'.google.logging.v2.LogMetric.ApiVersionB\x02\x18\x01\x1a\x36\n\x14LabelExtractorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"\x1c\n\nApiVersion\x12\x06\n\x02V2\x10\x00\x12\x06\n\x02V1\x10\x01:J\xea\x41G\n logging.googleapis.com/LogMetric\x12#projects/{project}/metrics/{metric}"\x8d\x01\n\x15ListLogMetricsRequest\x12\x43\n\x06parent\x18\x01 \x01(\tB3\xe0\x41\x02\xfa\x41-\n+cloudresourcemanager.googleapis.com/Project\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01"`\n\x16ListLogMetricsResponse\x12-\n\x07metrics\x18\x01 \x03(\x0b\x32\x1c.google.logging.v2.LogMetric\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"T\n\x13GetLogMetricRequest\x12=\n\x0bmetric_name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\n logging.googleapis.com/LogMetric"\x85\x01\n\x16\x43reateLogMetricRequest\x12\x38\n\x06parent\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\x12 logging.googleapis.com/LogMetric\x12\x31\n\x06metric\x18\x02 \x01(\x0b\x32\x1c.google.logging.v2.LogMetricB\x03\xe0\x41\x02"\x8a\x01\n\x16UpdateLogMetricRequest\x12=\n\x0bmetric_name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\n logging.googleapis.com/LogMetric\x12\x31\n\x06metric\x18\x02 \x01(\x0b\x32\x1c.google.logging.v2.LogMetricB\x03\xe0\x41\x02"W\n\x16\x44\x65leteLogMetricRequest\x12=\n\x0bmetric_name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\n logging.googleapis.com/LogMetric2\xae\x08\n\x10MetricsServiceV2\x12\x97\x01\n\x0eListLogMetrics\x12(.google.logging.v2.ListLogMetricsRequest\x1a).google.logging.v2.ListLogMetricsResponse"0\x82\xd3\xe4\x93\x02!\x12\x1f/v2/{parent=projects/*}/metrics\xda\x41\x06parent\x12\x92\x01\n\x0cGetLogMetric\x12&.google.logging.v2.GetLogMetricRequest\x1a\x1c.google.logging.v2.LogMetric"<\x82\xd3\xe4\x93\x02(\x12&/v2/{metric_name=projects/*/metrics/*}\xda\x41\x0bmetric_name\x12\x9b\x01\n\x0f\x43reateLogMetric\x12).google.logging.v2.CreateLogMetricRequest\x1a\x1c.google.logging.v2.LogMetric"?\x82\xd3\xe4\x93\x02)"\x1f/v2/{parent=projects/*}/metrics:\x06metric\xda\x41\rparent,metric\x12\xa7\x01\n\x0fUpdateLogMetric\x12).google.logging.v2.UpdateLogMetricRequest\x1a\x1c.google.logging.v2.LogMetric"K\x82\xd3\xe4\x93\x02\x30\x1a&/v2/{metric_name=projects/*/metrics/*}:\x06metric\xda\x41\x12metric_name,metric\x12\x92\x01\n\x0f\x44\x65leteLogMetric\x12).google.logging.v2.DeleteLogMetricRequest\x1a\x16.google.protobuf.Empty"<\x82\xd3\xe4\x93\x02(*&/v2/{metric_name=projects/*/metrics/*}\xda\x41\x0bmetric_name\x1a\x8d\x02\xca\x41\x16logging.googleapis.com\xd2\x41\xf0\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.writeB\x9f\x01\n\x15\x63om.google.logging.v2B\x13LoggingMetricsProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2b\x06proto3'
     ),
     dependencies=[
         google_dot_api_dot_client__pb2.DESCRIPTOR,
@@ -67,8 +67,8 @@ _LOGMETRIC_APIVERSION = _descriptor.EnumDescriptor(
     ],
     containing_type=None,
     serialized_options=None,
-    serialized_start=877,
-    serialized_end=905,
+    serialized_start=922,
+    serialized_end=950,
 )
 _sym_db.RegisterEnumDescriptor(_LOGMETRIC_APIVERSION)
 
@@ -125,8 +125,8 @@ _LOGMETRIC_LABELEXTRACTORSENTRY = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=821,
-    serialized_end=875,
+    serialized_start=866,
+    serialized_end=920,
 )
 
 _LOGMETRIC = _descriptor.Descriptor(
@@ -151,7 +151,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\002"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -169,7 +169,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\001"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -187,7 +187,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\002"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -205,7 +205,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\001"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -223,7 +223,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\001"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -241,7 +241,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\001"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -259,7 +259,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\001"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -277,7 +277,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\003"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -295,7 +295,7 @@ _LOGMETRIC = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\003"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -321,14 +321,14 @@ _LOGMETRIC = _descriptor.Descriptor(
     nested_types=[_LOGMETRIC_LABELEXTRACTORSENTRY,],
     enum_types=[_LOGMETRIC_APIVERSION,],
     serialized_options=_b(
-        "\352AD\n\035logging.googleapis.com/Metric\022#projects/{project}/metrics/{metric}"
+        "\352AG\n logging.googleapis.com/LogMetric\022#projects/{project}/metrics/{metric}"
     ),
     is_extendable=False,
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
     serialized_start=374,
-    serialized_end=978,
+    serialized_end=1026,
 )
 
 
@@ -374,7 +374,7 @@ _LISTLOGMETRICSREQUEST = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\001"),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -392,7 +392,7 @@ _LISTLOGMETRICSREQUEST = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=_b("\340A\001"),
             file=DESCRIPTOR,
         ),
     ],
@@ -404,8 +404,8 @@ _LISTLOGMETRICSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=981,
-    serialized_end=1112,
+    serialized_start=1029,
+    serialized_end=1170,
 )
 
 
@@ -461,8 +461,8 @@ _LISTLOGMETRICSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1114,
-    serialized_end=1210,
+    serialized_start=1172,
+    serialized_end=1268,
 )
 
 
@@ -488,9 +488,7 @@ _GETLOGMETRICREQUEST = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=_b(
-                "\340A\002\372A\037\n\035logging.googleapis.com/Metric"
-            ),
+            serialized_options=_b('\340A\002\372A"\n logging.googleapis.com/LogMetric'),
             file=DESCRIPTOR,
         ),
     ],
@@ -502,8 +500,8 @@ _GETLOGMETRICREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1212,
-    serialized_end=1293,
+    serialized_start=1270,
+    serialized_end=1354,
 )
 
 
@@ -530,7 +528,7 @@ _CREATELOGMETRICREQUEST = _descriptor.Descriptor(
             is_extension=False,
             extension_scope=None,
             serialized_options=_b(
-                "\340A\002\372A\037\n\035logging.googleapis.com/Metric"
+                '\340A\002\372A"\022 logging.googleapis.com/LogMetric'
             ),
             file=DESCRIPTOR,
         ),
@@ -561,8 +559,8 @@ _CREATELOGMETRICREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1296,
-    serialized_end=1426,
+    serialized_start=1357,
+    serialized_end=1490,
 )
 
 
@@ -588,9 +586,7 @@ _UPDATELOGMETRICREQUEST = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=_b(
-                "\340A\002\372A\037\n\035logging.googleapis.com/Metric"
-            ),
+            serialized_options=_b('\340A\002\372A"\n logging.googleapis.com/LogMetric'),
             file=DESCRIPTOR,
         ),
         _descriptor.FieldDescriptor(
@@ -620,8 +616,8 @@ _UPDATELOGMETRICREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1429,
-    serialized_end=1564,
+    serialized_start=1493,
+    serialized_end=1631,
 )
 
 
@@ -647,9 +643,7 @@ _DELETELOGMETRICREQUEST = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=_b(
-                "\340A\002\372A\037\n\035logging.googleapis.com/Metric"
-            ),
+            serialized_options=_b('\340A\002\372A"\n logging.googleapis.com/LogMetric'),
             file=DESCRIPTOR,
         ),
     ],
@@ -661,8 +655,8 @@ _DELETELOGMETRICREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1566,
-    serialized_end=1650,
+    serialized_start=1633,
+    serialized_end=1720,
 )
 
 _LOGMETRIC_LABELEXTRACTORSENTRY.containing_type = _LOGMETRIC
@@ -960,9 +954,20 @@ _sym_db.RegisterMessage(DeleteLogMetricRequest)
 
 DESCRIPTOR._options = None
 _LOGMETRIC_LABELEXTRACTORSENTRY._options = None
+_LOGMETRIC.fields_by_name["name"]._options = None
+_LOGMETRIC.fields_by_name["description"]._options = None
+_LOGMETRIC.fields_by_name["filter"]._options = None
+_LOGMETRIC.fields_by_name["metric_descriptor"]._options = None
+_LOGMETRIC.fields_by_name["value_extractor"]._options = None
+_LOGMETRIC.fields_by_name["label_extractors"]._options = None
+_LOGMETRIC.fields_by_name["bucket_options"]._options = None
+_LOGMETRIC.fields_by_name["create_time"]._options = None
+_LOGMETRIC.fields_by_name["update_time"]._options = None
 _LOGMETRIC.fields_by_name["version"]._options = None
 _LOGMETRIC._options = None
 _LISTLOGMETRICSREQUEST.fields_by_name["parent"]._options = None
+_LISTLOGMETRICSREQUEST.fields_by_name["page_token"]._options = None
+_LISTLOGMETRICSREQUEST.fields_by_name["page_size"]._options = None
 _GETLOGMETRICREQUEST.fields_by_name["metric_name"]._options = None
 _CREATELOGMETRICREQUEST.fields_by_name["parent"]._options = None
 _CREATELOGMETRICREQUEST.fields_by_name["metric"]._options = None
@@ -978,8 +983,8 @@ _METRICSSERVICEV2 = _descriptor.ServiceDescriptor(
     serialized_options=_b(
         "\312A\026logging.googleapis.com\322A\360\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write"
     ),
-    serialized_start=1653,
-    serialized_end=2723,
+    serialized_start=1723,
+    serialized_end=2793,
     methods=[
         _descriptor.MethodDescriptor(
             name="ListLogMetrics",

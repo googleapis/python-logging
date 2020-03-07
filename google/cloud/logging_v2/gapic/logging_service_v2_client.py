@@ -78,19 +78,10 @@ class LoggingServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
+    def billing_account_path(cls, billing_account):
+        """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
             "billingAccounts/{billing_account}", billing_account=billing_account,
-        )
-
-    @classmethod
-    def billing_log_path(cls, billing_account, log):
-        """Return a fully-qualified billing_log string."""
-        return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/logs/{log}",
-            billing_account=billing_account,
-            log=log,
         )
 
     @classmethod
@@ -99,33 +90,10 @@ class LoggingServiceV2Client(object):
         return google.api_core.path_template.expand("folders/{folder}", folder=folder,)
 
     @classmethod
-    def folder_log_path(cls, folder, log):
-        """Return a fully-qualified folder_log string."""
-        return google.api_core.path_template.expand(
-            "folders/{folder}/logs/{log}", folder=folder, log=log,
-        )
-
-    @classmethod
-    def log_path(cls, project, log):
-        """Return a fully-qualified log string."""
-        return google.api_core.path_template.expand(
-            "projects/{project}/logs/{log}", project=project, log=log,
-        )
-
-    @classmethod
     def organization_path(cls, organization):
         """Return a fully-qualified organization string."""
         return google.api_core.path_template.expand(
             "organizations/{organization}", organization=organization,
-        )
-
-    @classmethod
-    def organization_log_path(cls, organization, log):
-        """Return a fully-qualified organization_log string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}/logs/{log}",
-            organization=organization,
-            log=log,
         )
 
     @classmethod
@@ -266,7 +234,8 @@ class LoggingServiceV2Client(object):
             >>>
             >>> client = logging_v2.LoggingServiceV2Client()
             >>>
-            >>> log_name = client.log_path('[PROJECT]', '[LOG]')
+            >>> # TODO: Initialize `log_name`:
+            >>> log_name = ''
             >>>
             >>> client.delete_log(log_name)
 
@@ -404,9 +373,9 @@ class LoggingServiceV2Client(object):
                      "projects/my-project-id/logs/syslog"
                      "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
 
-                The permission logging.logEntries.create is needed on each project,
+                The permission ``logging.logEntries.create`` is needed on each project,
                 organization, billing account, or folder that is receiving new log
-                entries, whether the resource is specified in logName or in an
+                entries, whether the resource is specified in ``logName`` or in an
                 individual log entry.
             resource (Union[dict, ~google.cloud.logging_v2.types.MonitoredResource]): Optional. A default monitored resource object that is assigned to all
                 log entries in ``entries`` that do not specify a value for ``resource``.
@@ -480,7 +449,6 @@ class LoggingServiceV2Client(object):
     def list_log_entries(
         self,
         resource_names,
-        project_ids=None,
         filter_=None,
         order_by=None,
         page_size=None,
@@ -528,9 +496,6 @@ class LoggingServiceV2Client(object):
                      "folders/[FOLDER_ID]"
 
                 Projects listed in the ``project_ids`` field are added to this list.
-            project_ids (list[str]): Deprecated. Use ``resource_names`` instead. One or more project
-                identifiers or project numbers from which to retrieve log entries.
-                Example: ``"my-project-1A"``.
             filter_ (str): Optional. A filter that chooses which log entries to return. See
                 `Advanced Logs
                 Queries <https://cloud.google.com/logging/docs/view/advanced-queries>`__.
@@ -586,7 +551,6 @@ class LoggingServiceV2Client(object):
 
         request = logging_pb2.ListLogEntriesRequest(
             resource_names=resource_names,
-            project_ids=project_ids,
             filter=filter_,
             order_by=order_by,
             page_size=page_size,
