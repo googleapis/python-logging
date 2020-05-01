@@ -62,22 +62,6 @@ class LaunchStage(enum.IntEnum):
     DEPRECATED = 5
 
 
-class LifecycleState(enum.IntEnum):
-    """
-    LogBucket lifecycle states (Beta).
-
-    Attributes:
-      LIFECYCLE_STATE_UNSPECIFIED (int): Unspecified state.  This is only used/useful for distinguishing
-      unset values.
-      ACTIVE (int): The normal and active state.
-      DELETE_REQUESTED (int): The bucket has been marked for deletion by the user.
-    """
-
-    LIFECYCLE_STATE_UNSPECIFIED = 0
-    ACTIVE = 1
-    DELETE_REQUESTED = 2
-
-
 class LogSeverity(enum.IntEnum):
     """
     The severity of the event described in a log entry, expressed as one of

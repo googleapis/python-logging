@@ -2,7 +2,7 @@ config = {
     "interfaces": {
         "google.logging.v2.MetricsServiceV2": {
             "retry_codes": {
-                "idempotent": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
+                "idempotent": ["DEADLINE_EXCEEDED", "INTERNAL", "UNAVAILABLE"],
                 "non_idempotent": [],
             },
             "retry_params": {
@@ -34,12 +34,12 @@ config = {
                 },
                 "UpdateLogMetric": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
+                    "retry_codes_name": "idempotent",
                     "retry_params_name": "default",
                 },
                 "DeleteLogMetric": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
+                    "retry_codes_name": "idempotent",
                     "retry_params_name": "default",
                 },
             },

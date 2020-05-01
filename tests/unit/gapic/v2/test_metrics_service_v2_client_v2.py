@@ -128,7 +128,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup Request
-        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
 
         response = client.get_log_metric(metric_name)
         assert expected_response == response
@@ -149,7 +149,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup request
-        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
 
         with pytest.raises(CustomException):
             client.get_log_metric(metric_name)
@@ -226,7 +226,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup Request
-        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
         metric = {}
 
         response = client.update_log_metric(metric_name, metric)
@@ -248,7 +248,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup request
-        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
         metric = {}
 
         with pytest.raises(CustomException):
@@ -262,7 +262,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup Request
-        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
 
         client.delete_log_metric(metric_name)
 
@@ -282,7 +282,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup request
-        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
 
         with pytest.raises(CustomException):
             client.delete_log_metric(metric_name)

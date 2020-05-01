@@ -63,6 +63,37 @@ class CustomException(Exception):
 
 
 class TestLoggingServiceV2Client(object):
+    def test_delete_log(self):
+        channel = ChannelStub()
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.LoggingServiceV2Client()
+
+        # Setup Request
+        log_name = client.log_path("[PROJECT]", "[LOG]")
+
+        client.delete_log(log_name)
+
+        assert len(channel.requests) == 1
+        expected_request = logging_pb2.DeleteLogRequest(log_name=log_name)
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_delete_log_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.LoggingServiceV2Client()
+
+        # Setup request
+        log_name = client.log_path("[PROJECT]", "[LOG]")
+
+        with pytest.raises(CustomException):
+            client.delete_log(log_name)
+
     def test_write_log_entries(self):
         # Setup Expected Response
         expected_response = {}
@@ -99,37 +130,6 @@ class TestLoggingServiceV2Client(object):
 
         with pytest.raises(CustomException):
             client.write_log_entries(entries)
-
-    def test_delete_log(self):
-        channel = ChannelStub()
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
-
-        # Setup Request
-        log_name = "logName2013526694"
-
-        client.delete_log(log_name)
-
-        assert len(channel.requests) == 1
-        expected_request = logging_pb2.DeleteLogRequest(log_name=log_name)
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_delete_log_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
-
-        # Setup request
-        log_name = "logName2013526694"
-
-        with pytest.raises(CustomException):
-            client.delete_log(log_name)
 
     def test_list_log_entries(self):
         # Setup Expected Response

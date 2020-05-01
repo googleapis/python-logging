@@ -17,21 +17,6 @@ class ConfigServiceV2Stub(object):
     Args:
       channel: A grpc.Channel.
     """
-        self.ListBuckets = channel.unary_unary(
-            "/google.logging.v2.ConfigServiceV2/ListBuckets",
-            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.ListBucketsRequest.SerializeToString,
-            response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.ListBucketsResponse.FromString,
-        )
-        self.GetBucket = channel.unary_unary(
-            "/google.logging.v2.ConfigServiceV2/GetBucket",
-            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.GetBucketRequest.SerializeToString,
-            response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.LogBucket.FromString,
-        )
-        self.UpdateBucket = channel.unary_unary(
-            "/google.logging.v2.ConfigServiceV2/UpdateBucket",
-            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.UpdateBucketRequest.SerializeToString,
-            response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.LogBucket.FromString,
-        )
         self.ListSinks = channel.unary_unary(
             "/google.logging.v2.ConfigServiceV2/ListSinks",
             request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.ListSinksRequest.SerializeToString,
@@ -97,37 +82,6 @@ class ConfigServiceV2Stub(object):
 class ConfigServiceV2Servicer(object):
     """Service for configuring sinks used to route log entries.
   """
-
-    def ListBuckets(self, request, context):
-        """Lists buckets (Beta).
-    """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
-
-    def GetBucket(self, request, context):
-        """Gets a bucket (Beta).
-    """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
-
-    def UpdateBucket(self, request, context):
-        """Updates a bucket. This method replaces the following fields in the
-    existing bucket with values from the new bucket: `retention_period`
-
-    If the retention period is decreased and the bucket is locked,
-    FAILED_PRECONDITION will be returned.
-
-    If the bucket has a LifecycleState of DELETE_REQUESTED, FAILED_PRECONDITION
-    will be returned.
-
-    A buckets region may not be modified after it is created.
-    This method is in Beta.
-    """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
 
     def ListSinks(self, request, context):
         """Lists sinks.
@@ -217,7 +171,7 @@ class ConfigServiceV2Servicer(object):
     the GCP organization.
 
     See [Enabling CMEK for Logs
-    Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+    Router](/logging/docs/routing/managed-encryption) for more information.
     """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
@@ -237,7 +191,7 @@ class ConfigServiceV2Servicer(object):
     3) access to the key is disabled.
 
     See [Enabling CMEK for Logs
-    Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+    Router](/logging/docs/routing/managed-encryption) for more information.
     """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
@@ -246,21 +200,6 @@ class ConfigServiceV2Servicer(object):
 
 def add_ConfigServiceV2Servicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "ListBuckets": grpc.unary_unary_rpc_method_handler(
-            servicer.ListBuckets,
-            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.ListBucketsRequest.FromString,
-            response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.ListBucketsResponse.SerializeToString,
-        ),
-        "GetBucket": grpc.unary_unary_rpc_method_handler(
-            servicer.GetBucket,
-            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.GetBucketRequest.FromString,
-            response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.LogBucket.SerializeToString,
-        ),
-        "UpdateBucket": grpc.unary_unary_rpc_method_handler(
-            servicer.UpdateBucket,
-            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.UpdateBucketRequest.FromString,
-            response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.LogBucket.SerializeToString,
-        ),
         "ListSinks": grpc.unary_unary_rpc_method_handler(
             servicer.ListSinks,
             request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.ListSinksRequest.FromString,
