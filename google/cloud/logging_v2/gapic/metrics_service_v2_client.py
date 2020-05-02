@@ -80,29 +80,10 @@ class MetricsServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
-        return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}", billing_account=billing_account,
-        )
-
-    @classmethod
-    def folder_path(cls, folder):
-        """Return a fully-qualified folder string."""
-        return google.api_core.path_template.expand("folders/{folder}", folder=folder,)
-
-    @classmethod
-    def metric_path(cls, project, metric):
-        """Return a fully-qualified metric string."""
+    def log_metric_path(cls, project, metric):
+        """Return a fully-qualified log_metric string."""
         return google.api_core.path_template.expand(
             "projects/{project}/metrics/{metric}", project=project, metric=metric,
-        )
-
-    @classmethod
-    def organization_path(cls, organization):
-        """Return a fully-qualified organization string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}", organization=organization,
         )
 
     @classmethod
@@ -258,11 +239,20 @@ class MetricsServiceV2Client(object):
             ...         pass
 
         Args:
-            parent (str): Required. The name of the project containing the metrics:
+            parent (str): OAuth scopes needed for the client.
 
-                ::
+                Example:
 
-                     "projects/[PROJECT_ID]"
+                | service Foo { option (google.api.oauth_scopes) =
+                | "https://www.googleapis.com/auth/cloud-platform"; ... }
+
+                If there is more than one scope, use a comma-separated string:
+
+                Example:
+
+                | service Foo { option (google.api.oauth_scopes) =
+                | "https://www.googleapis.com/auth/cloud-platform,"
+                  "https://www.googleapis.com/auth/monitoring"; ... }
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -347,16 +337,14 @@ class MetricsServiceV2Client(object):
             >>>
             >>> client = logging_v2.MetricsServiceV2Client()
             >>>
-            >>> metric_name = client.metric_path('[PROJECT]', '[METRIC]')
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
             >>>
             >>> response = client.get_log_metric(metric_name)
 
         Args:
-            metric_name (str): Required. The resource name of the desired metric:
-
-                ::
-
-                     "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+            metric_name (str): Whether the metric records instantaneous values, changes to a value,
+                etc. Some combinations of ``metric_kind`` and ``value_type`` might not
+                be supported.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -429,14 +417,14 @@ class MetricsServiceV2Client(object):
             >>> response = client.create_log_metric(parent, metric)
 
         Args:
-            parent (str): Required. The resource name of the project in which to create the
-                metric:
+            parent (str): Optional. An `advanced logs
+                filter <https://cloud.google.com/logging/docs/view/advanced-queries>`__.
+                The only exported log entries are those that are in the resource owning
+                the sink and that match the filter. For example:
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-
-                The new metric must be provided in the request.
+                    logName="projects/[PROJECT_ID]/logs/[LOG_ID]" AND severity>=ERROR
             metric (Union[dict, ~google.cloud.logging_v2.types.LogMetric]): Required. The new logs-based metric, which must not have an identifier that
                 already exists.
 
@@ -508,7 +496,7 @@ class MetricsServiceV2Client(object):
             >>>
             >>> client = logging_v2.MetricsServiceV2Client()
             >>>
-            >>> metric_name = client.metric_path('[PROJECT]', '[METRIC]')
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
             >>>
             >>> # TODO: Initialize `metric`:
             >>> metric = {}
@@ -516,15 +504,37 @@ class MetricsServiceV2Client(object):
             >>> response = client.update_log_metric(metric_name, metric)
 
         Args:
-            metric_name (str): Required. The resource name of the metric to update:
+            metric_name (str): Protocol Buffers - Google's data interchange format Copyright 2008
+                Google Inc. All rights reserved.
+                https://developers.google.com/protocol-buffers/
+
+                Redistribution and use in source and binary forms, with or without
+                modification, are permitted provided that the following conditions are
+                met:
 
                 ::
 
-                     "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+                    * Redistributions of source code must retain the above copyright
 
-                The updated metric must be provided in the request and it's ``name``
-                field must be the same as ``[METRIC_ID]`` If the metric does not exist
-                in ``[PROJECT_ID]``, then a new metric is created.
+                notice, this list of conditions and the following disclaimer. \*
+                Redistributions in binary form must reproduce the above copyright
+                notice, this list of conditions and the following disclaimer in the
+                documentation and/or other materials provided with the distribution. \*
+                Neither the name of Google Inc. nor the names of its contributors may be
+                used to endorse or promote products derived from this software without
+                specific prior written permission.
+
+                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+                IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+                TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+                PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+                OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+                EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+                PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+                PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+                LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             metric (Union[dict, ~google.cloud.logging_v2.types.LogMetric]): Required. The updated metric.
 
                 If a dict is provided, it must be of the same form as the protobuf
@@ -594,16 +604,20 @@ class MetricsServiceV2Client(object):
             >>>
             >>> client = logging_v2.MetricsServiceV2Client()
             >>>
-            >>> metric_name = client.metric_path('[PROJECT]', '[METRIC]')
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
             >>>
             >>> client.delete_log_metric(metric_name)
 
         Args:
-            metric_name (str): Required. The resource name of the metric to delete:
+            metric_name (str): Required. An `advanced logs
+                filter <https://cloud.google.com/logging/docs/view/advanced-queries>`__
+                that matches the log entries to be excluded. By using the `sample
+                function <https://cloud.google.com/logging/docs/view/advanced-queries#sample>`__,
+                you can exclude less than 100% of the matching log entries. For example,
+                the following query matches 99% of low-severity log entries from Google
+                Cloud Storage buckets:
 
-                ::
-
-                     "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+                ``"resource.type=gcs_bucket severity<ERROR sample(insertId, 0.99)"``
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.

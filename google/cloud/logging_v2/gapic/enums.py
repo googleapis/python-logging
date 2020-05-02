@@ -21,8 +21,10 @@ import enum
 
 class LaunchStage(enum.IntEnum):
     """
-    The launch stage as defined by `Google Cloud Platform Launch
-    Stages <http://cloud.google.com/terms/launch-stages>`__.
+    Optional. If present, then retrieve the next batch of results from
+    the preceding call to this method. ``pageToken`` must be the value of
+    ``nextPageToken`` from the previous response. The values of other method
+    parameters should be identical to those in the previous call.
 
     Attributes:
       LAUNCH_STAGE_UNSPECIFIED (int): Do not use this default value.
@@ -47,11 +49,10 @@ class LaunchStage(enum.IntEnum):
       limited production use cases.
       GA (int): GA features are open to all developers and are considered stable and
       fully qualified for production use.
-      DEPRECATED (int): Deprecated features are scheduled to be shut down and removed. For more
-      information, see the “Deprecation Policy” section of our `Terms of
-      Service <https://cloud.google.com/terms/>`__ and the `Google Cloud
-      Platform Subject to the Deprecation
-      Policy <https://cloud.google.com/terms/deprecation>`__ documentation.
+      DEPRECATED (int): JSON name of this field. The value is set by protocol compiler. If
+      the user has set a "json_name" option on this field, that option's value
+      will be used. Otherwise, it's deduced from the field's name by
+      converting it to camelCase.
     """
 
     LAUNCH_STAGE_UNSPECIFIED = 0
@@ -62,26 +63,49 @@ class LaunchStage(enum.IntEnum):
     DEPRECATED = 5
 
 
+class LifecycleState(enum.IntEnum):
+    """
+    LogBucket lifecycle states (Beta).
+
+    Attributes:
+      LIFECYCLE_STATE_UNSPECIFIED (int): Unspecified state.  This is only used/useful for distinguishing
+      unset values.
+      ACTIVE (int): The normal and active state.
+      DELETE_REQUESTED (int): The bucket has been marked for deletion by the user.
+    """
+
+    LIFECYCLE_STATE_UNSPECIFIED = 0
+    ACTIVE = 1
+    DELETE_REQUESTED = 2
+
+
 class LogSeverity(enum.IntEnum):
     """
-    The severity of the event described in a log entry, expressed as one of
-    the standard severity levels listed below. For your reference, the
-    levels are assigned the listed numeric values. The effect of using
-    numeric values other than those listed is undefined.
-
-    You can filter for log entries by severity. For example, the following
-    filter expression will match log entries with severities ``INFO``,
-    ``NOTICE``, and ``WARNING``:
+    Required. The resource name of the log to which this log entry
+    belongs:
 
     ::
 
-         severity > DEBUG AND severity <= WARNING
+        "projects/[PROJECT_ID]/logs/[LOG_ID]"
+        "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+        "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+        "folders/[FOLDER_ID]/logs/[LOG_ID]"
 
-    If you are writing log entries, you should map other severity encodings
-    to one of these standard levels. For example, you might map all of
-    Java's FINE, FINER, and FINEST levels to ``LogSeverity.DEBUG``. You can
-    preserve the original severity level in the log entry payload if you
-    wish.
+    A project number may be used in place of PROJECT_ID. The project number
+    is translated to its corresponding PROJECT_ID internally and the
+    ``log_name`` field will contain PROJECT_ID in queries and exports.
+
+    ``[LOG_ID]`` must be URL-encoded within ``log_name``. Example:
+    ``"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"``.
+    ``[LOG_ID]`` must be less than 512 characters long and can only include
+    the following characters: upper and lower case alphanumeric characters,
+    forward-slash, underscore, hyphen, and period.
+
+    For backward compatibility, if ``log_name`` begins with a forward-slash,
+    such as ``/projects/...``, then the log entry is ingested as usual but
+    the forward-slash is removed. Listing the log entry will not show the
+    leading slash and filtering for a log name with a leading slash will
+    never return any results.
 
     Attributes:
       DEFAULT (int): (0) The log entry has no assigned severity level.
@@ -109,10 +133,8 @@ class LogSeverity(enum.IntEnum):
 
 class NullValue(enum.IntEnum):
     """
-    ``NullValue`` is a singleton enumeration to represent the null value for
-    the ``Value`` type union.
-
-    The JSON representation for ``NullValue`` is JSON ``null``.
+    The status code, which should be an enum value of
+    ``google.rpc.Code``.
 
     Attributes:
       NULL_VALUE (int): Null value.
@@ -160,8 +182,21 @@ class LogSink(object):
 
         Attributes:
           VERSION_FORMAT_UNSPECIFIED (int): An unspecified format version that will default to V2.
-          V2 (int): ``LogEntry`` version 2 format.
-          V1 (int): ``LogEntry`` version 1 format.
+          V2 (int): The request method. Examples: ``"GET"``, ``"HEAD"``, ``"PUT"``,
+          ``"POST"``.
+          V1 (int): Specifies a set of buckets with arbitrary widths.
+
+          There are ``size(bounds) + 1`` (= N) buckets. Bucket ``i`` has the
+          following boundaries:
+
+          ::
+
+             Upper bound (0 <= i < N-1):     bounds[i]
+             Lower bound (1 <= i < N);       bounds[i - 1]
+
+          The ``bounds`` field must contain at least one element. If ``bounds``
+          has only one element, then there are no finite buckets, and that single
+          element is the common boundary of the overflow and underflow buckets.
         """
 
         VERSION_FORMAT_UNSPECIFIED = 0
@@ -196,13 +231,131 @@ class MetricDescriptor(object):
 
         Attributes:
           VALUE_TYPE_UNSPECIFIED (int): Do not use this default value.
-          BOOL (int): The value is a boolean. This value type can be used only if the metric
-          kind is ``GAUGE``.
+          BOOL (int): ``LogEntry`` version 2 format.
           INT64 (int): The value is a signed 64-bit integer.
           DOUBLE (int): The value is a double precision floating point number.
-          STRING (int): The value is a text string. This value type can be used only if the
-          metric kind is ``GAUGE``.
-          DISTRIBUTION (int): The value is a ``Distribution``.
+          STRING (int): A definition of a client library method signature.
+
+          In client libraries, each proto RPC corresponds to one or more methods
+          which the end user is able to call, and calls the underlying RPC.
+          Normally, this method receives a single argument (a struct or instance
+          corresponding to the RPC request object). Defining this field will add
+          one or more overloads providing flattened or simpler method signatures
+          in some languages.
+
+          The fields on the method signature are provided as a comma-separated
+          string.
+
+          For example, the proto RPC and annotation:
+
+          rpc CreateSubscription(CreateSubscriptionRequest) returns (Subscription)
+          { option (google.api.method_signature) = "name,topic"; }
+
+          Would add the following Java overload (in addition to the method
+          accepting the request object):
+
+          public final Subscription createSubscription(String name, String topic)
+
+          The following backwards-compatibility guidelines apply:
+
+          -  Adding this annotation to an unannotated method is backwards
+             compatible.
+          -  Adding this annotation to a method which already has existing method
+             signature annotations is backwards compatible if and only if the new
+             method signature annotation is last in the sequence.
+          -  Modifying or removing an existing method signature annotation is a
+             breaking change.
+          -  Re-ordering existing method signature annotations is a breaking
+             change.
+          DISTRIBUTION (int): ``Any`` contains an arbitrary serialized protocol buffer message
+          along with a URL that describes the type of the serialized message.
+
+          Protobuf library provides support to pack/unpack Any values in the form
+          of utility functions or additional generated methods of the Any type.
+
+          Example 1: Pack and unpack a message in C++.
+
+          ::
+
+              Foo foo = ...;
+              Any any;
+              any.PackFrom(foo);
+              ...
+              if (any.UnpackTo(&foo)) {
+                ...
+              }
+
+          Example 2: Pack and unpack a message in Java.
+
+          ::
+
+              Foo foo = ...;
+              Any any = Any.pack(foo);
+              ...
+              if (any.is(Foo.class)) {
+                foo = any.unpack(Foo.class);
+              }
+
+          Example 3: Pack and unpack a message in Python.
+
+          ::
+
+              foo = Foo(...)
+              any = Any()
+              any.Pack(foo)
+              ...
+              if any.Is(Foo.DESCRIPTOR):
+                any.Unpack(foo)
+                ...
+
+          Example 4: Pack and unpack a message in Go
+
+          ::
+
+               foo := &pb.Foo{...}
+               any, err := ptypes.MarshalAny(foo)
+               ...
+               foo := &pb.Foo{}
+               if err := ptypes.UnmarshalAny(any, foo); err != nil {
+                 ...
+               }
+
+          The pack methods provided by protobuf library will by default use
+          'type.googleapis.com/full.type.name' as the type URL and the unpack
+          methods only use the fully qualified type name after the last '/' in the
+          type URL, for example "foo.bar.com/x/y.z" will yield type name "y.z".
+
+          # JSON
+
+          The JSON representation of an ``Any`` value uses the regular
+          representation of the deserialized, embedded message, with an additional
+          field ``@type`` which contains the type URL. Example:
+
+          ::
+
+              package google.profile;
+              message Person {
+                string first_name = 1;
+                string last_name = 2;
+              }
+
+              {
+                "@type": "type.googleapis.com/google.profile.Person",
+                "firstName": <string>,
+                "lastName": <string>
+              }
+
+          If the embedded message type is well-known and has a custom JSON
+          representation, that representation will be embedded adding a field
+          ``value`` which holds the custom JSON in addition to the ``@type``
+          field. Example (for message ``google.protobuf.Duration``):
+
+          ::
+
+              {
+                "@type": "type.googleapis.com/google.protobuf.Duration",
+                "value": "1.212s"
+              }
           MONEY (int): The value is money.
         """
 

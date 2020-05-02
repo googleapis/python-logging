@@ -114,22 +114,6 @@ class LoggingServiceV2GrpcTransport(object):
         return self._channel
 
     @property
-    def delete_log(self):
-        """Return the gRPC stub for :meth:`LoggingServiceV2Client.delete_log`.
-
-        Deletes all the log entries in a log. The log reappears if it receives new
-        entries. Log entries written shortly before the delete operation might not
-        be deleted. Entries received after the delete operation with a timestamp
-        before the operation will be deleted.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["logging_service_v2_stub"].DeleteLog
-
-    @property
     def write_log_entries(self):
         """Return the gRPC stub for :meth:`LoggingServiceV2Client.write_log_entries`.
 
@@ -149,13 +133,31 @@ class LoggingServiceV2GrpcTransport(object):
         return self._stubs["logging_service_v2_stub"].WriteLogEntries
 
     @property
+    def delete_log(self):
+        """Return the gRPC stub for :meth:`LoggingServiceV2Client.delete_log`.
+
+        Deletes all the log entries in a log. The log reappears if it receives new
+        entries. Log entries written shortly before the delete operation might not
+        be deleted. Entries received after the delete operation with a timestamp
+        before the operation will be deleted.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["logging_service_v2_stub"].DeleteLog
+
+    @property
     def list_log_entries(self):
         """Return the gRPC stub for :meth:`LoggingServiceV2Client.list_log_entries`.
 
-        Lists log entries. Use this method to retrieve log entries that
-        originated from a project/folder/organization/billing account. For ways
-        to export log entries, see `Exporting
-        Logs <https://cloud.google.com/logging/docs/export>`__.
+        Signed fractions of a second at nanosecond resolution of the span of
+        time. Durations less than one second are represented with a 0
+        ``seconds`` field and a positive or negative ``nanos`` field. For
+        durations of one second or more, a non-zero value for the ``nanos``
+        field must be of the same sign as the ``seconds`` field. Must be from
+        -999,999,999 to +999,999,999 inclusive.
 
         Returns:
             Callable: A callable which accepts the appropriate

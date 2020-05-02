@@ -74,37 +74,26 @@ class ConfigServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
+    def billing_account_path(cls, billing_account):
+        """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
             "billingAccounts/{billing_account}", billing_account=billing_account,
         )
 
     @classmethod
-    def billing_exclusion_path(cls, billing_account, exclusion):
-        """Return a fully-qualified billing_exclusion string."""
+    def billing_account_location_path(cls, billing_account, location):
+        """Return a fully-qualified billing_account_location string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/exclusions/{exclusion}",
+            "billingAccounts/{billing_account}/locations/{location}",
             billing_account=billing_account,
-            exclusion=exclusion,
+            location=location,
         )
 
     @classmethod
-    def billing_sink_path(cls, billing_account, sink):
-        """Return a fully-qualified billing_sink string."""
+    def cmek_settings_path(cls, project):
+        """Return a fully-qualified cmek_settings string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/sinks/{sink}",
-            billing_account=billing_account,
-            sink=sink,
-        )
-
-    @classmethod
-    def exclusion_path(cls, project, exclusion):
-        """Return a fully-qualified exclusion string."""
-        return google.api_core.path_template.expand(
-            "projects/{project}/exclusions/{exclusion}",
-            project=project,
-            exclusion=exclusion,
+            "projects/{project}/cmekSettings", project=project,
         )
 
     @classmethod
@@ -113,19 +102,45 @@ class ConfigServiceV2Client(object):
         return google.api_core.path_template.expand("folders/{folder}", folder=folder,)
 
     @classmethod
-    def folder_exclusion_path(cls, folder, exclusion):
-        """Return a fully-qualified folder_exclusion string."""
+    def folder_location_path(cls, folder, location):
+        """Return a fully-qualified folder_location string."""
         return google.api_core.path_template.expand(
-            "folders/{folder}/exclusions/{exclusion}",
-            folder=folder,
+            "folders/{folder}/locations/{location}", folder=folder, location=location,
+        )
+
+    @classmethod
+    def location_path(cls, project, location):
+        """Return a fully-qualified location string."""
+        return google.api_core.path_template.expand(
+            "projects/{project}/locations/{location}",
+            project=project,
+            location=location,
+        )
+
+    @classmethod
+    def log_bucket_path(cls, project, location, bucket):
+        """Return a fully-qualified log_bucket string."""
+        return google.api_core.path_template.expand(
+            "projects/{project}/locations/{location}/buckets/{bucket}",
+            project=project,
+            location=location,
+            bucket=bucket,
+        )
+
+    @classmethod
+    def log_exclusion_path(cls, project, exclusion):
+        """Return a fully-qualified log_exclusion string."""
+        return google.api_core.path_template.expand(
+            "projects/{project}/exclusions/{exclusion}",
+            project=project,
             exclusion=exclusion,
         )
 
     @classmethod
-    def folder_sink_path(cls, folder, sink):
-        """Return a fully-qualified folder_sink string."""
+    def log_sink_path(cls, project, sink):
+        """Return a fully-qualified log_sink string."""
         return google.api_core.path_template.expand(
-            "folders/{folder}/sinks/{sink}", folder=folder, sink=sink,
+            "projects/{project}/sinks/{sink}", project=project, sink=sink,
         )
 
     @classmethod
@@ -136,21 +151,12 @@ class ConfigServiceV2Client(object):
         )
 
     @classmethod
-    def organization_exclusion_path(cls, organization, exclusion):
-        """Return a fully-qualified organization_exclusion string."""
+    def organization_location_path(cls, organization, location):
+        """Return a fully-qualified organization_location string."""
         return google.api_core.path_template.expand(
-            "organizations/{organization}/exclusions/{exclusion}",
+            "organizations/{organization}/locations/{location}",
             organization=organization,
-            exclusion=exclusion,
-        )
-
-    @classmethod
-    def organization_sink_path(cls, organization, sink):
-        """Return a fully-qualified organization_sink string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}/sinks/{sink}",
-            organization=organization,
-            sink=sink,
+            location=location,
         )
 
     @classmethod
@@ -158,13 +164,6 @@ class ConfigServiceV2Client(object):
         """Return a fully-qualified project string."""
         return google.api_core.path_template.expand(
             "projects/{project}", project=project,
-        )
-
-    @classmethod
-    def sink_path(cls, project, sink):
-        """Return a fully-qualified sink string."""
-        return google.api_core.path_template.expand(
-            "projects/{project}/sinks/{sink}", project=project, sink=sink,
         )
 
     def __init__(
@@ -280,6 +279,281 @@ class ConfigServiceV2Client(object):
         self._inner_api_calls = {}
 
     # Service calls
+    def list_buckets(
+        self,
+        parent,
+        page_size=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Lists buckets (Beta).
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> parent = client.organization_location_path('[ORGANIZATION]', '[LOCATION]')
+            >>>
+            >>> # Iterate over all results
+            >>> for element in client.list_buckets(parent):
+            ...     # process element
+            ...     pass
+            >>>
+            >>>
+            >>> # Alternatively:
+            >>>
+            >>> # Iterate over results one page at a time
+            >>> for page in client.list_buckets(parent).pages:
+            ...     for element in page:
+            ...         # process element
+            ...         pass
+
+        Args:
+            parent (str): Required. Values for all of the labels listed in the associated
+                monitored resource descriptor. For example, Compute Engine VM instances
+                use the labels ``"project_id"``, ``"instance_id"``, and ``"zone"``.
+            page_size (int): The maximum number of resources contained in the
+                underlying API response. If page streaming is performed per-
+                resource, this parameter does not affect the return value. If page
+                streaming is performed per-page, this determines the maximum number
+                of resources in a page.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.api_core.page_iterator.PageIterator` instance.
+            An iterable of :class:`~google.cloud.logging_v2.types.LogBucket` instances.
+            You can also iterate over the pages of the response
+            using its `pages` property.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "list_buckets" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "list_buckets"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.list_buckets,
+                default_retry=self._method_configs["ListBuckets"].retry,
+                default_timeout=self._method_configs["ListBuckets"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.ListBucketsRequest(
+            parent=parent, page_size=page_size,
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("parent", parent)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        iterator = google.api_core.page_iterator.GRPCIterator(
+            client=None,
+            method=functools.partial(
+                self._inner_api_calls["list_buckets"],
+                retry=retry,
+                timeout=timeout,
+                metadata=metadata,
+            ),
+            request=request,
+            items_field="buckets",
+            request_token_field="page_token",
+            response_token_field="next_page_token",
+        )
+        return iterator
+
+    def get_bucket(
+        self,
+        name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Gets a bucket (Beta).
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> response = client.get_bucket(name)
+
+        Args:
+            name (str): Deletes a sink. If the sink has a unique ``writer_identity``, then
+                that service account is also deleted.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.logging_v2.types.LogBucket` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "get_bucket" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "get_bucket"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.get_bucket,
+                default_retry=self._method_configs["GetBucket"].retry,
+                default_timeout=self._method_configs["GetBucket"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.GetBucketRequest(name=name,)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["get_bucket"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
+    def update_bucket(
+        self,
+        name,
+        bucket,
+        update_mask,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Required. A set of labels used to describe instances of this
+        monitored resource type. For example, an individual Google Cloud SQL
+        database is identified by values for the labels ``"database_id"`` and
+        ``"zone"``.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> # TODO: Initialize `bucket`:
+            >>> bucket = {}
+            >>>
+            >>> # TODO: Initialize `update_mask`:
+            >>> update_mask = {}
+            >>>
+            >>> response = client.update_bucket(name, bucket, update_mask)
+
+        Args:
+            name (str): Auxiliary metadata for a ``MonitoredResource`` object.
+                ``MonitoredResource`` objects contain the minimum set of information to
+                uniquely identify a monitored resource instance. There is some other
+                useful auxiliary metadata. Monitoring and Logging use an ingestion
+                pipeline to extract metadata for cloud resources of all types, and store
+                the metadata in this message.
+            bucket (Union[dict, ~google.cloud.logging_v2.types.LogBucket]): Required. The updated bucket.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.LogBucket`
+            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): If there might be more results than those appearing in this
+                response, then ``nextPageToken`` is included. To get the next set of
+                results, call this method again using the value of ``nextPageToken`` as
+                ``pageToken``.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.FieldMask`
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.logging_v2.types.LogBucket` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "update_bucket" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "update_bucket"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.update_bucket,
+                default_retry=self._method_configs["UpdateBucket"].retry,
+                default_timeout=self._method_configs["UpdateBucket"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.UpdateBucketRequest(
+            name=name, bucket=bucket, update_mask=update_mask,
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["update_bucket"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def list_sinks(
         self,
         parent,
@@ -313,14 +587,8 @@ class ConfigServiceV2Client(object):
             ...         pass
 
         Args:
-            parent (str): Required. The parent resource whose sinks are to be listed:
-
-                ::
-
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+            parent (str): Input and output type names. These are resolved in the same way as
+                FieldDescriptorProto.type_name, but must refer to a message type.
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -405,21 +673,15 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> sink_name = client.sink_path('[PROJECT]', '[SINK]')
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
             >>>
             >>> response = client.get_sink(sink_name)
 
         Args:
-            sink_name (str): Required. The resource name of the sink:
-
-                ::
-
-                     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
+            sink_name (str): Optional. The maximum number of results to return from this request.
+                Non-positive values are ignored. The presence of ``nextPageToken`` in
+                the response indicates that more results might be available.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -478,10 +740,22 @@ class ConfigServiceV2Client(object):
         metadata=None,
     ):
         """
-        Creates a sink that exports specified log entries to a destination. The
-        export of newly-ingested log entries begins immediately, unless the
-        sink's ``writer_identity`` is not permitted to write to the destination.
-        A sink can export log entries only from the resource owning the sink.
+        Optional. This field applies only to sinks owned by organizations
+        and folders. If the field is false, the default, only the logs owned by
+        the sink's parent resource are available for export. If the field is
+        true, then logs from all the projects, folders, and billing accounts
+        contained in the sink's parent resource are also available for export.
+        Whether a particular log entry from the children is exported depends on
+        the sink's filter expression. For example, if this field is true, then
+        the filter ``resource.type=gce_instance`` would export all Compute
+        Engine VM instance log entries from all projects in the sink's parent.
+        To only export entries from certain child projects, filter on the
+        project part of the log name:
+
+        ::
+
+            logName:("projects/test-project1/" OR "projects/test-project2/") AND
+            resource.type=gce_instance
 
         Example:
             >>> from google.cloud import logging_v2
@@ -496,33 +770,39 @@ class ConfigServiceV2Client(object):
             >>> response = client.create_sink(parent, sink)
 
         Args:
-            parent (str): Required. The resource in which to create the sink:
-
-                ::
-
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
-
-                Examples: ``"projects/my-logging-project"``,
-                ``"organizations/123456789"``.
-            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The new sink, whose ``name`` parameter is a sink identifier
-                that is not already in use.
+            parent (str): Optional. The maximum number of results to return from this request.
+                Non-positive values are ignored. The presence of ``nextPageToken`` in
+                the response indicates that more results might be available.
+            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Not ZigZag encoded. Negative numbers take 10 bytes. Use TYPE_SINT32
+                if negative values are likely.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.LogSink`
-            unique_writer_identity (bool): Optional. Determines the kind of IAM identity returned as
-                ``writer_identity`` in the new sink. If this value is omitted or set to
-                false, and if the sink's parent is a project, then the value returned as
-                ``writer_identity`` is the same group or service account used by Logging
-                before the addition of writer identities to this API. The sink's
-                destination must be in the same project as the sink itself.
+            unique_writer_identity (bool): The resource name for the configured Cloud KMS key.
 
-                If this field is set to true, or if the sink is owned by a non-project
-                resource such as an organization, then the value of ``writer_identity``
-                will be a unique service account used only for exports from the new
-                sink. For more information, see ``writer_identity`` in ``LogSink``.
+                KMS key name format:
+                "projects/[PROJECT_ID]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]"
+
+                For example:
+                ``"projects/my-project-id/locations/my-region/keyRings/key-ring-name/cryptoKeys/key-name"``
+
+                To enable CMEK for the Logs Router, set this field to a valid
+                ``kms_key_name`` for which the associated service account has the
+                required ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned
+                for the key.
+
+                The Cloud KMS key used by the Log Router can be updated by changing the
+                ``kms_key_name`` to a new valid key name. Encryption operations that are
+                in progress will be completed with the key that was in use when they
+                started. Decryption operations will be completed using the key that was
+                used at the time of encryption unless access to that key has been
+                revoked.
+
+                To disable CMEK for the Logs Router, set this field to an empty string.
+
+                See `Enabling CMEK for Logs
+                Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+                for more information.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -584,19 +864,15 @@ class ConfigServiceV2Client(object):
         metadata=None,
     ):
         """
-        Updates a sink. This method replaces the following fields in the
-        existing sink with values from the new sink: ``destination``, and
-        ``filter``.
-
-        The updated sink might also have a new ``writer_identity``; see the
-        ``unique_writer_identity`` field.
+        The parameters to ``UpdateBucket`` (Beta).
 
         Example:
             >>> from google.cloud import logging_v2
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> sink_name = client.sink_path('[PROJECT]', '[SINK]')
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
             >>>
             >>> # TODO: Initialize `sink`:
             >>> sink = {}
@@ -604,46 +880,53 @@ class ConfigServiceV2Client(object):
             >>> response = client.update_sink(sink_name, sink)
 
         Args:
-            sink_name (str): Required. The full resource name of the sink to update, including the
-                parent resource and the sink identifier:
+            sink_name (str): ``Distribution`` contains summary statistics for a population of
+                values. It optionally contains a histogram representing the distribution
+                of those values across a set of buckets.
+
+                The summary statistics are the count, mean, sum of the squared deviation
+                from the mean, the minimum, and the maximum of the set of population of
+                values. The histogram is based on a sequence of buckets and gives a
+                count of values that fall into each bucket. The boundaries of the
+                buckets are given either explicitly or by formulas for buckets of fixed
+                or exponentially increasing widths.
+
+                Although it is not forbidden, it is generally a bad idea to include
+                non-finite values (infinities or NaNs) in the population of values, as
+                this will render the ``mean`` and ``sum_of_squared_deviation`` fields
+                meaningless.
+            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The resource for which to retrieve CMEK settings.
 
                 ::
 
-                     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+                    "projects/[PROJECT_ID]/cmekSettings"
+                    "organizations/[ORGANIZATION_ID]/cmekSettings"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+                    "folders/[FOLDER_ID]/cmekSettings"
 
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
-            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The updated sink, whose name is the same identifier that
-                appears as part of ``sink_name``.
+                Example: ``"organizations/12345/cmekSettings"``.
+
+                Note: CMEK for the Logs Router can currently only be configured for GCP
+                organizations. Once configured, it applies to all projects and folders
+                in the GCP organization.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.LogSink`
-            unique_writer_identity (bool): Optional. See ``sinks.create`` for a description of this field. When
-                updating a sink, the effect of this field on the value of
-                ``writer_identity`` in the updated sink depends on both the old and new
-                values of this field:
+            unique_writer_identity (bool): Optional. Resource name of the trace associated with the log entry,
+                if any. If it contains a relative resource name, the name is assumed to
+                be relative to ``//tracing.googleapis.com``. Example:
+                ``projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824``
+            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Output only. The service account that will be used by the Logs
+                Router to access your Cloud KMS key.
 
-                -  If the old and new values of this field are both false or both true,
-                   then there is no change to the sink's ``writer_identity``.
-                -  If the old value is false and the new value is true, then
-                   ``writer_identity`` is changed to a unique service account.
-                -  It is an error if the old value is true and the new value is set to
-                   false or defaulted to false.
-            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Optional. Field mask that specifies the fields in ``sink`` that need an
-                update. A sink field will be overwritten if, and only if, it is in the
-                update mask. ``name`` and output only fields cannot be updated.
+                Before enabling CMEK for Logs Router, you must first assign the role
+                ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` to the service account
+                that the Logs Router will use to access your Cloud KMS key. Use
+                ``GetCmekSettings`` to obtain the service account ID.
 
-                An empty updateMask is temporarily treated as using the following mask
-                for backwards compatibility purposes: destination,filter,includeChildren
-                At some point in the future, behavior will be removed and specifying an
-                empty updateMask will be an error.
-
-                For a detailed ``FieldMask`` definition, see
-                https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
-
-                Example: ``updateMask=filter``.
+                See `Enabling CMEK for Logs
+                Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+                for more information.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.FieldMask`
@@ -708,30 +991,34 @@ class ConfigServiceV2Client(object):
         metadata=None,
     ):
         """
-        Deletes a sink. If the sink has a unique ``writer_identity``, then that
-        service account is also deleted.
+        Required. The full resource name of the bucket to update.
+
+        ::
+
+            "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+            "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+            "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+            "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+
+        Example:
+        ``"projects/my-project-id/locations/my-location/buckets/my-bucket-id"``.
+        Also requires permission "resourcemanager.projects.updateLiens" to set
+        the locked property
 
         Example:
             >>> from google.cloud import logging_v2
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> sink_name = client.sink_path('[PROJECT]', '[SINK]')
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
             >>>
             >>> client.delete_sink(sink_name)
 
         Args:
-            sink_name (str): Required. The full resource name of the sink to delete, including the
-                parent resource and the sink identifier:
-
-                ::
-
-                     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
+            sink_name (str): Optional. The maximum number of results to return from this request.
+                Non-positive values are ignored. The presence of ``nextPageToken`` in
+                the response indicates that more results might be available.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -810,14 +1097,8 @@ class ConfigServiceV2Client(object):
             ...         pass
 
         Args:
-            parent (str): Required. The parent resource whose exclusions are to be listed.
-
-                ::
-
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+            parent (str): An annotation that describes a resource definition without a
+                corresponding message; see ``ResourceDescriptor``.
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -902,21 +1183,15 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> name = client.exclusion_path('[PROJECT]', '[EXCLUSION]')
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
             >>>
             >>> response = client.get_exclusion(name)
 
         Args:
-            name (str): Required. The resource name of an existing exclusion:
-
-                ::
-
-                     "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-                     "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
-
-                Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
+            name (str): If there might be more results than appear in this response, then
+                ``nextPageToken`` is included. To get the next set of results, call the
+                same method again using the value of ``nextPageToken`` as ``pageToken``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -991,19 +1266,20 @@ class ConfigServiceV2Client(object):
             >>> response = client.create_exclusion(parent, exclusion)
 
         Args:
-            parent (str): Required. The parent resource in which to create the exclusion:
+            parent (str): Optional. Field mask identifying which fields from ``cmek_settings``
+                should be updated. A field will be overwritten if and only if it is in
+                the update mask. Output only fields cannot be updated.
 
-                ::
+                See ``FieldMask`` for more information.
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                Example: ``"updateMask=kmsKeyName"``
+            exclusion (Union[dict, ~google.cloud.logging_v2.types.LogExclusion]): An indicator of the behavior of a given field (for example, that a
+                field is required in requests, or given as output but ignored as input).
+                This **does not** change the behavior in protocol buffers itself; it
+                only denotes the behavior and may affect how API tooling handles the
+                field.
 
-                Examples: ``"projects/my-logging-project"``,
-                ``"organizations/123456789"``.
-            exclusion (Union[dict, ~google.cloud.logging_v2.types.LogExclusion]): Required. The new exclusion, whose ``name`` parameter is an exclusion
-                name that is not already used in the parent resource.
+                Note: This enum **may** receive new values in the future.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.LogExclusion`
@@ -1074,7 +1350,8 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> name = client.exclusion_path('[PROJECT]', '[EXCLUSION]')
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
             >>>
             >>> # TODO: Initialize `exclusion`:
             >>> exclusion = {}
@@ -1085,29 +1362,142 @@ class ConfigServiceV2Client(object):
             >>> response = client.update_exclusion(name, exclusion, update_mask)
 
         Args:
-            name (str): Required. The resource name of the exclusion to update:
+            name (str): A simple descriptor of a resource type.
+
+                ResourceDescriptor annotates a resource message (either by means of a
+                protobuf annotation or use in the service config), and associates the
+                resource's schema, the resource type, and the pattern of the resource
+                name.
+
+                Example:
 
                 ::
 
-                     "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-                     "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+                    message Topic {
+                      // Indicates this message defines a resource schema.
+                      // Declares the resource type in the format of {service}/{kind}.
+                      // For Kubernetes resources, the format is {api group}/{kind}.
+                      option (google.api.resource) = {
+                        type: "pubsub.googleapis.com/Topic"
+                        name_descriptor: {
+                          pattern: "projects/{project}/topics/{topic}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Project"
+                          parent_name_extractor: "projects/{project}"
+                        }
+                      };
+                    }
 
-                Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
-            exclusion (Union[dict, ~google.cloud.logging_v2.types.LogExclusion]): Required. New values for the existing exclusion. Only the fields
-                specified in ``update_mask`` are relevant.
+                The ResourceDescriptor Yaml config will look like:
+
+                ::
+
+                    resources:
+                    - type: "pubsub.googleapis.com/Topic"
+                      name_descriptor:
+                        - pattern: "projects/{project}/topics/{topic}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Project"
+                          parent_name_extractor: "projects/{project}"
+
+                Sometimes, resources have multiple patterns, typically because they can
+                live under multiple parents.
+
+                Example:
+
+                ::
+
+                    message LogEntry {
+                      option (google.api.resource) = {
+                        type: "logging.googleapis.com/LogEntry"
+                        name_descriptor: {
+                          pattern: "projects/{project}/logs/{log}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Project"
+                          parent_name_extractor: "projects/{project}"
+                        }
+                        name_descriptor: {
+                          pattern: "folders/{folder}/logs/{log}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Folder"
+                          parent_name_extractor: "folders/{folder}"
+                        }
+                        name_descriptor: {
+                          pattern: "organizations/{organization}/logs/{log}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Organization"
+                          parent_name_extractor: "organizations/{organization}"
+                        }
+                        name_descriptor: {
+                          pattern: "billingAccounts/{billing_account}/logs/{log}"
+                          parent_type: "billing.googleapis.com/BillingAccount"
+                          parent_name_extractor: "billingAccounts/{billing_account}"
+                        }
+                      };
+                    }
+
+                The ResourceDescriptor Yaml config will look like:
+
+                ::
+
+                    resources:
+                    - type: 'logging.googleapis.com/LogEntry'
+                      name_descriptor:
+                        - pattern: "projects/{project}/logs/{log}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Project"
+                          parent_name_extractor: "projects/{project}"
+                        - pattern: "folders/{folder}/logs/{log}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Folder"
+                          parent_name_extractor: "folders/{folder}"
+                        - pattern: "organizations/{organization}/logs/{log}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Organization"
+                          parent_name_extractor: "organizations/{organization}"
+                        - pattern: "billingAccounts/{billing_account}/logs/{log}"
+                          parent_type: "billing.googleapis.com/BillingAccount"
+                          parent_name_extractor: "billingAccounts/{billing_account}"
+
+                For flexible resources, the resource name doesn't contain parent names,
+                but the resource itself has parents for policy evaluation.
+
+                Example:
+
+                ::
+
+                    message Shelf {
+                      option (google.api.resource) = {
+                        type: "library.googleapis.com/Shelf"
+                        name_descriptor: {
+                          pattern: "shelves/{shelf}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Project"
+                        }
+                        name_descriptor: {
+                          pattern: "shelves/{shelf}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Folder"
+                        }
+                      };
+                    }
+
+                The ResourceDescriptor Yaml config will look like:
+
+                ::
+
+                    resources:
+                    - type: 'library.googleapis.com/Shelf'
+                      name_descriptor:
+                        - pattern: "shelves/{shelf}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Project"
+                        - pattern: "shelves/{shelf}"
+                          parent_type: "cloudresourcemanager.googleapis.com/Folder"
+            exclusion (Union[dict, ~google.cloud.logging_v2.types.LogExclusion]): Required. The resource name of the sink:
+
+                ::
+
+                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+
+                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.LogExclusion`
-            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Required. A non-empty list of fields to change in the existing
-                exclusion. New values for the fields are taken from the corresponding
-                fields in the ``LogExclusion`` included in this request. Fields not
-                mentioned in ``update_mask`` are not changed and are ignored in the
-                request.
-
-                For example, to change the filter and description of an exclusion,
-                specify an ``update_mask`` of ``"filter,description"``.
+            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): The value is a text string. This value type can be used only if the
+                metric kind is ``GAUGE``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.FieldMask`
@@ -1176,21 +1566,21 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> name = client.exclusion_path('[PROJECT]', '[EXCLUSION]')
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
             >>>
             >>> client.delete_exclusion(name)
 
         Args:
-            name (str): Required. The resource name of an existing exclusion to delete:
+            name (str): Gets the Logs Router CMEK settings for the given resource.
 
-                ::
+                Note: CMEK for the Logs Router can currently only be configured for GCP
+                organizations. Once configured, it applies to all projects and folders
+                in the GCP organization.
 
-                     "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-                     "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
-
-                Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
+                See `Enabling CMEK for Logs
+                Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+                for more information.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -1238,44 +1628,30 @@ class ConfigServiceV2Client(object):
 
     def get_cmek_settings(
         self,
-        name=None,
+        name,
         retry=google.api_core.gapic_v1.method.DEFAULT,
         timeout=google.api_core.gapic_v1.method.DEFAULT,
         metadata=None,
     ):
         """
-        Gets the Logs Router CMEK settings for the given resource.
-
-        Note: CMEK for the Logs Router can currently only be configured for GCP
-        organizations. Once configured, it applies to all projects and folders
-        in the GCP organization.
-
-        See `Enabling CMEK for Logs
-        Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
-        for more information.
+        A specific metric, identified by specifying values for all of the
+        labels of a ``MetricDescriptor``.
 
         Example:
             >>> from google.cloud import logging_v2
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> response = client.get_cmek_settings()
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> response = client.get_cmek_settings(name)
 
         Args:
-            name (str): Required. The resource for which to retrieve CMEK settings.
-
-                ::
-
-                     "projects/[PROJECT_ID]/cmekSettings"
-                     "organizations/[ORGANIZATION_ID]/cmekSettings"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-                     "folders/[FOLDER_ID]/cmekSettings"
-
-                Example: ``"organizations/12345/cmekSettings"``.
-
-                Note: CMEK for the Logs Router can currently only be configured for GCP
-                organizations. Once configured, it applies to all projects and folders
-                in the GCP organization.
+            name (str): Optional. If present, then retrieve the next batch of results from
+                the preceding call to this method. ``pageToken`` must be the value of
+                ``nextPageToken`` from the previous response. The values of other method
+                parameters should be identical to those in the previous call.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -1326,68 +1702,64 @@ class ConfigServiceV2Client(object):
 
     def update_cmek_settings(
         self,
-        name=None,
-        cmek_settings=None,
+        name,
+        cmek_settings,
         update_mask=None,
         retry=google.api_core.gapic_v1.method.DEFAULT,
         timeout=google.api_core.gapic_v1.method.DEFAULT,
         metadata=None,
     ):
         """
-        Updates the Logs Router CMEK settings for the given resource.
-
-        Note: CMEK for the Logs Router can currently only be configured for GCP
-        organizations. Once configured, it applies to all projects and folders
-        in the GCP organization.
-
-        ``UpdateCmekSettings`` will fail if 1) ``kms_key_name`` is invalid, or
-        2) the associated service account does not have the required
-        ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for the
-        key, or
-
-        3) access to the key is disabled.
-
-        See `Enabling CMEK for Logs
-        Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
-        for more information.
+        Creates a sink that exports specified log entries to a destination.
+        The export of newly-ingested log entries begins immediately, unless the
+        sink's ``writer_identity`` is not permitted to write to the destination.
+        A sink can export log entries only from the resource owning the sink.
 
         Example:
             >>> from google.cloud import logging_v2
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> response = client.update_cmek_settings()
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> # TODO: Initialize `cmek_settings`:
+            >>> cmek_settings = {}
+            >>>
+            >>> response = client.update_cmek_settings(name, cmek_settings)
 
         Args:
-            name (str): Required. The resource name for the CMEK settings to update.
+            name (str): Required. The resource in which to create the sink:
 
                 ::
 
-                     "projects/[PROJECT_ID]/cmekSettings"
-                     "organizations/[ORGANIZATION_ID]/cmekSettings"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-                     "folders/[FOLDER_ID]/cmekSettings"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
 
-                Example: ``"organizations/12345/cmekSettings"``.
+                Examples: ``"projects/my-logging-project"``,
+                ``"organizations/123456789"``.
+            cmek_settings (Union[dict, ~google.cloud.logging_v2.types.CmekSettings]): The resource has one pattern, but the API owner expects to add more
+                later. (This is the inverse of ORIGINALLY_SINGLE_PATTERN, and prevents
+                that from being necessary once there are multiple patterns.)
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.CmekSettings`
+            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Updates the Logs Router CMEK settings for the given resource.
 
                 Note: CMEK for the Logs Router can currently only be configured for GCP
                 organizations. Once configured, it applies to all projects and folders
                 in the GCP organization.
-            cmek_settings (Union[dict, ~google.cloud.logging_v2.types.CmekSettings]): Required. The CMEK settings to update.
+
+                ``UpdateCmekSettings`` will fail if 1) ``kms_key_name`` is invalid, or
+                2) the associated service account does not have the required
+                ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for the
+                key, or 3) access to the key is disabled.
 
                 See `Enabling CMEK for Logs
                 Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
                 for more information.
-
-                If a dict is provided, it must be of the same form as the protobuf
-                message :class:`~google.cloud.logging_v2.types.CmekSettings`
-            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Optional. Field mask identifying which fields from ``cmek_settings``
-                should be updated. A field will be overwritten if and only if it is in
-                the update mask. Output only fields cannot be updated.
-
-                See ``FieldMask`` for more information.
-
-                Example: ``"updateMask=kmsKeyName"``
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.FieldMask`

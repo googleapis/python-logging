@@ -78,32 +78,16 @@ class LoggingServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
+    def billing_account_path(cls, billing_account):
+        """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
             "billingAccounts/{billing_account}", billing_account=billing_account,
-        )
-
-    @classmethod
-    def billing_log_path(cls, billing_account, log):
-        """Return a fully-qualified billing_log string."""
-        return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/logs/{log}",
-            billing_account=billing_account,
-            log=log,
         )
 
     @classmethod
     def folder_path(cls, folder):
         """Return a fully-qualified folder string."""
         return google.api_core.path_template.expand("folders/{folder}", folder=folder,)
-
-    @classmethod
-    def folder_log_path(cls, folder, log):
-        """Return a fully-qualified folder_log string."""
-        return google.api_core.path_template.expand(
-            "folders/{folder}/logs/{log}", folder=folder, log=log,
-        )
 
     @classmethod
     def log_path(cls, project, log):
@@ -117,15 +101,6 @@ class LoggingServiceV2Client(object):
         """Return a fully-qualified organization string."""
         return google.api_core.path_template.expand(
             "organizations/{organization}", organization=organization,
-        )
-
-    @classmethod
-    def organization_log_path(cls, organization, log):
-        """Return a fully-qualified organization_log string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}/logs/{log}",
-            organization=organization,
-            log=log,
         )
 
     @classmethod
@@ -248,87 +223,6 @@ class LoggingServiceV2Client(object):
         self._inner_api_calls = {}
 
     # Service calls
-    def delete_log(
-        self,
-        log_name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Deletes all the log entries in a log. The log reappears if it receives new
-        entries. Log entries written shortly before the delete operation might not
-        be deleted. Entries received after the delete operation with a timestamp
-        before the operation will be deleted.
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.LoggingServiceV2Client()
-            >>>
-            >>> log_name = client.log_path('[PROJECT]', '[LOG]')
-            >>>
-            >>> client.delete_log(log_name)
-
-        Args:
-            log_name (str): Required. The resource name of the log to delete:
-
-                ::
-
-                     "projects/[PROJECT_ID]/logs/[LOG_ID]"
-                     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-                     "folders/[FOLDER_ID]/logs/[LOG_ID]"
-
-                ``[LOG_ID]`` must be URL-encoded. For example,
-                ``"projects/my-project-id/logs/syslog"``,
-                ``"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"``.
-                For more information about log names, see ``LogEntry``.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "delete_log" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_log"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.delete_log,
-                default_retry=self._method_configs["DeleteLog"].retry,
-                default_timeout=self._method_configs["DeleteLog"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_pb2.DeleteLogRequest(log_name=log_name,)
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("log_name", log_name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        self._inner_api_calls["delete_log"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
     def write_log_entries(
         self,
         entries,
@@ -361,77 +255,273 @@ class LoggingServiceV2Client(object):
             >>> response = client.write_log_entries(entries)
 
         Args:
-            entries (list[Union[dict, ~google.cloud.logging_v2.types.LogEntry]]): Required. The log entries to send to Logging. The order of log entries
-                in this list does not matter. Values supplied in this method's
-                ``log_name``, ``resource``, and ``labels`` fields are copied into those
-                log entries in this list that do not include values for their
-                corresponding fields. For more information, see the ``LogEntry`` type.
+            entries (list[Union[dict, ~google.cloud.logging_v2.types.LogEntry]]): The number of values in each bucket of the histogram, as described
+                in ``bucket_options``. If the distribution does not have a histogram,
+                then omit this field. If there is a histogram, then the sum of the
+                values in ``bucket_counts`` must equal the value in the ``count`` field
+                of the distribution.
 
-                If the ``timestamp`` or ``insert_id`` fields are missing in log entries,
-                then this method supplies the current time or a unique identifier,
-                respectively. The supplied values are chosen so that, among the log
-                entries that did not supply their own values, the entries earlier in the
-                list will sort before the entries later in the list. See the
-                ``entries.list`` method.
+                If present, ``bucket_counts`` should contain N values, where N is the
+                number of buckets specified in ``bucket_options``. If you supply fewer
+                than N values, the remaining values are assumed to be 0.
 
-                Log entries with timestamps that are more than the `logs retention
-                period <https://cloud.google.com/logging/quota-policy>`__ in the past or
-                more than 24 hours in the future will not be available when calling
-                ``entries.list``. However, those log entries can still be `exported with
-                LogSinks <https://cloud.google.com/logging/docs/api/tasks/exporting-logs>`__.
-
-                To improve throughput and to avoid exceeding the `quota
-                limit <https://cloud.google.com/logging/quota-policy>`__ for calls to
-                ``entries.write``, you should try to include several log entries in this
-                list, rather than calling this method for each individual log entry.
+                The order of the values in ``bucket_counts`` follows the bucket
+                numbering schemes described for the three bucket types. The first value
+                must be the count for the underflow bucket (number 0). The next N-2
+                values are the counts for the finite buckets (number 1 through N-2). The
+                N'th value in ``bucket_counts`` is the count for the overflow bucket
+                (number N-1).
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.LogEntry`
-            log_name (str): Optional. A default log resource name that is assigned to all log
-                entries in ``entries`` that do not specify a value for ``log_name``:
+            log_name (str): The resource name of the bucket. For example:
+                "projects/my-project-id/locations/my-location/buckets/my-bucket-id The
+                supported locations are: "global" "us-central1"
+
+                For the location of ``global`` it is unspecified where logs are actually
+                stored. Once a bucket has been created, the location can not be changed.
+            resource (Union[dict, ~google.cloud.logging_v2.types.MonitoredResource]): ``FieldMask`` represents a set of symbolic field paths, for example:
 
                 ::
 
-                     "projects/[PROJECT_ID]/logs/[LOG_ID]"
-                     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-                     "folders/[FOLDER_ID]/logs/[LOG_ID]"
+                    paths: "f.a"
+                    paths: "f.b.d"
 
-                ``[LOG_ID]`` must be URL-encoded. For example:
+                Here ``f`` represents a field in some root message, ``a`` and ``b``
+                fields in the message found in ``f``, and ``d`` a field found in the
+                message in ``f.b``.
 
-                ::
+                Field masks are used to specify a subset of fields that should be
+                returned by a get operation or modified by an update operation. Field
+                masks also have a custom JSON encoding (see below).
 
-                     "projects/my-project-id/logs/syslog"
-                     "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
+                # Field Masks in Projections
 
-                The permission logging.logEntries.create is needed on each project,
-                organization, billing account, or folder that is receiving new log
-                entries, whether the resource is specified in logName or in an
-                individual log entry.
-            resource (Union[dict, ~google.cloud.logging_v2.types.MonitoredResource]): Optional. A default monitored resource object that is assigned to all
-                log entries in ``entries`` that do not specify a value for ``resource``.
-                Example:
+                When used in the context of a projection, a response message or
+                sub-message is filtered by the API to only contain those fields as
+                specified in the mask. For example, if the mask in the previous example
+                is applied to a response message as follows:
 
                 ::
 
-                     { "type": "gce_instance",
-                       "labels": {
-                         "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
+                    f {
+                      a : 22
+                      b {
+                        d : 1
+                        x : 2
+                      }
+                      y : 13
+                    }
+                    z: 8
 
-                See ``LogEntry``.
+                The result will not contain specific values for fields x,y and z (their
+                value will be set to the default, and omitted in proto text output):
+
+                ::
+
+                    f {
+                      a : 22
+                      b {
+                        d : 1
+                      }
+                    }
+
+                A repeated field is not allowed except at the last position of a paths
+                string.
+
+                If a FieldMask object is not present in a get operation, the operation
+                applies to all fields (as if a FieldMask of all fields had been
+                specified).
+
+                Note that a field mask does not necessarily apply to the top-level
+                response message. In case of a REST get operation, the field mask
+                applies directly to the response, but in case of a REST list operation,
+                the mask instead applies to each individual message in the returned
+                resource list. In case of a REST custom method, other definitions may be
+                used. Where the mask applies will be clearly documented together with
+                its declaration in the API. In any case, the effect on the returned
+                resource/resources is required behavior for APIs.
+
+                # Field Masks in Update Operations
+
+                A field mask in update operations specifies which fields of the targeted
+                resource are going to be updated. The API is required to only change the
+                values of the fields as specified in the mask and leave the others
+                untouched. If a resource is passed in to describe the updated values,
+                the API ignores the values of all fields not covered by the mask.
+
+                If a repeated field is specified for an update operation, new values
+                will be appended to the existing repeated field in the target resource.
+                Note that a repeated field is only allowed in the last position of a
+                ``paths`` string.
+
+                If a sub-message is specified in the last position of the field mask for
+                an update operation, then new value will be merged into the existing
+                sub-message in the target resource.
+
+                For example, given the target message:
+
+                ::
+
+                    f {
+                      b {
+                        d: 1
+                        x: 2
+                      }
+                      c: [1]
+                    }
+
+                And an update message:
+
+                ::
+
+                    f {
+                      b {
+                        d: 10
+                      }
+                      c: [2]
+                    }
+
+                then if the field mask is:
+
+                paths: ["f.b", "f.c"]
+
+                then the result will be:
+
+                ::
+
+                    f {
+                      b {
+                        d: 10
+                        x: 2
+                      }
+                      c: [1, 2]
+                    }
+
+                An implementation may provide options to override this default behavior
+                for repeated and message fields.
+
+                In order to reset a field's value to the default, the field must be in
+                the mask and set to the default value in the provided resource. Hence,
+                in order to reset all fields of a resource, provide a default instance
+                of the resource and set all fields in the mask, or do not provide a mask
+                as described below.
+
+                If a field mask is not present on update, the operation applies to all
+                fields (as if a field mask of all fields has been specified). Note that
+                in the presence of schema evolution, this may mean that fields the
+                client does not know and has therefore not filled into the request will
+                be reset to their default. If this is unwanted behavior, a specific
+                service may require a client to always specify a field mask, producing
+                an error if not.
+
+                As with get operations, the location of the resource which describes the
+                updated values in the request message depends on the operation kind. In
+                any case, the effect of the field mask is required to be honored by the
+                API.
+
+                ## Considerations for HTTP REST
+
+                The HTTP kind of an update operation which uses a field mask must be set
+                to PATCH instead of PUT in order to satisfy HTTP semantics (PUT must
+                only be used for full updates).
+
+                # JSON Encoding of Field Masks
+
+                In JSON, a field mask is encoded as a single string where paths are
+                separated by a comma. Fields name in each path are converted to/from
+                lower-camel naming conventions.
+
+                As an example, consider the following message declarations:
+
+                ::
+
+                    message Profile {
+                      User user = 1;
+                      Photo photo = 2;
+                    }
+                    message User {
+                      string display_name = 1;
+                      string address = 2;
+                    }
+
+                In proto a field mask for ``Profile`` may look as such:
+
+                ::
+
+                    mask {
+                      paths: "user.display_name"
+                      paths: "photo"
+                    }
+
+                In JSON, the same mask is represented as below:
+
+                ::
+
+                    {
+                      mask: "user.displayName,photo"
+                    }
+
+                # Field Masks and Oneof Fields
+
+                Field masks treat fields in oneofs just as regular fields. Consider the
+                following message:
+
+                ::
+
+                    message SampleMessage {
+                      oneof test_oneof {
+                        string name = 4;
+                        SubMessage sub_message = 9;
+                      }
+                    }
+
+                The field mask can be:
+
+                ::
+
+                    mask {
+                      paths: "name"
+                    }
+
+                Or:
+
+                ::
+
+                    mask {
+                      paths: "sub_message"
+                    }
+
+                Note that oneof type names ("test_oneof" in this case) cannot be used in
+                paths.
+
+                ## Field Mask Verification
+
+                The implementation of any API method which has a FieldMask type field in
+                the request should verify the included field paths, and return an
+                ``INVALID_ARGUMENT`` error if any path is unmappable.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.MonitoredResource`
-            labels (dict[str -> str]): Optional. Default labels that are added to the ``labels`` field of all
-                log entries in ``entries``. If a log entry already has a label with the
-                same key as a label in this parameter, then the log entry's label is not
-                changed. See ``LogEntry``.
-            partial_success (bool): Optional. Whether valid entries should be written even if some other
-                entries fail due to INVALID\_ARGUMENT or PERMISSION\_DENIED errors. If
-                any entry is not written, then the response status is the error
-                associated with one of the failed entries and the response includes
-                error details keyed by the entries' zero-based index in the
-                ``entries.write`` method.
+            labels (dict[str -> str]): Optional. Determines the kind of IAM identity returned as
+                ``writer_identity`` in the new sink. If this value is omitted or set to
+                false, and if the sink's parent is a project, then the value returned as
+                ``writer_identity`` is the same group or service account used by Logging
+                before the addition of writer identities to this API. The sink's
+                destination must be in the same project as the sink itself.
+
+                If this field is set to true, or if the sink is owned by a non-project
+                resource such as an organization, then the value of ``writer_identity``
+                will be a unique service account used only for exports from the new
+                sink. For more information, see ``writer_identity`` in ``LogSink``.
+            partial_success (bool): Optional. The sampling decision of the trace associated with the log
+                entry.
+
+                True means that the trace resource name in the ``trace`` field was
+                sampled for storage in a trace backend. False means that the trace was
+                not sampled for storage when this log entry was written, or the sampling
+                decision was unknown at the time. A non-sampled ``trace`` value is still
+                useful as a request correlation identifier. The default is False.
             dry_run (bool): Optional. If true, the request should expect normal response, but the
                 entries won't be persisted nor exported. Useful for checking whether the
                 logging API endpoints are working properly before sending valuable data.
@@ -477,10 +567,96 @@ class LoggingServiceV2Client(object):
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 
+    def delete_log(
+        self,
+        log_name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Deletes all the log entries in a log. The log reappears if it receives new
+        entries. Log entries written shortly before the delete operation might not
+        be deleted. Entries received after the delete operation with a timestamp
+        before the operation will be deleted.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.LoggingServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `log_name`:
+            >>> log_name = ''
+            >>>
+            >>> client.delete_log(log_name)
+
+        Args:
+            log_name (str): The severity of the event described in a log entry, expressed as one
+                of the standard severity levels listed below. For your reference, the
+                levels are assigned the listed numeric values. The effect of using
+                numeric values other than those listed is undefined.
+
+                You can filter for log entries by severity. For example, the following
+                filter expression will match log entries with severities ``INFO``,
+                ``NOTICE``, and ``WARNING``:
+
+                ::
+
+                    severity > DEBUG AND severity <= WARNING
+
+                If you are writing log entries, you should map other severity encodings
+                to one of these standard levels. For example, you might map all of
+                Java's FINE, FINER, and FINEST levels to ``LogSeverity.DEBUG``. You can
+                preserve the original severity level in the log entry payload if you
+                wish.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "delete_log" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_log"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.delete_log,
+                default_retry=self._method_configs["DeleteLog"].retry,
+                default_timeout=self._method_configs["DeleteLog"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_pb2.DeleteLogRequest(log_name=log_name,)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("log_name", log_name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        self._inner_api_calls["delete_log"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def list_log_entries(
         self,
         resource_names,
-        project_ids=None,
         filter_=None,
         order_by=None,
         page_size=None,
@@ -489,10 +665,12 @@ class LoggingServiceV2Client(object):
         metadata=None,
     ):
         """
-        Lists log entries. Use this method to retrieve log entries that
-        originated from a project/folder/organization/billing account. For ways
-        to export log entries, see `Exporting
-        Logs <https://cloud.google.com/logging/docs/export>`__.
+        Signed fractions of a second at nanosecond resolution of the span of
+        time. Durations less than one second are represented with a 0
+        ``seconds`` field and a positive or negative ``nanos`` field. For
+        durations of one second or more, a non-zero value for the ``nanos``
+        field must be of the same sign as the ``seconds`` field. Must be from
+        -999,999,999 to +999,999,999 inclusive.
 
         Example:
             >>> from google.cloud import logging_v2
@@ -517,35 +695,13 @@ class LoggingServiceV2Client(object):
             ...         pass
 
         Args:
-            resource_names (list[str]): Required. Names of one or more parent resources from which to retrieve
-                log entries:
-
-                ::
-
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
-
-                Projects listed in the ``project_ids`` field are added to this list.
-            project_ids (list[str]): Deprecated. Use ``resource_names`` instead. One or more project
-                identifiers or project numbers from which to retrieve log entries.
-                Example: ``"my-project-1A"``.
-            filter_ (str): Optional. A filter that chooses which log entries to return. See
-                `Advanced Logs
-                Queries <https://cloud.google.com/logging/docs/view/advanced-queries>`__.
-                Only log entries that match the filter are returned. An empty filter
-                matches all log entries in the resources listed in ``resource_names``.
-                Referencing a parent resource that is not listed in ``resource_names``
-                will cause the filter to return no results. The maximum length of the
-                filter is 20000 characters.
-            order_by (str): Optional. How the results should be sorted. Presently, the only
-                permitted values are ``"timestamp asc"`` (default) and
-                ``"timestamp desc"``. The first option returns entries in order of
-                increasing values of ``LogEntry.timestamp`` (oldest first), and the
-                second option returns entries in order of decreasing timestamps (newest
-                first). Entries with equal timestamps are returned in order of their
-                ``insert_id`` values.
+            resource_names (list[str]): The parameters to ``UpdateSink``.
+            filter_ (str): Optional. The severity of the log entry. The default value is
+                ``LogSeverity.DEFAULT``.
+            order_by (str): The plural name used in the resource name, such as 'projects' for
+                the name of 'projects/{project}'. It is the same concept of the
+                ``plural`` field in k8s CRD spec
+                https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -586,7 +742,6 @@ class LoggingServiceV2Client(object):
 
         request = logging_pb2.ListLogEntriesRequest(
             resource_names=resource_names,
-            project_ids=project_ids,
             filter=filter_,
             order_by=order_by,
             page_size=page_size,
@@ -730,14 +885,7 @@ class LoggingServiceV2Client(object):
             ...         pass
 
         Args:
-            parent (str): Required. The resource name that owns the logs:
-
-                ::
-
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+            parent (str): See ``HttpRule``.
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page

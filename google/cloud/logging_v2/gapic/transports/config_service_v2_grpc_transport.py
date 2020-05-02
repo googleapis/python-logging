@@ -116,6 +116,48 @@ class ConfigServiceV2GrpcTransport(object):
         return self._channel
 
     @property
+    def list_buckets(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_buckets`.
+
+        Lists buckets (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].ListBuckets
+
+    @property
+    def get_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.get_bucket`.
+
+        Gets a bucket (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].GetBucket
+
+    @property
+    def update_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_bucket`.
+
+        Required. A set of labels used to describe instances of this
+        monitored resource type. For example, an individual Google Cloud SQL
+        database is identified by values for the labels ``"database_id"`` and
+        ``"zone"``.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].UpdateBucket
+
+    @property
     def list_sinks(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_sinks`.
 
@@ -145,10 +187,22 @@ class ConfigServiceV2GrpcTransport(object):
     def create_sink(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.create_sink`.
 
-        Creates a sink that exports specified log entries to a destination. The
-        export of newly-ingested log entries begins immediately, unless the
-        sink's ``writer_identity`` is not permitted to write to the destination.
-        A sink can export log entries only from the resource owning the sink.
+        Optional. This field applies only to sinks owned by organizations
+        and folders. If the field is false, the default, only the logs owned by
+        the sink's parent resource are available for export. If the field is
+        true, then logs from all the projects, folders, and billing accounts
+        contained in the sink's parent resource are also available for export.
+        Whether a particular log entry from the children is exported depends on
+        the sink's filter expression. For example, if this field is true, then
+        the filter ``resource.type=gce_instance`` would export all Compute
+        Engine VM instance log entries from all projects in the sink's parent.
+        To only export entries from certain child projects, filter on the
+        project part of the log name:
+
+        ::
+
+            logName:("projects/test-project1/" OR "projects/test-project2/") AND
+            resource.type=gce_instance
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -161,12 +215,7 @@ class ConfigServiceV2GrpcTransport(object):
     def update_sink(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_sink`.
 
-        Updates a sink. This method replaces the following fields in the
-        existing sink with values from the new sink: ``destination``, and
-        ``filter``.
-
-        The updated sink might also have a new ``writer_identity``; see the
-        ``unique_writer_identity`` field.
+        The parameters to ``UpdateBucket`` (Beta).
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -179,8 +228,19 @@ class ConfigServiceV2GrpcTransport(object):
     def delete_sink(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.delete_sink`.
 
-        Deletes a sink. If the sink has a unique ``writer_identity``, then that
-        service account is also deleted.
+        Required. The full resource name of the bucket to update.
+
+        ::
+
+            "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+            "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+            "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+            "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+
+        Example:
+        ``"projects/my-project-id/locations/my-location/buckets/my-bucket-id"``.
+        Also requires permission "resourcemanager.projects.updateLiens" to set
+        the locked property
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -260,15 +320,8 @@ class ConfigServiceV2GrpcTransport(object):
     def get_cmek_settings(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.get_cmek_settings`.
 
-        Gets the Logs Router CMEK settings for the given resource.
-
-        Note: CMEK for the Logs Router can currently only be configured for GCP
-        organizations. Once configured, it applies to all projects and folders
-        in the GCP organization.
-
-        See `Enabling CMEK for Logs
-        Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
-        for more information.
+        A specific metric, identified by specifying values for all of the
+        labels of a ``MetricDescriptor``.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -281,22 +334,10 @@ class ConfigServiceV2GrpcTransport(object):
     def update_cmek_settings(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_cmek_settings`.
 
-        Updates the Logs Router CMEK settings for the given resource.
-
-        Note: CMEK for the Logs Router can currently only be configured for GCP
-        organizations. Once configured, it applies to all projects and folders
-        in the GCP organization.
-
-        ``UpdateCmekSettings`` will fail if 1) ``kms_key_name`` is invalid, or
-        2) the associated service account does not have the required
-        ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for the
-        key, or
-
-        3) access to the key is disabled.
-
-        See `Enabling CMEK for Logs
-        Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
-        for more information.
+        Creates a sink that exports specified log entries to a destination.
+        The export of newly-ingested log entries begins immediately, unless the
+        sink's ``writer_identity`` is not permitted to write to the destination.
+        A sink can export log entries only from the resource owning the sink.
 
         Returns:
             Callable: A callable which accepts the appropriate
