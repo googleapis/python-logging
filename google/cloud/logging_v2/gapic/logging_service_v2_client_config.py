@@ -2,8 +2,9 @@ config = {
     "interfaces": {
         "google.logging.v2.LoggingServiceV2": {
             "retry_codes": {
-                "idempotent": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
+                "idempotent": ["DEADLINE_EXCEEDED", "INTERNAL", "UNAVAILABLE"],
                 "non_idempotent": [],
+                "idempotent2": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
             },
             "retry_params": {
                 "default": {
@@ -17,9 +18,19 @@ config = {
                 }
             },
             "methods": {
+                "DeleteLog": {
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "idempotent",
+                    "retry_params_name": "default",
+                },
+                "ListLogEntries": {
+                    "timeout_millis": 10000,
+                    "retry_codes_name": "idempotent",
+                    "retry_params_name": "default",
+                },
                 "WriteLogEntries": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
+                    "retry_codes_name": "idempotent",
                     "retry_params_name": "default",
                     "bundling": {
                         "element_count_threshold": 1000,
@@ -27,24 +38,14 @@ config = {
                         "delay_threshold_millis": 50,
                     },
                 },
-                "DeleteLog": {
-                    "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
-                    "retry_params_name": "default",
-                },
-                "ListLogEntries": {
-                    "timeout_millis": 10000,
-                    "retry_codes_name": "non_idempotent",
-                    "retry_params_name": "default",
-                },
                 "ListMonitoredResourceDescriptors": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
                 "ListLogs": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
             },
