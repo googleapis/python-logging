@@ -26,6 +26,8 @@ class LaunchStage(enum.IntEnum):
 
     Attributes:
       LAUNCH_STAGE_UNSPECIFIED (int): Do not use this default value.
+      UNIMPLEMENTED (int): The feature is not yet implemented. Users can not use it.
+      PRELAUNCH (int): Prelaunch features are hidden from users and are only visible internally.
       EARLY_ACCESS (int): Early Access features are limited to a closed group of testers. To use
       these features, you must sign up in advance and sign a Trusted Tester
       agreement (which includes confidentiality provisions). These features may
@@ -55,6 +57,8 @@ class LaunchStage(enum.IntEnum):
     """
 
     LAUNCH_STAGE_UNSPECIFIED = 0
+    UNIMPLEMENTED = 6
+    PRELAUNCH = 7
     EARLY_ACCESS = 1
     ALPHA = 2
     BETA = 3
