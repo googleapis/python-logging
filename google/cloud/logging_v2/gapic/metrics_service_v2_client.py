@@ -206,6 +206,163 @@ class MetricsServiceV2Client(object):
         self._inner_api_calls = {}
 
     # Service calls
+    def update_log_metric(
+        self,
+        metric_name,
+        metric,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Creates or updates a logs-based metric.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.MetricsServiceV2Client()
+            >>>
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
+            >>>
+            >>> # TODO: Initialize `metric`:
+            >>> metric = {}
+            >>>
+            >>> response = client.update_log_metric(metric_name, metric)
+
+        Args:
+            metric_name (str): Required. The resource name of the metric to update:
+
+                ::
+
+                    "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+
+                The updated metric must be provided in the request and it's ``name``
+                field must be the same as ``[METRIC_ID]`` If the metric does not exist
+                in ``[PROJECT_ID]``, then a new metric is created.
+            metric (Union[dict, ~google.cloud.logging_v2.types.LogMetric]): Required. The updated metric.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.LogMetric`
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.logging_v2.types.LogMetric` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "update_log_metric" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "update_log_metric"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.update_log_metric,
+                default_retry=self._method_configs["UpdateLogMetric"].retry,
+                default_timeout=self._method_configs["UpdateLogMetric"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_metrics_pb2.UpdateLogMetricRequest(
+            metric_name=metric_name, metric=metric,
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("metric_name", metric_name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["update_log_metric"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
+    def delete_log_metric(
+        self,
+        metric_name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Deletes a logs-based metric.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.MetricsServiceV2Client()
+            >>>
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
+            >>>
+            >>> client.delete_log_metric(metric_name)
+
+        Args:
+            metric_name (str): Required. The resource name of the metric to delete:
+
+                ::
+
+                    "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "delete_log_metric" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_log_metric"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.delete_log_metric,
+                default_retry=self._method_configs["DeleteLogMetric"].retry,
+                default_timeout=self._method_configs["DeleteLogMetric"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_metrics_pb2.DeleteLogMetricRequest(metric_name=metric_name,)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("metric_name", metric_name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        self._inner_api_calls["delete_log_metric"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def list_log_metrics(
         self,
         parent,
@@ -470,162 +627,5 @@ class MetricsServiceV2Client(object):
             metadata.append(routing_metadata)
 
         return self._inner_api_calls["create_log_metric"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
-    def update_log_metric(
-        self,
-        metric_name,
-        metric,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Creates or updates a logs-based metric.
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.MetricsServiceV2Client()
-            >>>
-            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
-            >>>
-            >>> # TODO: Initialize `metric`:
-            >>> metric = {}
-            >>>
-            >>> response = client.update_log_metric(metric_name, metric)
-
-        Args:
-            metric_name (str): Required. The resource name of the metric to update:
-
-                ::
-
-                    "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-
-                The updated metric must be provided in the request and it's ``name``
-                field must be the same as ``[METRIC_ID]`` If the metric does not exist
-                in ``[PROJECT_ID]``, then a new metric is created.
-            metric (Union[dict, ~google.cloud.logging_v2.types.LogMetric]): Required. The updated metric.
-
-                If a dict is provided, it must be of the same form as the protobuf
-                message :class:`~google.cloud.logging_v2.types.LogMetric`
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Returns:
-            A :class:`~google.cloud.logging_v2.types.LogMetric` instance.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "update_log_metric" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "update_log_metric"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.update_log_metric,
-                default_retry=self._method_configs["UpdateLogMetric"].retry,
-                default_timeout=self._method_configs["UpdateLogMetric"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_metrics_pb2.UpdateLogMetricRequest(
-            metric_name=metric_name, metric=metric,
-        )
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("metric_name", metric_name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        return self._inner_api_calls["update_log_metric"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
-    def delete_log_metric(
-        self,
-        metric_name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Deletes a logs-based metric.
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.MetricsServiceV2Client()
-            >>>
-            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
-            >>>
-            >>> client.delete_log_metric(metric_name)
-
-        Args:
-            metric_name (str): Required. The resource name of the metric to delete:
-
-                ::
-
-                    "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "delete_log_metric" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_log_metric"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.delete_log_metric,
-                default_retry=self._method_configs["DeleteLogMetric"].retry,
-                default_timeout=self._method_configs["DeleteLogMetric"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_metrics_pb2.DeleteLogMetricRequest(metric_name=metric_name,)
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("metric_name", metric_name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        self._inner_api_calls["delete_log_metric"](
             request, retry=retry, timeout=timeout, metadata=metadata
         )
