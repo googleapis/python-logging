@@ -43,4 +43,7 @@ templated_files = common.py_library(unit_cov_level=95, cov_level=100)
 # Don't move noxfile. logging has special testing setups for django, etc
 s.move(templated_files, excludes="noxfile.py")
 
+# TODO(busunkim): Use latest sphinx after microgenerator transition
+s.replace("noxfile.py", """['"]sphinx['"]""", '"sphinx<3.0.0"')
+
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)

@@ -2088,7 +2088,7 @@ LogSink = _reflection.GeneratedProtocolMessageType(
           destination, log entry exports from this sink will fail. For
           more information, see `Granting Access for a Resource
           <https://cloud.google.com/iam/docs/granting-roles-to-service-a
-          ccounts#granting_access_to_a_service_account_for_a_resource>`_
+          ccounts#granting_access_to_a_service_account_for_a_resource>`\_
           _. Consult the destination service’s documentation to
           determine the appropriate IAM roles to assign to the identity.
       include_children:
@@ -2226,8 +2226,8 @@ UpdateBucketRequest = _reflection.GeneratedProtocolMessageType(
       name:
           Required. The full resource name of the bucket to update.  ::
           "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET
-          _ID]"    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_
-          ID]/buckets/[BUCKET_ID]"    "billingAccounts/[BILLING_ACCOUNT_
+          _ID]"    "organizations/[ORGANIZATION_ID]/locations/[LOCATION\_
+          ID]/buckets/[BUCKET_ID]"    "billingAccounts/[BILLING_ACCOUNT\_
           ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"    "folders/[
           FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
           Example: ``"projects/my-project-id/locations/my-
@@ -2683,7 +2683,7 @@ GetCmekSettingsRequest = _reflection.GeneratedProtocolMessageType(
         "__doc__": """The parameters to
   [GetCmekSettings][google.logging.v2.ConfigServiceV2.GetCmekSettings].
   See `Enabling CMEK for Logs Router
-  <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+  <https://cloud.google.com/logging/docs/routing/managed-encryption>`_\_
   for more information.
   
   Attributes:
@@ -2711,7 +2711,7 @@ UpdateCmekSettingsRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to [UpdateCmekSettings][google.logging.v2.ConfigService
   V2.UpdateCmekSettings].  See `Enabling CMEK for Logs Router
-  <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+  <https://cloud.google.com/logging/docs/routing/managed-encryption>`_\_
   for more information.
   
   Attributes:
@@ -2755,7 +2755,7 @@ CmekSettings = _reflection.GeneratedProtocolMessageType(
   be configured for GCP organizations. Once configured, it applies to
   all projects and folders in the GCP organization.  See `Enabling CMEK
   for Logs Router
-  <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+  <https://cloud.google.com/logging/docs/routing/managed-encryption>`_\_
   for more information.
   
   Attributes:
