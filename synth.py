@@ -36,6 +36,13 @@ s.move(library / "google/cloud/logging_v2/gapic")
 s.move(library / "tests/unit/gapic/v2")
 s.move(library / "docs/gapic/v2")
 
+# Escape '_' at the end of the line in pb2 docstrings
+s.replace(
+"google/cloud/**/*_pb2.py",
+"""\_$""",
+"""\_""",
+)
+
 # ----------------------------------------------------------------------------
 # Add templated files
 # ----------------------------------------------------------------------------
