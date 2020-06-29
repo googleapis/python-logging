@@ -82,10 +82,30 @@ Using the API
 .. code:: python
 
     from google.cloud import logging_v2
-
     client = logging_v2.LoggingServiceV2Client()
+
+    resource = {
+        "type": "global",
+        "labels": {
+            "project_id": "[PROJECT_ID]"
+        }
+    }
+
+    """
+    Log entries can be either LogEntry or dict.
+    You can describe the same data in the following format:
+
+    e = {
+        "log_name": "projects/[PROJECT_ID]/logs/test-logging",
+        "resource": resource,
+        "text_payload": "this is a log statement",
+    }
+    """
     e = logging_v2.types.LogEntry(
-        text_payload="text")
+        log_name="projects/[PROJECT_ID]/logs/test-logging", # optional
+        resource=resource, # optional
+        text_payload="this is a log statement")
+
     entries = [e]
     response = client.write_log_entries(entries)
 
