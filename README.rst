@@ -1,7 +1,7 @@
 Python Client for Stackdriver Logging
 =====================================
 
-|pypi| |versions| 
+|pypi| |versions|
 
 `Stackdriver Logging API`_: Writes log entries and manages your Stackdriver
 Logging configuration.
@@ -84,7 +84,9 @@ Using the API
     from google.cloud import logging_v2
 
     client = logging_v2.LoggingServiceV2Client()
-    entries = []
+    e = logging_v2.types.LogEntry(
+        text_payload="text")
+    entries = [e]
     response = client.write_log_entries(entries)
 
 .. code:: python
