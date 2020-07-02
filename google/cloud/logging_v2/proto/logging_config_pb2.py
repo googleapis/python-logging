@@ -1998,6 +1998,7 @@ LogBucket = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LOGBUCKET,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """Describes a repository of logs (Beta).
+  
   Attributes:
       name:
           The resource name of the bucket. For example: “projects/my-
@@ -2038,6 +2039,7 @@ LogSink = _reflection.GeneratedProtocolMessageType(
   dataset, or a Cloud Pub/Sub topic. A logs filter controls which log
   entries are exported. The sink must be created within a project,
   organization, billing account, or folder.
+  
   Attributes:
       name:
           Required. The client-assigned sink identifier, unique within
@@ -2129,6 +2131,7 @@ BigQueryOptions = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """Options that change functionality of a sink exporting data to
   BigQuery.
+  
   Attributes:
       use_partitioned_tables:
           Optional. Whether to use `BigQuery’s partition tables
@@ -2161,6 +2164,7 @@ ListBucketsRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTBUCKETSREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``ListBuckets`` (Beta).
+  
   Attributes:
       parent:
           Required. The parent resource whose buckets are to be listed:
@@ -2195,6 +2199,7 @@ ListBucketsResponse = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTBUCKETSRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The response from ListBuckets (Beta).
+  
   Attributes:
       buckets:
           A list of buckets.
@@ -2216,6 +2221,7 @@ UpdateBucketRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _UPDATEBUCKETREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``UpdateBucket`` (Beta).
+  
   Attributes:
       name:
           Required. The full resource name of the bucket to update.  ::
@@ -2251,6 +2257,7 @@ GetBucketRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _GETBUCKETREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``GetBucket`` (Beta).
+  
   Attributes:
       name:
           Required. The resource name of the bucket:  ::     "projects/[
@@ -2274,6 +2281,7 @@ ListSinksRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTSINKSREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``ListSinks``.
+  
   Attributes:
       parent:
           Required. The parent resource whose sinks are to be listed:
@@ -2305,6 +2313,7 @@ ListSinksResponse = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTSINKSRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """Result returned from ``ListSinks``.
+  
   Attributes:
       sinks:
           A list of sinks.
@@ -2326,6 +2335,7 @@ GetSinkRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _GETSINKREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``GetSink``.
+  
   Attributes:
       sink_name:
           Required. The resource name of the sink:  ::
@@ -2347,6 +2357,7 @@ CreateSinkRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _CREATESINKREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``CreateSink``.
+  
   Attributes:
       parent:
           Required. The resource in which to create the sink:  ::
@@ -2383,6 +2394,7 @@ UpdateSinkRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _UPDATESINKREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``UpdateSink``.
+  
   Attributes:
       sink_name:
           Required. The full resource name of the sink to update,
@@ -2434,6 +2446,7 @@ DeleteSinkRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DELETESINKREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``DeleteSink``.
+  
   Attributes:
       sink_name:
           Required. The full resource name of the sink to delete,
@@ -2462,6 +2475,7 @@ LogExclusion = _reflection.GeneratedProtocolMessageType(
   excluded. Note that organization-level and folder-level exclusions
   don’t apply to child resources, and that you can’t exclude audit log
   entries.
+  
   Attributes:
       name:
           Required. A client-assigned identifier, such as ``"load-
@@ -2505,6 +2519,7 @@ ListExclusionsRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTEXCLUSIONSREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``ListExclusions``.
+  
   Attributes:
       parent:
           Required. The parent resource whose exclusions are to be
@@ -2536,6 +2551,7 @@ ListExclusionsResponse = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTEXCLUSIONSRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """Result returned from ``ListExclusions``.
+  
   Attributes:
       exclusions:
           A list of exclusions.
@@ -2557,6 +2573,7 @@ GetExclusionRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _GETEXCLUSIONREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``GetExclusion``.
+  
   Attributes:
       name:
           Required. The resource name of an existing exclusion:  ::
@@ -2579,6 +2596,7 @@ CreateExclusionRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _CREATEEXCLUSIONREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``CreateExclusion``.
+  
   Attributes:
       parent:
           Required. The parent resource in which to create the
@@ -2604,6 +2622,7 @@ UpdateExclusionRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _UPDATEEXCLUSIONREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``UpdateExclusion``.
+  
   Attributes:
       name:
           Required. The resource name of the exclusion to update:  ::
@@ -2638,6 +2657,7 @@ DeleteExclusionRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DELETEEXCLUSIONREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
         "__doc__": """The parameters to ``DeleteExclusion``.
+  
   Attributes:
       name:
           Required. The resource name of an existing exclusion to
@@ -2665,6 +2685,7 @@ GetCmekSettingsRequest = _reflection.GeneratedProtocolMessageType(
   See `Enabling CMEK for Logs Router
   <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
   for more information.
+  
   Attributes:
       name:
           Required. The resource for which to retrieve CMEK settings.
@@ -2692,6 +2713,7 @@ UpdateCmekSettingsRequest = _reflection.GeneratedProtocolMessageType(
   V2.UpdateCmekSettings].  See `Enabling CMEK for Logs Router
   <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
   for more information.
+  
   Attributes:
       name:
           Required. The resource name for the CMEK settings to update.
@@ -2735,6 +2757,7 @@ CmekSettings = _reflection.GeneratedProtocolMessageType(
   for Logs Router
   <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
   for more information.
+  
   Attributes:
       name:
           Output only. The resource name of the CMEK settings.
