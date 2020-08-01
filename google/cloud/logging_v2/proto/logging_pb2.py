@@ -36,6 +36,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     package="google.logging.v2",
     syntax="proto3",
     serialized_options=b"\n\025com.google.logging.v2B\014LoggingProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2",
+    create_key=_descriptor._internal_create_key,
     serialized_pb=b'\n+google/cloud/logging_v2/proto/logging.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a#google/api/monitored_resource.proto\x1a\x19google/api/resource.proto\x1a-google/cloud/logging_v2/proto/log_entry.proto\x1a\x32google/cloud/logging_v2/proto/logging_config.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto\x1a\x1cgoogle/api/annotations.proto"H\n\x10\x44\x65leteLogRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\n\x1alogging.googleapis.com/Log"\xe6\x02\n\x16WriteLogEntriesRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x01\xfa\x41\x1c\n\x1alogging.googleapis.com/Log\x12\x34\n\x08resource\x18\x02 \x01(\x0b\x32\x1d.google.api.MonitoredResourceB\x03\xe0\x41\x01\x12J\n\x06labels\x18\x03 \x03(\x0b\x32\x35.google.logging.v2.WriteLogEntriesRequest.LabelsEntryB\x03\xe0\x41\x01\x12\x31\n\x07\x65ntries\x18\x04 \x03(\x0b\x32\x1b.google.logging.v2.LogEntryB\x03\xe0\x41\x02\x12\x1c\n\x0fpartial_success\x18\x05 \x01(\x08\x42\x03\xe0\x41\x01\x12\x14\n\x07\x64ry_run\x18\x06 \x01(\x08\x42\x03\xe0\x41\x01\x1a-\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"\x19\n\x17WriteLogEntriesResponse"\xc8\x01\n\x1cWriteLogEntriesPartialErrors\x12]\n\x10log_entry_errors\x18\x01 \x03(\x0b\x32\x43.google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry\x1aI\n\x13LogEntryErrorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.google.rpc.Status:\x02\x38\x01"\xb0\x01\n\x15ListLogEntriesRequest\x12:\n\x0eresource_names\x18\x08 \x03(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x13\n\x06\x66ilter\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08order_by\x18\x03 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x04 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x05 \x01(\tB\x03\xe0\x41\x01"_\n\x16ListLogEntriesResponse\x12,\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x1b.google.logging.v2.LogEntry\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"Z\n\'ListMonitoredResourceDescriptorsRequest\x12\x16\n\tpage_size\x18\x01 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01"\x8a\x01\n(ListMonitoredResourceDescriptorsResponse\x12\x45\n\x14resource_descriptors\x18\x01 \x03(\x0b\x32\'.google.api.MonitoredResourceDescriptor\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"v\n\x0fListLogsRequest\x12\x32\n\x06parent\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x16\n\tpage_size\x18\x02 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x03 \x01(\tB\x03\xe0\x41\x01">\n\x10ListLogsResponse\x12\x11\n\tlog_names\x18\x03 \x03(\t\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t2\xdd\n\n\x10LoggingServiceV2\x12\x93\x02\n\tDeleteLog\x12#.google.logging.v2.DeleteLogRequest\x1a\x16.google.protobuf.Empty"\xc8\x01\x82\xd3\xe4\x93\x02\xb6\x01* /v2/{log_name=projects/*/logs/*}Z\x1b*\x19/v2/{log_name=*/*/logs/*}Z\'*%/v2/{log_name=organizations/*/logs/*}Z!*\x1f/v2/{log_name=folders/*/logs/*}Z)*\'/v2/{log_name=billingAccounts/*/logs/*}\xda\x41\x08log_name\x12\xa9\x01\n\x0fWriteLogEntries\x12).google.logging.v2.WriteLogEntriesRequest\x1a*.google.logging.v2.WriteLogEntriesResponse"?\x82\xd3\xe4\x93\x02\x16"\x11/v2/entries:write:\x01*\xda\x41 log_name,resource,labels,entries\x12\xa3\x01\n\x0eListLogEntries\x12(.google.logging.v2.ListLogEntriesRequest\x1a).google.logging.v2.ListLogEntriesResponse"<\x82\xd3\xe4\x93\x02\x15"\x10/v2/entries:list:\x01*\xda\x41\x1eresource_names,filter,order_by\x12\xc5\x01\n ListMonitoredResourceDescriptors\x12:.google.logging.v2.ListMonitoredResourceDescriptorsRequest\x1a;.google.logging.v2.ListMonitoredResourceDescriptorsResponse"(\x82\xd3\xe4\x93\x02"\x12 /v2/monitoredResourceDescriptors\x12\x88\x02\n\x08ListLogs\x12".google.logging.v2.ListLogsRequest\x1a#.google.logging.v2.ListLogsResponse"\xb2\x01\x82\xd3\xe4\x93\x02\xa2\x01\x12\x15/v2/{parent=*/*}/logsZ\x1e\x12\x1c/v2/{parent=projects/*}/logsZ#\x12!/v2/{parent=organizations/*}/logsZ\x1d\x12\x1b/v2/{parent=folders/*}/logsZ%\x12#/v2/{parent=billingAccounts/*}/logs\xda\x41\x06parent\x1a\x8d\x02\xca\x41\x16logging.googleapis.com\xd2\x41\xf0\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.writeB\x98\x01\n\x15\x63om.google.logging.v2B\x0cLoggingProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2b\x06proto3',
     dependencies=[
         google_dot_api_dot_client__pb2.DESCRIPTOR,
@@ -59,6 +60,7 @@ _DELETELOGREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="log_name",
@@ -77,6 +79,7 @@ _DELETELOGREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A\034\n\032logging.googleapis.com/Log",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -98,6 +101,7 @@ _WRITELOGENTRIESREQUEST_LABELSENTRY = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="key",
@@ -116,6 +120,7 @@ _WRITELOGENTRIESREQUEST_LABELSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="value",
@@ -134,6 +139,7 @@ _WRITELOGENTRIESREQUEST_LABELSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -154,6 +160,7 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="log_name",
@@ -172,6 +179,7 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001\372A\034\n\032logging.googleapis.com/Log",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="resource",
@@ -190,6 +198,7 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="labels",
@@ -208,6 +217,7 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="entries",
@@ -226,6 +236,7 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="partial_success",
@@ -244,6 +255,7 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="dry_run",
@@ -262,6 +274,7 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -283,6 +296,7 @@ _WRITELOGENTRIESRESPONSE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[],
     extensions=[],
     nested_types=[],
@@ -303,6 +317,7 @@ _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="key",
@@ -321,6 +336,7 @@ _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="value",
@@ -339,6 +355,7 @@ _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -359,6 +376,7 @@ _WRITELOGENTRIESPARTIALERRORS = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="log_entry_errors",
@@ -377,6 +395,7 @@ _WRITELOGENTRIESPARTIALERRORS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -398,6 +417,7 @@ _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="resource_names",
@@ -416,6 +436,7 @@ _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A\034\022\032logging.googleapis.com/Log",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="filter",
@@ -434,6 +455,7 @@ _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="order_by",
@@ -452,6 +474,7 @@ _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_size",
@@ -470,6 +493,7 @@ _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_token",
@@ -488,6 +512,7 @@ _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -509,6 +534,7 @@ _LISTLOGENTRIESRESPONSE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="entries",
@@ -527,6 +553,7 @@ _LISTLOGENTRIESRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="next_page_token",
@@ -545,6 +572,7 @@ _LISTLOGENTRIESRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -566,6 +594,7 @@ _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="page_size",
@@ -584,6 +613,7 @@ _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_token",
@@ -602,6 +632,7 @@ _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -623,6 +654,7 @@ _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="resource_descriptors",
@@ -641,6 +673,7 @@ _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="next_page_token",
@@ -659,6 +692,7 @@ _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -680,6 +714,7 @@ _LISTLOGSREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="parent",
@@ -698,6 +733,7 @@ _LISTLOGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A\034\022\032logging.googleapis.com/Log",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_size",
@@ -716,6 +752,7 @@ _LISTLOGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_token",
@@ -734,6 +771,7 @@ _LISTLOGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -755,6 +793,7 @@ _LISTLOGSRESPONSE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="log_names",
@@ -773,6 +812,7 @@ _LISTLOGSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="next_page_token",
@@ -791,6 +831,7 @@ _LISTLOGSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1218,6 +1259,7 @@ _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
     file=DESCRIPTOR,
     index=0,
     serialized_options=b"\312A\026logging.googleapis.com\322A\360\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write",
+    create_key=_descriptor._internal_create_key,
     serialized_start=1795,
     serialized_end=3168,
     methods=[
@@ -1229,6 +1271,7 @@ _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_DELETELOGREQUEST,
             output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
             serialized_options=b"\202\323\344\223\002\266\001* /v2/{log_name=projects/*/logs/*}Z\033*\031/v2/{log_name=*/*/logs/*}Z'*%/v2/{log_name=organizations/*/logs/*}Z!*\037/v2/{log_name=folders/*/logs/*}Z)*'/v2/{log_name=billingAccounts/*/logs/*}\332A\010log_name",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="WriteLogEntries",
@@ -1238,6 +1281,7 @@ _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_WRITELOGENTRIESREQUEST,
             output_type=_WRITELOGENTRIESRESPONSE,
             serialized_options=b'\202\323\344\223\002\026"\021/v2/entries:write:\001*\332A log_name,resource,labels,entries',
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="ListLogEntries",
@@ -1247,6 +1291,7 @@ _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_LISTLOGENTRIESREQUEST,
             output_type=_LISTLOGENTRIESRESPONSE,
             serialized_options=b'\202\323\344\223\002\025"\020/v2/entries:list:\001*\332A\036resource_names,filter,order_by',
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="ListMonitoredResourceDescriptors",
@@ -1256,6 +1301,7 @@ _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_LISTMONITOREDRESOURCEDESCRIPTORSREQUEST,
             output_type=_LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE,
             serialized_options=b'\202\323\344\223\002"\022 /v2/monitoredResourceDescriptors',
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="ListLogs",
@@ -1265,6 +1311,7 @@ _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_LISTLOGSREQUEST,
             output_type=_LISTLOGSRESPONSE,
             serialized_options=b"\202\323\344\223\002\242\001\022\025/v2/{parent=*/*}/logsZ\036\022\034/v2/{parent=projects/*}/logsZ#\022!/v2/{parent=organizations/*}/logsZ\035\022\033/v2/{parent=folders/*}/logsZ%\022#/v2/{parent=billingAccounts/*}/logs\332A\006parent",
+            create_key=_descriptor._internal_create_key,
         ),
     ],
 )
