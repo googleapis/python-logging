@@ -2,8 +2,9 @@ config = {
     "interfaces": {
         "google.logging.v2.ConfigServiceV2": {
             "retry_codes": {
-                "idempotent": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
+                "idempotent": ["DEADLINE_EXCEEDED", "INTERNAL", "UNAVAILABLE"],
                 "non_idempotent": [],
+                "idempotent2": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
             },
             "retry_params": {
                 "default": {
@@ -17,14 +18,29 @@ config = {
                 }
             },
             "methods": {
-                "ListBuckets": {
+                "DeleteSink": {
                     "timeout_millis": 60000,
                     "retry_codes_name": "idempotent",
                     "retry_params_name": "default",
                 },
-                "GetBucket": {
+                "UpdateSink": {
                     "timeout_millis": 60000,
                     "retry_codes_name": "idempotent",
+                    "retry_params_name": "default",
+                },
+                "DeleteExclusion": {
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "idempotent",
+                    "retry_params_name": "default",
+                },
+                "ListBuckets": {
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "idempotent2",
+                    "retry_params_name": "default",
+                },
+                "GetBucket": {
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
                 "UpdateBucket": {
@@ -34,12 +50,12 @@ config = {
                 },
                 "ListSinks": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
                 "GetSink": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
                 "CreateSink": {
@@ -47,24 +63,14 @@ config = {
                     "retry_codes_name": "non_idempotent",
                     "retry_params_name": "default",
                 },
-                "UpdateSink": {
-                    "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
-                    "retry_params_name": "default",
-                },
-                "DeleteSink": {
-                    "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
-                    "retry_params_name": "default",
-                },
                 "ListExclusions": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
                 "GetExclusion": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
                 "CreateExclusion": {
@@ -77,14 +83,9 @@ config = {
                     "retry_codes_name": "non_idempotent",
                     "retry_params_name": "default",
                 },
-                "DeleteExclusion": {
-                    "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
-                    "retry_params_name": "default",
-                },
                 "GetCmekSettings": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "idempotent2",
                     "retry_params_name": "default",
                 },
                 "UpdateCmekSettings": {
