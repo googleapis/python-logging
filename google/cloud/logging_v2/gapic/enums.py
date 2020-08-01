@@ -174,9 +174,7 @@ class LogMetric(object):
 class LogSink(object):
     class VersionFormat(enum.IntEnum):
         """
-        Available log entry formats. Log entries can be written to
-        Logging in either format and can be exported in either format.
-        Version 2 is the preferred format.
+        Deprecated. This is unused.
 
         Attributes:
           VERSION_FORMAT_UNSPECIFIED (int): An unspecified format version that will default to V2.
