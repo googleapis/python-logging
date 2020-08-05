@@ -1,7 +1,7 @@
 Python Client for Stackdriver Logging
 =====================================
 
-|pypi| |versions| 
+|pypi| |versions|
 
 `Stackdriver Logging API`_: Writes log entries and manages your Stackdriver
 Logging configuration.
@@ -35,15 +35,15 @@ In order to use this library, you first need to go through the following steps:
 Installation
 ~~~~~~~~~~~~
 
-Install this library in a `virtualenv`_ using pip. `virtualenv`_ is a tool to
+Install this library in a `venv`_ using pip. `venv`_ is a tool to
 create isolated Python environments. The basic problem it addresses is one of
 dependencies and versions, and indirectly permissions.
 
-With `virtualenv`_, it's possible to install this library without needing system
+With `venv`_, it's possible to install this library without needing system
 install permissions, and without clashing with the installed system
 dependencies.
 
-.. _`virtualenv`: https://virtualenv.pypa.io/en/latest/
+.. _`venv`: https://docs.python.org/3/library/venv.html
 
 
 Supported Python Versions
@@ -52,7 +52,7 @@ Python >= 3.5
 
 Deprecated Python Versions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-Python == 2.7. Python 2.7 support will be removed on January 1, 2020.
+Python == 2.7. Python 2.7 support was removed on January 1, 2020.
 
 
 Mac/Linux
@@ -60,8 +60,7 @@ Mac/Linux
 
 .. code-block:: console
 
-    pip install virtualenv
-    virtualenv <your-env>
+    python -m venv <your-env>
     source <your-env>/bin/activate
     <your-env>/bin/pip install google-cloud-logging
 
@@ -71,8 +70,7 @@ Windows
 
 .. code-block:: console
 
-    pip install virtualenv
-    virtualenv <your-env>
+    python -m venv <your-env>
     <your-env>\Scripts\activate
     <your-env>\Scripts\pip.exe install google-cloud-logging
 
@@ -82,9 +80,31 @@ Using the API
 .. code:: python
 
     from google.cloud import logging_v2
-
     client = logging_v2.LoggingServiceV2Client()
-    entries = []
+
+    resource = {
+        "type": "global",
+        "labels": {
+            "project_id": "[PROJECT_ID]"
+        }
+    }
+
+    """
+    Log entries can be either LogEntry or dict.
+    You can describe the same data in the following format:
+
+    e = {
+        "log_name": "projects/[PROJECT_ID]/logs/test-logging",
+        "resource": resource,
+        "text_payload": "this is a log statement",
+    }
+    """
+    e = logging_v2.types.LogEntry(
+        log_name="projects/[PROJECT_ID]/logs/test-logging", # optional
+        resource=resource, # optional
+        text_payload="this is a log statement")
+
+    entries = [e]
     response = client.write_log_entries(entries)
 
 .. code:: python
