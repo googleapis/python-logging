@@ -52,7 +52,9 @@ class TestConnection(unittest.TestCase):
         custom_endpoint = "https://foo-logging.googleapis.com"
         conn = self._make_one(object(), api_endpoint=custom_endpoint)
         URI = "/".join([custom_endpoint, conn.API_VERSION, "foo"])
-        self.assertEqual(conn.build_api_url("/foo"), URI)
+        # strip out url arguments for comparison
+        created_url = conn.build_api_url("/foo").split('?')[0]
+        self.assertEqual(created_url, URI)
 
     def test_extra_headers(self):
         import requests
