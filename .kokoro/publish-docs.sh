@@ -42,6 +42,8 @@ python3 -m docuploader create-metadata \
 cat docs.metadata
 
 # upload docs
+echo "bucket: ${V2_STAGING_BUCKET}"
+echo python3 -m docuploader upload docs/_build/html --metadata-file docs.metadata --staging-bucket "${STAGING_BUCKET}"
 python3 -m docuploader upload docs/_build/html --metadata-file docs.metadata --staging-bucket "${STAGING_BUCKET}"
 
 
@@ -61,5 +63,4 @@ python3 -m docuploader create-metadata \
 cat docs.metadata
 
 # upload docs
-echo "bucket: ${V2_STAGING_BUCKET}"
-#python3 -m docuploader upload docs/_build/html/docfx_yaml --metadata-file docs.metadata --destination-prefix docfx --staging-bucket "${V2_STAGING_BUCKET}"
+python3 -m docuploader upload docs/_build/html/docfx_yaml --metadata-file docs.metadata --destination-prefix docfx --staging-bucket "${V2_STAGING_BUCKET}"
