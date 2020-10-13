@@ -53,7 +53,7 @@ class TestConnection(unittest.TestCase):
         conn = self._make_one(object(), api_endpoint=custom_endpoint)
         URI = "/".join([custom_endpoint, conn.API_VERSION, "foo"])
         # strip out url arguments for comparison
-        created_url = conn.build_api_url("/foo").split('?')[0]
+        created_url = conn.build_api_url("/foo").split("?")[0]
         self.assertEqual(created_url, URI)
 
     def test_extra_headers(self):
