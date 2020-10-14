@@ -42,8 +42,7 @@ python3 -m docuploader create-metadata \
 cat docs.metadata
 
 # upload docs
-echo "bucket: ${V2_STAGING_BUCKET}"
-echo python3 -m docuploader upload docs/_build/html --metadata-file docs.metadata --staging-bucket "${STAGING_BUCKET}"
+env
 python3 -m docuploader upload docs/_build/html --metadata-file docs.metadata --staging-bucket "${STAGING_BUCKET}"
 
 
