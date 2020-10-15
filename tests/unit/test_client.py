@@ -284,11 +284,11 @@ class TestClient(unittest.TestCase):
         self.assertEqual(logger.project, self.PROJECT)
         self.assertEqual(token, TOKEN)
 
-        # check payload
-        payload_no_filter = deepcopy(client._connection._called_with)
-        payload_no_filter['data']['filter'] = "removed"
+        # check call payload
+        call_payload_no_filter = deepcopy(client._connection._called_with)
+        call_payload_no_filter['data']['filter'] = "removed"
         self.assertEqual(
-            payload_no_filter,
+            call_payload_no_filter,
             {
                 "path": "/entries:list",
                 "method": "POST",
@@ -314,7 +314,7 @@ class TestClient(unittest.TestCase):
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
-        FILTER = "logName:LOGNAME"
+        INPUT_FILTER = "logName:LOGNAME"
         IID1 = "IID1"
         IID2 = "IID2"
         PAYLOAD = {"message": "MESSAGE", "weather": "partly cloudy"}
@@ -344,7 +344,7 @@ class TestClient(unittest.TestCase):
 
         iterator = client.list_entries(
             projects=[PROJECT1, PROJECT2],
-            filter_=FILTER,
+            filter_=INPUT_FILTER,
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
             page_token=TOKEN,
@@ -377,14 +377,16 @@ class TestClient(unittest.TestCase):
 
         self.assertIs(entries[0].logger, entries[1].logger)
 
-        called_with = client._connection._called_with
+        # check call payload
+        call_payload_no_filter = deepcopy(client._connection._called_with)
+        call_payload_no_filter['data']['filter'] = "removed"
         self.assertEqual(
-            called_with,
+            call_payload_no_filter,
             {
                 "path": "/entries:list",
                 "method": "POST",
                 "data": {
-                    "filter": FILTER,
+                    "filter": "removed",
                     "orderBy": DESCENDING,
                     "pageSize": PAGE_SIZE,
                     "pageToken": TOKEN,
@@ -392,6 +394,13 @@ class TestClient(unittest.TestCase):
                 },
             },
         )
+        # verify that default timestamp filter is added
+        timestamp = datetime.strptime(
+            client._connection._called_with["data"]["filter"],
+            INPUT_FILTER + ' AND timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+        )
+        yesterday = datetime.now(timezone.utc) - timedelta(days=1)
+        self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
     def test_sink_defaults(self):
         from google.cloud.logging.sink import Sink
