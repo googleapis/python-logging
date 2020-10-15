@@ -32,6 +32,7 @@ class TestLogger(unittest.TestCase):
 
     PROJECT = "test-project"
     LOGGER_NAME = "logger-name"
+    TIME_FORMAT = '"%Y-%m-%dT%H:%M:%S.%f%z"'
 
     @staticmethod
     def _get_target_class():
@@ -508,7 +509,7 @@ class TestLogger(unittest.TestCase):
 
         # check call payload
         call_payload_no_filter = deepcopy(client._connection._called_with)
-        call_payload_no_filter['data']['filter'] = "removed"
+        call_payload_no_filter["data"]["filter"] = "removed"
         self.assertEqual(
             call_payload_no_filter,
             {
@@ -523,7 +524,7 @@ class TestLogger(unittest.TestCase):
         # verify that default filter is 24 hours
         timestamp = datetime.strptime(
             client._connection._called_with["data"]["filter"],
-            LOG_FILTER + ' AND timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+            LOG_FILTER + " AND timestamp>=" + self.TIME_FORMAT
         )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
@@ -557,7 +558,7 @@ class TestLogger(unittest.TestCase):
         # self.assertEqual(client._listed, LISTED)
         # check call payload
         call_payload_no_filter = deepcopy(client._connection._called_with)
-        call_payload_no_filter['data']['filter'] = "removed"
+        call_payload_no_filter["data"]["filter"] = "removed"
         self.assertEqual(
             call_payload_no_filter,
             {
@@ -582,7 +583,7 @@ class TestLogger(unittest.TestCase):
             " AND " +
             LOG_FILTER +
             " AND " +
-            'timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+            "timestamp>=" + self.TIME_FORMAT
         )
         timestamp = datetime.strptime(
             client._connection._called_with["data"]["filter"],
@@ -597,7 +598,7 @@ class TestLogger(unittest.TestCase):
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
-        INPUT_FILTER = 'resource.type:global AND timestamp="2020-10-13T21:06:41+0000"'
+        INPUT_FILTER = 'resource.type:global AND timestamp="2020-10-13T21"'
         TOKEN = "TOKEN"
         PAGE_SIZE = 42
         client = Client(

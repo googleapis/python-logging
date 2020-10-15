@@ -38,6 +38,7 @@ class TestClient(unittest.TestCase):
     METRIC_NAME = "metric_name"
     FILTER = "logName:syslog AND severity>=ERROR"
     DESCRIPTION = "DESCRIPTION"
+    TIME_FORMAT = '"%Y-%m-%dT%H:%M:%S.%f%z"'
 
     @staticmethod
     def _get_target_class():
@@ -286,7 +287,7 @@ class TestClient(unittest.TestCase):
 
         # check call payload
         call_payload_no_filter = deepcopy(client._connection._called_with)
-        call_payload_no_filter['data']['filter'] = "removed"
+        call_payload_no_filter["data"]["filter"] = "removed"
         self.assertEqual(
             call_payload_no_filter,
             {
@@ -301,7 +302,7 @@ class TestClient(unittest.TestCase):
         # verify that default filter is 24 hours
         timestamp = datetime.strptime(
             client._connection._called_with["data"]["filter"],
-            'timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+            "timestamp>=" + self.TIME_FORMAT
         )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
@@ -379,7 +380,7 @@ class TestClient(unittest.TestCase):
 
         # check call payload
         call_payload_no_filter = deepcopy(client._connection._called_with)
-        call_payload_no_filter['data']['filter'] = "removed"
+        call_payload_no_filter["data"]["filter"] = "removed"
         self.assertEqual(
             call_payload_no_filter,
             {
@@ -397,7 +398,7 @@ class TestClient(unittest.TestCase):
         # verify that default timestamp filter is added
         timestamp = datetime.strptime(
             client._connection._called_with["data"]["filter"],
-            INPUT_FILTER + ' AND timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+            INPUT_FILTER + " AND timestamp>=" + self.TIME_FORMAT
         )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
@@ -410,7 +411,7 @@ class TestClient(unittest.TestCase):
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
-        INPUT_FILTER = 'logName:LOGNAME AND timestamp="2020-10-13T21:06:41+0000"'
+        INPUT_FILTER = 'logName:LOGNAME AND timestamp="2020-10-13T21"'
         IID1 = "IID1"
         IID2 = "IID2"
         PAYLOAD = {"message": "MESSAGE", "weather": "partly cloudy"}
