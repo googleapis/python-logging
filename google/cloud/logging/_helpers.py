@@ -54,7 +54,7 @@ _NORMALIZED_SEVERITIES = {
     logging.NOTSET: LogSeverity.DEFAULT,
 }
 
-_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
 """Time format for timestamps used in API"""
 
 METADATA_URL = "http://metadata.google.internal./computeMetadata/v1/"

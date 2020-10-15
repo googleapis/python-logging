@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
+
 import unittest
 
 import mock
@@ -280,14 +284,19 @@ class TestClient(unittest.TestCase):
         self.assertEqual(token, TOKEN)
 
         called_with = client._connection._called_with
+        # check payload
         self.assertEqual(
-            called_with,
-            {
-                "path": "/entries:list",
-                "method": "POST",
-                "data": {"projectIds": [self.PROJECT]},
-            },
-        )
+            set(called_with.keys()), set(["path", "method", "data"]))
+        self.assertEqual(called_with["path"], "/entries:list")
+        self.assertEqual(called_with["method"], "POST")
+        self.assertEqual(
+            set(called_with["data"].keys()), set(["filter", "projectIds"]))
+        self.assertEqual(called_with["data"]["projectIds"], [self.PROJECT])
+        # verify that default filter is 24 hours
+        timestamp = datetime.strptime(
+            called_with["data"]["filter"], 'timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"')
+        yesterday = datetime.now(timezone.utc) - timedelta(days=1)
+        self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
     def test_list_entries_explicit(self):
         from google.cloud.logging import DESCENDING
