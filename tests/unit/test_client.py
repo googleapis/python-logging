@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from copy import deepcopy
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
@@ -283,18 +284,25 @@ class TestClient(unittest.TestCase):
         self.assertEqual(logger.project, self.PROJECT)
         self.assertEqual(token, TOKEN)
 
-        called_with = client._connection._called_with
         # check payload
+        payload_no_filter = deepcopy(client._connection._called_with)
+        payload_no_filter['data']['filter'] = "removed"
         self.assertEqual(
-            set(called_with.keys()), set(["path", "method", "data"]))
-        self.assertEqual(called_with["path"], "/entries:list")
-        self.assertEqual(called_with["method"], "POST")
-        self.assertEqual(
-            set(called_with["data"].keys()), set(["filter", "projectIds"]))
-        self.assertEqual(called_with["data"]["projectIds"], [self.PROJECT])
+            payload_no_filter,
+            {
+                "path": "/entries:list",
+                "method": "POST",
+                "data": {
+                    "filter": "removed",
+                    "projectIds": [self.PROJECT],
+                },
+            },
+        )
         # verify that default filter is 24 hours
         timestamp = datetime.strptime(
-            called_with["data"]["filter"], 'timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"')
+            client._connection._called_with["data"]["filter"],
+            'timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+        )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
