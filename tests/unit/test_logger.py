@@ -534,7 +534,7 @@ class TestLogger(unittest.TestCase):
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
-        FILTER = "resource.type:global"
+        INPUT_FILTER = "resource.type:global"
         TOKEN = "TOKEN"
         PAGE_SIZE = 42
         client = Client(
@@ -544,7 +544,7 @@ class TestLogger(unittest.TestCase):
         logger = self._make_one(self.LOGGER_NAME, client=client)
         iterator = logger.list_entries(
             projects=[PROJECT1, PROJECT2],
-            filter_=FILTER,
+            filter_=INPUT_FILTER,
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
             page_token=TOKEN,
@@ -555,19 +555,16 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(len(entries), 0)
         self.assertIsNone(token)
         # self.assertEqual(client._listed, LISTED)
-        called_with = client._connection._called_with
-        combined_filter = "%s AND logName=projects/%s/logs/%s" % (
-            FILTER,
-            self.PROJECT,
-            self.LOGGER_NAME,
-        )
+        # check call payload
+        call_payload_no_filter = deepcopy(client._connection._called_with)
+        call_payload_no_filter['data']['filter'] = "removed"
         self.assertEqual(
-            called_with,
+            call_payload_no_filter,
             {
                 "method": "POST",
                 "path": "/entries:list",
                 "data": {
-                    "filter": combined_filter,
+                    "filter": "removed",
                     "orderBy": DESCENDING,
                     "pageSize": PAGE_SIZE,
                     "pageToken": TOKEN,
@@ -575,7 +572,24 @@ class TestLogger(unittest.TestCase):
                 },
             },
         )
-
+        # verify that default filter is 24 hours
+        LOG_FILTER = "logName=projects/%s/logs/%s" % (
+            self.PROJECT,
+            self.LOGGER_NAME,
+        )
+        combined_filter = (
+            INPUT_FILTER +
+            " AND " +
+            LOG_FILTER +
+            " AND " +
+            'timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+        )
+        timestamp = datetime.strptime(
+            client._connection._called_with["data"]["filter"],
+            combined_filter
+        )
+        yesterday = datetime.now(timezone.utc) - timedelta(days=1)
+        self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
 class TestBatch(unittest.TestCase):
 
