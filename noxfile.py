@@ -118,7 +118,7 @@ def system(session):
     session.install('mock', 'pytest')
     systest_deps = [
         'google-cloud-bigquery',
-        'google-cloud-pubsub < 2.0.0',
+        'google-cloud-pubsub',
         'google-cloud-storage',
         'google-cloud-testutils',
     ]
