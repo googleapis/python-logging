@@ -28,6 +28,12 @@ if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"periodic"* ]]; then
     git checkout $LATEST_RELEASE
 fi
 
+# Exit early if samples directory doesn't exist
+if [ ! -d "./samples" ]; then
+  echo "No tests run. `./samples` not found"
+  exit 0
+fi
+
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
 
@@ -66,37 +72,36 @@ set +e
 # Use RTN to return a non-zero value if the test fails.
 RTN=0
 ROOT=$(pwd)
-if [ -d "./samples" ]; then
-    # Find all requirements.txt in the samples directory (may break on whitespace).
-    for file in samples/**/requirements.txt; do
-        cd "$ROOT"
-        # Navigate to the project folder.
-        file=$(dirname "$file")
-        cd "$file"
+# Find all requirements.txt in the samples directory (may break on whitespace).
+for file in samples/**/requirements.txt; do
+    cd "$ROOT"
+    # Navigate to the project folder.
+    file=$(dirname "$file")
+    cd "$file"
 
-        echo "------------------------------------------------------------"
-        echo "- testing $file"
-        echo "------------------------------------------------------------"
+    echo "------------------------------------------------------------"
+    echo "- testing $file"
+    echo "------------------------------------------------------------"
 
-        # Use nox to execute the tests for the project.
-        python3.6 -m nox -s "$RUN_TESTS_SESSION"
-        EXIT=$?
+    # Use nox to execute the tests for the project.
+    python3.6 -m nox -s "$RUN_TESTS_SESSION"
+    EXIT=$?
 
-        # If this is a periodic build, send the test log to the Build Cop Bot.
-        # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-        if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"periodic"* ]]; then
-          chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
-          $KOKORO_GFILE_DIR/linux_amd64/buildcop
-        fi
+    # If this is a periodic build, send the test log to the Build Cop Bot.
+    # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
+    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"periodic"* ]]; then
+      chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
+      $KOKORO_GFILE_DIR/linux_amd64/buildcop
+    fi
 
-        if [[ $EXIT -ne 0 ]]; then
-          RTN=1
-          echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
-        else
-          echo -e "\n Testing completed.\n"
-        fi
-    done
-fi
+    if [[ $EXIT -ne 0 ]]; then
+      RTN=1
+      echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
+    else
+      echo -e "\n Testing completed.\n"
+    fi
+
+done
 cd "$ROOT"
 
 # Workaround for Kokoro permissions issue: delete secrets
