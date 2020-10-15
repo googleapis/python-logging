@@ -591,6 +591,58 @@ class TestLogger(unittest.TestCase):
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
+    def test_list_entries_explicit_timestamp(self):
+        from google.cloud.logging import DESCENDING
+        from google.cloud.logging.client import Client
+
+        PROJECT1 = "PROJECT1"
+        PROJECT2 = "PROJECT2"
+        INPUT_FILTER = 'resource.type:global AND timestamp="2020-10-13T21:06:41+0000"'
+        TOKEN = "TOKEN"
+        PAGE_SIZE = 42
+        client = Client(
+            project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
+        )
+        client._connection = _Connection({})
+        logger = self._make_one(self.LOGGER_NAME, client=client)
+        iterator = logger.list_entries(
+            projects=[PROJECT1, PROJECT2],
+            filter_=INPUT_FILTER,
+            order_by=DESCENDING,
+            page_size=PAGE_SIZE,
+            page_token=TOKEN,
+        )
+        entries = list(iterator)
+        token = iterator.next_page_token
+
+        self.assertEqual(len(entries), 0)
+        self.assertIsNone(token)
+        # self.assertEqual(client._listed, LISTED)
+        # check call payload
+        LOG_FILTER = "logName=projects/%s/logs/%s" % (
+            self.PROJECT,
+            self.LOGGER_NAME,
+        )
+        combined_filter = (
+            INPUT_FILTER +
+            " AND " +
+            LOG_FILTER
+        )
+        self.assertEqual(
+            client._connection._called_with,
+            {
+                "method": "POST",
+                "path": "/entries:list",
+                "data": {
+                    "filter": combined_filter,
+                    "orderBy": DESCENDING,
+                    "pageSize": PAGE_SIZE,
+                    "pageToken": TOKEN,
+                    "projectIds": [PROJECT1, PROJECT2],
+                },
+            },
+        )
+
 class TestBatch(unittest.TestCase):
 
     PROJECT = "test-project"
