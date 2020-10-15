@@ -42,7 +42,6 @@ python3 -m docuploader create-metadata \
 cat docs.metadata
 
 # upload docs
-env
 python3 -m docuploader upload docs/_build/html --metadata-file docs.metadata --staging-bucket "${STAGING_BUCKET}"
 
 
