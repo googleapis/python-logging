@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from copy import deepcopy
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
+
 import unittest
 
 import mock
@@ -499,15 +504,29 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(len(entries), 0)
         self.assertEqual(token, TOKEN)
         called_with = client._connection._called_with
-        FILTER = "logName=projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME)
+        LOG_FILTER = "logName=projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME)
+
+        # check call payload
+        call_payload_no_filter = deepcopy(client._connection._called_with)
+        call_payload_no_filter['data']['filter'] = "removed"
         self.assertEqual(
-            called_with,
+            call_payload_no_filter,
             {
-                "method": "POST",
                 "path": "/entries:list",
-                "data": {"filter": FILTER, "projectIds": [self.PROJECT]},
+                "method": "POST",
+                "data": {
+                    "filter": "removed",
+                    "projectIds": [self.PROJECT],
+                },
             },
         )
+        # verify that default filter is 24 hours
+        timestamp = datetime.strptime(
+            client._connection._called_with["data"]["filter"],
+            LOG_FILTER + ' AND timestamp>="%Y-%m-%dT%H:%M:%S.%f%z"'
+        )
+        yesterday = datetime.now(timezone.utc) - timedelta(days=1)
+        self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
     def test_list_entries_explicit(self):
         from google.cloud.logging import DESCENDING
