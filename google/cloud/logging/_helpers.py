@@ -147,6 +147,6 @@ def _add_defaults_to_filter(filter_):
     time_filter = 'timestamp>="%s"' % yesterday.strftime(_TIME_FORMAT)
     if filter_ is None:
         filter_ = time_filter
-    elif "timestamp" not in filter_:
+    elif "timestamp" not in filter_.lower():
         filter_ = "%s AND %s" % (filter_, time_filter)
     return filter_
