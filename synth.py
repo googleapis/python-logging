@@ -51,9 +51,6 @@ templated_files = common.py_library(
         'google-cloud-testutils'
     ],
     unit_test_dependencies = [
-        'mock',
-        'pytest',
-       'pytest-cov',
        'flask',
        'webob',
        'django'
