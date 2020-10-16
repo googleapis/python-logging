@@ -54,9 +54,6 @@ _NORMALIZED_SEVERITIES = {
     logging.NOTSET: LogSeverity.DEFAULT,
 }
 
-_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
-"""Time format for timestamps used in API"""
-
 METADATA_URL = "http://metadata.google.internal./computeMetadata/v1/"
 METADATA_HEADERS = {"Metadata-Flavor": "Google"}
 
@@ -144,7 +141,7 @@ def _add_defaults_to_filter(filter_):
 
     # By default, requests should only return logs in the last 24 hours
     yesterday = datetime.now(timezone.utc) - timedelta(days=1)
-    time_filter = 'timestamp>="%s"' % yesterday.strftime(_TIME_FORMAT)
+    time_filter = 'timestamp>="%s"' % yesterday.isoformat()
     if filter_ is None:
         filter_ = time_filter
     elif "timestamp" not in filter_.lower():
