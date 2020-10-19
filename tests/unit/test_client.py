@@ -302,7 +302,7 @@ class TestClient(unittest.TestCase):
         # verify that default filter is 24 hours
         timestamp = datetime.strptime(
             client._connection._called_with["data"]["filter"],
-            "timestamp>=" + self.TIME_FORMAT
+            "timestamp>=" + self.TIME_FORMAT,
         )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
@@ -398,7 +398,7 @@ class TestClient(unittest.TestCase):
         # verify that default timestamp filter is added
         timestamp = datetime.strptime(
             client._connection._called_with["data"]["filter"],
-            INPUT_FILTER + " AND timestamp>=" + self.TIME_FORMAT
+            INPUT_FILTER + " AND timestamp>=" + self.TIME_FORMAT,
         )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))

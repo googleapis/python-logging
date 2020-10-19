@@ -504,7 +504,6 @@ class TestLogger(unittest.TestCase):
 
         self.assertEqual(len(entries), 0)
         self.assertEqual(token, TOKEN)
-        called_with = client._connection._called_with
         LOG_FILTER = "logName=projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME)
 
         # check call payload
@@ -524,7 +523,7 @@ class TestLogger(unittest.TestCase):
         # verify that default filter is 24 hours
         timestamp = datetime.strptime(
             client._connection._called_with["data"]["filter"],
-            LOG_FILTER + " AND timestamp>=" + self.TIME_FORMAT
+            LOG_FILTER + " AND timestamp>=" + self.TIME_FORMAT,
         )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
@@ -579,15 +578,15 @@ class TestLogger(unittest.TestCase):
             self.LOGGER_NAME,
         )
         combined_filter = (
-            INPUT_FILTER +
-            " AND " +
-            LOG_FILTER +
-            " AND " +
-            "timestamp>=" + self.TIME_FORMAT
+            INPUT_FILTER
+            + " AND "
+            + LOG_FILTER
+            + " AND "
+            + "timestamp>="
+            + self.TIME_FORMAT
         )
         timestamp = datetime.strptime(
-            client._connection._called_with["data"]["filter"],
-            combined_filter
+            client._connection._called_with["data"]["filter"], combined_filter
         )
         yesterday = datetime.now(timezone.utc) - timedelta(days=1)
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
@@ -624,11 +623,7 @@ class TestLogger(unittest.TestCase):
             self.PROJECT,
             self.LOGGER_NAME,
         )
-        combined_filter = (
-            INPUT_FILTER +
-            " AND " +
-            LOG_FILTER
-        )
+        combined_filter = INPUT_FILTER + " AND " + LOG_FILTER
         self.assertEqual(
             client._connection._called_with,
             {
@@ -643,6 +638,7 @@ class TestLogger(unittest.TestCase):
                 },
             },
         )
+
 
 class TestBatch(unittest.TestCase):
 
