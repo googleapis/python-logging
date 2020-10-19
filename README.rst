@@ -79,7 +79,7 @@ Windows
 Using the API
 -------------
 
-Connecting Google Cloud Logging to `Python's standard logging library`_
+Connecting Cloud Logging to `Python's standard logging library`_
 
 .. code:: python
 
