@@ -110,8 +110,8 @@ Using the Python root logger:
 Next Steps
 ~~~~~~~~~~
 
--  Read the `Setting Up Cloud Logging for Python`_ getting started doc
--  Read the `Product documentation`_ to learn more about the product and see
+-  Read the `Setting Up Cloud Logging for Python`_ How-to Guide
+-  Read the `Product documentation`_ to learn more about the product and see other
    How-to Guides.
 -  Read the `Client Library Documentation`_ for to see other available
    methods on the client.
