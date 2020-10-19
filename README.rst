@@ -78,7 +78,7 @@ Windows
 Using the API
 -------------
 
-Connecting the library to Python logging
+Connecting Google Cloud Logging to [Python's `logging` standard library](https://docs.python.org/2/library/logging.html)
 
 .. code:: python
 
@@ -98,7 +98,7 @@ Using the Python root logger:
 
 .. code:: python
 
-    # Imports Python standard library logging
+    # Imports Python logging standard library
     import logging
 
     # The data to log
