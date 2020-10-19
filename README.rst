@@ -16,6 +16,7 @@ Logging configuration.
 .. _Stackdriver Logging API: https://cloud.google.com/logging
 .. _Client Library Documentation: https://googleapis.dev/python/logging/latest
 .. _Product Documentation:  https://cloud.google.com/logging/docs
+.. _Setting Up Cloud Logging for Python: https://cloud.google.com/logging/docs/setup/python
 
 Quick Start
 -----------
@@ -77,57 +78,40 @@ Windows
 Using the API
 -------------
 
-.. code:: python
-
-    from google.cloud import logging_v2
-    client = logging_v2.LoggingServiceV2Client()
-
-    resource = {
-        "type": "global",
-        "labels": {
-            "project_id": "[PROJECT_ID]"
-        }
-    }
-
-    """
-    Log entries can be either LogEntry or dict.
-    You can describe the same data in the following format:
-
-    e = {
-        "log_name": "projects/[PROJECT_ID]/logs/test-logging",
-        "resource": resource,
-        "text_payload": "this is a log statement",
-    }
-    """
-    e = logging_v2.types.LogEntry(
-        log_name="projects/[PROJECT_ID]/logs/test-logging", # optional
-        resource=resource, # optional
-        text_payload="this is a log statement")
-
-    entries = [e]
-    response = client.write_log_entries(entries)
+Connecting the library to Python logging
 
 .. code:: python
 
-    from google.cloud import logging
-    client = logging.Client()
-    logger = client.logger('log_name')
-    logger.log_text('A simple entry')  # API call
+    # Imports the Cloud Logging client library
+    import google.cloud.logging
 
-Example of fetching entries:
+    # Instantiates a client
+    client = google.cloud.logging.Client()
+
+    # Retrieves a Cloud Logging handler based on the environment
+    # you're running in and integrates the handler with the
+    # Python logging module. By default this captures all logs
+    # at INFO level and higher
+    client.setup_logging()
+
+Using the Python root logger:
 
 .. code:: python
 
-    from google.cloud import logging
-    client = logging.Client()
-    logger = client.logger('log_name')
-    for entry in logger.list_entries():
-        print(entry.payload)
+    # Imports Python standard library logging
+    import logging
+
+    # The data to log
+    text = 'Hello, world!'
+
+    # Emits the data using the standard logging module
+    logging.warning(text)
 
 Next Steps
 ~~~~~~~~~~
 
--  Read the `Client Library Documentation`_ for to see other available
-   methods on the client.
+-  Read the `Setting Up Cloud Logging for Python`_ getting started doc
 -  Read the `Product documentation`_ to learn more about the product and see
    How-to Guides.
+-  Read the `Client Library Documentation`_ for to see other available
+   methods on the client.
