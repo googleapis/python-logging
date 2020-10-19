@@ -17,6 +17,7 @@ Logging configuration.
 .. _Client Library Documentation: https://googleapis.dev/python/logging/latest
 .. _Product Documentation:  https://cloud.google.com/logging/docs
 .. _Setting Up Cloud Logging for Python: https://cloud.google.com/logging/docs/setup/python
+.. _Python's standard logging library: https://docs.python.org/2/library/logging.html
 
 Quick Start
 -----------
@@ -78,7 +79,7 @@ Windows
 Using the API
 -------------
 
-Connecting Google Cloud Logging to [Python's `logging` standard library](https://docs.python.org/2/library/logging.html)
+Connecting Google Cloud Logging to `Python's standard logging library`_
 
 .. code:: python
 
@@ -98,7 +99,7 @@ Using the Python root logger:
 
 .. code:: python
 
-    # Imports Python logging standard library
+    # Imports Python standard logging library
     import logging
 
     # The data to log
