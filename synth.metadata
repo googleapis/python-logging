@@ -11,15 +11,15 @@
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "d399c754bdea83297877ab49e5f66b257a957a78",
-        "internalRef": "323860336"
+        "sha": "26e80fe6cffa4963139373b9a8300bddad606daa",
+        "internalRef": "324046932"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "ee7506d15daa3873accfff9430eff7e3953f0248"
+        "sha": "5dfda5621df45b71b6e88544ebbb53b1a8c90214"
       }
     }
   ],
@@ -47,7 +47,10 @@
     ".kokoro/build.sh",
     ".kokoro/continuous/common.cfg",
     ".kokoro/continuous/continuous.cfg",
+    ".kokoro/docker/docs/Dockerfile",
+    ".kokoro/docker/docs/fetch_gpg_keys.sh",
     ".kokoro/docs/common.cfg",
+    ".kokoro/docs/docs-presubmit.cfg",
     ".kokoro/docs/docs.cfg",
     ".kokoro/presubmit/common.cfg",
     ".kokoro/presubmit/presubmit.cfg",
@@ -73,6 +76,8 @@
     ".kokoro/samples/python3.8/presubmit.cfg",
     ".kokoro/test-samples.sh",
     ".kokoro/trampoline.sh",
+    ".kokoro/trampoline_v2.sh",
+    ".trampolinerc",
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.rst",
     "LICENSE",
