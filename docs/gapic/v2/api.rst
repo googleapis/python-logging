@@ -1,5 +1,5 @@
-Client for Cloud Logging API
-============================
+Client for Stackdriver Logging API
+==================================
 
 .. automodule:: google.cloud.logging_v2
     :members:
