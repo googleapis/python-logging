@@ -61,6 +61,89 @@ class CustomException(Exception):
 
 
 class TestMetricsServiceV2Client(object):
+    def test_update_log_metric(self):
+        # Setup Expected Response
+        name = "name3373707"
+        description = "description-1724546052"
+        filter_ = "filter-1274492040"
+        value_extractor = "valueExtractor2047672534"
+        expected_response = {
+            "name": name,
+            "description": description,
+            "filter": filter_,
+            "value_extractor": value_extractor,
+        }
+        expected_response = logging_metrics_pb2.LogMetric(**expected_response)
+
+        # Mock the API response
+        channel = ChannelStub(responses=[expected_response])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.MetricsServiceV2Client()
+
+        # Setup Request
+        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric = {}
+
+        response = client.update_log_metric(metric_name, metric)
+        assert expected_response == response
+
+        assert len(channel.requests) == 1
+        expected_request = logging_metrics_pb2.UpdateLogMetricRequest(
+            metric_name=metric_name, metric=metric
+        )
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_update_log_metric_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.MetricsServiceV2Client()
+
+        # Setup request
+        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+        metric = {}
+
+        with pytest.raises(CustomException):
+            client.update_log_metric(metric_name, metric)
+
+    def test_delete_log_metric(self):
+        channel = ChannelStub()
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.MetricsServiceV2Client()
+
+        # Setup Request
+        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+
+        client.delete_log_metric(metric_name)
+
+        assert len(channel.requests) == 1
+        expected_request = logging_metrics_pb2.DeleteLogMetricRequest(
+            metric_name=metric_name
+        )
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_delete_log_metric_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.MetricsServiceV2Client()
+
+        # Setup request
+        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
+
+        with pytest.raises(CustomException):
+            client.delete_log_metric(metric_name)
+
     def test_list_log_metrics(self):
         # Setup Expected Response
         next_page_token = ""
@@ -128,7 +211,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup Request
-        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
 
         response = client.get_log_metric(metric_name)
         assert expected_response == response
@@ -149,7 +232,7 @@ class TestMetricsServiceV2Client(object):
             client = logging_v2.MetricsServiceV2Client()
 
         # Setup request
-        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
+        metric_name = client.log_metric_path("[PROJECT]", "[METRIC]")
 
         with pytest.raises(CustomException):
             client.get_log_metric(metric_name)
@@ -203,86 +286,3 @@ class TestMetricsServiceV2Client(object):
 
         with pytest.raises(CustomException):
             client.create_log_metric(parent, metric)
-
-    def test_update_log_metric(self):
-        # Setup Expected Response
-        name = "name3373707"
-        description = "description-1724546052"
-        filter_ = "filter-1274492040"
-        value_extractor = "valueExtractor2047672534"
-        expected_response = {
-            "name": name,
-            "description": description,
-            "filter": filter_,
-            "value_extractor": value_extractor,
-        }
-        expected_response = logging_metrics_pb2.LogMetric(**expected_response)
-
-        # Mock the API response
-        channel = ChannelStub(responses=[expected_response])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
-
-        # Setup Request
-        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
-        metric = {}
-
-        response = client.update_log_metric(metric_name, metric)
-        assert expected_response == response
-
-        assert len(channel.requests) == 1
-        expected_request = logging_metrics_pb2.UpdateLogMetricRequest(
-            metric_name=metric_name, metric=metric
-        )
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_update_log_metric_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
-
-        # Setup request
-        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
-        metric = {}
-
-        with pytest.raises(CustomException):
-            client.update_log_metric(metric_name, metric)
-
-    def test_delete_log_metric(self):
-        channel = ChannelStub()
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
-
-        # Setup Request
-        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
-
-        client.delete_log_metric(metric_name)
-
-        assert len(channel.requests) == 1
-        expected_request = logging_metrics_pb2.DeleteLogMetricRequest(
-            metric_name=metric_name
-        )
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_delete_log_metric_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
-
-        # Setup request
-        metric_name = client.metric_path("[PROJECT]", "[METRIC]")
-
-        with pytest.raises(CustomException):
-            client.delete_log_metric(metric_name)

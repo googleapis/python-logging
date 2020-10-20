@@ -62,6 +62,261 @@ class CustomException(Exception):
 
 
 class TestConfigServiceV2Client(object):
+    def test_delete_sink(self):
+        channel = ChannelStub()
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup Request
+        sink_name = "sinkName-1391757129"
+
+        client.delete_sink(sink_name)
+
+        assert len(channel.requests) == 1
+        expected_request = logging_config_pb2.DeleteSinkRequest(sink_name=sink_name)
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_delete_sink_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup request
+        sink_name = "sinkName-1391757129"
+
+        with pytest.raises(CustomException):
+            client.delete_sink(sink_name)
+
+    def test_update_sink(self):
+        # Setup Expected Response
+        name = "name3373707"
+        destination = "destination-1429847026"
+        filter_ = "filter-1274492040"
+        description = "description-1724546052"
+        disabled = True
+        writer_identity = "writerIdentity775638794"
+        include_children = True
+        expected_response = {
+            "name": name,
+            "destination": destination,
+            "filter": filter_,
+            "description": description,
+            "disabled": disabled,
+            "writer_identity": writer_identity,
+            "include_children": include_children,
+        }
+        expected_response = logging_config_pb2.LogSink(**expected_response)
+
+        # Mock the API response
+        channel = ChannelStub(responses=[expected_response])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup Request
+        sink_name = "sinkName-1391757129"
+        sink = {}
+
+        response = client.update_sink(sink_name, sink)
+        assert expected_response == response
+
+        assert len(channel.requests) == 1
+        expected_request = logging_config_pb2.UpdateSinkRequest(
+            sink_name=sink_name, sink=sink
+        )
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_update_sink_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup request
+        sink_name = "sinkName-1391757129"
+        sink = {}
+
+        with pytest.raises(CustomException):
+            client.update_sink(sink_name, sink)
+
+    def test_delete_exclusion(self):
+        channel = ChannelStub()
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup Request
+        name = "name3373707"
+
+        client.delete_exclusion(name)
+
+        assert len(channel.requests) == 1
+        expected_request = logging_config_pb2.DeleteExclusionRequest(name=name)
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_delete_exclusion_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup request
+        name = "name3373707"
+
+        with pytest.raises(CustomException):
+            client.delete_exclusion(name)
+
+    def test_list_buckets(self):
+        # Setup Expected Response
+        next_page_token = ""
+        buckets_element = {}
+        buckets = [buckets_element]
+        expected_response = {"next_page_token": next_page_token, "buckets": buckets}
+        expected_response = logging_config_pb2.ListBucketsResponse(**expected_response)
+
+        # Mock the API response
+        channel = ChannelStub(responses=[expected_response])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup Request
+        parent = client.organization_location_path("[ORGANIZATION]", "[LOCATION]")
+
+        paged_list_response = client.list_buckets(parent)
+        resources = list(paged_list_response)
+        assert len(resources) == 1
+
+        assert expected_response.buckets[0] == resources[0]
+
+        assert len(channel.requests) == 1
+        expected_request = logging_config_pb2.ListBucketsRequest(parent=parent)
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_list_buckets_exception(self):
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup request
+        parent = client.organization_location_path("[ORGANIZATION]", "[LOCATION]")
+
+        paged_list_response = client.list_buckets(parent)
+        with pytest.raises(CustomException):
+            list(paged_list_response)
+
+    def test_get_bucket(self):
+        # Setup Expected Response
+        name_2 = "name2-1052831874"
+        description = "description-1724546052"
+        retention_days = 1544391896
+        expected_response = {
+            "name": name_2,
+            "description": description,
+            "retention_days": retention_days,
+        }
+        expected_response = logging_config_pb2.LogBucket(**expected_response)
+
+        # Mock the API response
+        channel = ChannelStub(responses=[expected_response])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup Request
+        name = "name3373707"
+
+        response = client.get_bucket(name)
+        assert expected_response == response
+
+        assert len(channel.requests) == 1
+        expected_request = logging_config_pb2.GetBucketRequest(name=name)
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_get_bucket_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup request
+        name = "name3373707"
+
+        with pytest.raises(CustomException):
+            client.get_bucket(name)
+
+    def test_update_bucket(self):
+        # Setup Expected Response
+        name_2 = "name2-1052831874"
+        description = "description-1724546052"
+        retention_days = 1544391896
+        expected_response = {
+            "name": name_2,
+            "description": description,
+            "retention_days": retention_days,
+        }
+        expected_response = logging_config_pb2.LogBucket(**expected_response)
+
+        # Mock the API response
+        channel = ChannelStub(responses=[expected_response])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup Request
+        name = "name3373707"
+        bucket = {}
+        update_mask = {}
+
+        response = client.update_bucket(name, bucket, update_mask)
+        assert expected_response == response
+
+        assert len(channel.requests) == 1
+        expected_request = logging_config_pb2.UpdateBucketRequest(
+            name=name, bucket=bucket, update_mask=update_mask
+        )
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_update_bucket_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = logging_v2.ConfigServiceV2Client()
+
+        # Setup request
+        name = "name3373707"
+        bucket = {}
+        update_mask = {}
+
+        with pytest.raises(CustomException):
+            client.update_bucket(name, bucket, update_mask)
+
     def test_list_sinks(self):
         # Setup Expected Response
         next_page_token = ""
@@ -133,7 +388,7 @@ class TestConfigServiceV2Client(object):
             client = logging_v2.ConfigServiceV2Client()
 
         # Setup Request
-        sink_name = client.sink_path("[PROJECT]", "[SINK]")
+        sink_name = "sinkName-1391757129"
 
         response = client.get_sink(sink_name)
         assert expected_response == response
@@ -152,7 +407,7 @@ class TestConfigServiceV2Client(object):
             client = logging_v2.ConfigServiceV2Client()
 
         # Setup request
-        sink_name = client.sink_path("[PROJECT]", "[SINK]")
+        sink_name = "sinkName-1391757129"
 
         with pytest.raises(CustomException):
             client.get_sink(sink_name)
@@ -212,93 +467,6 @@ class TestConfigServiceV2Client(object):
 
         with pytest.raises(CustomException):
             client.create_sink(parent, sink)
-
-    def test_update_sink(self):
-        # Setup Expected Response
-        name = "name3373707"
-        destination = "destination-1429847026"
-        filter_ = "filter-1274492040"
-        description = "description-1724546052"
-        disabled = True
-        writer_identity = "writerIdentity775638794"
-        include_children = True
-        expected_response = {
-            "name": name,
-            "destination": destination,
-            "filter": filter_,
-            "description": description,
-            "disabled": disabled,
-            "writer_identity": writer_identity,
-            "include_children": include_children,
-        }
-        expected_response = logging_config_pb2.LogSink(**expected_response)
-
-        # Mock the API response
-        channel = ChannelStub(responses=[expected_response])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
-
-        # Setup Request
-        sink_name = client.sink_path("[PROJECT]", "[SINK]")
-        sink = {}
-
-        response = client.update_sink(sink_name, sink)
-        assert expected_response == response
-
-        assert len(channel.requests) == 1
-        expected_request = logging_config_pb2.UpdateSinkRequest(
-            sink_name=sink_name, sink=sink
-        )
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_update_sink_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
-
-        # Setup request
-        sink_name = client.sink_path("[PROJECT]", "[SINK]")
-        sink = {}
-
-        with pytest.raises(CustomException):
-            client.update_sink(sink_name, sink)
-
-    def test_delete_sink(self):
-        channel = ChannelStub()
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
-
-        # Setup Request
-        sink_name = client.sink_path("[PROJECT]", "[SINK]")
-
-        client.delete_sink(sink_name)
-
-        assert len(channel.requests) == 1
-        expected_request = logging_config_pb2.DeleteSinkRequest(sink_name=sink_name)
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_delete_sink_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
-
-        # Setup request
-        sink_name = client.sink_path("[PROJECT]", "[SINK]")
-
-        with pytest.raises(CustomException):
-            client.delete_sink(sink_name)
 
     def test_list_exclusions(self):
         # Setup Expected Response
@@ -370,7 +538,7 @@ class TestConfigServiceV2Client(object):
             client = logging_v2.ConfigServiceV2Client()
 
         # Setup Request
-        name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
+        name = "name3373707"
 
         response = client.get_exclusion(name)
         assert expected_response == response
@@ -389,7 +557,7 @@ class TestConfigServiceV2Client(object):
             client = logging_v2.ConfigServiceV2Client()
 
         # Setup request
-        name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
+        name = "name3373707"
 
         with pytest.raises(CustomException):
             client.get_exclusion(name)
@@ -466,7 +634,7 @@ class TestConfigServiceV2Client(object):
             client = logging_v2.ConfigServiceV2Client()
 
         # Setup Request
-        name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
+        name = "name3373707"
         exclusion = {}
         update_mask = {}
 
@@ -489,51 +657,20 @@ class TestConfigServiceV2Client(object):
             client = logging_v2.ConfigServiceV2Client()
 
         # Setup request
-        name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
+        name = "name3373707"
         exclusion = {}
         update_mask = {}
 
         with pytest.raises(CustomException):
             client.update_exclusion(name, exclusion, update_mask)
 
-    def test_delete_exclusion(self):
-        channel = ChannelStub()
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
-
-        # Setup Request
-        name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
-
-        client.delete_exclusion(name)
-
-        assert len(channel.requests) == 1
-        expected_request = logging_config_pb2.DeleteExclusionRequest(name=name)
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_delete_exclusion_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
-
-        # Setup request
-        name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
-
-        with pytest.raises(CustomException):
-            client.delete_exclusion(name)
-
     def test_get_cmek_settings(self):
         # Setup Expected Response
-        name = "name3373707"
+        name_2 = "name2-1052831874"
         kms_key_name = "kmsKeyName2094986649"
         service_account_id = "serviceAccountId-111486921"
         expected_response = {
-            "name": name,
+            "name": name_2,
             "kms_key_name": kms_key_name,
             "service_account_id": service_account_id,
         }
@@ -546,11 +683,14 @@ class TestConfigServiceV2Client(object):
             create_channel.return_value = channel
             client = logging_v2.ConfigServiceV2Client()
 
-        response = client.get_cmek_settings()
+        # Setup Request
+        name = "name3373707"
+
+        response = client.get_cmek_settings(name)
         assert expected_response == response
 
         assert len(channel.requests) == 1
-        expected_request = logging_config_pb2.GetCmekSettingsRequest()
+        expected_request = logging_config_pb2.GetCmekSettingsRequest(name=name)
         actual_request = channel.requests[0][1]
         assert expected_request == actual_request
 
@@ -562,16 +702,19 @@ class TestConfigServiceV2Client(object):
             create_channel.return_value = channel
             client = logging_v2.ConfigServiceV2Client()
 
+        # Setup request
+        name = "name3373707"
+
         with pytest.raises(CustomException):
-            client.get_cmek_settings()
+            client.get_cmek_settings(name)
 
     def test_update_cmek_settings(self):
         # Setup Expected Response
-        name = "name3373707"
+        name_2 = "name2-1052831874"
         kms_key_name = "kmsKeyName2094986649"
         service_account_id = "serviceAccountId-111486921"
         expected_response = {
-            "name": name,
+            "name": name_2,
             "kms_key_name": kms_key_name,
             "service_account_id": service_account_id,
         }
@@ -584,11 +727,17 @@ class TestConfigServiceV2Client(object):
             create_channel.return_value = channel
             client = logging_v2.ConfigServiceV2Client()
 
-        response = client.update_cmek_settings()
+        # Setup Request
+        name = "name3373707"
+        cmek_settings = {}
+
+        response = client.update_cmek_settings(name, cmek_settings)
         assert expected_response == response
 
         assert len(channel.requests) == 1
-        expected_request = logging_config_pb2.UpdateCmekSettingsRequest()
+        expected_request = logging_config_pb2.UpdateCmekSettingsRequest(
+            name=name, cmek_settings=cmek_settings
+        )
         actual_request = channel.requests[0][1]
         assert expected_request == actual_request
 
@@ -600,5 +749,9 @@ class TestConfigServiceV2Client(object):
             create_channel.return_value = channel
             client = logging_v2.ConfigServiceV2Client()
 
+        # Setup request
+        name = "name3373707"
+        cmek_settings = {}
+
         with pytest.raises(CustomException):
-            client.update_cmek_settings()
+            client.update_cmek_settings(name, cmek_settings)

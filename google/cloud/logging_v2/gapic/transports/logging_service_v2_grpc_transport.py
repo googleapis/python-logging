@@ -130,6 +130,22 @@ class LoggingServiceV2GrpcTransport(object):
         return self._stubs["logging_service_v2_stub"].DeleteLog
 
     @property
+    def list_log_entries(self):
+        """Return the gRPC stub for :meth:`LoggingServiceV2Client.list_log_entries`.
+
+        Lists log entries. Use this method to retrieve log entries that
+        originated from a project/folder/organization/billing account. For ways
+        to export log entries, see `Exporting
+        Logs <https://cloud.google.com/logging/docs/export>`__.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["logging_service_v2_stub"].ListLogEntries
+
+    @property
     def write_log_entries(self):
         """Return the gRPC stub for :meth:`LoggingServiceV2Client.write_log_entries`.
 
@@ -147,22 +163,6 @@ class LoggingServiceV2GrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["logging_service_v2_stub"].WriteLogEntries
-
-    @property
-    def list_log_entries(self):
-        """Return the gRPC stub for :meth:`LoggingServiceV2Client.list_log_entries`.
-
-        Lists log entries. Use this method to retrieve log entries that
-        originated from a project/folder/organization/billing account. For ways
-        to export log entries, see `Exporting
-        Logs <https://cloud.google.com/logging/docs/export>`__.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["logging_service_v2_stub"].ListLogEntries
 
     @property
     def list_monitored_resource_descriptors(self):

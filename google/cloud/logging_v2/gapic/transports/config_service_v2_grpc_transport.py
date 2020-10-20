@@ -116,6 +116,100 @@ class ConfigServiceV2GrpcTransport(object):
         return self._channel
 
     @property
+    def delete_sink(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.delete_sink`.
+
+        Deletes a sink. If the sink has a unique ``writer_identity``, then
+        that service account is also deleted.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].DeleteSink
+
+    @property
+    def update_sink(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_sink`.
+
+        Updates a sink. This method replaces the following fields in the
+        existing sink with values from the new sink: ``destination``, and
+        ``filter``.
+
+        The updated sink might also have a new ``writer_identity``; see the
+        ``unique_writer_identity`` field.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].UpdateSink
+
+    @property
+    def delete_exclusion(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.delete_exclusion`.
+
+        Deletes an exclusion.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].DeleteExclusion
+
+    @property
+    def list_buckets(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_buckets`.
+
+        Lists buckets (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].ListBuckets
+
+    @property
+    def get_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.get_bucket`.
+
+        Gets a bucket (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].GetBucket
+
+    @property
+    def update_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_bucket`.
+
+        Updates a bucket. This method replaces the following fields in the
+        existing bucket with values from the new bucket: ``retention_period``
+
+        If the retention period is decreased and the bucket is locked,
+        FAILED_PRECONDITION will be returned.
+
+        If the bucket has a LifecycleState of DELETE_REQUESTED,
+        FAILED_PRECONDITION will be returned.
+
+        A buckets region may not be modified after it is created. This method is
+        in Beta.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].UpdateBucket
+
+    @property
     def list_sinks(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_sinks`.
 
@@ -145,8 +239,8 @@ class ConfigServiceV2GrpcTransport(object):
     def create_sink(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.create_sink`.
 
-        Creates a sink that exports specified log entries to a destination. The
-        export of newly-ingested log entries begins immediately, unless the
+        Creates a sink that exports specified log entries to a destination.
+        The export of newly-ingested log entries begins immediately, unless the
         sink's ``writer_identity`` is not permitted to write to the destination.
         A sink can export log entries only from the resource owning the sink.
 
@@ -156,38 +250,6 @@ class ConfigServiceV2GrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["config_service_v2_stub"].CreateSink
-
-    @property
-    def update_sink(self):
-        """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_sink`.
-
-        Updates a sink. This method replaces the following fields in the
-        existing sink with values from the new sink: ``destination``, and
-        ``filter``.
-
-        The updated sink might also have a new ``writer_identity``; see the
-        ``unique_writer_identity`` field.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["config_service_v2_stub"].UpdateSink
-
-    @property
-    def delete_sink(self):
-        """Return the gRPC stub for :meth:`ConfigServiceV2Client.delete_sink`.
-
-        Deletes a sink. If the sink has a unique ``writer_identity``, then that
-        service account is also deleted.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["config_service_v2_stub"].DeleteSink
 
     @property
     def list_exclusions(self):
@@ -244,19 +306,6 @@ class ConfigServiceV2GrpcTransport(object):
         return self._stubs["config_service_v2_stub"].UpdateExclusion
 
     @property
-    def delete_exclusion(self):
-        """Return the gRPC stub for :meth:`ConfigServiceV2Client.delete_exclusion`.
-
-        Deletes an exclusion.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["config_service_v2_stub"].DeleteExclusion
-
-    @property
     def get_cmek_settings(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.get_cmek_settings`.
 
@@ -290,9 +339,7 @@ class ConfigServiceV2GrpcTransport(object):
         ``UpdateCmekSettings`` will fail if 1) ``kms_key_name`` is invalid, or
         2) the associated service account does not have the required
         ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for the
-        key, or
-
-        3) access to the key is disabled.
+        key, or 3) access to the key is disabled.
 
         See `Enabling CMEK for Logs
         Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
