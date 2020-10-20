@@ -352,7 +352,6 @@ intersphinx_mapping = {
         None,
     ),
     "grpc": ("https://grpc.io/grpc/python/", None),
-    
 }
 
 
