@@ -26,6 +26,7 @@ from google.cloud.logging_v2.proto import (
 )
 from google.protobuf import duration_pb2 as google_dot_protobuf_dot_duration__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
+from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 from google.rpc import status_pb2 as google_dot_rpc_dot_status__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
@@ -37,7 +38,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n\025com.google.logging.v2B\014LoggingProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2\352\002\032Google::Cloud::Logging::V2",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n+google/cloud/logging_v2/proto/logging.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a#google/api/monitored_resource.proto\x1a\x19google/api/resource.proto\x1a-google/cloud/logging_v2/proto/log_entry.proto\x1a\x32google/cloud/logging_v2/proto/logging_config.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto\x1a\x1cgoogle/api/annotations.proto"H\n\x10\x44\x65leteLogRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\n\x1alogging.googleapis.com/Log"\xe6\x02\n\x16WriteLogEntriesRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x01\xfa\x41\x1c\n\x1alogging.googleapis.com/Log\x12\x34\n\x08resource\x18\x02 \x01(\x0b\x32\x1d.google.api.MonitoredResourceB\x03\xe0\x41\x01\x12J\n\x06labels\x18\x03 \x03(\x0b\x32\x35.google.logging.v2.WriteLogEntriesRequest.LabelsEntryB\x03\xe0\x41\x01\x12\x31\n\x07\x65ntries\x18\x04 \x03(\x0b\x32\x1b.google.logging.v2.LogEntryB\x03\xe0\x41\x02\x12\x1c\n\x0fpartial_success\x18\x05 \x01(\x08\x42\x03\xe0\x41\x01\x12\x14\n\x07\x64ry_run\x18\x06 \x01(\x08\x42\x03\xe0\x41\x01\x1a-\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"\x19\n\x17WriteLogEntriesResponse"\xc8\x01\n\x1cWriteLogEntriesPartialErrors\x12]\n\x10log_entry_errors\x18\x01 \x03(\x0b\x32\x43.google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry\x1aI\n\x13LogEntryErrorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.google.rpc.Status:\x02\x38\x01"\xb0\x01\n\x15ListLogEntriesRequest\x12:\n\x0eresource_names\x18\x08 \x03(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x13\n\x06\x66ilter\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08order_by\x18\x03 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x04 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x05 \x01(\tB\x03\xe0\x41\x01"_\n\x16ListLogEntriesResponse\x12,\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x1b.google.logging.v2.LogEntry\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"Z\n\'ListMonitoredResourceDescriptorsRequest\x12\x16\n\tpage_size\x18\x01 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01"\x8a\x01\n(ListMonitoredResourceDescriptorsResponse\x12\x45\n\x14resource_descriptors\x18\x01 \x03(\x0b\x32\'.google.api.MonitoredResourceDescriptor\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"v\n\x0fListLogsRequest\x12\x32\n\x06parent\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x16\n\tpage_size\x18\x02 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x03 \x01(\tB\x03\xe0\x41\x01">\n\x10ListLogsResponse\x12\x11\n\tlog_names\x18\x03 \x03(\t\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t2\xdd\n\n\x10LoggingServiceV2\x12\x93\x02\n\tDeleteLog\x12#.google.logging.v2.DeleteLogRequest\x1a\x16.google.protobuf.Empty"\xc8\x01\x82\xd3\xe4\x93\x02\xb6\x01* /v2/{log_name=projects/*/logs/*}Z\x1b*\x19/v2/{log_name=*/*/logs/*}Z\'*%/v2/{log_name=organizations/*/logs/*}Z!*\x1f/v2/{log_name=folders/*/logs/*}Z)*\'/v2/{log_name=billingAccounts/*/logs/*}\xda\x41\x08log_name\x12\xa9\x01\n\x0fWriteLogEntries\x12).google.logging.v2.WriteLogEntriesRequest\x1a*.google.logging.v2.WriteLogEntriesResponse"?\x82\xd3\xe4\x93\x02\x16"\x11/v2/entries:write:\x01*\xda\x41 log_name,resource,labels,entries\x12\xa3\x01\n\x0eListLogEntries\x12(.google.logging.v2.ListLogEntriesRequest\x1a).google.logging.v2.ListLogEntriesResponse"<\x82\xd3\xe4\x93\x02\x15"\x10/v2/entries:list:\x01*\xda\x41\x1eresource_names,filter,order_by\x12\xc5\x01\n ListMonitoredResourceDescriptors\x12:.google.logging.v2.ListMonitoredResourceDescriptorsRequest\x1a;.google.logging.v2.ListMonitoredResourceDescriptorsResponse"(\x82\xd3\xe4\x93\x02"\x12 /v2/monitoredResourceDescriptors\x12\x88\x02\n\x08ListLogs\x12".google.logging.v2.ListLogsRequest\x1a#.google.logging.v2.ListLogsResponse"\xb2\x01\x82\xd3\xe4\x93\x02\xa2\x01\x12\x15/v2/{parent=*/*}/logsZ\x1e\x12\x1c/v2/{parent=projects/*}/logsZ#\x12!/v2/{parent=organizations/*}/logsZ\x1d\x12\x1b/v2/{parent=folders/*}/logsZ%\x12#/v2/{parent=billingAccounts/*}/logs\xda\x41\x06parent\x1a\x8d\x02\xca\x41\x16logging.googleapis.com\xd2\x41\xf0\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.writeB\xb5\x01\n\x15\x63om.google.logging.v2B\x0cLoggingProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2\xea\x02\x1aGoogle::Cloud::Logging::V2b\x06proto3',
+    serialized_pb=b'\n+google/cloud/logging_v2/proto/logging.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a#google/api/monitored_resource.proto\x1a\x19google/api/resource.proto\x1a-google/cloud/logging_v2/proto/log_entry.proto\x1a\x32google/cloud/logging_v2/proto/logging_config.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto\x1a\x1cgoogle/api/annotations.proto"H\n\x10\x44\x65leteLogRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\n\x1alogging.googleapis.com/Log"\xe6\x02\n\x16WriteLogEntriesRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x01\xfa\x41\x1c\n\x1alogging.googleapis.com/Log\x12\x34\n\x08resource\x18\x02 \x01(\x0b\x32\x1d.google.api.MonitoredResourceB\x03\xe0\x41\x01\x12J\n\x06labels\x18\x03 \x03(\x0b\x32\x35.google.logging.v2.WriteLogEntriesRequest.LabelsEntryB\x03\xe0\x41\x01\x12\x31\n\x07\x65ntries\x18\x04 \x03(\x0b\x32\x1b.google.logging.v2.LogEntryB\x03\xe0\x41\x02\x12\x1c\n\x0fpartial_success\x18\x05 \x01(\x08\x42\x03\xe0\x41\x01\x12\x14\n\x07\x64ry_run\x18\x06 \x01(\x08\x42\x03\xe0\x41\x01\x1a-\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"\x19\n\x17WriteLogEntriesResponse"\xc8\x01\n\x1cWriteLogEntriesPartialErrors\x12]\n\x10log_entry_errors\x18\x01 \x03(\x0b\x32\x43.google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry\x1aI\n\x13LogEntryErrorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.google.rpc.Status:\x02\x38\x01"\xb0\x01\n\x15ListLogEntriesRequest\x12:\n\x0eresource_names\x18\x08 \x03(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x13\n\x06\x66ilter\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08order_by\x18\x03 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x04 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x05 \x01(\tB\x03\xe0\x41\x01"_\n\x16ListLogEntriesResponse\x12,\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x1b.google.logging.v2.LogEntry\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"Z\n\'ListMonitoredResourceDescriptorsRequest\x12\x16\n\tpage_size\x18\x01 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01"\x8a\x01\n(ListMonitoredResourceDescriptorsResponse\x12\x45\n\x14resource_descriptors\x18\x01 \x03(\x0b\x32\'.google.api.MonitoredResourceDescriptor\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"v\n\x0fListLogsRequest\x12\x32\n\x06parent\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x16\n\tpage_size\x18\x02 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x03 \x01(\tB\x03\xe0\x41\x01">\n\x10ListLogsResponse\x12\x11\n\tlog_names\x18\x03 \x03(\t\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t2\xdd\n\n\x10LoggingServiceV2\x12\x93\x02\n\tDeleteLog\x12#.google.logging.v2.DeleteLogRequest\x1a\x16.google.protobuf.Empty"\xc8\x01\x82\xd3\xe4\x93\x02\xb6\x01* /v2/{log_name=projects/*/logs/*}Z\x1b*\x19/v2/{log_name=*/*/logs/*}Z\'*%/v2/{log_name=organizations/*/logs/*}Z!*\x1f/v2/{log_name=folders/*/logs/*}Z)*\'/v2/{log_name=billingAccounts/*/logs/*}\xda\x41\x08log_name\x12\xa9\x01\n\x0fWriteLogEntries\x12).google.logging.v2.WriteLogEntriesRequest\x1a*.google.logging.v2.WriteLogEntriesResponse"?\x82\xd3\xe4\x93\x02\x16"\x11/v2/entries:write:\x01*\xda\x41 log_name,resource,labels,entries\x12\xa3\x01\n\x0eListLogEntries\x12(.google.logging.v2.ListLogEntriesRequest\x1a).google.logging.v2.ListLogEntriesResponse"<\x82\xd3\xe4\x93\x02\x15"\x10/v2/entries:list:\x01*\xda\x41\x1eresource_names,filter,order_by\x12\xc5\x01\n ListMonitoredResourceDescriptors\x12:.google.logging.v2.ListMonitoredResourceDescriptorsRequest\x1a;.google.logging.v2.ListMonitoredResourceDescriptorsResponse"(\x82\xd3\xe4\x93\x02"\x12 /v2/monitoredResourceDescriptors\x12\x88\x02\n\x08ListLogs\x12".google.logging.v2.ListLogsRequest\x1a#.google.logging.v2.ListLogsResponse"\xb2\x01\x82\xd3\xe4\x93\x02\xa2\x01\x12\x15/v2/{parent=*/*}/logsZ\x1e\x12\x1c/v2/{parent=projects/*}/logsZ#\x12!/v2/{parent=organizations/*}/logsZ\x1d\x12\x1b/v2/{parent=folders/*}/logsZ%\x12#/v2/{parent=billingAccounts/*}/logs\xda\x41\x06parent\x1a\x8d\x02\xca\x41\x16logging.googleapis.com\xd2\x41\xf0\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.writeB\xb5\x01\n\x15\x63om.google.logging.v2B\x0cLoggingProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2\xea\x02\x1aGoogle::Cloud::Logging::V2b\x06proto3',
     dependencies=[
         google_dot_api_dot_client__pb2.DESCRIPTOR,
         google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,
@@ -47,6 +48,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
         google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.DESCRIPTOR,
         google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,
         google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,
         google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,
         google_dot_rpc_dot_status__pb2.DESCRIPTOR,
         google_dot_api_dot_annotations__pb2.DESCRIPTOR,
@@ -90,8 +92,8 @@ _DELETELOGREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=436,
-    serialized_end=508,
+    serialized_start=470,
+    serialized_end=542,
 )
 
 
@@ -150,8 +152,8 @@ _WRITELOGENTRIESREQUEST_LABELSENTRY = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=824,
-    serialized_end=869,
+    serialized_start=858,
+    serialized_end=903,
 )
 
 _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
@@ -287,8 +289,8 @@ _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=511,
-    serialized_end=869,
+    serialized_start=545,
+    serialized_end=903,
 )
 
 
@@ -308,8 +310,8 @@ _WRITELOGENTRIESRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=871,
-    serialized_end=896,
+    serialized_start=905,
+    serialized_end=930,
 )
 
 
@@ -368,8 +370,8 @@ _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1026,
-    serialized_end=1099,
+    serialized_start=1060,
+    serialized_end=1133,
 )
 
 _WRITELOGENTRIESPARTIALERRORS = _descriptor.Descriptor(
@@ -410,8 +412,8 @@ _WRITELOGENTRIESPARTIALERRORS = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=899,
-    serialized_end=1099,
+    serialized_start=933,
+    serialized_end=1133,
 )
 
 
@@ -527,8 +529,8 @@ _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1102,
-    serialized_end=1278,
+    serialized_start=1136,
+    serialized_end=1312,
 )
 
 
@@ -587,8 +589,8 @@ _LISTLOGENTRIESRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1280,
-    serialized_end=1375,
+    serialized_start=1314,
+    serialized_end=1409,
 )
 
 
@@ -647,8 +649,8 @@ _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1377,
-    serialized_end=1467,
+    serialized_start=1411,
+    serialized_end=1501,
 )
 
 
@@ -707,8 +709,8 @@ _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1470,
-    serialized_end=1608,
+    serialized_start=1504,
+    serialized_end=1642,
 )
 
 
@@ -786,8 +788,8 @@ _LISTLOGSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1610,
-    serialized_end=1728,
+    serialized_start=1644,
+    serialized_end=1762,
 )
 
 
@@ -846,8 +848,8 @@ _LISTLOGSRESPONSE = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1730,
-    serialized_end=1792,
+    serialized_start=1764,
+    serialized_end=1826,
 )
 
 _WRITELOGENTRIESREQUEST_LABELSENTRY.containing_type = _WRITELOGENTRIESREQUEST
@@ -1094,7 +1096,8 @@ ListLogEntriesRequest = _reflection.GeneratedProtocolMessageType(
           values.
       page_size:
           Optional. The maximum number of results to return from this
-          request. Non-positive values are ignored. The presence of
+          request. Default is 50. If the value is negative or exceeds
+          1000, the request is rejected. The presence of
           ``next_page_token`` in the response indicates that more
           results might be available.
       page_token:
@@ -1273,8 +1276,8 @@ _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=b"\312A\026logging.googleapis.com\322A\360\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write",
     create_key=_descriptor._internal_create_key,
-    serialized_start=1795,
-    serialized_end=3168,
+    serialized_start=1829,
+    serialized_end=3202,
     methods=[
         _descriptor.MethodDescriptor(
             name="DeleteLog",

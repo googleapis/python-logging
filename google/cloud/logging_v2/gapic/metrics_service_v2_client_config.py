@@ -2,46 +2,68 @@ config = {
     "interfaces": {
         "google.logging.v2.MetricsServiceV2": {
             "retry_codes": {
-                "idempotent": ["DEADLINE_EXCEEDED", "INTERNAL", "UNAVAILABLE"],
-                "non_idempotent": [],
-                "idempotent2": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
+                "retry_policy_4_codes": [
+                    "DEADLINE_EXCEEDED",
+                    "INTERNAL",
+                    "UNAVAILABLE",
+                ],
+                "no_retry_codes": [],
+                "no_retry_1_codes": [],
             },
             "retry_params": {
-                "default": {
+                "retry_policy_4_params": {
                     "initial_retry_delay_millis": 100,
                     "retry_delay_multiplier": 1.3,
                     "max_retry_delay_millis": 60000,
-                    "initial_rpc_timeout_millis": 20000,
+                    "initial_rpc_timeout_millis": 60000,
                     "rpc_timeout_multiplier": 1.0,
-                    "max_rpc_timeout_millis": 20000,
-                    "total_timeout_millis": 600000,
-                }
+                    "max_rpc_timeout_millis": 60000,
+                    "total_timeout_millis": 60000,
+                },
+                "no_retry_params": {
+                    "initial_retry_delay_millis": 0,
+                    "retry_delay_multiplier": 0.0,
+                    "max_retry_delay_millis": 0,
+                    "initial_rpc_timeout_millis": 0,
+                    "rpc_timeout_multiplier": 1.0,
+                    "max_rpc_timeout_millis": 0,
+                    "total_timeout_millis": 0,
+                },
+                "no_retry_1_params": {
+                    "initial_retry_delay_millis": 0,
+                    "retry_delay_multiplier": 0.0,
+                    "max_retry_delay_millis": 0,
+                    "initial_rpc_timeout_millis": 60000,
+                    "rpc_timeout_multiplier": 1.0,
+                    "max_rpc_timeout_millis": 60000,
+                    "total_timeout_millis": 60000,
+                },
             },
             "methods": {
                 "UpdateLogMetric": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
-                    "retry_params_name": "default",
+                    "retry_codes_name": "retry_policy_4_codes",
+                    "retry_params_name": "retry_policy_4_params",
                 },
                 "DeleteLogMetric": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
-                    "retry_params_name": "default",
+                    "retry_codes_name": "retry_policy_4_codes",
+                    "retry_params_name": "retry_policy_4_params",
                 },
                 "ListLogMetrics": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent2",
-                    "retry_params_name": "default",
+                    "retry_codes_name": "retry_policy_4_codes",
+                    "retry_params_name": "retry_policy_4_params",
                 },
                 "GetLogMetric": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent2",
-                    "retry_params_name": "default",
+                    "retry_codes_name": "retry_policy_4_codes",
+                    "retry_params_name": "retry_policy_4_params",
                 },
                 "CreateLogMetric": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "non_idempotent",
-                    "retry_params_name": "default",
+                    "retry_codes_name": "no_retry_1_codes",
+                    "retry_params_name": "no_retry_1_params",
                 },
             },
         }

@@ -208,7 +208,8 @@ class ConfigServiceV2Servicer(object):
         the GCP organization.
 
         See [Enabling CMEK for Logs
-        Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+        Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+        for more information.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
@@ -228,7 +229,8 @@ class ConfigServiceV2Servicer(object):
         3) access to the key is disabled.
 
         See [Enabling CMEK for Logs
-        Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+        Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+        for more information.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")

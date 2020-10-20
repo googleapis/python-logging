@@ -738,15 +738,11 @@ LogEntry = _reflection.GeneratedProtocolMessageType(
           in a new log entry, then Logging assigns it the current time.
           Timestamps have nanosecond accuracy, but trailing zeros in the
           fractional seconds might be omitted when the timestamp is
-          displayed.  Incoming log entries should have timestamps that
-          are no more than the `logs retention period
-          <https://cloud.google.com/logging/quotas>`__ in the past, and
-          no more than 24 hours in the future. Log entries outside those
-          time boundaries will not be available when calling
-          ``entries.list``, but those log entries can still be `exported
-          with LogSinks
-          <https://cloud.google.com/logging/docs/api/tasks/exporting-
-          logs>`__.
+          displayed.  Incoming log entries must have timestamps that
+          don’t exceed the `logs retention period <https://cloud.google.
+          com/logging/quotas#logs_retention_periods>`__ in the past, and
+          that don’t exceed 24 hours in the future. Log entries outside
+          those time boundaries aren’t ingested by Logging.
       receive_timestamp:
           Output only. The time the log entry was received by Logging.
       severity:
