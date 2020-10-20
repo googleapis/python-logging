@@ -28,6 +28,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     package="google.logging.v2",
     syntax="proto3",
     serialized_options=b"\n\025com.google.logging.v2B\022LoggingConfigProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2\352A`\n+logging.googleapis.com/OrganizationLocation\0221organizations/{organization}/locations/{location}\352AN\n%logging.googleapis.com/FolderLocation\022%folders/{folder}/locations/{location}\352Ag\n-logging.googleapis.com/BillingAccountLocation\0226billingAccounts/{billing_account}/locations/{location}",
+    create_key=_descriptor._internal_create_key,
     serialized_pb=b'\n2google/cloud/logging_v2/proto/logging_config.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto"\x9b\x04\n\tLogBucket\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x34\n\x0b\x63reate_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x16\n\x0eretention_days\x18\x0b \x01(\x05\x12?\n\x0flifecycle_state\x18\x0c \x01(\x0e\x32!.google.logging.v2.LifecycleStateB\x03\xe0\x41\x03:\xa5\x02\xea\x41\xa1\x02\n logging.googleapis.com/LogBucket\x12\x38projects/{project}/locations/{location}/buckets/{bucket}\x12\x42organizations/{organization}/locations/{location}/buckets/{bucket}\x12\x36\x66olders/{folder}/locations/{location}/buckets/{bucket}\x12GbillingAccounts/{billing_account}/locations/{location}/buckets/{bucket}"\xcb\x05\n\x07LogSink\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x1e\n\x0b\x64\x65stination\x18\x03 \x01(\tB\t\xe0\x41\x02\xfa\x41\x03\n\x01*\x12\x13\n\x06\x66ilter\x18\x05 \x01(\tB\x03\xe0\x41\x01\x12\x18\n\x0b\x64\x65scription\x18\x12 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08\x64isabled\x18\x13 \x01(\x08\x42\x03\xe0\x41\x01\x12K\n\x15output_version_format\x18\x06 \x01(\x0e\x32(.google.logging.v2.LogSink.VersionFormatB\x02\x18\x01\x12\x1c\n\x0fwriter_identity\x18\x08 \x01(\tB\x03\xe0\x41\x03\x12\x1d\n\x10include_children\x18\t \x01(\x08\x42\x03\xe0\x41\x01\x12\x43\n\x10\x62igquery_options\x18\x0c \x01(\x0b\x32".google.logging.v2.BigQueryOptionsB\x03\xe0\x41\x01H\x00\x12\x34\n\x0b\x63reate_time\x18\r \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x0e \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03"?\n\rVersionFormat\x12\x1e\n\x1aVERSION_FORMAT_UNSPECIFIED\x10\x00\x12\x06\n\x02V2\x10\x01\x12\x06\n\x02V1\x10\x02:\xbf\x01\xea\x41\xbb\x01\n\x1elogging.googleapis.com/LogSink\x12\x1fprojects/{project}/sinks/{sink}\x12)organizations/{organization}/sinks/{sink}\x12\x1d\x66olders/{folder}/sinks/{sink}\x12.billingAccounts/{billing_account}/sinks/{sink}B\t\n\x07options"g\n\x0f\x42igQueryOptions\x12#\n\x16use_partitioned_tables\x18\x01 \x01(\x08\x42\x03\xe0\x41\x01\x12/\n"uses_timestamp_column_partitioning\x18\x03 \x01(\x08\x42\x03\xe0\x41\x03"\x7f\n\x12ListBucketsRequest\x12\x38\n\x06parent\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\x12 logging.googleapis.com/LogBucket\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01"]\n\x13ListBucketsResponse\x12-\n\x07\x62uckets\x18\x01 \x03(\x0b\x32\x1c.google.logging.v2.LogBucket\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"\xb6\x01\n\x13UpdateBucketRequest\x12\x36\n\x04name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\n logging.googleapis.com/LogBucket\x12\x31\n\x06\x62ucket\x18\x02 \x01(\x0b\x32\x1c.google.logging.v2.LogBucketB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x02"J\n\x10GetBucketRequest\x12\x36\n\x04name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\n logging.googleapis.com/LogBucket"{\n\x10ListSinksRequest\x12\x36\n\x06parent\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \x12\x1elogging.googleapis.com/LogSink\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01"W\n\x11ListSinksResponse\x12)\n\x05sinks\x18\x01 \x03(\x0b\x32\x1a.google.logging.v2.LogSink\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"K\n\x0eGetSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink"\x9f\x01\n\x11\x43reateSinkRequest\x12\x36\n\x06parent\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \x12\x1elogging.googleapis.com/LogSink\x12-\n\x04sink\x18\x02 \x01(\x0b\x32\x1a.google.logging.v2.LogSinkB\x03\xe0\x41\x02\x12#\n\x16unique_writer_identity\x18\x03 \x01(\x08\x42\x03\xe0\x41\x01"\xd8\x01\n\x11UpdateSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink\x12-\n\x04sink\x18\x02 \x01(\x0b\x32\x1a.google.logging.v2.LogSinkB\x03\xe0\x41\x02\x12#\n\x16unique_writer_identity\x18\x03 \x01(\x08\x42\x03\xe0\x41\x01\x12\x34\n\x0bupdate_mask\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x01"N\n\x11\x44\x65leteSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink"\xc2\x03\n\x0cLogExclusion\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x18\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x13\n\x06\x66ilter\x18\x03 \x01(\tB\x03\xe0\x41\x02\x12\x15\n\x08\x64isabled\x18\x04 \x01(\x08\x42\x03\xe0\x41\x01\x12\x34\n\x0b\x63reate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03:\xec\x01\xea\x41\xe8\x01\n#logging.googleapis.com/LogExclusion\x12)projects/{project}/exclusions/{exclusion}\x12\x33organizations/{organization}/exclusions/{exclusion}\x12\'folders/{folder}/exclusions/{exclusion}\x12\x38\x62illingAccounts/{billing_account}/exclusions/{exclusion}"\x85\x01\n\x15ListExclusionsRequest\x12;\n\x06parent\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\x12#logging.googleapis.com/LogExclusion\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01"f\n\x16ListExclusionsResponse\x12\x33\n\nexclusions\x18\x01 \x03(\x0b\x32\x1f.google.logging.v2.LogExclusion\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"P\n\x13GetExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion"\x8e\x01\n\x16\x43reateExclusionRequest\x12;\n\x06parent\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\x12#logging.googleapis.com/LogExclusion\x12\x37\n\texclusion\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.LogExclusionB\x03\xe0\x41\x02"\xc2\x01\n\x16UpdateExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion\x12\x37\n\texclusion\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.LogExclusionB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x02"S\n\x16\x44\x65leteExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion"S\n\x16GetCmekSettingsRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/CmekSettings"\xa1\x01\n\x19UpdateCmekSettingsRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12;\n\rcmek_settings\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.CmekSettingsB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x01"\x9f\x02\n\x0c\x43mekSettings\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x03\x12\x14\n\x0ckms_key_name\x18\x02 \x01(\t\x12\x1f\n\x12service_account_id\x18\x03 \x01(\tB\x03\xe0\x41\x03:\xc4\x01\xea\x41\xc0\x01\n#logging.googleapis.com/CmekSettings\x12\x1fprojects/{project}/cmekSettings\x12)organizations/{organization}/cmekSettings\x12\x1d\x66olders/{folder}/cmekSettings\x12.billingAccounts/{billing_account}/cmekSettings*S\n\x0eLifecycleState\x12\x1f\n\x1bLIFECYCLE_STATE_UNSPECIFIED\x10\x00\x12\n\n\x06\x41\x43TIVE\x10\x01\x12\x14\n\x10\x44\x45LETE_REQUESTED\x10\x02\x32\xaf\'\n\x0f\x43onfigServiceV2\x12\xdc\x02\n\x0bListBuckets\x12%.google.logging.v2.ListBucketsRequest\x1a&.google.logging.v2.ListBucketsResponse"\xfd\x01\x82\xd3\xe4\x93\x02\xed\x01\x12$/v2/{parent=*/*/locations/*}/bucketsZ-\x12+/v2/{parent=projects/*/locations/*}/bucketsZ2\x12\x30/v2/{parent=organizations/*/locations/*}/bucketsZ,\x12*/v2/{parent=folders/*/locations/*}/bucketsZ4\x12\x32/v2/{parent=billingAccounts/*/locations/*}/buckets\xda\x41\x06parent\x12\xb9\x02\n\tGetBucket\x12#.google.logging.v2.GetBucketRequest\x1a\x1c.google.logging.v2.LogBucket"\xe8\x01\x82\xd3\xe4\x93\x02\xe1\x01\x12$/v2/{name=*/*/locations/*/buckets/*}Z-\x12+/v2/{name=projects/*/locations/*/buckets/*}Z2\x12\x30/v2/{name=organizations/*/locations/*/buckets/*}Z,\x12*/v2/{name=folders/*/locations/*/buckets/*}Z(\x12&/v2/{name=billingAccounts/*/buckets/*}\x12\xf3\x02\n\x0cUpdateBucket\x12&.google.logging.v2.UpdateBucketRequest\x1a\x1c.google.logging.v2.LogBucket"\x9c\x02\x82\xd3\xe4\x93\x02\x95\x02\x32$/v2/{name=*/*/locations/*/buckets/*}:\x06\x62ucketZ52+/v2/{name=projects/*/locations/*/buckets/*}:\x06\x62ucketZ:20/v2/{name=organizations/*/locations/*/buckets/*}:\x06\x62ucketZ42*/v2/{name=folders/*/locations/*/buckets/*}:\x06\x62ucketZ<22/v2/{name=billingAccounts/*/locations/*/buckets/*}:\x06\x62ucket\x12\x90\x02\n\tListSinks\x12#.google.logging.v2.ListSinksRequest\x1a$.google.logging.v2.ListSinksResponse"\xb7\x01\x82\xd3\xe4\x93\x02\xa7\x01\x12\x16/v2/{parent=*/*}/sinksZ\x1f\x12\x1d/v2/{parent=projects/*}/sinksZ$\x12"/v2/{parent=organizations/*}/sinksZ\x1e\x12\x1c/v2/{parent=folders/*}/sinksZ&\x12$/v2/{parent=billingAccounts/*}/sinks\xda\x41\x06parent\x12\x9e\x02\n\x07GetSink\x12!.google.logging.v2.GetSinkRequest\x1a\x1a.google.logging.v2.LogSink"\xd3\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{sink_name=*/*/sinks/*}Z$\x12"/v2/{sink_name=projects/*/sinks/*}Z)\x12\'/v2/{sink_name=organizations/*/sinks/*}Z#\x12!/v2/{sink_name=folders/*/sinks/*}Z+\x12)/v2/{sink_name=billingAccounts/*/sinks/*}\xda\x41\tsink_name\x12\xab\x02\n\nCreateSink\x12$.google.logging.v2.CreateSinkRequest\x1a\x1a.google.logging.v2.LogSink"\xda\x01\x82\xd3\xe4\x93\x02\xc5\x01"\x16/v2/{parent=*/*}/sinks:\x04sinkZ%"\x1d/v2/{parent=projects/*}/sinks:\x04sinkZ*""/v2/{parent=organizations/*}/sinks:\x04sinkZ$"\x1c/v2/{parent=folders/*}/sinks:\x04sinkZ,"$/v2/{parent=billingAccounts/*}/sinks:\x04sink\xda\x41\x0bparent,sink\x12\x9f\x04\n\nUpdateSink\x12$.google.logging.v2.UpdateSinkRequest\x1a\x1a.google.logging.v2.LogSink"\xce\x03\x82\xd3\xe4\x93\x02\x99\x03\x1a\x1b/v2/{sink_name=*/*/sinks/*}:\x04sinkZ*\x1a"/v2/{sink_name=projects/*/sinks/*}:\x04sinkZ/\x1a\'/v2/{sink_name=organizations/*/sinks/*}:\x04sinkZ)\x1a!/v2/{sink_name=folders/*/sinks/*}:\x04sinkZ1\x1a)/v2/{sink_name=billingAccounts/*/sinks/*}:\x04sinkZ*2"/v2/{sink_name=projects/*/sinks/*}:\x04sinkZ/2\'/v2/{sink_name=organizations/*/sinks/*}:\x04sinkZ)2!/v2/{sink_name=folders/*/sinks/*}:\x04sinkZ12)/v2/{sink_name=billingAccounts/*/sinks/*}:\x04sink\xda\x41\x1asink_name,sink,update_mask\xda\x41\x0esink_name,sink\x12\xa0\x02\n\nDeleteSink\x12$.google.logging.v2.DeleteSinkRequest\x1a\x16.google.protobuf.Empty"\xd3\x01\x82\xd3\xe4\x93\x02\xc0\x01*\x1b/v2/{sink_name=*/*/sinks/*}Z$*"/v2/{sink_name=projects/*/sinks/*}Z)*\'/v2/{sink_name=organizations/*/sinks/*}Z#*!/v2/{sink_name=folders/*/sinks/*}Z+*)/v2/{sink_name=billingAccounts/*/sinks/*}\xda\x41\tsink_name\x12\xb8\x02\n\x0eListExclusions\x12(.google.logging.v2.ListExclusionsRequest\x1a).google.logging.v2.ListExclusionsResponse"\xd0\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{parent=*/*}/exclusionsZ$\x12"/v2/{parent=projects/*}/exclusionsZ)\x12\'/v2/{parent=organizations/*}/exclusionsZ#\x12!/v2/{parent=folders/*}/exclusionsZ+\x12)/v2/{parent=billingAccounts/*}/exclusions\xda\x41\x06parent\x12\xa8\x02\n\x0cGetExclusion\x12&.google.logging.v2.GetExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion"\xce\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{name=*/*/exclusions/*}Z$\x12"/v2/{name=projects/*/exclusions/*}Z)\x12\'/v2/{name=organizations/*/exclusions/*}Z#\x12!/v2/{name=folders/*/exclusions/*}Z+\x12)/v2/{name=billingAccounts/*/exclusions/*}\xda\x41\x04name\x12\xf1\x02\n\x0f\x43reateExclusion\x12).google.logging.v2.CreateExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion"\x91\x02\x82\xd3\xe4\x93\x02\xf7\x01"\x1b/v2/{parent=*/*}/exclusions:\texclusionZ/""/v2/{parent=projects/*}/exclusions:\texclusionZ4"\'/v2/{parent=organizations/*}/exclusions:\texclusionZ."!/v2/{parent=folders/*}/exclusions:\texclusionZ6")/v2/{parent=billingAccounts/*}/exclusions:\texclusion\xda\x41\x10parent,exclusion\x12\xfb\x02\n\x0fUpdateExclusion\x12).google.logging.v2.UpdateExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion"\x9b\x02\x82\xd3\xe4\x93\x02\xf7\x01\x32\x1b/v2/{name=*/*/exclusions/*}:\texclusionZ/2"/v2/{name=projects/*/exclusions/*}:\texclusionZ42\'/v2/{name=organizations/*/exclusions/*}:\texclusionZ.2!/v2/{name=folders/*/exclusions/*}:\texclusionZ62)/v2/{name=billingAccounts/*/exclusions/*}:\texclusion\xda\x41\x1aname,exclusion,update_mask\x12\xa5\x02\n\x0f\x44\x65leteExclusion\x12).google.logging.v2.DeleteExclusionRequest\x1a\x16.google.protobuf.Empty"\xce\x01\x82\xd3\xe4\x93\x02\xc0\x01*\x1b/v2/{name=*/*/exclusions/*}Z$*"/v2/{name=projects/*/exclusions/*}Z)*\'/v2/{name=organizations/*/exclusions/*}Z#*!/v2/{name=folders/*/exclusions/*}Z+*)/v2/{name=billingAccounts/*/exclusions/*}\xda\x41\x04name\x12\xad\x01\n\x0fGetCmekSettings\x12).google.logging.v2.GetCmekSettingsRequest\x1a\x1f.google.logging.v2.CmekSettings"N\x82\xd3\xe4\x93\x02H\x12\x1b/v2/{name=*/*}/cmekSettingsZ)\x12\'/v2/{name=organizations/*}/cmekSettings\x12\xd1\x01\n\x12UpdateCmekSettings\x12,.google.logging.v2.UpdateCmekSettingsRequest\x1a\x1f.google.logging.v2.CmekSettings"l\x82\xd3\xe4\x93\x02\x66\x32\x1b/v2/{name=*/*}/cmekSettings:\rcmek_settingsZ82\'/v2/{name=organizations/*}/cmekSettings:\rcmek_settings\x1a\xdf\x01\xca\x41\x16logging.googleapis.com\xd2\x41\xc2\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.readB\xbc\x03\n\x15\x63om.google.logging.v2B\x12LoggingConfigProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2\xea\x41`\n+logging.googleapis.com/OrganizationLocation\x12\x31organizations/{organization}/locations/{location}\xea\x41N\n%logging.googleapis.com/FolderLocation\x12%folders/{folder}/locations/{location}\xea\x41g\n-logging.googleapis.com/BillingAccountLocation\x12\x36\x62illingAccounts/{billing_account}/locations/{location}b\x06proto3',
     dependencies=[
         google_dot_api_dot_client__pb2.DESCRIPTOR,
@@ -46,6 +47,7 @@ _LIFECYCLESTATE = _descriptor.EnumDescriptor(
     full_name="google.logging.v2.LifecycleState",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="LIFECYCLE_STATE_UNSPECIFIED",
@@ -53,9 +55,15 @@ _LIFECYCLESTATE = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="ACTIVE", index=1, number=1, serialized_options=None, type=None
+            name="ACTIVE",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
             name="DELETE_REQUESTED",
@@ -63,6 +71,7 @@ _LIFECYCLESTATE = _descriptor.EnumDescriptor(
             number=2,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -83,6 +92,7 @@ _LOGSINK_VERSIONFORMAT = _descriptor.EnumDescriptor(
     full_name="google.logging.v2.LogSink.VersionFormat",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="VERSION_FORMAT_UNSPECIFIED",
@@ -90,12 +100,23 @@ _LOGSINK_VERSIONFORMAT = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="V2", index=1, number=1, serialized_options=None, type=None
+            name="V2",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="V1", index=2, number=2, serialized_options=None, type=None
+            name="V1",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -112,6 +133,7 @@ _LOGBUCKET = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -130,6 +152,7 @@ _LOGBUCKET = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="description",
@@ -148,6 +171,7 @@ _LOGBUCKET = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="create_time",
@@ -166,6 +190,7 @@ _LOGBUCKET = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="update_time",
@@ -184,6 +209,7 @@ _LOGBUCKET = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="retention_days",
@@ -202,6 +228,7 @@ _LOGBUCKET = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="lifecycle_state",
@@ -220,6 +247,7 @@ _LOGBUCKET = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -241,6 +269,7 @@ _LOGSINK = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -259,6 +288,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="destination",
@@ -277,6 +307,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A\003\n\001*",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="filter",
@@ -295,6 +326,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="description",
@@ -313,6 +345,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="disabled",
@@ -331,6 +364,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="output_version_format",
@@ -349,6 +383,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\030\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="writer_identity",
@@ -367,6 +402,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="include_children",
@@ -385,6 +421,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="bigquery_options",
@@ -403,6 +440,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="create_time",
@@ -421,6 +459,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="update_time",
@@ -439,6 +478,7 @@ _LOGSINK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -456,6 +496,7 @@ _LOGSINK = _descriptor.Descriptor(
             full_name="google.logging.v2.LogSink.options",
             index=0,
             containing_type=None,
+            create_key=_descriptor._internal_create_key,
             fields=[],
         ),
     ],
@@ -470,6 +511,7 @@ _BIGQUERYOPTIONS = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="use_partitioned_tables",
@@ -488,6 +530,7 @@ _BIGQUERYOPTIONS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="uses_timestamp_column_partitioning",
@@ -506,6 +549,7 @@ _BIGQUERYOPTIONS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -527,6 +571,7 @@ _LISTBUCKETSREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="parent",
@@ -545,6 +590,7 @@ _LISTBUCKETSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b'\340A\002\372A"\022 logging.googleapis.com/LogBucket',
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_token",
@@ -563,6 +609,7 @@ _LISTBUCKETSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_size",
@@ -581,6 +628,7 @@ _LISTBUCKETSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -602,6 +650,7 @@ _LISTBUCKETSRESPONSE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="buckets",
@@ -620,6 +669,7 @@ _LISTBUCKETSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="next_page_token",
@@ -638,6 +688,7 @@ _LISTBUCKETSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -659,6 +710,7 @@ _UPDATEBUCKETREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -677,6 +729,7 @@ _UPDATEBUCKETREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b'\340A\002\372A"\n logging.googleapis.com/LogBucket',
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="bucket",
@@ -695,6 +748,7 @@ _UPDATEBUCKETREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="update_mask",
@@ -713,6 +767,7 @@ _UPDATEBUCKETREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -734,6 +789,7 @@ _GETBUCKETREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -752,6 +808,7 @@ _GETBUCKETREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b'\340A\002\372A"\n logging.googleapis.com/LogBucket',
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -773,6 +830,7 @@ _LISTSINKSREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="parent",
@@ -791,6 +849,7 @@ _LISTSINKSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A \022\036logging.googleapis.com/LogSink",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_token",
@@ -809,6 +868,7 @@ _LISTSINKSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_size",
@@ -827,6 +887,7 @@ _LISTSINKSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -848,6 +909,7 @@ _LISTSINKSRESPONSE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="sinks",
@@ -866,6 +928,7 @@ _LISTSINKSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="next_page_token",
@@ -884,6 +947,7 @@ _LISTSINKSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -905,6 +969,7 @@ _GETSINKREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="sink_name",
@@ -923,6 +988,7 @@ _GETSINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -944,6 +1010,7 @@ _CREATESINKREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="parent",
@@ -962,6 +1029,7 @@ _CREATESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A \022\036logging.googleapis.com/LogSink",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="sink",
@@ -980,6 +1048,7 @@ _CREATESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="unique_writer_identity",
@@ -998,6 +1067,7 @@ _CREATESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1019,6 +1089,7 @@ _UPDATESINKREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="sink_name",
@@ -1037,6 +1108,7 @@ _UPDATESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="sink",
@@ -1055,6 +1127,7 @@ _UPDATESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="unique_writer_identity",
@@ -1073,6 +1146,7 @@ _UPDATESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="update_mask",
@@ -1091,6 +1165,7 @@ _UPDATESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1112,6 +1187,7 @@ _DELETESINKREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="sink_name",
@@ -1130,6 +1206,7 @@ _DELETESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1151,6 +1228,7 @@ _LOGEXCLUSION = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -1169,6 +1247,7 @@ _LOGEXCLUSION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="description",
@@ -1187,6 +1266,7 @@ _LOGEXCLUSION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="filter",
@@ -1205,6 +1285,7 @@ _LOGEXCLUSION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="disabled",
@@ -1223,6 +1304,7 @@ _LOGEXCLUSION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="create_time",
@@ -1241,6 +1323,7 @@ _LOGEXCLUSION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="update_time",
@@ -1259,6 +1342,7 @@ _LOGEXCLUSION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1280,6 +1364,7 @@ _LISTEXCLUSIONSREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="parent",
@@ -1298,6 +1383,7 @@ _LISTEXCLUSIONSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\022#logging.googleapis.com/LogExclusion",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_token",
@@ -1316,6 +1402,7 @@ _LISTEXCLUSIONSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="page_size",
@@ -1334,6 +1421,7 @@ _LISTEXCLUSIONSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1355,6 +1443,7 @@ _LISTEXCLUSIONSRESPONSE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="exclusions",
@@ -1373,6 +1462,7 @@ _LISTEXCLUSIONSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="next_page_token",
@@ -1391,6 +1481,7 @@ _LISTEXCLUSIONSRESPONSE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1412,6 +1503,7 @@ _GETEXCLUSIONREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -1430,6 +1522,7 @@ _GETEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1451,6 +1544,7 @@ _CREATEEXCLUSIONREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="parent",
@@ -1469,6 +1563,7 @@ _CREATEEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\022#logging.googleapis.com/LogExclusion",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="exclusion",
@@ -1487,6 +1582,7 @@ _CREATEEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1508,6 +1604,7 @@ _UPDATEEXCLUSIONREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -1526,6 +1623,7 @@ _UPDATEEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="exclusion",
@@ -1544,6 +1642,7 @@ _UPDATEEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="update_mask",
@@ -1562,6 +1661,7 @@ _UPDATEEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1583,6 +1683,7 @@ _DELETEEXCLUSIONREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -1601,6 +1702,7 @@ _DELETEEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1622,6 +1724,7 @@ _GETCMEKSETTINGSREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -1640,6 +1743,7 @@ _GETCMEKSETTINGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/CmekSettings",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1661,6 +1765,7 @@ _UPDATECMEKSETTINGSREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -1679,6 +1784,7 @@ _UPDATECMEKSETTINGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="cmek_settings",
@@ -1697,6 +1803,7 @@ _UPDATECMEKSETTINGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="update_mask",
@@ -1715,6 +1822,7 @@ _UPDATECMEKSETTINGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1736,6 +1844,7 @@ _CMEKSETTINGS = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -1754,6 +1863,7 @@ _CMEKSETTINGS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="kms_key_name",
@@ -1772,6 +1882,7 @@ _CMEKSETTINGS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="service_account_id",
@@ -1790,6 +1901,7 @@ _CMEKSETTINGS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -2734,6 +2846,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
     file=DESCRIPTOR,
     index=0,
     serialized_options=b"\312A\026logging.googleapis.com\322A\302\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read",
+    create_key=_descriptor._internal_create_key,
     serialized_start=4745,
     serialized_end=9784,
     methods=[
@@ -2745,6 +2858,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_LISTBUCKETSREQUEST,
             output_type=_LISTBUCKETSRESPONSE,
             serialized_options=b"\202\323\344\223\002\355\001\022$/v2/{parent=*/*/locations/*}/bucketsZ-\022+/v2/{parent=projects/*/locations/*}/bucketsZ2\0220/v2/{parent=organizations/*/locations/*}/bucketsZ,\022*/v2/{parent=folders/*/locations/*}/bucketsZ4\0222/v2/{parent=billingAccounts/*/locations/*}/buckets\332A\006parent",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="GetBucket",
@@ -2754,6 +2868,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_GETBUCKETREQUEST,
             output_type=_LOGBUCKET,
             serialized_options=b"\202\323\344\223\002\341\001\022$/v2/{name=*/*/locations/*/buckets/*}Z-\022+/v2/{name=projects/*/locations/*/buckets/*}Z2\0220/v2/{name=organizations/*/locations/*/buckets/*}Z,\022*/v2/{name=folders/*/locations/*/buckets/*}Z(\022&/v2/{name=billingAccounts/*/buckets/*}",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="UpdateBucket",
@@ -2763,6 +2878,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_UPDATEBUCKETREQUEST,
             output_type=_LOGBUCKET,
             serialized_options=b"\202\323\344\223\002\225\0022$/v2/{name=*/*/locations/*/buckets/*}:\006bucketZ52+/v2/{name=projects/*/locations/*/buckets/*}:\006bucketZ:20/v2/{name=organizations/*/locations/*/buckets/*}:\006bucketZ42*/v2/{name=folders/*/locations/*/buckets/*}:\006bucketZ<22/v2/{name=billingAccounts/*/locations/*/buckets/*}:\006bucket",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="ListSinks",
@@ -2772,6 +2888,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_LISTSINKSREQUEST,
             output_type=_LISTSINKSRESPONSE,
             serialized_options=b'\202\323\344\223\002\247\001\022\026/v2/{parent=*/*}/sinksZ\037\022\035/v2/{parent=projects/*}/sinksZ$\022"/v2/{parent=organizations/*}/sinksZ\036\022\034/v2/{parent=folders/*}/sinksZ&\022$/v2/{parent=billingAccounts/*}/sinks\332A\006parent',
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="GetSink",
@@ -2781,6 +2898,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_GETSINKREQUEST,
             output_type=_LOGSINK,
             serialized_options=b"\202\323\344\223\002\300\001\022\033/v2/{sink_name=*/*/sinks/*}Z$\022\"/v2/{sink_name=projects/*/sinks/*}Z)\022'/v2/{sink_name=organizations/*/sinks/*}Z#\022!/v2/{sink_name=folders/*/sinks/*}Z+\022)/v2/{sink_name=billingAccounts/*/sinks/*}\332A\tsink_name",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="CreateSink",
@@ -2790,6 +2908,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_CREATESINKREQUEST,
             output_type=_LOGSINK,
             serialized_options=b'\202\323\344\223\002\305\001"\026/v2/{parent=*/*}/sinks:\004sinkZ%"\035/v2/{parent=projects/*}/sinks:\004sinkZ*""/v2/{parent=organizations/*}/sinks:\004sinkZ$"\034/v2/{parent=folders/*}/sinks:\004sinkZ,"$/v2/{parent=billingAccounts/*}/sinks:\004sink\332A\013parent,sink',
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="UpdateSink",
@@ -2799,6 +2918,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_UPDATESINKREQUEST,
             output_type=_LOGSINK,
             serialized_options=b"\202\323\344\223\002\231\003\032\033/v2/{sink_name=*/*/sinks/*}:\004sinkZ*\032\"/v2/{sink_name=projects/*/sinks/*}:\004sinkZ/\032'/v2/{sink_name=organizations/*/sinks/*}:\004sinkZ)\032!/v2/{sink_name=folders/*/sinks/*}:\004sinkZ1\032)/v2/{sink_name=billingAccounts/*/sinks/*}:\004sinkZ*2\"/v2/{sink_name=projects/*/sinks/*}:\004sinkZ/2'/v2/{sink_name=organizations/*/sinks/*}:\004sinkZ)2!/v2/{sink_name=folders/*/sinks/*}:\004sinkZ12)/v2/{sink_name=billingAccounts/*/sinks/*}:\004sink\332A\032sink_name,sink,update_mask\332A\016sink_name,sink",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="DeleteSink",
@@ -2808,6 +2928,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_DELETESINKREQUEST,
             output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
             serialized_options=b"\202\323\344\223\002\300\001*\033/v2/{sink_name=*/*/sinks/*}Z$*\"/v2/{sink_name=projects/*/sinks/*}Z)*'/v2/{sink_name=organizations/*/sinks/*}Z#*!/v2/{sink_name=folders/*/sinks/*}Z+*)/v2/{sink_name=billingAccounts/*/sinks/*}\332A\tsink_name",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="ListExclusions",
@@ -2817,6 +2938,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_LISTEXCLUSIONSREQUEST,
             output_type=_LISTEXCLUSIONSRESPONSE,
             serialized_options=b"\202\323\344\223\002\300\001\022\033/v2/{parent=*/*}/exclusionsZ$\022\"/v2/{parent=projects/*}/exclusionsZ)\022'/v2/{parent=organizations/*}/exclusionsZ#\022!/v2/{parent=folders/*}/exclusionsZ+\022)/v2/{parent=billingAccounts/*}/exclusions\332A\006parent",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="GetExclusion",
@@ -2826,6 +2948,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_GETEXCLUSIONREQUEST,
             output_type=_LOGEXCLUSION,
             serialized_options=b"\202\323\344\223\002\300\001\022\033/v2/{name=*/*/exclusions/*}Z$\022\"/v2/{name=projects/*/exclusions/*}Z)\022'/v2/{name=organizations/*/exclusions/*}Z#\022!/v2/{name=folders/*/exclusions/*}Z+\022)/v2/{name=billingAccounts/*/exclusions/*}\332A\004name",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="CreateExclusion",
@@ -2835,6 +2958,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_CREATEEXCLUSIONREQUEST,
             output_type=_LOGEXCLUSION,
             serialized_options=b'\202\323\344\223\002\367\001"\033/v2/{parent=*/*}/exclusions:\texclusionZ/""/v2/{parent=projects/*}/exclusions:\texclusionZ4"\'/v2/{parent=organizations/*}/exclusions:\texclusionZ."!/v2/{parent=folders/*}/exclusions:\texclusionZ6")/v2/{parent=billingAccounts/*}/exclusions:\texclusion\332A\020parent,exclusion',
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="UpdateExclusion",
@@ -2844,6 +2968,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_UPDATEEXCLUSIONREQUEST,
             output_type=_LOGEXCLUSION,
             serialized_options=b"\202\323\344\223\002\367\0012\033/v2/{name=*/*/exclusions/*}:\texclusionZ/2\"/v2/{name=projects/*/exclusions/*}:\texclusionZ42'/v2/{name=organizations/*/exclusions/*}:\texclusionZ.2!/v2/{name=folders/*/exclusions/*}:\texclusionZ62)/v2/{name=billingAccounts/*/exclusions/*}:\texclusion\332A\032name,exclusion,update_mask",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="DeleteExclusion",
@@ -2853,6 +2978,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_DELETEEXCLUSIONREQUEST,
             output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
             serialized_options=b"\202\323\344\223\002\300\001*\033/v2/{name=*/*/exclusions/*}Z$*\"/v2/{name=projects/*/exclusions/*}Z)*'/v2/{name=organizations/*/exclusions/*}Z#*!/v2/{name=folders/*/exclusions/*}Z+*)/v2/{name=billingAccounts/*/exclusions/*}\332A\004name",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="GetCmekSettings",
@@ -2862,6 +2988,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_GETCMEKSETTINGSREQUEST,
             output_type=_CMEKSETTINGS,
             serialized_options=b"\202\323\344\223\002H\022\033/v2/{name=*/*}/cmekSettingsZ)\022'/v2/{name=organizations/*}/cmekSettings",
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="UpdateCmekSettings",
@@ -2871,6 +2998,7 @@ _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
             input_type=_UPDATECMEKSETTINGSREQUEST,
             output_type=_CMEKSETTINGS,
             serialized_options=b"\202\323\344\223\002f2\033/v2/{name=*/*}/cmekSettings:\rcmek_settingsZ82'/v2/{name=organizations/*}/cmekSettings:\rcmek_settings",
+            create_key=_descriptor._internal_create_key,
         ),
     ],
 )
