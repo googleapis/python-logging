@@ -865,8 +865,6 @@ DeleteLogRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DELETELOGREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """The parameters to DeleteLog.
-  
-  
   Attributes:
       log_name:
           Required. The resource name of the log to delete:  ::
@@ -900,8 +898,6 @@ WriteLogEntriesRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _WRITELOGENTRIESREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """The parameters to WriteLogEntries.
-  
-  
   Attributes:
       log_name:
           Optional. A default log resource name that is assigned to all
@@ -981,9 +977,7 @@ WriteLogEntriesResponse = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _WRITELOGENTRIESRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
-        "__doc__": """Result returned from WriteLogEntries.
-  
-  """,
+        "__doc__": """Result returned from WriteLogEntries.""",
         # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesResponse)
     },
 )
@@ -1005,8 +999,6 @@ WriteLogEntriesPartialErrors = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _WRITELOGENTRIESPARTIALERRORS,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """Error details for WriteLogEntries with partial success.
-  
-  
   Attributes:
       log_entry_errors:
           When ``WriteLogEntriesRequest.partial_success`` is true,
@@ -1028,8 +1020,6 @@ ListLogEntriesRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTLOGENTRIESREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """The parameters to ``ListLogEntries``.
-  
-  
   Attributes:
       resource_names:
           Required. Names of one or more parent resources from which to
@@ -1081,8 +1071,6 @@ ListLogEntriesResponse = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTLOGENTRIESRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """Result returned from ``ListLogEntries``.
-  
-  
   Attributes:
       entries:
           A list of log entries. If ``entries`` is empty,
@@ -1114,8 +1102,6 @@ ListMonitoredResourceDescriptorsRequest = _reflection.GeneratedProtocolMessageTy
         "DESCRIPTOR": _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """The parameters to ListMonitoredResourceDescriptors
-  
-  
   Attributes:
       page_size:
           Optional. The maximum number of results to return from this
@@ -1141,8 +1127,6 @@ ListMonitoredResourceDescriptorsResponse = _reflection.GeneratedProtocolMessageT
         "DESCRIPTOR": _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """Result returned from ListMonitoredResourceDescriptors.
-  
-  
   Attributes:
       resource_descriptors:
           A list of resource descriptors.
@@ -1164,8 +1148,6 @@ ListLogsRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTLOGSREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """The parameters to ListLogs.
-  
-  
   Attributes:
       parent:
           Required. The resource name that owns the logs:  ::
@@ -1196,8 +1178,6 @@ ListLogsResponse = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTLOGSRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_pb2",
         "__doc__": """Result returned from ListLogs.
-  
-  
   Attributes:
       log_names:
           A list of log names. For example, ``"projects/my-
