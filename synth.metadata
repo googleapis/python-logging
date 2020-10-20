@@ -11,15 +11,15 @@
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "0dc0a6c0f1a9f979bc0690f0caa5fbafa3000c2c",
-        "internalRef": "327026955"
+        "sha": "2db5725bf898b544a0cf951e1694d3b0fce5eda3",
+        "internalRef": "329384854"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "d3049e66447b44dc10579e461d5e08e0e3838edd"
+        "sha": "d91dd8aac77f7a9c5506c238038a26fa4f9e361e"
       }
     }
   ],
@@ -43,6 +43,7 @@
     ".github/ISSUE_TEMPLATE/support_request.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/release-please.yml",
+    ".github/snippet-bot.yml",
     ".gitignore",
     ".kokoro/build.sh",
     ".kokoro/continuous/common.cfg",
