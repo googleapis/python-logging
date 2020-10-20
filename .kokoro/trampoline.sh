@@ -15,14 +15,9 @@
 
 set -eo pipefail
 
-# Always run the cleanup script, regardless of the success of bouncing into
-# the container.
-function cleanup() {
-    chmod +x ${KOKORO_GFILE_DIR}/trampoline_cleanup.sh
-    ${KOKORO_GFILE_DIR}/trampoline_cleanup.sh
-    echo "cleanup";
-}
-trap cleanup EXIT
+python3 "${KOKORO_GFILE_DIR}/trampoline_v1.py"  || ret_code=$?
 
-$(dirname $0)/populate-secrets.sh # Secret Manager secrets.
-python3 "${KOKORO_GFILE_DIR}/trampoline_v1.py"
+chmod +x ${KOKORO_GFILE_DIR}/trampoline_cleanup.sh
+${KOKORO_GFILE_DIR}/trampoline_cleanup.sh || true
+
+exit ${ret_code}

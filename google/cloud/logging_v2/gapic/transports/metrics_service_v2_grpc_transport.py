@@ -116,32 +116,6 @@ class MetricsServiceV2GrpcTransport(object):
         return self._channel
 
     @property
-    def update_log_metric(self):
-        """Return the gRPC stub for :meth:`MetricsServiceV2Client.update_log_metric`.
-
-        Creates or updates a logs-based metric.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["metrics_service_v2_stub"].UpdateLogMetric
-
-    @property
-    def delete_log_metric(self):
-        """Return the gRPC stub for :meth:`MetricsServiceV2Client.delete_log_metric`.
-
-        Deletes a logs-based metric.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["metrics_service_v2_stub"].DeleteLogMetric
-
-    @property
     def list_log_metrics(self):
         """Return the gRPC stub for :meth:`MetricsServiceV2Client.list_log_metrics`.
 
@@ -179,3 +153,29 @@ class MetricsServiceV2GrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["metrics_service_v2_stub"].CreateLogMetric
+
+    @property
+    def update_log_metric(self):
+        """Return the gRPC stub for :meth:`MetricsServiceV2Client.update_log_metric`.
+
+        Creates or updates a logs-based metric.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["metrics_service_v2_stub"].UpdateLogMetric
+
+    @property
+    def delete_log_metric(self):
+        """Return the gRPC stub for :meth:`MetricsServiceV2Client.delete_log_metric`.
+
+        Deletes a logs-based metric.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["metrics_service_v2_stub"].DeleteLogMetric
