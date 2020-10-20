@@ -80,20 +80,11 @@ class LoggingServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
+    def billing_account_path(cls, billing_account):
+        """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
             "billingAccounts/{billing_account}",
             billing_account=billing_account,
-        )
-
-    @classmethod
-    def billing_log_path(cls, billing_account, log):
-        """Return a fully-qualified billing_log string."""
-        return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/logs/{log}",
-            billing_account=billing_account,
-            log=log,
         )
 
     @classmethod
@@ -102,15 +93,6 @@ class LoggingServiceV2Client(object):
         return google.api_core.path_template.expand(
             "folders/{folder}",
             folder=folder,
-        )
-
-    @classmethod
-    def folder_log_path(cls, folder, log):
-        """Return a fully-qualified folder_log string."""
-        return google.api_core.path_template.expand(
-            "folders/{folder}/logs/{log}",
-            folder=folder,
-            log=log,
         )
 
     @classmethod
@@ -128,15 +110,6 @@ class LoggingServiceV2Client(object):
         return google.api_core.path_template.expand(
             "organizations/{organization}",
             organization=organization,
-        )
-
-    @classmethod
-    def organization_log_path(cls, organization, log):
-        """Return a fully-qualified organization_log string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}/logs/{log}",
-            organization=organization,
-            log=log,
         )
 
     @classmethod
@@ -264,6 +237,153 @@ class LoggingServiceV2Client(object):
         self._inner_api_calls = {}
 
     # Service calls
+    def write_log_entries(
+        self,
+        entries,
+        log_name=None,
+        resource=None,
+        labels=None,
+        partial_success=None,
+        dry_run=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Writes log entries to Logging. This API method is the
+        only way to send log entries to Logging. This method
+        is used, directly or indirectly, by the Logging agent
+        (fluentd) and all logging libraries configured to use Logging.
+        A single request may contain log entries for a maximum of 1000
+        different resources (projects, organizations, billing accounts or
+        folders)
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.LoggingServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `entries`:
+            >>> entries = []
+            >>>
+            >>> response = client.write_log_entries(entries)
+
+        Args:
+            entries (list[Union[dict, ~google.cloud.logging_v2.types.LogEntry]]): Required. The log entries to send to Logging. The order of log
+                entries in this list does not matter. Values supplied in this method's
+                ``log_name``, ``resource``, and ``labels`` fields are copied into those
+                log entries in this list that do not include values for their
+                corresponding fields. For more information, see the ``LogEntry`` type.
+
+                If the ``timestamp`` or ``insert_id`` fields are missing in log entries,
+                then this method supplies the current time or a unique identifier,
+                respectively. The supplied values are chosen so that, among the log
+                entries that did not supply their own values, the entries earlier in the
+                list will sort before the entries later in the list. See the
+                ``entries.list`` method.
+
+                Log entries with timestamps that are more than the `logs retention
+                period <https://cloud.google.com/logging/quota-policy>`__ in the past or
+                more than 24 hours in the future will not be available when calling
+                ``entries.list``. However, those log entries can still be `exported with
+                LogSinks <https://cloud.google.com/logging/docs/api/tasks/exporting-logs>`__.
+
+                To improve throughput and to avoid exceeding the `quota
+                limit <https://cloud.google.com/logging/quota-policy>`__ for calls to
+                ``entries.write``, you should try to include several log entries in this
+                list, rather than calling this method for each individual log entry.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.LogEntry`
+            log_name (str): Optional. A default log resource name that is assigned to all log
+                entries in ``entries`` that do not specify a value for ``log_name``:
+
+                ::
+
+                    "projects/[PROJECT_ID]/logs/[LOG_ID]"
+                    "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+                    "folders/[FOLDER_ID]/logs/[LOG_ID]"
+
+                ``[LOG_ID]`` must be URL-encoded. For example:
+
+                ::
+
+                    "projects/my-project-id/logs/syslog"
+                    "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
+
+                The permission ``logging.logEntries.create`` is needed on each project,
+                organization, billing account, or folder that is receiving new log
+                entries, whether the resource is specified in ``logName`` or in an
+                individual log entry.
+            resource (Union[dict, ~google.cloud.logging_v2.types.MonitoredResource]): Optional. A default monitored resource object that is assigned to
+                all log entries in ``entries`` that do not specify a value for
+                ``resource``. Example:
+
+                ::
+
+                    { "type": "gce_instance",
+                      "labels": {
+                        "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
+
+                See ``LogEntry``.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.MonitoredResource`
+            labels (dict[str -> str]): Optional. Default labels that are added to the ``labels`` field of
+                all log entries in ``entries``. If a log entry already has a label with
+                the same key as a label in this parameter, then the log entry's label is
+                not changed. See ``LogEntry``.
+            partial_success (bool): Optional. Whether valid entries should be written even if some other
+                entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
+                entry is not written, then the response status is the error associated
+                with one of the failed entries and the response includes error details
+                keyed by the entries' zero-based index in the ``entries.write`` method.
+            dry_run (bool): Optional. If true, the request should expect normal response, but the
+                entries won't be persisted nor exported. Useful for checking whether the
+                logging API endpoints are working properly before sending valuable data.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.logging_v2.types.WriteLogEntriesResponse` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "write_log_entries" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "write_log_entries"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.write_log_entries,
+                default_retry=self._method_configs["WriteLogEntries"].retry,
+                default_timeout=self._method_configs["WriteLogEntries"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_pb2.WriteLogEntriesRequest(
+            entries=entries,
+            log_name=log_name,
+            resource=resource,
+            labels=labels,
+            partial_success=partial_success,
+            dry_run=dry_run,
+        )
+        return self._inner_api_calls["write_log_entries"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def delete_log(
         self,
         log_name,
@@ -282,7 +402,8 @@ class LoggingServiceV2Client(object):
             >>>
             >>> client = logging_v2.LoggingServiceV2Client()
             >>>
-            >>> log_name = client.log_path('[PROJECT]', '[LOG]')
+            >>> # TODO: Initialize `log_name`:
+            >>> log_name = ''
             >>>
             >>> client.delete_log(log_name)
 
@@ -291,10 +412,10 @@ class LoggingServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/logs/[LOG_ID]"
-                     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-                     "folders/[FOLDER_ID]/logs/[LOG_ID]"
+                    "projects/[PROJECT_ID]/logs/[LOG_ID]"
+                    "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+                    "folders/[FOLDER_ID]/logs/[LOG_ID]"
 
                 ``[LOG_ID]`` must be URL-encoded. For example,
                 ``"projects/my-project-id/logs/syslog"``,
@@ -347,158 +468,9 @@ class LoggingServiceV2Client(object):
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 
-    def write_log_entries(
-        self,
-        entries,
-        log_name=None,
-        resource=None,
-        labels=None,
-        partial_success=None,
-        dry_run=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Writes log entries to Logging. This API method is the
-        only way to send log entries to Logging. This method
-        is used, directly or indirectly, by the Logging agent
-        (fluentd) and all logging libraries configured to use Logging.
-        A single request may contain log entries for a maximum of 1000
-        different resources (projects, organizations, billing accounts or
-        folders)
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.LoggingServiceV2Client()
-            >>>
-            >>> # TODO: Initialize `entries`:
-            >>> entries = []
-            >>>
-            >>> response = client.write_log_entries(entries)
-
-        Args:
-            entries (list[Union[dict, ~google.cloud.logging_v2.types.LogEntry]]): Required. The log entries to send to Logging. The order of log entries
-                in this list does not matter. Values supplied in this method's
-                ``log_name``, ``resource``, and ``labels`` fields are copied into those
-                log entries in this list that do not include values for their
-                corresponding fields. For more information, see the ``LogEntry`` type.
-
-                If the ``timestamp`` or ``insert_id`` fields are missing in log entries,
-                then this method supplies the current time or a unique identifier,
-                respectively. The supplied values are chosen so that, among the log
-                entries that did not supply their own values, the entries earlier in the
-                list will sort before the entries later in the list. See the
-                ``entries.list`` method.
-
-                Log entries with timestamps that are more than the `logs retention
-                period <https://cloud.google.com/logging/quota-policy>`__ in the past or
-                more than 24 hours in the future will not be available when calling
-                ``entries.list``. However, those log entries can still be `exported with
-                LogSinks <https://cloud.google.com/logging/docs/api/tasks/exporting-logs>`__.
-
-                To improve throughput and to avoid exceeding the `quota
-                limit <https://cloud.google.com/logging/quota-policy>`__ for calls to
-                ``entries.write``, you should try to include several log entries in this
-                list, rather than calling this method for each individual log entry.
-
-                If a dict is provided, it must be of the same form as the protobuf
-                message :class:`~google.cloud.logging_v2.types.LogEntry`
-            log_name (str): Optional. A default log resource name that is assigned to all log
-                entries in ``entries`` that do not specify a value for ``log_name``:
-
-                ::
-
-                     "projects/[PROJECT_ID]/logs/[LOG_ID]"
-                     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-                     "folders/[FOLDER_ID]/logs/[LOG_ID]"
-
-                ``[LOG_ID]`` must be URL-encoded. For example:
-
-                ::
-
-                     "projects/my-project-id/logs/syslog"
-                     "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
-
-                The permission logging.logEntries.create is needed on each project,
-                organization, billing account, or folder that is receiving new log
-                entries, whether the resource is specified in logName or in an
-                individual log entry.
-            resource (Union[dict, ~google.cloud.logging_v2.types.MonitoredResource]): Optional. A default monitored resource object that is assigned to all
-                log entries in ``entries`` that do not specify a value for ``resource``.
-                Example:
-
-                ::
-
-                     { "type": "gce_instance",
-                       "labels": {
-                         "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
-
-                See ``LogEntry``.
-
-                If a dict is provided, it must be of the same form as the protobuf
-                message :class:`~google.cloud.logging_v2.types.MonitoredResource`
-            labels (dict[str -> str]): Optional. Default labels that are added to the ``labels`` field of all
-                log entries in ``entries``. If a log entry already has a label with the
-                same key as a label in this parameter, then the log entry's label is not
-                changed. See ``LogEntry``.
-            partial_success (bool): Optional. Whether valid entries should be written even if some other
-                entries fail due to INVALID\_ARGUMENT or PERMISSION\_DENIED errors. If
-                any entry is not written, then the response status is the error
-                associated with one of the failed entries and the response includes
-                error details keyed by the entries' zero-based index in the
-                ``entries.write`` method.
-            dry_run (bool): Optional. If true, the request should expect normal response, but the
-                entries won't be persisted nor exported. Useful for checking whether the
-                logging API endpoints are working properly before sending valuable data.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Returns:
-            A :class:`~google.cloud.logging_v2.types.WriteLogEntriesResponse` instance.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "write_log_entries" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "write_log_entries"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.write_log_entries,
-                default_retry=self._method_configs["WriteLogEntries"].retry,
-                default_timeout=self._method_configs["WriteLogEntries"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_pb2.WriteLogEntriesRequest(
-            entries=entries,
-            log_name=log_name,
-            resource=resource,
-            labels=labels,
-            partial_success=partial_success,
-            dry_run=dry_run,
-        )
-        return self._inner_api_calls["write_log_entries"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
     def list_log_entries(
         self,
         resource_names,
-        project_ids=None,
         filter_=None,
         order_by=None,
         page_size=None,
@@ -535,20 +507,17 @@ class LoggingServiceV2Client(object):
             ...         pass
 
         Args:
-            resource_names (list[str]): Required. Names of one or more parent resources from which to retrieve
-                log entries:
+            resource_names (list[str]): Required. Names of one or more parent resources from which to
+                retrieve log entries:
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
 
                 Projects listed in the ``project_ids`` field are added to this list.
-            project_ids (list[str]): Deprecated. Use ``resource_names`` instead. One or more project
-                identifiers or project numbers from which to retrieve log entries.
-                Example: ``"my-project-1A"``.
             filter_ (str): Optional. A filter that chooses which log entries to return. See
                 `Advanced Logs
                 Queries <https://cloud.google.com/logging/docs/view/advanced-queries>`__.
@@ -604,7 +573,6 @@ class LoggingServiceV2Client(object):
 
         request = logging_pb2.ListLogEntriesRequest(
             resource_names=resource_names,
-            project_ids=project_ids,
             filter=filter_,
             order_by=order_by,
             page_size=page_size,
@@ -752,10 +720,10 @@ class LoggingServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page

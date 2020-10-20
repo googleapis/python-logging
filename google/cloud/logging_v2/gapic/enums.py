@@ -47,8 +47,8 @@ class LaunchStage(enum.IntEnum):
       limited production use cases.
       GA (int): GA features are open to all developers and are considered stable and
       fully qualified for production use.
-      DEPRECATED (int): Deprecated features are scheduled to be shut down and removed. For more
-      information, see the “Deprecation Policy” section of our `Terms of
+      DEPRECATED (int): Deprecated features are scheduled to be shut down and removed. For
+      more information, see the “Deprecation Policy” section of our `Terms of
       Service <https://cloud.google.com/terms/>`__ and the `Google Cloud
       Platform Subject to the Deprecation
       Policy <https://cloud.google.com/terms/deprecation>`__ documentation.
@@ -62,10 +62,26 @@ class LaunchStage(enum.IntEnum):
     DEPRECATED = 5
 
 
+class LifecycleState(enum.IntEnum):
+    """
+    LogBucket lifecycle states (Beta).
+
+    Attributes:
+      LIFECYCLE_STATE_UNSPECIFIED (int): Unspecified state.  This is only used/useful for distinguishing
+      unset values.
+      ACTIVE (int): The normal and active state.
+      DELETE_REQUESTED (int): The bucket has been marked for deletion by the user.
+    """
+
+    LIFECYCLE_STATE_UNSPECIFIED = 0
+    ACTIVE = 1
+    DELETE_REQUESTED = 2
+
+
 class LogSeverity(enum.IntEnum):
     """
-    The severity of the event described in a log entry, expressed as one of
-    the standard severity levels listed below. For your reference, the
+    The severity of the event described in a log entry, expressed as one
+    of the standard severity levels listed below. For your reference, the
     levels are assigned the listed numeric values. The effect of using
     numeric values other than those listed is undefined.
 
@@ -75,7 +91,7 @@ class LogSeverity(enum.IntEnum):
 
     ::
 
-         severity > DEBUG AND severity <= WARNING
+        severity > DEBUG AND severity <= WARNING
 
     If you are writing log entries, you should map other severity encodings
     to one of these standard levels. For example, you might map all of
@@ -109,8 +125,8 @@ class LogSeverity(enum.IntEnum):
 
 class NullValue(enum.IntEnum):
     """
-    ``NullValue`` is a singleton enumeration to represent the null value for
-    the ``Value`` type union.
+    ``NullValue`` is a singleton enumeration to represent the null value
+    for the ``Value`` type union.
 
     The JSON representation for ``NullValue`` is JSON ``null``.
 
@@ -196,8 +212,8 @@ class MetricDescriptor(object):
 
         Attributes:
           VALUE_TYPE_UNSPECIFIED (int): Do not use this default value.
-          BOOL (int): The value is a boolean. This value type can be used only if the metric
-          kind is ``GAUGE``.
+          BOOL (int): The value is a boolean. This value type can be used only if the
+          metric kind is ``GAUGE``.
           INT64 (int): The value is a signed 64-bit integer.
           DOUBLE (int): The value is a double precision floating point number.
           STRING (int): The value is a text string. This value type can be used only if the

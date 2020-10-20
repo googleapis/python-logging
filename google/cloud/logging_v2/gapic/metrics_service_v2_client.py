@@ -82,36 +82,12 @@ class MetricsServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
-        return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}",
-            billing_account=billing_account,
-        )
-
-    @classmethod
-    def folder_path(cls, folder):
-        """Return a fully-qualified folder string."""
-        return google.api_core.path_template.expand(
-            "folders/{folder}",
-            folder=folder,
-        )
-
-    @classmethod
-    def metric_path(cls, project, metric):
-        """Return a fully-qualified metric string."""
+    def log_metric_path(cls, project, metric):
+        """Return a fully-qualified log_metric string."""
         return google.api_core.path_template.expand(
             "projects/{project}/metrics/{metric}",
             project=project,
             metric=metric,
-        )
-
-    @classmethod
-    def organization_path(cls, organization):
-        """Return a fully-qualified organization string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}",
-            organization=organization,
         )
 
     @classmethod
@@ -276,7 +252,7 @@ class MetricsServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
+                    "projects/[PROJECT_ID]"
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -362,7 +338,7 @@ class MetricsServiceV2Client(object):
             >>>
             >>> client = logging_v2.MetricsServiceV2Client()
             >>>
-            >>> metric_name = client.metric_path('[PROJECT]', '[METRIC]')
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
             >>>
             >>> response = client.get_log_metric(metric_name)
 
@@ -371,7 +347,7 @@ class MetricsServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+                    "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -451,7 +427,7 @@ class MetricsServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
+                    "projects/[PROJECT_ID]"
 
                 The new metric must be provided in the request.
             metric (Union[dict, ~google.cloud.logging_v2.types.LogMetric]): Required. The new logs-based metric, which must not have an identifier that
@@ -526,7 +502,7 @@ class MetricsServiceV2Client(object):
             >>>
             >>> client = logging_v2.MetricsServiceV2Client()
             >>>
-            >>> metric_name = client.metric_path('[PROJECT]', '[METRIC]')
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
             >>>
             >>> # TODO: Initialize `metric`:
             >>> metric = {}
@@ -538,7 +514,7 @@ class MetricsServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+                    "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
 
                 The updated metric must be provided in the request and it's ``name``
                 field must be the same as ``[METRIC_ID]`` If the metric does not exist
@@ -613,7 +589,7 @@ class MetricsServiceV2Client(object):
             >>>
             >>> client = logging_v2.MetricsServiceV2Client()
             >>>
-            >>> metric_name = client.metric_path('[PROJECT]', '[METRIC]')
+            >>> metric_name = client.log_metric_path('[PROJECT]', '[METRIC]')
             >>>
             >>> client.delete_log_metric(metric_name)
 
@@ -622,7 +598,7 @@ class MetricsServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+                    "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
