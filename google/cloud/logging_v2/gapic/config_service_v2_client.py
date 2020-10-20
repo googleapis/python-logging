@@ -40,20 +40,22 @@ from google.protobuf import empty_pb2
 from google.protobuf import field_mask_pb2
 
 
+
 _GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution(
-    "google-cloud-logging",
+    'google-cloud-logging',
 ).version
 
 
 class ConfigServiceV2Client(object):
     """Service for configuring sinks used to route log entries."""
 
-    SERVICE_ADDRESS = "logging.googleapis.com:443"
+    SERVICE_ADDRESS = 'logging.googleapis.com:443'
     """The default address of the service."""
 
     # The name of the interface for this client. This is the key used to
     # find the method configuration in the client_config dictionary.
-    _INTERFACE_NAME = "google.logging.v2.ConfigServiceV2"
+    _INTERFACE_NAME = 'google.logging.v2.ConfigServiceV2'
+
 
     @classmethod
     def from_service_account_file(cls, filename, *args, **kwargs):
@@ -69,17 +71,19 @@ class ConfigServiceV2Client(object):
         Returns:
             ConfigServiceV2Client: The constructed client.
         """
-        credentials = service_account.Credentials.from_service_account_file(filename)
-        kwargs["credentials"] = credentials
+        credentials = service_account.Credentials.from_service_account_file(
+            filename)
+        kwargs['credentials'] = credentials
         return cls(*args, **kwargs)
 
     from_service_account_json = from_service_account_file
+
 
     @classmethod
     def billing_account_path(cls, billing_account):
         """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}",
+            'billingAccounts/{billing_account}',
             billing_account=billing_account,
         )
 
@@ -87,7 +91,7 @@ class ConfigServiceV2Client(object):
     def billing_account_location_path(cls, billing_account, location):
         """Return a fully-qualified billing_account_location string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/locations/{location}",
+            'billingAccounts/{billing_account}/locations/{location}',
             billing_account=billing_account,
             location=location,
         )
@@ -96,7 +100,7 @@ class ConfigServiceV2Client(object):
     def cmek_settings_path(cls, project):
         """Return a fully-qualified cmek_settings string."""
         return google.api_core.path_template.expand(
-            "projects/{project}/cmekSettings",
+            'projects/{project}/cmekSettings',
             project=project,
         )
 
@@ -104,7 +108,7 @@ class ConfigServiceV2Client(object):
     def folder_path(cls, folder):
         """Return a fully-qualified folder string."""
         return google.api_core.path_template.expand(
-            "folders/{folder}",
+            'folders/{folder}',
             folder=folder,
         )
 
@@ -112,7 +116,7 @@ class ConfigServiceV2Client(object):
     def folder_location_path(cls, folder, location):
         """Return a fully-qualified folder_location string."""
         return google.api_core.path_template.expand(
-            "folders/{folder}/locations/{location}",
+            'folders/{folder}/locations/{location}',
             folder=folder,
             location=location,
         )
@@ -121,7 +125,7 @@ class ConfigServiceV2Client(object):
     def location_path(cls, project, location):
         """Return a fully-qualified location string."""
         return google.api_core.path_template.expand(
-            "projects/{project}/locations/{location}",
+            'projects/{project}/locations/{location}',
             project=project,
             location=location,
         )
@@ -130,7 +134,7 @@ class ConfigServiceV2Client(object):
     def log_bucket_path(cls, project, location, bucket):
         """Return a fully-qualified log_bucket string."""
         return google.api_core.path_template.expand(
-            "projects/{project}/locations/{location}/buckets/{bucket}",
+            'projects/{project}/locations/{location}/buckets/{bucket}',
             project=project,
             location=location,
             bucket=bucket,
@@ -140,7 +144,7 @@ class ConfigServiceV2Client(object):
     def log_exclusion_path(cls, project, exclusion):
         """Return a fully-qualified log_exclusion string."""
         return google.api_core.path_template.expand(
-            "projects/{project}/exclusions/{exclusion}",
+            'projects/{project}/exclusions/{exclusion}',
             project=project,
             exclusion=exclusion,
         )
@@ -149,7 +153,7 @@ class ConfigServiceV2Client(object):
     def log_sink_path(cls, project, sink):
         """Return a fully-qualified log_sink string."""
         return google.api_core.path_template.expand(
-            "projects/{project}/sinks/{sink}",
+            'projects/{project}/sinks/{sink}',
             project=project,
             sink=sink,
         )
@@ -158,7 +162,7 @@ class ConfigServiceV2Client(object):
     def organization_path(cls, organization):
         """Return a fully-qualified organization string."""
         return google.api_core.path_template.expand(
-            "organizations/{organization}",
+            'organizations/{organization}',
             organization=organization,
         )
 
@@ -166,7 +170,7 @@ class ConfigServiceV2Client(object):
     def organization_location_path(cls, organization, location):
         """Return a fully-qualified organization_location string."""
         return google.api_core.path_template.expand(
-            "organizations/{organization}/locations/{location}",
+            'organizations/{organization}/locations/{location}',
             organization=organization,
             location=location,
         )
@@ -175,19 +179,12 @@ class ConfigServiceV2Client(object):
     def project_path(cls, project):
         """Return a fully-qualified project string."""
         return google.api_core.path_template.expand(
-            "projects/{project}",
+            'projects/{project}',
             project=project,
         )
 
-    def __init__(
-        self,
-        transport=None,
-        channel=None,
-        credentials=None,
-        client_config=None,
-        client_info=None,
-        client_options=None,
-    ):
+    def __init__(self, transport=None, channel=None, credentials=None,
+            client_config=None, client_info=None, client_options=None):
         """Constructor.
 
         Args:
@@ -223,27 +220,20 @@ class ConfigServiceV2Client(object):
         """
         # Raise deprecation warnings for things we want to go away.
         if client_config is not None:
-            warnings.warn(
-                "The `client_config` argument is deprecated.",
-                PendingDeprecationWarning,
-                stacklevel=2,
-            )
+            warnings.warn('The `client_config` argument is deprecated.',
+                          PendingDeprecationWarning, stacklevel=2)
         else:
             client_config = config_service_v2_client_config.config
 
         if channel:
-            warnings.warn(
-                "The `channel` argument is deprecated; use " "`transport` instead.",
-                PendingDeprecationWarning,
-                stacklevel=2,
-            )
+            warnings.warn('The `channel` argument is deprecated; use '
+                          '`transport` instead.',
+                          PendingDeprecationWarning, stacklevel=2)
 
         api_endpoint = self.SERVICE_ADDRESS
         if client_options:
             if type(client_options) == dict:
-                client_options = google.api_core.client_options.from_dict(
-                    client_options
-                )
+                client_options = google.api_core.client_options.from_dict(client_options)
             if client_options.api_endpoint:
                 api_endpoint = client_options.api_endpoint
 
@@ -260,17 +250,15 @@ class ConfigServiceV2Client(object):
             else:
                 if credentials:
                     raise ValueError(
-                        "Received both a transport instance and "
-                        "credentials; these are mutually exclusive."
+                        'Received both a transport instance and '
+                        'credentials; these are mutually exclusive.'
                     )
                 self.transport = transport
         else:
-            self.transport = (
-                config_service_v2_grpc_transport.ConfigServiceV2GrpcTransport(
-                    address=api_endpoint,
-                    channel=channel,
-                    credentials=credentials,
-                )
+            self.transport = config_service_v2_grpc_transport.ConfigServiceV2GrpcTransport(
+                address=api_endpoint,
+                channel=channel,
+                credentials=credentials,
             )
 
         if client_info is None:
@@ -286,7 +274,7 @@ class ConfigServiceV2Client(object):
         # (Ordinarily, these are the defaults specified in the `*_config.py`
         # file next to this one.)
         self._method_configs = google.api_core.gapic_v1.config.parse_method_configs(
-            client_config["interfaces"][self._INTERFACE_NAME],
+            client_config['interfaces'][self._INTERFACE_NAME],
         )
 
         # Save a dictionary of cached API call functions.
@@ -297,12 +285,11 @@ class ConfigServiceV2Client(object):
 
     # Service calls
     def delete_sink(
-        self,
-        sink_name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            sink_name,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Deletes a sink. If the sink has a unique ``writer_identity``, then
         that service account is also deleted.
@@ -346,13 +333,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "delete_sink" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_sink"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'delete_sink' not in self._inner_api_calls:
+            self._inner_api_calls['delete_sink'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.delete_sink,
-                default_retry=self._method_configs["DeleteSink"].retry,
-                default_timeout=self._method_configs["DeleteSink"].timeout,
+                default_retry=self._method_configs['DeleteSink'].retry,
+                default_timeout=self._method_configs['DeleteSink'].timeout,
                 client_info=self._client_info,
             )
 
@@ -363,29 +348,24 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("sink_name", sink_name)]
+            routing_header = [('sink_name', sink_name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        self._inner_api_calls["delete_sink"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        self._inner_api_calls['delete_sink'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def update_sink(
-        self,
-        sink_name,
-        sink,
-        unique_writer_identity=None,
-        update_mask=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            sink_name,
+            sink,
+            unique_writer_identity=None,
+            update_mask=None,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Updates a sink. This method replaces the following fields in the
         existing sink with values from the new sink: ``destination``, and
@@ -471,13 +451,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "update_sink" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "update_sink"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'update_sink' not in self._inner_api_calls:
+            self._inner_api_calls['update_sink'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.update_sink,
-                default_retry=self._method_configs["UpdateSink"].retry,
-                default_timeout=self._method_configs["UpdateSink"].timeout,
+                default_retry=self._method_configs['UpdateSink'].retry,
+                default_timeout=self._method_configs['UpdateSink'].timeout,
                 client_info=self._client_info,
             )
 
@@ -491,26 +469,21 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("sink_name", sink_name)]
+            routing_header = [('sink_name', sink_name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["update_sink"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['update_sink'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def delete_exclusion(
-        self,
-        name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            name,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Deletes an exclusion.
 
@@ -552,13 +525,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "delete_exclusion" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_exclusion"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'delete_exclusion' not in self._inner_api_calls:
+            self._inner_api_calls['delete_exclusion'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.delete_exclusion,
-                default_retry=self._method_configs["DeleteExclusion"].retry,
-                default_timeout=self._method_configs["DeleteExclusion"].timeout,
+                default_retry=self._method_configs['DeleteExclusion'].retry,
+                default_timeout=self._method_configs['DeleteExclusion'].timeout,
                 client_info=self._client_info,
             )
 
@@ -569,27 +540,22 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("name", name)]
+            routing_header = [('name', name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        self._inner_api_calls["delete_exclusion"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        self._inner_api_calls['delete_exclusion'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def list_buckets(
-        self,
-        parent,
-        page_size=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            parent,
+            page_size=None,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Lists buckets (Beta).
 
@@ -655,13 +621,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "list_buckets" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "list_buckets"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'list_buckets' not in self._inner_api_calls:
+            self._inner_api_calls['list_buckets'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.list_buckets,
-                default_retry=self._method_configs["ListBuckets"].retry,
-                default_timeout=self._method_configs["ListBuckets"].timeout,
+                default_retry=self._method_configs['ListBuckets'].retry,
+                default_timeout=self._method_configs['ListBuckets'].timeout,
                 client_info=self._client_info,
             )
 
@@ -673,37 +637,29 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("parent", parent)]
+            routing_header = [('parent', parent)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
         iterator = google.api_core.page_iterator.GRPCIterator(
             client=None,
-            method=functools.partial(
-                self._inner_api_calls["list_buckets"],
-                retry=retry,
-                timeout=timeout,
-                metadata=metadata,
-            ),
+            method=functools.partial(self._inner_api_calls['list_buckets'], retry=retry, timeout=timeout, metadata=metadata),
             request=request,
-            items_field="buckets",
-            request_token_field="page_token",
-            response_token_field="next_page_token",
+            items_field='buckets',
+            request_token_field='page_token',
+            response_token_field='next_page_token',
         )
         return iterator
 
     def get_bucket(
-        self,
-        name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            name,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Gets a bucket (Beta).
 
@@ -749,13 +705,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "get_bucket" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "get_bucket"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'get_bucket' not in self._inner_api_calls:
+            self._inner_api_calls['get_bucket'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.get_bucket,
-                default_retry=self._method_configs["GetBucket"].retry,
-                default_timeout=self._method_configs["GetBucket"].timeout,
+                default_retry=self._method_configs['GetBucket'].retry,
+                default_timeout=self._method_configs['GetBucket'].timeout,
                 client_info=self._client_info,
             )
 
@@ -766,28 +720,23 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("name", name)]
+            routing_header = [('name', name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["get_bucket"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['get_bucket'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def update_bucket(
-        self,
-        name,
-        bucket,
-        update_mask,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            name,
+            bucket,
+            update_mask,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Updates a bucket. This method replaces the following fields in the
         existing bucket with values from the new bucket: ``retention_period``
@@ -867,13 +816,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "update_bucket" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "update_bucket"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'update_bucket' not in self._inner_api_calls:
+            self._inner_api_calls['update_bucket'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.update_bucket,
-                default_retry=self._method_configs["UpdateBucket"].retry,
-                default_timeout=self._method_configs["UpdateBucket"].timeout,
+                default_retry=self._method_configs['UpdateBucket'].retry,
+                default_timeout=self._method_configs['UpdateBucket'].timeout,
                 client_info=self._client_info,
             )
 
@@ -886,27 +833,22 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("name", name)]
+            routing_header = [('name', name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["update_bucket"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['update_bucket'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def list_sinks(
-        self,
-        parent,
-        page_size=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            parent,
+            page_size=None,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Lists sinks.
 
@@ -968,13 +910,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "list_sinks" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "list_sinks"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'list_sinks' not in self._inner_api_calls:
+            self._inner_api_calls['list_sinks'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.list_sinks,
-                default_retry=self._method_configs["ListSinks"].retry,
-                default_timeout=self._method_configs["ListSinks"].timeout,
+                default_retry=self._method_configs['ListSinks'].retry,
+                default_timeout=self._method_configs['ListSinks'].timeout,
                 client_info=self._client_info,
             )
 
@@ -986,37 +926,29 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("parent", parent)]
+            routing_header = [('parent', parent)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
         iterator = google.api_core.page_iterator.GRPCIterator(
             client=None,
-            method=functools.partial(
-                self._inner_api_calls["list_sinks"],
-                retry=retry,
-                timeout=timeout,
-                metadata=metadata,
-            ),
+            method=functools.partial(self._inner_api_calls['list_sinks'], retry=retry, timeout=timeout, metadata=metadata),
             request=request,
-            items_field="sinks",
-            request_token_field="page_token",
-            response_token_field="next_page_token",
+            items_field='sinks',
+            request_token_field='page_token',
+            response_token_field='next_page_token',
         )
         return iterator
 
     def get_sink(
-        self,
-        sink_name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            sink_name,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Gets a sink.
 
@@ -1061,13 +993,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "get_sink" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "get_sink"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'get_sink' not in self._inner_api_calls:
+            self._inner_api_calls['get_sink'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.get_sink,
-                default_retry=self._method_configs["GetSink"].retry,
-                default_timeout=self._method_configs["GetSink"].timeout,
+                default_retry=self._method_configs['GetSink'].retry,
+                default_timeout=self._method_configs['GetSink'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1078,28 +1008,23 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("sink_name", sink_name)]
+            routing_header = [('sink_name', sink_name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["get_sink"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['get_sink'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def create_sink(
-        self,
-        parent,
-        sink,
-        unique_writer_identity=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            parent,
+            sink,
+            unique_writer_identity=None,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Creates a sink that exports specified log entries to a destination.
         The export of newly-ingested log entries begins immediately, unless the
@@ -1166,13 +1091,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "create_sink" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "create_sink"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'create_sink' not in self._inner_api_calls:
+            self._inner_api_calls['create_sink'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.create_sink,
-                default_retry=self._method_configs["CreateSink"].retry,
-                default_timeout=self._method_configs["CreateSink"].timeout,
+                default_retry=self._method_configs['CreateSink'].retry,
+                default_timeout=self._method_configs['CreateSink'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1185,27 +1108,22 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("parent", parent)]
+            routing_header = [('parent', parent)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["create_sink"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['create_sink'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def list_exclusions(
-        self,
-        parent,
-        page_size=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            parent,
+            page_size=None,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Lists all the exclusions in a parent resource.
 
@@ -1267,13 +1185,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "list_exclusions" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "list_exclusions"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'list_exclusions' not in self._inner_api_calls:
+            self._inner_api_calls['list_exclusions'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.list_exclusions,
-                default_retry=self._method_configs["ListExclusions"].retry,
-                default_timeout=self._method_configs["ListExclusions"].timeout,
+                default_retry=self._method_configs['ListExclusions'].retry,
+                default_timeout=self._method_configs['ListExclusions'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1285,37 +1201,29 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("parent", parent)]
+            routing_header = [('parent', parent)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
         iterator = google.api_core.page_iterator.GRPCIterator(
             client=None,
-            method=functools.partial(
-                self._inner_api_calls["list_exclusions"],
-                retry=retry,
-                timeout=timeout,
-                metadata=metadata,
-            ),
+            method=functools.partial(self._inner_api_calls['list_exclusions'], retry=retry, timeout=timeout, metadata=metadata),
             request=request,
-            items_field="exclusions",
-            request_token_field="page_token",
-            response_token_field="next_page_token",
+            items_field='exclusions',
+            request_token_field='page_token',
+            response_token_field='next_page_token',
         )
         return iterator
 
     def get_exclusion(
-        self,
-        name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            name,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Gets the description of an exclusion.
 
@@ -1360,13 +1268,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "get_exclusion" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "get_exclusion"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'get_exclusion' not in self._inner_api_calls:
+            self._inner_api_calls['get_exclusion'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.get_exclusion,
-                default_retry=self._method_configs["GetExclusion"].retry,
-                default_timeout=self._method_configs["GetExclusion"].timeout,
+                default_retry=self._method_configs['GetExclusion'].retry,
+                default_timeout=self._method_configs['GetExclusion'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1377,27 +1283,22 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("name", name)]
+            routing_header = [('name', name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["get_exclusion"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['get_exclusion'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def create_exclusion(
-        self,
-        parent,
-        exclusion,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            parent,
+            exclusion,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Creates a new exclusion in a specified parent resource.
         Only log entries belonging to that resource can be excluded.
@@ -1452,13 +1353,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "create_exclusion" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "create_exclusion"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'create_exclusion' not in self._inner_api_calls:
+            self._inner_api_calls['create_exclusion'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.create_exclusion,
-                default_retry=self._method_configs["CreateExclusion"].retry,
-                default_timeout=self._method_configs["CreateExclusion"].timeout,
+                default_retry=self._method_configs['CreateExclusion'].retry,
+                default_timeout=self._method_configs['CreateExclusion'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1470,28 +1369,23 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("parent", parent)]
+            routing_header = [('parent', parent)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["create_exclusion"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['create_exclusion'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def update_exclusion(
-        self,
-        name,
-        exclusion,
-        update_mask,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            name,
+            exclusion,
+            update_mask,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Changes one or more properties of an existing exclusion.
 
@@ -1558,13 +1452,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "update_exclusion" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "update_exclusion"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'update_exclusion' not in self._inner_api_calls:
+            self._inner_api_calls['update_exclusion'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.update_exclusion,
-                default_retry=self._method_configs["UpdateExclusion"].retry,
-                default_timeout=self._method_configs["UpdateExclusion"].timeout,
+                default_retry=self._method_configs['UpdateExclusion'].retry,
+                default_timeout=self._method_configs['UpdateExclusion'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1577,26 +1469,21 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("name", name)]
+            routing_header = [('name', name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["update_exclusion"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['update_exclusion'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def get_cmek_settings(
-        self,
-        name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            name,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Gets the Logs Router CMEK settings for the given resource.
 
@@ -1653,13 +1540,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "get_cmek_settings" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "get_cmek_settings"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'get_cmek_settings' not in self._inner_api_calls:
+            self._inner_api_calls['get_cmek_settings'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.get_cmek_settings,
-                default_retry=self._method_configs["GetCmekSettings"].retry,
-                default_timeout=self._method_configs["GetCmekSettings"].timeout,
+                default_retry=self._method_configs['GetCmekSettings'].retry,
+                default_timeout=self._method_configs['GetCmekSettings'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1670,28 +1555,23 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("name", name)]
+            routing_header = [('name', name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["get_cmek_settings"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['get_cmek_settings'](request, retry=retry, timeout=timeout, metadata=metadata)
 
     def update_cmek_settings(
-        self,
-        name,
-        cmek_settings,
-        update_mask=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
+            self,
+            name,
+            cmek_settings,
+            update_mask=None,
+            retry=google.api_core.gapic_v1.method.DEFAULT,
+            timeout=google.api_core.gapic_v1.method.DEFAULT,
+            metadata=None):
         """
         Updates the Logs Router CMEK settings for the given resource.
 
@@ -1774,13 +1654,11 @@ class ConfigServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if "update_cmek_settings" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "update_cmek_settings"
-            ] = google.api_core.gapic_v1.method.wrap_method(
+        if 'update_cmek_settings' not in self._inner_api_calls:
+            self._inner_api_calls['update_cmek_settings'] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.update_cmek_settings,
-                default_retry=self._method_configs["UpdateCmekSettings"].retry,
-                default_timeout=self._method_configs["UpdateCmekSettings"].timeout,
+                default_retry=self._method_configs['UpdateCmekSettings'].retry,
+                default_timeout=self._method_configs['UpdateCmekSettings'].timeout,
                 client_info=self._client_info,
             )
 
@@ -1793,15 +1671,11 @@ class ConfigServiceV2Client(object):
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [("name", name)]
+            routing_header = [('name', name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
             metadata.append(routing_metadata)
 
-        return self._inner_api_calls["update_cmek_settings"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
+        return self._inner_api_calls['update_cmek_settings'](request, retry=retry, timeout=timeout, metadata=metadata)
