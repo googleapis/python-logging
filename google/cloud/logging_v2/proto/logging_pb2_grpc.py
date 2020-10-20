@@ -2,13 +2,14 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from google.cloud.logging_v2.proto import logging_pb2 as google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2
+from google.cloud.logging_v2.proto import (
+    logging_pb2 as google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2,
+)
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class LoggingServiceV2Stub(object):
-    """Service for ingesting and querying logs.
-    """
+    """Service for ingesting and querying logs."""
 
     def __init__(self, channel):
         """Constructor.
@@ -17,35 +18,34 @@ class LoggingServiceV2Stub(object):
             channel: A grpc.Channel.
         """
         self.DeleteLog = channel.unary_unary(
-                '/google.logging.v2.LoggingServiceV2/DeleteLog',
-                request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.DeleteLogRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
+            "/google.logging.v2.LoggingServiceV2/DeleteLog",
+            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.DeleteLogRequest.SerializeToString,
+            response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
         self.WriteLogEntries = channel.unary_unary(
-                '/google.logging.v2.LoggingServiceV2/WriteLogEntries',
-                request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesResponse.FromString,
-                )
+            "/google.logging.v2.LoggingServiceV2/WriteLogEntries",
+            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesResponse.FromString,
+        )
         self.ListLogEntries = channel.unary_unary(
-                '/google.logging.v2.LoggingServiceV2/ListLogEntries',
-                request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesResponse.FromString,
-                )
+            "/google.logging.v2.LoggingServiceV2/ListLogEntries",
+            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesResponse.FromString,
+        )
         self.ListMonitoredResourceDescriptors = channel.unary_unary(
-                '/google.logging.v2.LoggingServiceV2/ListMonitoredResourceDescriptors',
-                request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsResponse.FromString,
-                )
+            "/google.logging.v2.LoggingServiceV2/ListMonitoredResourceDescriptors",
+            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsResponse.FromString,
+        )
         self.ListLogs = channel.unary_unary(
-                '/google.logging.v2.LoggingServiceV2/ListLogs',
-                request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsResponse.FromString,
-                )
+            "/google.logging.v2.LoggingServiceV2/ListLogs",
+            request_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsResponse.FromString,
+        )
 
 
 class LoggingServiceV2Servicer(object):
-    """Service for ingesting and querying logs.
-    """
+    """Service for ingesting and querying logs."""
 
     def DeleteLog(self, request, context):
         """Deletes all the log entries in a log. The log reappears if it receives new
@@ -54,8 +54,8 @@ class LoggingServiceV2Servicer(object):
         before the operation will be deleted.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def WriteLogEntries(self, request, context):
         """Writes log entries to Logging. This API method is the
@@ -67,8 +67,8 @@ class LoggingServiceV2Servicer(object):
         folders)
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ListLogEntries(self, request, context):
         """Lists log entries.  Use this method to retrieve log entries that originated
@@ -77,139 +77,193 @@ class LoggingServiceV2Servicer(object):
         Logs](https://cloud.google.com/logging/docs/export).
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ListMonitoredResourceDescriptors(self, request, context):
-        """Lists the descriptors for monitored resource types used by Logging.
-        """
+        """Lists the descriptors for monitored resource types used by Logging."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ListLogs(self, request, context):
         """Lists the logs in projects, organizations, folders, or billing accounts.
         Only logs that have entries are listed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_LoggingServiceV2Servicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'DeleteLog': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteLog,
-                    request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.DeleteLogRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-            'WriteLogEntries': grpc.unary_unary_rpc_method_handler(
-                    servicer.WriteLogEntries,
-                    request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesResponse.SerializeToString,
-            ),
-            'ListLogEntries': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListLogEntries,
-                    request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesResponse.SerializeToString,
-            ),
-            'ListMonitoredResourceDescriptors': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListMonitoredResourceDescriptors,
-                    request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsResponse.SerializeToString,
-            ),
-            'ListLogs': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListLogs,
-                    request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsResponse.SerializeToString,
-            ),
+        "DeleteLog": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteLog,
+            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.DeleteLogRequest.FromString,
+            response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+        ),
+        "WriteLogEntries": grpc.unary_unary_rpc_method_handler(
+            servicer.WriteLogEntries,
+            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesRequest.FromString,
+            response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesResponse.SerializeToString,
+        ),
+        "ListLogEntries": grpc.unary_unary_rpc_method_handler(
+            servicer.ListLogEntries,
+            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesRequest.FromString,
+            response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesResponse.SerializeToString,
+        ),
+        "ListMonitoredResourceDescriptors": grpc.unary_unary_rpc_method_handler(
+            servicer.ListMonitoredResourceDescriptors,
+            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsRequest.FromString,
+            response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsResponse.SerializeToString,
+        ),
+        "ListLogs": grpc.unary_unary_rpc_method_handler(
+            servicer.ListLogs,
+            request_deserializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsRequest.FromString,
+            response_serializer=google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'google.logging.v2.LoggingServiceV2', rpc_method_handlers)
+        "google.logging.v2.LoggingServiceV2", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class LoggingServiceV2(object):
-    """Service for ingesting and querying logs.
-    """
+    """Service for ingesting and querying logs."""
 
     @staticmethod
-    def DeleteLog(request,
+    def DeleteLog(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.logging.v2.LoggingServiceV2/DeleteLog',
+            "/google.logging.v2.LoggingServiceV2/DeleteLog",
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.DeleteLogRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def WriteLogEntries(request,
+    def WriteLogEntries(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.logging.v2.LoggingServiceV2/WriteLogEntries',
+            "/google.logging.v2.LoggingServiceV2/WriteLogEntries",
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesRequest.SerializeToString,
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.WriteLogEntriesResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ListLogEntries(request,
+    def ListLogEntries(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.logging.v2.LoggingServiceV2/ListLogEntries',
+            "/google.logging.v2.LoggingServiceV2/ListLogEntries",
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesRequest.SerializeToString,
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogEntriesResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ListMonitoredResourceDescriptors(request,
+    def ListMonitoredResourceDescriptors(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.logging.v2.LoggingServiceV2/ListMonitoredResourceDescriptors',
+            "/google.logging.v2.LoggingServiceV2/ListMonitoredResourceDescriptors",
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsRequest.SerializeToString,
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListMonitoredResourceDescriptorsResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ListLogs(request,
+    def ListLogs(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.logging.v2.LoggingServiceV2/ListLogs',
+            "/google.logging.v2.LoggingServiceV2/ListLogs",
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsRequest.SerializeToString,
             google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__pb2.ListLogsResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
