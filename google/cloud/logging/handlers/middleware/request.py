@@ -35,7 +35,7 @@ def _get_django_request():
 
 try:
     from django.utils.deprecation import MiddlewareMixin
-except ImportError: # pragma: NO COVER
+except ImportError:  # pragma: NO COVER
     MiddlewareMixin = object
 
 
