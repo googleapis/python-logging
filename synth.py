@@ -50,7 +50,7 @@ templated_files = common.py_library(
         'google-cloud-storage',
         'google-cloud-testutils'
     ],
-    unit_test_dependencies = [
+    unit_test_external_dependencies = [
        'flask',
        'webob',
        'django'
