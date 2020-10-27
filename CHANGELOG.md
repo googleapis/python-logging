@@ -1,5 +1,4 @@
-Changelog
----------
+# Changelog
 
 [PyPI History][1]
 
