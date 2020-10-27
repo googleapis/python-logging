@@ -41,7 +41,7 @@ s.move(library / "docs/gapic/v2")
 # ----------------------------------------------------------------------------
 templated_files = common.py_library(
     unit_cov_level=95,
-    cov_level=100,
+    cov_level=99,
     system_test_python_versions = ['3.8'],
     unit_test_python_versions = ['3.5', '3.6', '3.7', '3.8'],
     system_test_external_dependencies = [
