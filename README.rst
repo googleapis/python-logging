@@ -76,43 +76,11 @@ Windows
     <your-env>\Scripts\activate
     <your-env>\Scripts\pip.exe install google-cloud-logging
 
-Using the API
--------------
-
-Connecting Cloud Logging to `Python's standard logging library`_
-
-.. code:: python
-
-    # Imports the Cloud Logging client library
-    import google.cloud.logging
-
-    # Instantiates a client
-    client = google.cloud.logging.Client()
-
-    # Retrieves a Cloud Logging handler based on the environment
-    # you're running in and integrates the handler with the
-    # Python logging module. By default this captures all logs
-    # at INFO level and higher
-    client.setup_logging()
-
-Using the Python root logger:
-
-.. code:: python
-
-    # Imports Python standard logging library
-    import logging
-
-    # The data to log
-    text = 'Hello, world!'
-
-    # Emits the data using the standard logging module
-    logging.warning(text)
-
 Next Steps
 ~~~~~~~~~~
 
 -  Read the `Setting Up Cloud Logging for Python`_ How-to Guide
--  Read the `Product documentation`_ to learn more about the product and see other
-   How-to Guides.
+-  Read the `Product documentation`_ to learn more about the product and see
+   other How-to Guides.
 -  Read the `Client Library Documentation`_ for to see other available
    methods on the client.
