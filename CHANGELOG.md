@@ -4,6 +4,19 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+## [1.16.0](https://www.github.com/googleapis/python-logging/compare/v1.15.1...v1.16.0) (2020-10-27)
+
+
+### Features
+
+* pass 'client_options' to super ctor ([#61](https://www.github.com/googleapis/python-logging/issues/61)) ([c4387b3](https://www.github.com/googleapis/python-logging/commit/c4387b307f8f3502fb53ae1f7e1144f6284280a4)), closes [#55](https://www.github.com/googleapis/python-logging/issues/55)
+
+
+### Bug Fixes
+
+* add default filter settings to list_entries ([#73](https://www.github.com/googleapis/python-logging/issues/73)) ([0a1dd94](https://www.github.com/googleapis/python-logging/commit/0a1dd94811232634fdb849cb2c85bd44e870642f))
+* failing CI tests ([#70](https://www.github.com/googleapis/python-logging/issues/70)) ([96adeed](https://www.github.com/googleapis/python-logging/commit/96adeedbda16a5c21651c356261442478aaa867a))
+
 ### [1.15.1](https://www.github.com/googleapis/python-logging/compare/v1.15.0...v1.15.1) (2020-07-01)
 
 
