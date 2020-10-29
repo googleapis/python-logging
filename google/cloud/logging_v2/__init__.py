@@ -58,5 +58,5 @@ __all__ = (
     "__version__",
     "ASCENDING",
     "Client",
-    "DESCENDING"
+    "DESCENDING",
 )

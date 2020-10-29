@@ -37,5 +37,5 @@ __all__ = (
     "Batch",
     "Metric",
     "Sink",
-    "handlers"
+    "handlers",
 )
