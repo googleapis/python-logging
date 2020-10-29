@@ -279,6 +279,288 @@ class ConfigServiceV2Client(object):
         self._inner_api_calls = {}
 
     # Service calls
+    def delete_sink(
+        self,
+        sink_name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Deletes a sink. If the sink has a unique ``writer_identity``, then
+        that service account is also deleted.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
+            >>>
+            >>> client.delete_sink(sink_name)
+
+        Args:
+            sink_name (str): Required. The full resource name of the sink to delete, including
+                the parent resource and the sink identifier:
+
+                ::
+
+                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+
+                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "delete_sink" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_sink"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.delete_sink,
+                default_retry=self._method_configs["DeleteSink"].retry,
+                default_timeout=self._method_configs["DeleteSink"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.DeleteSinkRequest(sink_name=sink_name)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("sink_name", sink_name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        self._inner_api_calls["delete_sink"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
+    def update_sink(
+        self,
+        sink_name,
+        sink,
+        unique_writer_identity=None,
+        update_mask=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Updates a sink. This method replaces the following fields in the
+        existing sink with values from the new sink: ``destination``, and
+        ``filter``.
+
+        The updated sink might also have a new ``writer_identity``; see the
+        ``unique_writer_identity`` field.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
+            >>>
+            >>> # TODO: Initialize `sink`:
+            >>> sink = {}
+            >>>
+            >>> response = client.update_sink(sink_name, sink)
+
+        Args:
+            sink_name (str): Required. The full resource name of the sink to update, including
+                the parent resource and the sink identifier:
+
+                ::
+
+                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+
+                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
+            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The updated sink, whose name is the same identifier that
+                appears as part of ``sink_name``.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.LogSink`
+            unique_writer_identity (bool): Optional. See ``sinks.create`` for a description of this field. When
+                updating a sink, the effect of this field on the value of
+                ``writer_identity`` in the updated sink depends on both the old and new
+                values of this field:
+
+                -  If the old and new values of this field are both false or both true,
+                   then there is no change to the sink's ``writer_identity``.
+                -  If the old value is false and the new value is true, then
+                   ``writer_identity`` is changed to a unique service account.
+                -  It is an error if the old value is true and the new value is set to
+                   false or defaulted to false.
+            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Optional. Field mask that specifies the fields in ``sink`` that need
+                an update. A sink field will be overwritten if, and only if, it is in
+                the update mask. ``name`` and output only fields cannot be updated.
+
+                An empty updateMask is temporarily treated as using the following mask
+                for backwards compatibility purposes: destination,filter,includeChildren
+                At some point in the future, behavior will be removed and specifying an
+                empty updateMask will be an error.
+
+                For a detailed ``FieldMask`` definition, see
+                https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+
+                Example: ``updateMask=filter``.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.FieldMask`
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.logging_v2.types.LogSink` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "update_sink" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "update_sink"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.update_sink,
+                default_retry=self._method_configs["UpdateSink"].retry,
+                default_timeout=self._method_configs["UpdateSink"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.UpdateSinkRequest(
+            sink_name=sink_name,
+            sink=sink,
+            unique_writer_identity=unique_writer_identity,
+            update_mask=update_mask,
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("sink_name", sink_name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["update_sink"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
+    def delete_exclusion(
+        self,
+        name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Deletes an exclusion.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> client.delete_exclusion(name)
+
+        Args:
+            name (str): Required. The resource name of an existing exclusion to delete:
+
+                ::
+
+                    "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
+                    "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
+                    "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+
+                Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "delete_exclusion" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_exclusion"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.delete_exclusion,
+                default_retry=self._method_configs["DeleteExclusion"].retry,
+                default_timeout=self._method_configs["DeleteExclusion"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.DeleteExclusionRequest(name=name)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        self._inner_api_calls["delete_exclusion"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def list_buckets(
         self,
         parent,
@@ -885,212 +1167,6 @@ class ConfigServiceV2Client(object):
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 
-    def update_sink(
-        self,
-        sink_name,
-        sink,
-        unique_writer_identity=None,
-        update_mask=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Updates a sink. This method replaces the following fields in the
-        existing sink with values from the new sink: ``destination``, and
-        ``filter``.
-
-        The updated sink might also have a new ``writer_identity``; see the
-        ``unique_writer_identity`` field.
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.ConfigServiceV2Client()
-            >>>
-            >>> # TODO: Initialize `sink_name`:
-            >>> sink_name = ''
-            >>>
-            >>> # TODO: Initialize `sink`:
-            >>> sink = {}
-            >>>
-            >>> response = client.update_sink(sink_name, sink)
-
-        Args:
-            sink_name (str): Required. The full resource name of the sink to update, including
-                the parent resource and the sink identifier:
-
-                ::
-
-                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
-            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The updated sink, whose name is the same identifier that
-                appears as part of ``sink_name``.
-
-                If a dict is provided, it must be of the same form as the protobuf
-                message :class:`~google.cloud.logging_v2.types.LogSink`
-            unique_writer_identity (bool): Optional. See ``sinks.create`` for a description of this field. When
-                updating a sink, the effect of this field on the value of
-                ``writer_identity`` in the updated sink depends on both the old and new
-                values of this field:
-
-                -  If the old and new values of this field are both false or both true,
-                   then there is no change to the sink's ``writer_identity``.
-                -  If the old value is false and the new value is true, then
-                   ``writer_identity`` is changed to a unique service account.
-                -  It is an error if the old value is true and the new value is set to
-                   false or defaulted to false.
-            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Optional. Field mask that specifies the fields in ``sink`` that need
-                an update. A sink field will be overwritten if, and only if, it is in
-                the update mask. ``name`` and output only fields cannot be updated.
-
-                An empty updateMask is temporarily treated as using the following mask
-                for backwards compatibility purposes: destination,filter,includeChildren
-                At some point in the future, behavior will be removed and specifying an
-                empty updateMask will be an error.
-
-                For a detailed ``FieldMask`` definition, see
-                https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
-
-                Example: ``updateMask=filter``.
-
-                If a dict is provided, it must be of the same form as the protobuf
-                message :class:`~google.cloud.logging_v2.types.FieldMask`
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Returns:
-            A :class:`~google.cloud.logging_v2.types.LogSink` instance.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "update_sink" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "update_sink"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.update_sink,
-                default_retry=self._method_configs["UpdateSink"].retry,
-                default_timeout=self._method_configs["UpdateSink"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_config_pb2.UpdateSinkRequest(
-            sink_name=sink_name,
-            sink=sink,
-            unique_writer_identity=unique_writer_identity,
-            update_mask=update_mask,
-        )
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("sink_name", sink_name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        return self._inner_api_calls["update_sink"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
-    def delete_sink(
-        self,
-        sink_name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Deletes a sink. If the sink has a unique ``writer_identity``, then
-        that service account is also deleted.
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.ConfigServiceV2Client()
-            >>>
-            >>> # TODO: Initialize `sink_name`:
-            >>> sink_name = ''
-            >>>
-            >>> client.delete_sink(sink_name)
-
-        Args:
-            sink_name (str): Required. The full resource name of the sink to delete, including
-                the parent resource and the sink identifier:
-
-                ::
-
-                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "delete_sink" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_sink"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.delete_sink,
-                default_retry=self._method_configs["DeleteSink"].retry,
-                default_timeout=self._method_configs["DeleteSink"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_config_pb2.DeleteSinkRequest(sink_name=sink_name)
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("sink_name", sink_name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        self._inner_api_calls["delete_sink"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
     def list_exclusions(
         self,
         parent,
@@ -1474,82 +1550,6 @@ class ConfigServiceV2Client(object):
             metadata.append(routing_metadata)
 
         return self._inner_api_calls["update_exclusion"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
-    def delete_exclusion(
-        self,
-        name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Deletes an exclusion.
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.ConfigServiceV2Client()
-            >>>
-            >>> # TODO: Initialize `name`:
-            >>> name = ''
-            >>>
-            >>> client.delete_exclusion(name)
-
-        Args:
-            name (str): Required. The resource name of an existing exclusion to delete:
-
-                ::
-
-                    "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-                    "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-                    "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-                    "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
-
-                Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "delete_exclusion" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_exclusion"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.delete_exclusion,
-                default_retry=self._method_configs["DeleteExclusion"].retry,
-                default_timeout=self._method_configs["DeleteExclusion"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_config_pb2.DeleteExclusionRequest(name=name)
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("name", name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        self._inner_api_calls["delete_exclusion"](
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 

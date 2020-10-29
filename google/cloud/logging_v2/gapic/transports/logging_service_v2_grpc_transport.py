@@ -114,25 +114,6 @@ class LoggingServiceV2GrpcTransport(object):
         return self._channel
 
     @property
-    def write_log_entries(self):
-        """Return the gRPC stub for :meth:`LoggingServiceV2Client.write_log_entries`.
-
-        Writes log entries to Logging. This API method is the
-        only way to send log entries to Logging. This method
-        is used, directly or indirectly, by the Logging agent
-        (fluentd) and all logging libraries configured to use Logging.
-        A single request may contain log entries for a maximum of 1000
-        different resources (projects, organizations, billing accounts or
-        folders)
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["logging_service_v2_stub"].WriteLogEntries
-
-    @property
     def delete_log(self):
         """Return the gRPC stub for :meth:`LoggingServiceV2Client.delete_log`.
 
@@ -163,6 +144,25 @@ class LoggingServiceV2GrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["logging_service_v2_stub"].ListLogEntries
+
+    @property
+    def write_log_entries(self):
+        """Return the gRPC stub for :meth:`LoggingServiceV2Client.write_log_entries`.
+
+        Writes log entries to Logging. This API method is the
+        only way to send log entries to Logging. This method
+        is used, directly or indirectly, by the Logging agent
+        (fluentd) and all logging libraries configured to use Logging.
+        A single request may contain log entries for a maximum of 1000
+        different resources (projects, organizations, billing accounts or
+        folders)
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["logging_service_v2_stub"].WriteLogEntries
 
     @property
     def list_monitored_resource_descriptors(self):
