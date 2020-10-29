@@ -14,12 +14,12 @@
 
 """Define API Loggers."""
 
-from google.cloud.logging._helpers import _add_defaults_to_filter
-from google.cloud.logging.entries import LogEntry
-from google.cloud.logging.entries import ProtobufEntry
-from google.cloud.logging.entries import StructEntry
-from google.cloud.logging.entries import TextEntry
-from google.cloud.logging.resource import Resource
+from google.cloud.logging_v2._helpers import _add_defaults_to_filter
+from google.cloud.logging_v2.entries import LogEntry
+from google.cloud.logging_v2.entries import ProtobufEntry
+from google.cloud.logging_v2.entries import StructEntry
+from google.cloud.logging_v2.entries import TextEntry
+from google.cloud.logging_v2.resource import Resource
 
 
 _GLOBAL_RESOURCE = Resource(type="global", labels={})

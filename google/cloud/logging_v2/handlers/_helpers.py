@@ -22,7 +22,7 @@ try:
 except ImportError:  # pragma: NO COVER
     flask = None
 
-from google.cloud.logging.handlers.middleware.request import _get_django_request
+from google.cloud.logging_v2.handlers.middleware.request import _get_django_request
 
 _DJANGO_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
 _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"

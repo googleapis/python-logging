@@ -21,7 +21,7 @@ metadata such as log level is properly captured.
 
 import logging.handlers
 
-from google.cloud.logging.handlers._helpers import format_stackdriver_json
+from google.cloud.logging_v2.handlers._helpers import format_stackdriver_json
 
 
 class ContainerEngineHandler(logging.StreamHandler):

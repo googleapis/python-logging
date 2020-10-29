@@ -18,7 +18,7 @@ import logging
 import os
 
 try:
-    from google.cloud.logging import _gapic
+    from google.cloud.logging_v2 import _gapic
 except ImportError:  # pragma: NO COVER
     _HAVE_GRPC = False
     _gapic = None
@@ -28,21 +28,21 @@ else:
 import google.api_core.client_options
 from google.cloud.client import ClientWithProject
 from google.cloud.environment_vars import DISABLE_GRPC
-from google.cloud.logging._helpers import _add_defaults_to_filter
-from google.cloud.logging._helpers import retrieve_metadata_server
-from google.cloud.logging._http import Connection
-from google.cloud.logging._http import _LoggingAPI as JSONLoggingAPI
-from google.cloud.logging._http import _MetricsAPI as JSONMetricsAPI
-from google.cloud.logging._http import _SinksAPI as JSONSinksAPI
-from google.cloud.logging.handlers import CloudLoggingHandler
-from google.cloud.logging.handlers import AppEngineHandler
-from google.cloud.logging.handlers import ContainerEngineHandler
-from google.cloud.logging.handlers import setup_logging
-from google.cloud.logging.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
+from google.cloud.logging_v2._helpers import _add_defaults_to_filter
+from google.cloud.logging_v2._helpers import retrieve_metadata_server
+from google.cloud.logging_v2._http import Connection
+from google.cloud.logging_v2._http import _LoggingAPI as JSONLoggingAPI
+from google.cloud.logging_v2._http import _MetricsAPI as JSONMetricsAPI
+from google.cloud.logging_v2._http import _SinksAPI as JSONSinksAPI
+from google.cloud.logging_v2.handlers import CloudLoggingHandler
+from google.cloud.logging_v2.handlers import AppEngineHandler
+from google.cloud.logging_v2.handlers import ContainerEngineHandler
+from google.cloud.logging_v2.handlers import setup_logging
+from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
 
-from google.cloud.logging.logger import Logger
-from google.cloud.logging.metric import Metric
-from google.cloud.logging.sink import Sink
+from google.cloud.logging_v2.logger import Logger
+from google.cloud.logging_v2.metric import Metric
+from google.cloud.logging_v2.sink import Sink
 
 
 _DISABLE_GRPC = os.getenv(DISABLE_GRPC, False)

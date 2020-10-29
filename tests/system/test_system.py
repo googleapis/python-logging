@@ -26,10 +26,10 @@ from google.api_core.exceptions import ServiceUnavailable
 from google.cloud._helpers import UTC
 import google.cloud.logging
 import google.cloud.logging.handlers.handlers
-from google.cloud.logging.handlers.handlers import CloudLoggingHandler
-from google.cloud.logging.handlers.transports import SyncTransport
-from google.cloud.logging import client
-from google.cloud.logging.resource import Resource
+from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
+from google.cloud.logging_v2.handlers.transports import SyncTransport
+from google.cloud.logging_v2 import client
+from google.cloud.logging_v2.resource import Resource
 
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
@@ -124,7 +124,7 @@ class TestLogging(unittest.TestCase):
     def test_list_entry_with_unregistered(self):
         from google.protobuf import any_pb2
         from google.protobuf import descriptor_pool
-        from google.cloud.logging import entries
+        from google.cloud.logging_v2 import entries
 
         pool = descriptor_pool.Default()
         type_name = "google.cloud.audit.AuditLog"

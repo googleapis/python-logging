@@ -17,8 +17,8 @@
 Logs directly to the the Stackdriver Logging API with a synchronous call.
 """
 
-from google.cloud.logging import _helpers
-from google.cloud.logging.handlers.transports.base import Transport
+from google.cloud.logging_v2 import _helpers
+from google.cloud.logging_v2.handlers.transports.base import Transport
 
 
 class SyncTransport(Transport):

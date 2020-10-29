@@ -30,9 +30,9 @@ from google.cloud.logging_v2.proto.log_entry_pb2 import LogEntry
 from google.protobuf.json_format import MessageToDict
 from google.protobuf.json_format import ParseDict
 
-from google.cloud.logging._helpers import entry_from_resource
-from google.cloud.logging.sink import Sink
-from google.cloud.logging.metric import Metric
+from google.cloud.logging_v2._helpers import entry_from_resource
+from google.cloud.logging_v2.sink import Sink
+from google.cloud.logging_v2.metric import Metric
 
 
 class _LoggingAPI(object):

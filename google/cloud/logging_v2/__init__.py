@@ -21,6 +21,19 @@ from google.cloud.logging_v2.gapic import logging_service_v2_client
 from google.cloud.logging_v2.gapic import metrics_service_v2_client
 
 
+from pkg_resources import get_distribution
+
+__version__ = get_distribution("google-cloud-logging").version
+
+from google.cloud.logging_v2.client import Client
+
+
+ASCENDING = "timestamp asc"
+"""Query string to order by ascending timestamps."""
+DESCENDING = "timestamp desc"
+"""Query string to order by decending timestamps."""
+
+
 class LoggingServiceV2Client(logging_service_v2_client.LoggingServiceV2Client):
     __doc__ = logging_service_v2_client.LoggingServiceV2Client.__doc__
     enums = enums
@@ -42,4 +55,8 @@ __all__ = (
     "LoggingServiceV2Client",
     "ConfigServiceV2Client",
     "MetricsServiceV2Client",
+    "__version__",
+    "ASCENDING",
+    "Client",
+    "DESCENDING"
 )

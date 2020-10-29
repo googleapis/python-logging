@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud.logging.handlers.middleware.request import RequestMiddleware
+from google.cloud.logging_v2.handlers.middleware.request import RequestMiddleware
 
 __all__ = ["RequestMiddleware"]
