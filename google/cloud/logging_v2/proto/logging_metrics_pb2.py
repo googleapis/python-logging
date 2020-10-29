@@ -691,16 +691,12 @@ LogMetric = _reflection.GeneratedProtocolMessageType(
         ),
         "DESCRIPTOR": _LOGMETRIC,
         "__module__": "google.cloud.logging_v2.proto.logging_metrics_pb2",
-        "__doc__": """Describes a logs-based metric. The value of the metric is
-  the number of log entries that match a logs filter in a given time
-  interval.
-  
+        "__doc__": """Describes a logs-based metric. The value of the metric is the number
+  of log entries that match a logs filter in a given time interval.
   Logs-based metric can also be used to extract values from logs and
   create a a distribution of the values. The distribution records the
   statistics of the extracted values along with an optional histogram of
   the values as specified by the bucket options.
-  
-  
   Attributes:
       name:
           Required. The client-assigned metric identifier. Examples:
@@ -807,8 +803,6 @@ ListLogMetricsRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTLOGMETRICSREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_metrics_pb2",
         "__doc__": """The parameters to ListLogMetrics.
-  
-  
   Attributes:
       parent:
           Required. The name of the project containing the metrics:  ::
@@ -837,8 +831,6 @@ ListLogMetricsResponse = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LISTLOGMETRICSRESPONSE,
         "__module__": "google.cloud.logging_v2.proto.logging_metrics_pb2",
         "__doc__": """Result returned from ListLogMetrics.
-  
-  
   Attributes:
       metrics:
           A list of logs-based metrics.
@@ -860,8 +852,6 @@ GetLogMetricRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _GETLOGMETRICREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_metrics_pb2",
         "__doc__": """The parameters to GetLogMetric.
-  
-  
   Attributes:
       metric_name:
           Required. The resource name of the desired metric:  ::
@@ -879,8 +869,6 @@ CreateLogMetricRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _CREATELOGMETRICREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_metrics_pb2",
         "__doc__": """The parameters to CreateLogMetric.
-  
-  
   Attributes:
       parent:
           Required. The resource name of the project in which to create
@@ -902,8 +890,6 @@ UpdateLogMetricRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _UPDATELOGMETRICREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_metrics_pb2",
         "__doc__": """The parameters to UpdateLogMetric.
-  
-  
   Attributes:
       metric_name:
           Required. The resource name of the metric to update:  ::
@@ -926,8 +912,6 @@ DeleteLogMetricRequest = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DELETELOGMETRICREQUEST,
         "__module__": "google.cloud.logging_v2.proto.logging_metrics_pb2",
         "__doc__": """The parameters to DeleteLogMetric.
-  
-  
   Attributes:
       metric_name:
           Required. The resource name of the metric to delete:  ::
