@@ -686,6 +686,7 @@ LogEntry = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _LOGENTRY,
         "__module__": "google.cloud.logging_v2.proto.log_entry_pb2",
         "__doc__": """An individual entry in a log.
+  
   Attributes:
       log_name:
           Required. The resource name of the log to which this log entry
@@ -807,6 +808,7 @@ LogEntryOperation = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.logging_v2.proto.log_entry_pb2",
         "__doc__": """Additional information about a potentially long-running operation with
   which a log entry is associated.
+  
   Attributes:
       id:
           Optional. An arbitrary operation identifier. Log entries with
@@ -837,6 +839,7 @@ LogEntrySourceLocation = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.logging_v2.proto.log_entry_pb2",
         "__doc__": """Additional information about the source code location that produced
   the log entry.
+  
   Attributes:
       file:
           Optional. Source file name. Depending on the runtime
