@@ -44,7 +44,7 @@ from google.protobuf import empty_pb2
 from google.protobuf import field_mask_pb2
 
 
-_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-logging",).version
+_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-logging").version
 
 
 class LoggingServiceV2Client(object):
@@ -78,61 +78,36 @@ class LoggingServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
+    def billing_account_path(cls, billing_account):
+        """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}", billing_account=billing_account,
-        )
-
-    @classmethod
-    def billing_log_path(cls, billing_account, log):
-        """Return a fully-qualified billing_log string."""
-        return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/logs/{log}",
-            billing_account=billing_account,
-            log=log,
+            "billingAccounts/{billing_account}", billing_account=billing_account
         )
 
     @classmethod
     def folder_path(cls, folder):
         """Return a fully-qualified folder string."""
-        return google.api_core.path_template.expand("folders/{folder}", folder=folder,)
-
-    @classmethod
-    def folder_log_path(cls, folder, log):
-        """Return a fully-qualified folder_log string."""
-        return google.api_core.path_template.expand(
-            "folders/{folder}/logs/{log}", folder=folder, log=log,
-        )
+        return google.api_core.path_template.expand("folders/{folder}", folder=folder)
 
     @classmethod
     def log_path(cls, project, log):
         """Return a fully-qualified log string."""
         return google.api_core.path_template.expand(
-            "projects/{project}/logs/{log}", project=project, log=log,
+            "projects/{project}/logs/{log}", project=project, log=log
         )
 
     @classmethod
     def organization_path(cls, organization):
         """Return a fully-qualified organization string."""
         return google.api_core.path_template.expand(
-            "organizations/{organization}", organization=organization,
-        )
-
-    @classmethod
-    def organization_log_path(cls, organization, log):
-        """Return a fully-qualified organization_log string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}/logs/{log}",
-            organization=organization,
-            log=log,
+            "organizations/{organization}", organization=organization
         )
 
     @classmethod
     def project_path(cls, project):
         """Return a fully-qualified project string."""
         return google.api_core.path_template.expand(
-            "projects/{project}", project=project,
+            "projects/{project}", project=project
         )
 
     def __init__(
@@ -222,12 +197,12 @@ class LoggingServiceV2Client(object):
                 self.transport = transport
         else:
             self.transport = logging_service_v2_grpc_transport.LoggingServiceV2GrpcTransport(
-                address=api_endpoint, channel=channel, credentials=credentials,
+                address=api_endpoint, channel=channel, credentials=credentials
             )
 
         if client_info is None:
             client_info = google.api_core.gapic_v1.client_info.ClientInfo(
-                gapic_version=_GAPIC_LIBRARY_VERSION,
+                gapic_version=_GAPIC_LIBRARY_VERSION
             )
         else:
             client_info.gapic_version = _GAPIC_LIBRARY_VERSION
@@ -238,7 +213,7 @@ class LoggingServiceV2Client(object):
         # (Ordinarily, these are the defaults specified in the `*_config.py`
         # file next to this one.)
         self._method_configs = google.api_core.gapic_v1.config.parse_method_configs(
-            client_config["interfaces"][self._INTERFACE_NAME],
+            client_config["interfaces"][self._INTERFACE_NAME]
         )
 
         # Save a dictionary of cached API call functions.
@@ -248,87 +223,6 @@ class LoggingServiceV2Client(object):
         self._inner_api_calls = {}
 
     # Service calls
-    def delete_log(
-        self,
-        log_name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Deletes all the log entries in a log. The log reappears if it receives new
-        entries. Log entries written shortly before the delete operation might not
-        be deleted. Entries received after the delete operation with a timestamp
-        before the operation will be deleted.
-
-        Example:
-            >>> from google.cloud import logging_v2
-            >>>
-            >>> client = logging_v2.LoggingServiceV2Client()
-            >>>
-            >>> log_name = client.log_path('[PROJECT]', '[LOG]')
-            >>>
-            >>> client.delete_log(log_name)
-
-        Args:
-            log_name (str): Required. The resource name of the log to delete:
-
-                ::
-
-                     "projects/[PROJECT_ID]/logs/[LOG_ID]"
-                     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-                     "folders/[FOLDER_ID]/logs/[LOG_ID]"
-
-                ``[LOG_ID]`` must be URL-encoded. For example,
-                ``"projects/my-project-id/logs/syslog"``,
-                ``"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"``.
-                For more information about log names, see ``LogEntry``.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "delete_log" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_log"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.delete_log,
-                default_retry=self._method_configs["DeleteLog"].retry,
-                default_timeout=self._method_configs["DeleteLog"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = logging_pb2.DeleteLogRequest(log_name=log_name,)
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("log_name", log_name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        self._inner_api_calls["delete_log"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
     def write_log_entries(
         self,
         entries,
@@ -361,8 +255,8 @@ class LoggingServiceV2Client(object):
             >>> response = client.write_log_entries(entries)
 
         Args:
-            entries (list[Union[dict, ~google.cloud.logging_v2.types.LogEntry]]): Required. The log entries to send to Logging. The order of log entries
-                in this list does not matter. Values supplied in this method's
+            entries (list[Union[dict, ~google.cloud.logging_v2.types.LogEntry]]): Required. The log entries to send to Logging. The order of log
+                entries in this list does not matter. Values supplied in this method's
                 ``log_name``, ``resource``, and ``labels`` fields are copied into those
                 log entries in this list that do not include values for their
                 corresponding fields. For more information, see the ``LogEntry`` type.
@@ -392,46 +286,45 @@ class LoggingServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/logs/[LOG_ID]"
-                     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-                     "folders/[FOLDER_ID]/logs/[LOG_ID]"
+                    "projects/[PROJECT_ID]/logs/[LOG_ID]"
+                    "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+                    "folders/[FOLDER_ID]/logs/[LOG_ID]"
 
                 ``[LOG_ID]`` must be URL-encoded. For example:
 
                 ::
 
-                     "projects/my-project-id/logs/syslog"
-                     "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
+                    "projects/my-project-id/logs/syslog"
+                    "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
 
-                The permission logging.logEntries.create is needed on each project,
+                The permission ``logging.logEntries.create`` is needed on each project,
                 organization, billing account, or folder that is receiving new log
-                entries, whether the resource is specified in logName or in an
+                entries, whether the resource is specified in ``logName`` or in an
                 individual log entry.
-            resource (Union[dict, ~google.cloud.logging_v2.types.MonitoredResource]): Optional. A default monitored resource object that is assigned to all
-                log entries in ``entries`` that do not specify a value for ``resource``.
-                Example:
+            resource (Union[dict, ~google.cloud.logging_v2.types.MonitoredResource]): Optional. A default monitored resource object that is assigned to
+                all log entries in ``entries`` that do not specify a value for
+                ``resource``. Example:
 
                 ::
 
-                     { "type": "gce_instance",
-                       "labels": {
-                         "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
+                    { "type": "gce_instance",
+                      "labels": {
+                        "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
 
                 See ``LogEntry``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.MonitoredResource`
-            labels (dict[str -> str]): Optional. Default labels that are added to the ``labels`` field of all
-                log entries in ``entries``. If a log entry already has a label with the
-                same key as a label in this parameter, then the log entry's label is not
-                changed. See ``LogEntry``.
+            labels (dict[str -> str]): Optional. Default labels that are added to the ``labels`` field of
+                all log entries in ``entries``. If a log entry already has a label with
+                the same key as a label in this parameter, then the log entry's label is
+                not changed. See ``LogEntry``.
             partial_success (bool): Optional. Whether valid entries should be written even if some other
-                entries fail due to INVALID\_ARGUMENT or PERMISSION\_DENIED errors. If
-                any entry is not written, then the response status is the error
-                associated with one of the failed entries and the response includes
-                error details keyed by the entries' zero-based index in the
-                ``entries.write`` method.
+                entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
+                entry is not written, then the response status is the error associated
+                with one of the failed entries and the response includes error details
+                keyed by the entries' zero-based index in the ``entries.write`` method.
             dry_run (bool): Optional. If true, the request should expect normal response, but the
                 entries won't be persisted nor exported. Useful for checking whether the
                 logging API endpoints are working properly before sending valuable data.
@@ -477,10 +370,91 @@ class LoggingServiceV2Client(object):
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 
+    def delete_log(
+        self,
+        log_name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Deletes all the log entries in a log. The log reappears if it receives new
+        entries. Log entries written shortly before the delete operation might not
+        be deleted. Entries received after the delete operation with a timestamp
+        before the operation will be deleted.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.LoggingServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `log_name`:
+            >>> log_name = ''
+            >>>
+            >>> client.delete_log(log_name)
+
+        Args:
+            log_name (str): Required. The resource name of the log to delete:
+
+                ::
+
+                    "projects/[PROJECT_ID]/logs/[LOG_ID]"
+                    "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+                    "folders/[FOLDER_ID]/logs/[LOG_ID]"
+
+                ``[LOG_ID]`` must be URL-encoded. For example,
+                ``"projects/my-project-id/logs/syslog"``,
+                ``"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"``.
+                For more information about log names, see ``LogEntry``.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "delete_log" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_log"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.delete_log,
+                default_retry=self._method_configs["DeleteLog"].retry,
+                default_timeout=self._method_configs["DeleteLog"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_pb2.DeleteLogRequest(log_name=log_name)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("log_name", log_name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        self._inner_api_calls["delete_log"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def list_log_entries(
         self,
         resource_names,
-        project_ids=None,
         filter_=None,
         order_by=None,
         page_size=None,
@@ -517,20 +491,17 @@ class LoggingServiceV2Client(object):
             ...         pass
 
         Args:
-            resource_names (list[str]): Required. Names of one or more parent resources from which to retrieve
-                log entries:
+            resource_names (list[str]): Required. Names of one or more parent resources from which to
+                retrieve log entries:
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
 
                 Projects listed in the ``project_ids`` field are added to this list.
-            project_ids (list[str]): Deprecated. Use ``resource_names`` instead. One or more project
-                identifiers or project numbers from which to retrieve log entries.
-                Example: ``"my-project-1A"``.
             filter_ (str): Optional. A filter that chooses which log entries to return. See
                 `Advanced Logs
                 Queries <https://cloud.google.com/logging/docs/view/advanced-queries>`__.
@@ -586,7 +557,6 @@ class LoggingServiceV2Client(object):
 
         request = logging_pb2.ListLogEntriesRequest(
             resource_names=resource_names,
-            project_ids=project_ids,
             filter=filter_,
             order_by=order_by,
             page_size=page_size,
@@ -679,7 +649,7 @@ class LoggingServiceV2Client(object):
             )
 
         request = logging_pb2.ListMonitoredResourceDescriptorsRequest(
-            page_size=page_size,
+            page_size=page_size
         )
         iterator = google.api_core.page_iterator.GRPCIterator(
             client=None,
@@ -734,10 +704,10 @@ class LoggingServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -776,7 +746,7 @@ class LoggingServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_pb2.ListLogsRequest(parent=parent, page_size=page_size,)
+        request = logging_pb2.ListLogsRequest(parent=parent, page_size=page_size)
         if metadata is None:
             metadata = []
         metadata = list(metadata)

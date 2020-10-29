@@ -59,7 +59,7 @@ class ConfigServiceV2GrpcTransport(object):
         # exception (channels come with credentials baked in already).
         if channel is not None and credentials is not None:
             raise ValueError(
-                "The `channel` and `credentials` arguments are mutually " "exclusive.",
+                "The `channel` and `credentials` arguments are mutually " "exclusive."
             )
 
         # Create the channel.
@@ -80,7 +80,7 @@ class ConfigServiceV2GrpcTransport(object):
         self._stubs = {
             "config_service_v2_stub": logging_config_pb2_grpc.ConfigServiceV2Stub(
                 channel
-            ),
+            )
         }
 
     @classmethod
@@ -116,6 +116,55 @@ class ConfigServiceV2GrpcTransport(object):
         return self._channel
 
     @property
+    def list_buckets(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_buckets`.
+
+        Lists buckets (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].ListBuckets
+
+    @property
+    def get_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.get_bucket`.
+
+        Gets a bucket (Beta).
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].GetBucket
+
+    @property
+    def update_bucket(self):
+        """Return the gRPC stub for :meth:`ConfigServiceV2Client.update_bucket`.
+
+        Updates a bucket. This method replaces the following fields in the
+        existing bucket with values from the new bucket: ``retention_period``
+
+        If the retention period is decreased and the bucket is locked,
+        FAILED_PRECONDITION will be returned.
+
+        If the bucket has a LifecycleState of DELETE_REQUESTED,
+        FAILED_PRECONDITION will be returned.
+
+        A buckets region may not be modified after it is created. This method is
+        in Beta.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["config_service_v2_stub"].UpdateBucket
+
+    @property
     def list_sinks(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.list_sinks`.
 
@@ -145,8 +194,8 @@ class ConfigServiceV2GrpcTransport(object):
     def create_sink(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.create_sink`.
 
-        Creates a sink that exports specified log entries to a destination. The
-        export of newly-ingested log entries begins immediately, unless the
+        Creates a sink that exports specified log entries to a destination.
+        The export of newly-ingested log entries begins immediately, unless the
         sink's ``writer_identity`` is not permitted to write to the destination.
         A sink can export log entries only from the resource owning the sink.
 
@@ -179,8 +228,8 @@ class ConfigServiceV2GrpcTransport(object):
     def delete_sink(self):
         """Return the gRPC stub for :meth:`ConfigServiceV2Client.delete_sink`.
 
-        Deletes a sink. If the sink has a unique ``writer_identity``, then that
-        service account is also deleted.
+        Deletes a sink. If the sink has a unique ``writer_identity``, then
+        that service account is also deleted.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -290,9 +339,7 @@ class ConfigServiceV2GrpcTransport(object):
         ``UpdateCmekSettings`` will fail if 1) ``kms_key_name`` is invalid, or
         2) the associated service account does not have the required
         ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for the
-        key, or
-
-        3) access to the key is disabled.
+        key, or 3) access to the key is disabled.
 
         See `Enabling CMEK for Logs
         Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__

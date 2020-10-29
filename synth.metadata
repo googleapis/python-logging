@@ -1,17 +1,10 @@
 {
   "sources": [
     {
-      "generator": {
-        "name": "artman",
-        "version": "2.0.0",
-        "dockerImage": "googleapis/artman@sha256:b3b47805231a305d0f40c4bf069df20f6a2635574e6d4259fac651d3f9f6e098"
-      }
-    },
-    {
       "git": {
         "name": ".",
-        "remote": "git@github.com:googleapis/python-logging",
-        "sha": "a22a3bfdd4c8a4d6e9cc0c7d7504322ff31ad7ea"
+        "remote": "https://github.com/googleapis/python-logging.git",
+        "sha": "cbbe6df57c7a02eef950e0802514f8a523768a72"
       }
     },
     {
@@ -37,9 +30,70 @@
         "apiName": "logging",
         "apiVersion": "v2",
         "language": "python",
-        "generator": "gapic",
-        "config": "google/logging/artman_logging.yaml"
+        "generator": "bazel"
       }
     }
+  ],
+  "generatedFiles": [
+    ".flake8",
+    ".github/CONTRIBUTING.md",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    ".github/ISSUE_TEMPLATE/feature_request.md",
+    ".github/ISSUE_TEMPLATE/support_request.md",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/release-please.yml",
+    ".gitignore",
+    ".kokoro/build.sh",
+    ".kokoro/continuous/common.cfg",
+    ".kokoro/continuous/continuous.cfg",
+    ".kokoro/docs/common.cfg",
+    ".kokoro/docs/docs.cfg",
+    ".kokoro/presubmit/common.cfg",
+    ".kokoro/presubmit/presubmit.cfg",
+    ".kokoro/publish-docs.sh",
+    ".kokoro/release.sh",
+    ".kokoro/release/common.cfg",
+    ".kokoro/release/release.cfg",
+    ".kokoro/trampoline.sh",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.rst",
+    "LICENSE",
+    "MANIFEST.in",
+    "docs/_static/custom.css",
+    "docs/_templates/layout.html",
+    "docs/conf.py",
+    "google/cloud/logging/handlers/_helpers.py",
+    "google/cloud/logging_v2/gapic/__init__.py",
+    "google/cloud/logging_v2/gapic/config_service_v2_client.py",
+    "google/cloud/logging_v2/gapic/config_service_v2_client_config.py",
+    "google/cloud/logging_v2/gapic/enums.py",
+    "google/cloud/logging_v2/gapic/logging_service_v2_client.py",
+    "google/cloud/logging_v2/gapic/logging_service_v2_client_config.py",
+    "google/cloud/logging_v2/gapic/metrics_service_v2_client.py",
+    "google/cloud/logging_v2/gapic/metrics_service_v2_client_config.py",
+    "google/cloud/logging_v2/gapic/transports/__init__.py",
+    "google/cloud/logging_v2/gapic/transports/config_service_v2_grpc_transport.py",
+    "google/cloud/logging_v2/gapic/transports/logging_service_v2_grpc_transport.py",
+    "google/cloud/logging_v2/gapic/transports/metrics_service_v2_grpc_transport.py",
+    "google/cloud/logging_v2/proto/__init__.py",
+    "google/cloud/logging_v2/proto/log_entry.proto",
+    "google/cloud/logging_v2/proto/log_entry_pb2.py",
+    "google/cloud/logging_v2/proto/log_entry_pb2_grpc.py",
+    "google/cloud/logging_v2/proto/logging.proto",
+    "google/cloud/logging_v2/proto/logging_config.proto",
+    "google/cloud/logging_v2/proto/logging_config_pb2.py",
+    "google/cloud/logging_v2/proto/logging_config_pb2_grpc.py",
+    "google/cloud/logging_v2/proto/logging_metrics.proto",
+    "google/cloud/logging_v2/proto/logging_metrics_pb2.py",
+    "google/cloud/logging_v2/proto/logging_metrics_pb2_grpc.py",
+    "google/cloud/logging_v2/proto/logging_pb2.py",
+    "google/cloud/logging_v2/proto/logging_pb2_grpc.py",
+    "noxfile.py",
+    "renovate.json",
+    "setup.cfg",
+    "tests/unit/gapic/v2/test_config_service_v2_client_v2.py",
+    "tests/unit/gapic/v2/test_logging_service_v2_client_v2.py",
+    "tests/unit/gapic/v2/test_metrics_service_v2_client_v2.py",
+    "tests/unit/test_logger.py"
   ]
 }

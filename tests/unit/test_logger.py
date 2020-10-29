@@ -570,7 +570,7 @@ class TestLogger(unittest.TestCase):
             },
         )
         # verify that default filter is 24 hours
-        LOG_FILTER = "logName=projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME,)
+        LOG_FILTER = "logName=projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME)
         combined_filter = (
             INPUT_FILTER
             + " AND "
@@ -613,7 +613,7 @@ class TestLogger(unittest.TestCase):
         self.assertIsNone(token)
         # self.assertEqual(client._listed, LISTED)
         # check call payload
-        LOG_FILTER = "logName=projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME,)
+        LOG_FILTER = "logName=projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME)
         combined_filter = INPUT_FILTER + " AND " + LOG_FILTER
         self.assertEqual(
             client._connection._called_with,

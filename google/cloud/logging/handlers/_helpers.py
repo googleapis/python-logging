@@ -91,10 +91,7 @@ def get_trace_id():
     :rtype: str
     :returns: TraceID in HTTP request headers.
     """
-    checkers = (
-        get_trace_id_from_django,
-        get_trace_id_from_flask,
-    )
+    checkers = (get_trace_id_from_django, get_trace_id_from_flask)
 
     for checker in checkers:
         trace_id = checker()
