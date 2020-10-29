@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-# Copyright 2020 Google LLC
+# Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +23,7 @@ from google.cloud.logging_v2.logger import Batch
 from google.cloud.logging_v2.metric import Metric
 from google.cloud.logging_v2.sink import Sink
 from google.cloud.logging_v2 import handlers
+from google.cloud.logging_v2 import __version__ as version
 
 
 __all__ = (
@@ -39,3 +38,5 @@ __all__ = (
     "Sink",
     "handlers",
 )
+
+__version__ = version
