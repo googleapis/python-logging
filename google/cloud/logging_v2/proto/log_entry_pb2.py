@@ -35,6 +35,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     package="google.logging.v2",
     syntax="proto3",
     serialized_options=b"\n\025com.google.logging.v2B\rLogEntryProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2",
+    create_key=_descriptor._internal_create_key,
     serialized_pb=b'\n-google/cloud/logging_v2/proto/log_entry.proto\x12\x11google.logging.v2\x1a\x1fgoogle/api/field_behavior.proto\x1a#google/api/monitored_resource.proto\x1a\x19google/api/resource.proto\x1a&google/logging/type/http_request.proto\x1a&google/logging/type/log_severity.proto\x1a\x19google/protobuf/any.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto\x1a\x1cgoogle/api/annotations.proto"\xd2\x07\n\x08LogEntry\x12\x15\n\x08log_name\x18\x0c \x01(\tB\x03\xe0\x41\x02\x12\x34\n\x08resource\x18\x08 \x01(\x0b\x32\x1d.google.api.MonitoredResourceB\x03\xe0\x41\x02\x12-\n\rproto_payload\x18\x02 \x01(\x0b\x32\x14.google.protobuf.AnyH\x00\x12\x16\n\x0ctext_payload\x18\x03 \x01(\tH\x00\x12/\n\x0cjson_payload\x18\x06 \x01(\x0b\x32\x17.google.protobuf.StructH\x00\x12\x32\n\ttimestamp\x18\t \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x01\x12:\n\x11receive_timestamp\x18\x18 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x37\n\x08severity\x18\n \x01(\x0e\x32 .google.logging.type.LogSeverityB\x03\xe0\x41\x01\x12\x16\n\tinsert_id\x18\x04 \x01(\tB\x03\xe0\x41\x01\x12;\n\x0chttp_request\x18\x07 \x01(\x0b\x32 .google.logging.type.HttpRequestB\x03\xe0\x41\x01\x12<\n\x06labels\x18\x0b \x03(\x0b\x32\'.google.logging.v2.LogEntry.LabelsEntryB\x03\xe0\x41\x01\x12<\n\toperation\x18\x0f \x01(\x0b\x32$.google.logging.v2.LogEntryOperationB\x03\xe0\x41\x01\x12\x12\n\x05trace\x18\x16 \x01(\tB\x03\xe0\x41\x01\x12\x14\n\x07span_id\x18\x1b \x01(\tB\x03\xe0\x41\x01\x12\x1a\n\rtrace_sampled\x18\x1e \x01(\x08\x42\x03\xe0\x41\x01\x12G\n\x0fsource_location\x18\x17 \x01(\x0b\x32).google.logging.v2.LogEntrySourceLocationB\x03\xe0\x41\x01\x1a-\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01:\xbd\x01\xea\x41\xb9\x01\n\x1alogging.googleapis.com/Log\x12\x1dprojects/{project}/logs/{log}\x12\'organizations/{organization}/logs/{log}\x12\x1b\x66olders/{folder}/logs/{log}\x12,billingAccounts/{billing_account}/logs/{log}\x1a\x08log_nameB\t\n\x07payload"b\n\x11LogEntryOperation\x12\x0f\n\x02id\x18\x01 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08producer\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x12\n\x05\x66irst\x18\x03 \x01(\x08\x42\x03\xe0\x41\x01\x12\x11\n\x04last\x18\x04 \x01(\x08\x42\x03\xe0\x41\x01"U\n\x16LogEntrySourceLocation\x12\x11\n\x04\x66ile\x18\x01 \x01(\tB\x03\xe0\x41\x01\x12\x11\n\x04line\x18\x02 \x01(\x03\x42\x03\xe0\x41\x01\x12\x15\n\x08\x66unction\x18\x03 \x01(\tB\x03\xe0\x41\x01\x42\x99\x01\n\x15\x63om.google.logging.v2B\rLogEntryProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2b\x06proto3',
     dependencies=[
         google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,
@@ -57,6 +58,7 @@ _LOGENTRY_LABELSENTRY = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="key",
@@ -75,6 +77,7 @@ _LOGENTRY_LABELSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="value",
@@ -93,6 +96,7 @@ _LOGENTRY_LABELSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -113,6 +117,7 @@ _LOGENTRY = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="log_name",
@@ -131,6 +136,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="resource",
@@ -149,6 +155,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="proto_payload",
@@ -167,6 +174,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="text_payload",
@@ -185,6 +193,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="json_payload",
@@ -203,6 +212,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="timestamp",
@@ -221,6 +231,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="receive_timestamp",
@@ -239,6 +250,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\003",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="severity",
@@ -257,6 +269,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="insert_id",
@@ -275,6 +288,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="http_request",
@@ -293,6 +307,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="labels",
@@ -311,6 +326,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="operation",
@@ -329,6 +345,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="trace",
@@ -347,6 +364,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="span_id",
@@ -365,6 +383,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="trace_sampled",
@@ -383,6 +402,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="source_location",
@@ -401,6 +421,7 @@ _LOGENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -416,6 +437,7 @@ _LOGENTRY = _descriptor.Descriptor(
             full_name="google.logging.v2.LogEntry.payload",
             index=0,
             containing_type=None,
+            create_key=_descriptor._internal_create_key,
             fields=[],
         )
     ],
@@ -430,6 +452,7 @@ _LOGENTRYOPERATION = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="id",
@@ -448,6 +471,7 @@ _LOGENTRYOPERATION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="producer",
@@ -466,6 +490,7 @@ _LOGENTRYOPERATION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="first",
@@ -484,6 +509,7 @@ _LOGENTRYOPERATION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last",
@@ -502,6 +528,7 @@ _LOGENTRYOPERATION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -523,6 +550,7 @@ _LOGENTRYSOURCELOCATION = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="file",
@@ -541,6 +569,7 @@ _LOGENTRYSOURCELOCATION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="line",
@@ -559,6 +588,7 @@ _LOGENTRYSOURCELOCATION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="function",
@@ -577,6 +607,7 @@ _LOGENTRYSOURCELOCATION = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\001",
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
