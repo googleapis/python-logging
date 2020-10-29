@@ -2,9 +2,8 @@ config = {
     "interfaces": {
         "google.logging.v2.ConfigServiceV2": {
             "retry_codes": {
-                "idempotent": ["DEADLINE_EXCEEDED", "INTERNAL", "UNAVAILABLE"],
+                "idempotent": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
                 "non_idempotent": [],
-                "idempotent2": ["DEADLINE_EXCEEDED", "UNAVAILABLE"],
             },
             "retry_params": {
                 "default": {
@@ -15,18 +14,24 @@ config = {
                     "rpc_timeout_multiplier": 1.0,
                     "max_rpc_timeout_millis": 20000,
                     "total_timeout_millis": 600000,
-                },
-                "write_sink": {
-                    "initial_retry_delay_millis": 100,
-                    "retry_delay_multiplier": 1.3,
-                    "max_retry_delay_millis": 60000,
-                    "initial_rpc_timeout_millis": 20000,
-                    "rpc_timeout_multiplier": 1.0,
-                    "max_rpc_timeout_millis": 20000,
-                    "total_timeout_millis": 600000,
-                },
+                }
             },
             "methods": {
+                "ListBuckets": {
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "idempotent",
+                    "retry_params_name": "default",
+                },
+                "GetBucket": {
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "idempotent",
+                    "retry_params_name": "default",
+                },
+                "UpdateBucket": {
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "non_idempotent",
+                    "retry_params_name": "default",
+                },
                 "ListSinks": {
                     "timeout_millis": 60000,
                     "retry_codes_name": "idempotent",
@@ -38,18 +43,18 @@ config = {
                     "retry_params_name": "default",
                 },
                 "CreateSink": {
-                    "timeout_millis": 120000,
+                    "timeout_millis": 60000,
                     "retry_codes_name": "non_idempotent",
                     "retry_params_name": "default",
                 },
                 "UpdateSink": {
-                    "timeout_millis": 120000,
-                    "retry_codes_name": "idempotent",
+                    "timeout_millis": 60000,
+                    "retry_codes_name": "non_idempotent",
                     "retry_params_name": "default",
                 },
                 "DeleteSink": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "non_idempotent",
                     "retry_params_name": "default",
                 },
                 "ListExclusions": {
@@ -74,12 +79,12 @@ config = {
                 },
                 "DeleteExclusion": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent",
+                    "retry_codes_name": "non_idempotent",
                     "retry_params_name": "default",
                 },
                 "GetCmekSettings": {
                     "timeout_millis": 60000,
-                    "retry_codes_name": "idempotent2",
+                    "retry_codes_name": "idempotent",
                     "retry_params_name": "default",
                 },
                 "UpdateCmekSettings": {

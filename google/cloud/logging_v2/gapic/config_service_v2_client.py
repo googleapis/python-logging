@@ -40,7 +40,7 @@ from google.protobuf import empty_pb2
 from google.protobuf import field_mask_pb2
 
 
-_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-logging",).version
+_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-logging").version
 
 
 class ConfigServiceV2Client(object):
@@ -74,33 +74,62 @@ class ConfigServiceV2Client(object):
     from_service_account_json = from_service_account_file
 
     @classmethod
-    def billing_path(cls, billing_account):
-        """Return a fully-qualified billing string."""
+    def billing_account_path(cls, billing_account):
+        """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}", billing_account=billing_account,
+            "billingAccounts/{billing_account}", billing_account=billing_account
         )
 
     @classmethod
-    def billing_exclusion_path(cls, billing_account, exclusion):
-        """Return a fully-qualified billing_exclusion string."""
+    def billing_account_location_path(cls, billing_account, location):
+        """Return a fully-qualified billing_account_location string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/exclusions/{exclusion}",
+            "billingAccounts/{billing_account}/locations/{location}",
             billing_account=billing_account,
-            exclusion=exclusion,
+            location=location,
         )
 
     @classmethod
-    def billing_sink_path(cls, billing_account, sink):
-        """Return a fully-qualified billing_sink string."""
+    def cmek_settings_path(cls, project):
+        """Return a fully-qualified cmek_settings string."""
         return google.api_core.path_template.expand(
-            "billingAccounts/{billing_account}/sinks/{sink}",
-            billing_account=billing_account,
-            sink=sink,
+            "projects/{project}/cmekSettings", project=project
         )
 
     @classmethod
-    def exclusion_path(cls, project, exclusion):
-        """Return a fully-qualified exclusion string."""
+    def folder_path(cls, folder):
+        """Return a fully-qualified folder string."""
+        return google.api_core.path_template.expand("folders/{folder}", folder=folder)
+
+    @classmethod
+    def folder_location_path(cls, folder, location):
+        """Return a fully-qualified folder_location string."""
+        return google.api_core.path_template.expand(
+            "folders/{folder}/locations/{location}", folder=folder, location=location
+        )
+
+    @classmethod
+    def location_path(cls, project, location):
+        """Return a fully-qualified location string."""
+        return google.api_core.path_template.expand(
+            "projects/{project}/locations/{location}",
+            project=project,
+            location=location,
+        )
+
+    @classmethod
+    def log_bucket_path(cls, project, location, bucket):
+        """Return a fully-qualified log_bucket string."""
+        return google.api_core.path_template.expand(
+            "projects/{project}/locations/{location}/buckets/{bucket}",
+            project=project,
+            location=location,
+            bucket=bucket,
+        )
+
+    @classmethod
+    def log_exclusion_path(cls, project, exclusion):
+        """Return a fully-qualified log_exclusion string."""
         return google.api_core.path_template.expand(
             "projects/{project}/exclusions/{exclusion}",
             project=project,
@@ -108,63 +137,33 @@ class ConfigServiceV2Client(object):
         )
 
     @classmethod
-    def folder_path(cls, folder):
-        """Return a fully-qualified folder string."""
-        return google.api_core.path_template.expand("folders/{folder}", folder=folder,)
-
-    @classmethod
-    def folder_exclusion_path(cls, folder, exclusion):
-        """Return a fully-qualified folder_exclusion string."""
+    def log_sink_path(cls, project, sink):
+        """Return a fully-qualified log_sink string."""
         return google.api_core.path_template.expand(
-            "folders/{folder}/exclusions/{exclusion}",
-            folder=folder,
-            exclusion=exclusion,
-        )
-
-    @classmethod
-    def folder_sink_path(cls, folder, sink):
-        """Return a fully-qualified folder_sink string."""
-        return google.api_core.path_template.expand(
-            "folders/{folder}/sinks/{sink}", folder=folder, sink=sink,
+            "projects/{project}/sinks/{sink}", project=project, sink=sink
         )
 
     @classmethod
     def organization_path(cls, organization):
         """Return a fully-qualified organization string."""
         return google.api_core.path_template.expand(
-            "organizations/{organization}", organization=organization,
+            "organizations/{organization}", organization=organization
         )
 
     @classmethod
-    def organization_exclusion_path(cls, organization, exclusion):
-        """Return a fully-qualified organization_exclusion string."""
+    def organization_location_path(cls, organization, location):
+        """Return a fully-qualified organization_location string."""
         return google.api_core.path_template.expand(
-            "organizations/{organization}/exclusions/{exclusion}",
+            "organizations/{organization}/locations/{location}",
             organization=organization,
-            exclusion=exclusion,
-        )
-
-    @classmethod
-    def organization_sink_path(cls, organization, sink):
-        """Return a fully-qualified organization_sink string."""
-        return google.api_core.path_template.expand(
-            "organizations/{organization}/sinks/{sink}",
-            organization=organization,
-            sink=sink,
+            location=location,
         )
 
     @classmethod
     def project_path(cls, project):
         """Return a fully-qualified project string."""
         return google.api_core.path_template.expand(
-            "projects/{project}", project=project,
-        )
-
-    @classmethod
-    def sink_path(cls, project, sink):
-        """Return a fully-qualified sink string."""
-        return google.api_core.path_template.expand(
-            "projects/{project}/sinks/{sink}", project=project, sink=sink,
+            "projects/{project}", project=project
         )
 
     def __init__(
@@ -254,12 +253,12 @@ class ConfigServiceV2Client(object):
                 self.transport = transport
         else:
             self.transport = config_service_v2_grpc_transport.ConfigServiceV2GrpcTransport(
-                address=api_endpoint, channel=channel, credentials=credentials,
+                address=api_endpoint, channel=channel, credentials=credentials
             )
 
         if client_info is None:
             client_info = google.api_core.gapic_v1.client_info.ClientInfo(
-                gapic_version=_GAPIC_LIBRARY_VERSION,
+                gapic_version=_GAPIC_LIBRARY_VERSION
             )
         else:
             client_info.gapic_version = _GAPIC_LIBRARY_VERSION
@@ -270,7 +269,7 @@ class ConfigServiceV2Client(object):
         # (Ordinarily, these are the defaults specified in the `*_config.py`
         # file next to this one.)
         self._method_configs = google.api_core.gapic_v1.config.parse_method_configs(
-            client_config["interfaces"][self._INTERFACE_NAME],
+            client_config["interfaces"][self._INTERFACE_NAME]
         )
 
         # Save a dictionary of cached API call functions.
@@ -280,6 +279,318 @@ class ConfigServiceV2Client(object):
         self._inner_api_calls = {}
 
     # Service calls
+    def list_buckets(
+        self,
+        parent,
+        page_size=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Lists buckets (Beta).
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> parent = client.organization_location_path('[ORGANIZATION]', '[LOCATION]')
+            >>>
+            >>> # Iterate over all results
+            >>> for element in client.list_buckets(parent):
+            ...     # process element
+            ...     pass
+            >>>
+            >>>
+            >>> # Alternatively:
+            >>>
+            >>> # Iterate over results one page at a time
+            >>> for page in client.list_buckets(parent).pages:
+            ...     for element in page:
+            ...         # process element
+            ...         pass
+
+        Args:
+            parent (str): Required. The parent resource whose buckets are to be listed:
+
+                ::
+
+                    "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+                    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+                    "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+
+                Note: The locations portion of the resource must be specified, but
+                supplying the character ``-`` in place of [LOCATION_ID] will return all
+                buckets.
+            page_size (int): The maximum number of resources contained in the
+                underlying API response. If page streaming is performed per-
+                resource, this parameter does not affect the return value. If page
+                streaming is performed per-page, this determines the maximum number
+                of resources in a page.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.api_core.page_iterator.PageIterator` instance.
+            An iterable of :class:`~google.cloud.logging_v2.types.LogBucket` instances.
+            You can also iterate over the pages of the response
+            using its `pages` property.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "list_buckets" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "list_buckets"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.list_buckets,
+                default_retry=self._method_configs["ListBuckets"].retry,
+                default_timeout=self._method_configs["ListBuckets"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.ListBucketsRequest(
+            parent=parent, page_size=page_size
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("parent", parent)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        iterator = google.api_core.page_iterator.GRPCIterator(
+            client=None,
+            method=functools.partial(
+                self._inner_api_calls["list_buckets"],
+                retry=retry,
+                timeout=timeout,
+                metadata=metadata,
+            ),
+            request=request,
+            items_field="buckets",
+            request_token_field="page_token",
+            response_token_field="next_page_token",
+        )
+        return iterator
+
+    def get_bucket(
+        self,
+        name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Gets a bucket (Beta).
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> response = client.get_bucket(name)
+
+        Args:
+            name (str): Required. The resource name of the bucket:
+
+                ::
+
+                    "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+                    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+                    "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+
+                Example:
+                ``"projects/my-project-id/locations/my-location/buckets/my-bucket-id"``.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.logging_v2.types.LogBucket` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "get_bucket" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "get_bucket"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.get_bucket,
+                default_retry=self._method_configs["GetBucket"].retry,
+                default_timeout=self._method_configs["GetBucket"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.GetBucketRequest(name=name)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["get_bucket"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
+    def update_bucket(
+        self,
+        name,
+        bucket,
+        update_mask,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Updates a bucket. This method replaces the following fields in the
+        existing bucket with values from the new bucket: ``retention_period``
+
+        If the retention period is decreased and the bucket is locked,
+        FAILED_PRECONDITION will be returned.
+
+        If the bucket has a LifecycleState of DELETE_REQUESTED,
+        FAILED_PRECONDITION will be returned.
+
+        A buckets region may not be modified after it is created. This method is
+        in Beta.
+
+        Example:
+            >>> from google.cloud import logging_v2
+            >>>
+            >>> client = logging_v2.ConfigServiceV2Client()
+            >>>
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> # TODO: Initialize `bucket`:
+            >>> bucket = {}
+            >>>
+            >>> # TODO: Initialize `update_mask`:
+            >>> update_mask = {}
+            >>>
+            >>> response = client.update_bucket(name, bucket, update_mask)
+
+        Args:
+            name (str): Required. The full resource name of the bucket to update.
+
+                ::
+
+                    "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+                    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+                    "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+
+                Example:
+                ``"projects/my-project-id/locations/my-location/buckets/my-bucket-id"``.
+                Also requires permission "resourcemanager.projects.updateLiens" to set
+                the locked property
+            bucket (Union[dict, ~google.cloud.logging_v2.types.LogBucket]): Required. The updated bucket.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.LogBucket`
+            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Required. Field mask that specifies the fields in ``bucket`` that
+                need an update. A bucket field will be overwritten if, and only if, it
+                is in the update mask. ``name`` and output only fields cannot be
+                updated.
+
+                For a detailed ``FieldMask`` definition, see
+                https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+
+                Example: ``updateMask=retention_days``.
+
+                If a dict is provided, it must be of the same form as the protobuf
+                message :class:`~google.cloud.logging_v2.types.FieldMask`
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.logging_v2.types.LogBucket` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "update_bucket" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "update_bucket"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.update_bucket,
+                default_retry=self._method_configs["UpdateBucket"].retry,
+                default_timeout=self._method_configs["UpdateBucket"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = logging_config_pb2.UpdateBucketRequest(
+            name=name, bucket=bucket, update_mask=update_mask
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["update_bucket"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def list_sinks(
         self,
         parent,
@@ -317,10 +628,10 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -360,7 +671,7 @@ class ConfigServiceV2Client(object):
             )
 
         request = logging_config_pb2.ListSinksRequest(
-            parent=parent, page_size=page_size,
+            parent=parent, page_size=page_size
         )
         if metadata is None:
             metadata = []
@@ -405,7 +716,8 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> sink_name = client.sink_path('[PROJECT]', '[SINK]')
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
             >>>
             >>> response = client.get_sink(sink_name)
 
@@ -414,10 +726,10 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
 
                 Example: ``"projects/my-project-id/sinks/my-sink-id"``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
@@ -450,7 +762,7 @@ class ConfigServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_config_pb2.GetSinkRequest(sink_name=sink_name,)
+        request = logging_config_pb2.GetSinkRequest(sink_name=sink_name)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -478,8 +790,8 @@ class ConfigServiceV2Client(object):
         metadata=None,
     ):
         """
-        Creates a sink that exports specified log entries to a destination. The
-        export of newly-ingested log entries begins immediately, unless the
+        Creates a sink that exports specified log entries to a destination.
+        The export of newly-ingested log entries begins immediately, unless the
         sink's ``writer_identity`` is not permitted to write to the destination.
         A sink can export log entries only from the resource owning the sink.
 
@@ -500,15 +812,15 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
 
                 Examples: ``"projects/my-logging-project"``,
                 ``"organizations/123456789"``.
-            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The new sink, whose ``name`` parameter is a sink identifier
-                that is not already in use.
+            sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The new sink, whose ``name`` parameter is a sink
+                identifier that is not already in use.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.LogSink`
@@ -554,7 +866,7 @@ class ConfigServiceV2Client(object):
             )
 
         request = logging_config_pb2.CreateSinkRequest(
-            parent=parent, sink=sink, unique_writer_identity=unique_writer_identity,
+            parent=parent, sink=sink, unique_writer_identity=unique_writer_identity
         )
         if metadata is None:
             metadata = []
@@ -596,7 +908,8 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> sink_name = client.sink_path('[PROJECT]', '[SINK]')
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
             >>>
             >>> # TODO: Initialize `sink`:
             >>> sink = {}
@@ -604,15 +917,15 @@ class ConfigServiceV2Client(object):
             >>> response = client.update_sink(sink_name, sink)
 
         Args:
-            sink_name (str): Required. The full resource name of the sink to update, including the
-                parent resource and the sink identifier:
+            sink_name (str): Required. The full resource name of the sink to update, including
+                the parent resource and the sink identifier:
 
                 ::
 
-                     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
 
                 Example: ``"projects/my-project-id/sinks/my-sink-id"``.
             sink (Union[dict, ~google.cloud.logging_v2.types.LogSink]): Required. The updated sink, whose name is the same identifier that
@@ -631,9 +944,9 @@ class ConfigServiceV2Client(object):
                    ``writer_identity`` is changed to a unique service account.
                 -  It is an error if the old value is true and the new value is set to
                    false or defaulted to false.
-            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Optional. Field mask that specifies the fields in ``sink`` that need an
-                update. A sink field will be overwritten if, and only if, it is in the
-                update mask. ``name`` and output only fields cannot be updated.
+            update_mask (Union[dict, ~google.cloud.logging_v2.types.FieldMask]): Optional. Field mask that specifies the fields in ``sink`` that need
+                an update. A sink field will be overwritten if, and only if, it is in
+                the update mask. ``name`` and output only fields cannot be updated.
 
                 An empty updateMask is temporarily treated as using the following mask
                 for backwards compatibility purposes: destination,filter,includeChildren
@@ -708,28 +1021,29 @@ class ConfigServiceV2Client(object):
         metadata=None,
     ):
         """
-        Deletes a sink. If the sink has a unique ``writer_identity``, then that
-        service account is also deleted.
+        Deletes a sink. If the sink has a unique ``writer_identity``, then
+        that service account is also deleted.
 
         Example:
             >>> from google.cloud import logging_v2
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> sink_name = client.sink_path('[PROJECT]', '[SINK]')
+            >>> # TODO: Initialize `sink_name`:
+            >>> sink_name = ''
             >>>
             >>> client.delete_sink(sink_name)
 
         Args:
-            sink_name (str): Required. The full resource name of the sink to delete, including the
-                parent resource and the sink identifier:
+            sink_name (str): Required. The full resource name of the sink to delete, including
+                the parent resource and the sink identifier:
 
                 ::
 
-                     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-                     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
 
                 Example: ``"projects/my-project-id/sinks/my-sink-id"``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
@@ -759,7 +1073,7 @@ class ConfigServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_config_pb2.DeleteSinkRequest(sink_name=sink_name,)
+        request = logging_config_pb2.DeleteSinkRequest(sink_name=sink_name)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -814,10 +1128,10 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -857,7 +1171,7 @@ class ConfigServiceV2Client(object):
             )
 
         request = logging_config_pb2.ListExclusionsRequest(
-            parent=parent, page_size=page_size,
+            parent=parent, page_size=page_size
         )
         if metadata is None:
             metadata = []
@@ -902,7 +1216,8 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> name = client.exclusion_path('[PROJECT]', '[EXCLUSION]')
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
             >>>
             >>> response = client.get_exclusion(name)
 
@@ -911,10 +1226,10 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-                     "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+                    "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
+                    "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
+                    "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
 
                 Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
@@ -947,7 +1262,7 @@ class ConfigServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_config_pb2.GetExclusionRequest(name=name,)
+        request = logging_config_pb2.GetExclusionRequest(name=name)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -995,15 +1310,15 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]"
-                     "organizations/[ORGANIZATION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]"
-                     "folders/[FOLDER_ID]"
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
 
                 Examples: ``"projects/my-logging-project"``,
                 ``"organizations/123456789"``.
-            exclusion (Union[dict, ~google.cloud.logging_v2.types.LogExclusion]): Required. The new exclusion, whose ``name`` parameter is an exclusion
-                name that is not already used in the parent resource.
+            exclusion (Union[dict, ~google.cloud.logging_v2.types.LogExclusion]): Required. The new exclusion, whose ``name`` parameter is an
+                exclusion name that is not already used in the parent resource.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.logging_v2.types.LogExclusion`
@@ -1038,7 +1353,7 @@ class ConfigServiceV2Client(object):
             )
 
         request = logging_config_pb2.CreateExclusionRequest(
-            parent=parent, exclusion=exclusion,
+            parent=parent, exclusion=exclusion
         )
         if metadata is None:
             metadata = []
@@ -1074,7 +1389,8 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> name = client.exclusion_path('[PROJECT]', '[EXCLUSION]')
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
             >>>
             >>> # TODO: Initialize `exclusion`:
             >>> exclusion = {}
@@ -1089,10 +1405,10 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-                     "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+                    "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
+                    "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
+                    "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
 
                 Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
             exclusion (Union[dict, ~google.cloud.logging_v2.types.LogExclusion]): Required. New values for the existing exclusion. Only the fields
@@ -1142,7 +1458,7 @@ class ConfigServiceV2Client(object):
             )
 
         request = logging_config_pb2.UpdateExclusionRequest(
-            name=name, exclusion=exclusion, update_mask=update_mask,
+            name=name, exclusion=exclusion, update_mask=update_mask
         )
         if metadata is None:
             metadata = []
@@ -1176,7 +1492,8 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> name = client.exclusion_path('[PROJECT]', '[EXCLUSION]')
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
             >>>
             >>> client.delete_exclusion(name)
 
@@ -1185,10 +1502,10 @@ class ConfigServiceV2Client(object):
 
                 ::
 
-                     "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-                     "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+                    "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
+                    "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
+                    "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
 
                 Example: ``"projects/my-project-id/exclusions/my-exclusion-id"``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
@@ -1218,7 +1535,7 @@ class ConfigServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_config_pb2.DeleteExclusionRequest(name=name,)
+        request = logging_config_pb2.DeleteExclusionRequest(name=name)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1238,7 +1555,7 @@ class ConfigServiceV2Client(object):
 
     def get_cmek_settings(
         self,
-        name=None,
+        name,
         retry=google.api_core.gapic_v1.method.DEFAULT,
         timeout=google.api_core.gapic_v1.method.DEFAULT,
         metadata=None,
@@ -1259,17 +1576,20 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> response = client.get_cmek_settings()
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> response = client.get_cmek_settings(name)
 
         Args:
             name (str): Required. The resource for which to retrieve CMEK settings.
 
                 ::
 
-                     "projects/[PROJECT_ID]/cmekSettings"
-                     "organizations/[ORGANIZATION_ID]/cmekSettings"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-                     "folders/[FOLDER_ID]/cmekSettings"
+                    "projects/[PROJECT_ID]/cmekSettings"
+                    "organizations/[ORGANIZATION_ID]/cmekSettings"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+                    "folders/[FOLDER_ID]/cmekSettings"
 
                 Example: ``"organizations/12345/cmekSettings"``.
 
@@ -1306,7 +1626,7 @@ class ConfigServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_config_pb2.GetCmekSettingsRequest(name=name,)
+        request = logging_config_pb2.GetCmekSettingsRequest(name=name)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1326,8 +1646,8 @@ class ConfigServiceV2Client(object):
 
     def update_cmek_settings(
         self,
-        name=None,
-        cmek_settings=None,
+        name,
+        cmek_settings,
         update_mask=None,
         retry=google.api_core.gapic_v1.method.DEFAULT,
         timeout=google.api_core.gapic_v1.method.DEFAULT,
@@ -1343,9 +1663,7 @@ class ConfigServiceV2Client(object):
         ``UpdateCmekSettings`` will fail if 1) ``kms_key_name`` is invalid, or
         2) the associated service account does not have the required
         ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for the
-        key, or
-
-        3) access to the key is disabled.
+        key, or 3) access to the key is disabled.
 
         See `Enabling CMEK for Logs
         Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
@@ -1356,17 +1674,23 @@ class ConfigServiceV2Client(object):
             >>>
             >>> client = logging_v2.ConfigServiceV2Client()
             >>>
-            >>> response = client.update_cmek_settings()
+            >>> # TODO: Initialize `name`:
+            >>> name = ''
+            >>>
+            >>> # TODO: Initialize `cmek_settings`:
+            >>> cmek_settings = {}
+            >>>
+            >>> response = client.update_cmek_settings(name, cmek_settings)
 
         Args:
             name (str): Required. The resource name for the CMEK settings to update.
 
                 ::
 
-                     "projects/[PROJECT_ID]/cmekSettings"
-                     "organizations/[ORGANIZATION_ID]/cmekSettings"
-                     "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-                     "folders/[FOLDER_ID]/cmekSettings"
+                    "projects/[PROJECT_ID]/cmekSettings"
+                    "organizations/[ORGANIZATION_ID]/cmekSettings"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+                    "folders/[FOLDER_ID]/cmekSettings"
 
                 Example: ``"organizations/12345/cmekSettings"``.
 
@@ -1422,7 +1746,7 @@ class ConfigServiceV2Client(object):
             )
 
         request = logging_config_pb2.UpdateCmekSettingsRequest(
-            name=name, cmek_settings=cmek_settings, update_mask=update_mask,
+            name=name, cmek_settings=cmek_settings, update_mask=update_mask
         )
         if metadata is None:
             metadata = []
