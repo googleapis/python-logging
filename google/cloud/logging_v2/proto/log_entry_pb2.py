@@ -776,8 +776,8 @@ LogEntryOperation = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _LOGENTRYOPERATION,
         "__module__": "google.cloud.logging_v2.proto.log_entry_pb2",
-        "__doc__": """Additional information about a potentially long-running operation with
-  which a log entry is associated.
+        "__doc__": """Additional information about a potentially long-running
+  operation with which a log entry is associated.
   
   
   Attributes:
@@ -808,8 +808,8 @@ LogEntrySourceLocation = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _LOGENTRYSOURCELOCATION,
         "__module__": "google.cloud.logging_v2.proto.log_entry_pb2",
-        "__doc__": """Additional information about the source code location that
-  produced the log entry.
+        "__doc__": """Additional information about the source code location that produced the
+  log entry.
   
   
   Attributes:
