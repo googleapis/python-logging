@@ -2073,9 +2073,7 @@ LogSink = _reflection.GeneratedProtocolMessageType(
           Optional. If set to True, then this sink is disabled and it
           does not export any log entries.
       output_version_format:
-          Deprecated. The log entry format to use for this sink’s
-          exported log entries. The v2 format is used by default and
-          cannot be changed.
+          Deprecated. This field is unused.
       writer_identity:
           Output only. An IAM identity–a service account or group—under
           which Logging writes the exported log entries to the sink’s
