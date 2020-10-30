@@ -7,6 +7,7 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
+
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
@@ -23,37 +24,51 @@ from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
-  name='google/cloud/logging_v2/proto/logging_config.proto',
-  package='google.logging.v2',
-  syntax='proto3',
-  serialized_options=b'\n\025com.google.logging.v2B\022LoggingConfigProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2\352A`\n+logging.googleapis.com/OrganizationLocation\0221organizations/{organization}/locations/{location}\352AN\n%logging.googleapis.com/FolderLocation\022%folders/{folder}/locations/{location}\352Ag\n-logging.googleapis.com/BillingAccountLocation\0226billingAccounts/{billing_account}/locations/{location}',
-  serialized_pb=b'\n2google/cloud/logging_v2/proto/logging_config.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto\"\x9b\x04\n\tLogBucket\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x34\n\x0b\x63reate_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x16\n\x0eretention_days\x18\x0b \x01(\x05\x12?\n\x0flifecycle_state\x18\x0c \x01(\x0e\x32!.google.logging.v2.LifecycleStateB\x03\xe0\x41\x03:\xa5\x02\xea\x41\xa1\x02\n logging.googleapis.com/LogBucket\x12\x38projects/{project}/locations/{location}/buckets/{bucket}\x12\x42organizations/{organization}/locations/{location}/buckets/{bucket}\x12\x36\x66olders/{folder}/locations/{location}/buckets/{bucket}\x12GbillingAccounts/{billing_account}/locations/{location}/buckets/{bucket}\"\xcb\x05\n\x07LogSink\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x1e\n\x0b\x64\x65stination\x18\x03 \x01(\tB\t\xe0\x41\x02\xfa\x41\x03\n\x01*\x12\x13\n\x06\x66ilter\x18\x05 \x01(\tB\x03\xe0\x41\x01\x12\x18\n\x0b\x64\x65scription\x18\x12 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08\x64isabled\x18\x13 \x01(\x08\x42\x03\xe0\x41\x01\x12K\n\x15output_version_format\x18\x06 \x01(\x0e\x32(.google.logging.v2.LogSink.VersionFormatB\x02\x18\x01\x12\x1c\n\x0fwriter_identity\x18\x08 \x01(\tB\x03\xe0\x41\x03\x12\x1d\n\x10include_children\x18\t \x01(\x08\x42\x03\xe0\x41\x01\x12\x43\n\x10\x62igquery_options\x18\x0c \x01(\x0b\x32\".google.logging.v2.BigQueryOptionsB\x03\xe0\x41\x01H\x00\x12\x34\n\x0b\x63reate_time\x18\r \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x0e \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\"?\n\rVersionFormat\x12\x1e\n\x1aVERSION_FORMAT_UNSPECIFIED\x10\x00\x12\x06\n\x02V2\x10\x01\x12\x06\n\x02V1\x10\x02:\xbf\x01\xea\x41\xbb\x01\n\x1elogging.googleapis.com/LogSink\x12\x1fprojects/{project}/sinks/{sink}\x12)organizations/{organization}/sinks/{sink}\x12\x1d\x66olders/{folder}/sinks/{sink}\x12.billingAccounts/{billing_account}/sinks/{sink}B\t\n\x07options\"g\n\x0f\x42igQueryOptions\x12#\n\x16use_partitioned_tables\x18\x01 \x01(\x08\x42\x03\xe0\x41\x01\x12/\n\"uses_timestamp_column_partitioning\x18\x03 \x01(\x08\x42\x03\xe0\x41\x03\"\x7f\n\x12ListBucketsRequest\x12\x38\n\x06parent\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41\"\x12 logging.googleapis.com/LogBucket\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01\"]\n\x13ListBucketsResponse\x12-\n\x07\x62uckets\x18\x01 \x03(\x0b\x32\x1c.google.logging.v2.LogBucket\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\xb6\x01\n\x13UpdateBucketRequest\x12\x36\n\x04name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41\"\n logging.googleapis.com/LogBucket\x12\x31\n\x06\x62ucket\x18\x02 \x01(\x0b\x32\x1c.google.logging.v2.LogBucketB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x02\"J\n\x10GetBucketRequest\x12\x36\n\x04name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41\"\n logging.googleapis.com/LogBucket\"{\n\x10ListSinksRequest\x12\x36\n\x06parent\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \x12\x1elogging.googleapis.com/LogSink\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01\"W\n\x11ListSinksResponse\x12)\n\x05sinks\x18\x01 \x03(\x0b\x32\x1a.google.logging.v2.LogSink\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"K\n\x0eGetSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink\"\x9f\x01\n\x11\x43reateSinkRequest\x12\x36\n\x06parent\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \x12\x1elogging.googleapis.com/LogSink\x12-\n\x04sink\x18\x02 \x01(\x0b\x32\x1a.google.logging.v2.LogSinkB\x03\xe0\x41\x02\x12#\n\x16unique_writer_identity\x18\x03 \x01(\x08\x42\x03\xe0\x41\x01\"\xd8\x01\n\x11UpdateSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink\x12-\n\x04sink\x18\x02 \x01(\x0b\x32\x1a.google.logging.v2.LogSinkB\x03\xe0\x41\x02\x12#\n\x16unique_writer_identity\x18\x03 \x01(\x08\x42\x03\xe0\x41\x01\x12\x34\n\x0bupdate_mask\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x01\"N\n\x11\x44\x65leteSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink\"\xc2\x03\n\x0cLogExclusion\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x18\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x13\n\x06\x66ilter\x18\x03 \x01(\tB\x03\xe0\x41\x02\x12\x15\n\x08\x64isabled\x18\x04 \x01(\x08\x42\x03\xe0\x41\x01\x12\x34\n\x0b\x63reate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03:\xec\x01\xea\x41\xe8\x01\n#logging.googleapis.com/LogExclusion\x12)projects/{project}/exclusions/{exclusion}\x12\x33organizations/{organization}/exclusions/{exclusion}\x12\'folders/{folder}/exclusions/{exclusion}\x12\x38\x62illingAccounts/{billing_account}/exclusions/{exclusion}\"\x85\x01\n\x15ListExclusionsRequest\x12;\n\x06parent\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\x12#logging.googleapis.com/LogExclusion\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01\"f\n\x16ListExclusionsResponse\x12\x33\n\nexclusions\x18\x01 \x03(\x0b\x32\x1f.google.logging.v2.LogExclusion\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"P\n\x13GetExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion\"\x8e\x01\n\x16\x43reateExclusionRequest\x12;\n\x06parent\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\x12#logging.googleapis.com/LogExclusion\x12\x37\n\texclusion\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.LogExclusionB\x03\xe0\x41\x02\"\xc2\x01\n\x16UpdateExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion\x12\x37\n\texclusion\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.LogExclusionB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x02\"S\n\x16\x44\x65leteExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion\"S\n\x16GetCmekSettingsRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/CmekSettings\"\xa1\x01\n\x19UpdateCmekSettingsRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12;\n\rcmek_settings\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.CmekSettingsB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x01\"\x9f\x02\n\x0c\x43mekSettings\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x03\x12\x14\n\x0ckms_key_name\x18\x02 \x01(\t\x12\x1f\n\x12service_account_id\x18\x03 \x01(\tB\x03\xe0\x41\x03:\xc4\x01\xea\x41\xc0\x01\n#logging.googleapis.com/CmekSettings\x12\x1fprojects/{project}/cmekSettings\x12)organizations/{organization}/cmekSettings\x12\x1d\x66olders/{folder}/cmekSettings\x12.billingAccounts/{billing_account}/cmekSettings*S\n\x0eLifecycleState\x12\x1f\n\x1bLIFECYCLE_STATE_UNSPECIFIED\x10\x00\x12\n\n\x06\x41\x43TIVE\x10\x01\x12\x14\n\x10\x44\x45LETE_REQUESTED\x10\x02\x32\xaf\'\n\x0f\x43onfigServiceV2\x12\xdc\x02\n\x0bListBuckets\x12%.google.logging.v2.ListBucketsRequest\x1a&.google.logging.v2.ListBucketsResponse\"\xfd\x01\x82\xd3\xe4\x93\x02\xed\x01\x12$/v2/{parent=*/*/locations/*}/bucketsZ-\x12+/v2/{parent=projects/*/locations/*}/bucketsZ2\x12\x30/v2/{parent=organizations/*/locations/*}/bucketsZ,\x12*/v2/{parent=folders/*/locations/*}/bucketsZ4\x12\x32/v2/{parent=billingAccounts/*/locations/*}/buckets\xda\x41\x06parent\x12\xb9\x02\n\tGetBucket\x12#.google.logging.v2.GetBucketRequest\x1a\x1c.google.logging.v2.LogBucket\"\xe8\x01\x82\xd3\xe4\x93\x02\xe1\x01\x12$/v2/{name=*/*/locations/*/buckets/*}Z-\x12+/v2/{name=projects/*/locations/*/buckets/*}Z2\x12\x30/v2/{name=organizations/*/locations/*/buckets/*}Z,\x12*/v2/{name=folders/*/locations/*/buckets/*}Z(\x12&/v2/{name=billingAccounts/*/buckets/*}\x12\xf3\x02\n\x0cUpdateBucket\x12&.google.logging.v2.UpdateBucketRequest\x1a\x1c.google.logging.v2.LogBucket\"\x9c\x02\x82\xd3\xe4\x93\x02\x95\x02\x32$/v2/{name=*/*/locations/*/buckets/*}:\x06\x62ucketZ52+/v2/{name=projects/*/locations/*/buckets/*}:\x06\x62ucketZ:20/v2/{name=organizations/*/locations/*/buckets/*}:\x06\x62ucketZ42*/v2/{name=folders/*/locations/*/buckets/*}:\x06\x62ucketZ<22/v2/{name=billingAccounts/*/locations/*/buckets/*}:\x06\x62ucket\x12\x90\x02\n\tListSinks\x12#.google.logging.v2.ListSinksRequest\x1a$.google.logging.v2.ListSinksResponse\"\xb7\x01\x82\xd3\xe4\x93\x02\xa7\x01\x12\x16/v2/{parent=*/*}/sinksZ\x1f\x12\x1d/v2/{parent=projects/*}/sinksZ$\x12\"/v2/{parent=organizations/*}/sinksZ\x1e\x12\x1c/v2/{parent=folders/*}/sinksZ&\x12$/v2/{parent=billingAccounts/*}/sinks\xda\x41\x06parent\x12\x9e\x02\n\x07GetSink\x12!.google.logging.v2.GetSinkRequest\x1a\x1a.google.logging.v2.LogSink\"\xd3\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{sink_name=*/*/sinks/*}Z$\x12\"/v2/{sink_name=projects/*/sinks/*}Z)\x12\'/v2/{sink_name=organizations/*/sinks/*}Z#\x12!/v2/{sink_name=folders/*/sinks/*}Z+\x12)/v2/{sink_name=billingAccounts/*/sinks/*}\xda\x41\tsink_name\x12\xab\x02\n\nCreateSink\x12$.google.logging.v2.CreateSinkRequest\x1a\x1a.google.logging.v2.LogSink\"\xda\x01\x82\xd3\xe4\x93\x02\xc5\x01\"\x16/v2/{parent=*/*}/sinks:\x04sinkZ%\"\x1d/v2/{parent=projects/*}/sinks:\x04sinkZ*\"\"/v2/{parent=organizations/*}/sinks:\x04sinkZ$\"\x1c/v2/{parent=folders/*}/sinks:\x04sinkZ,\"$/v2/{parent=billingAccounts/*}/sinks:\x04sink\xda\x41\x0bparent,sink\x12\x9f\x04\n\nUpdateSink\x12$.google.logging.v2.UpdateSinkRequest\x1a\x1a.google.logging.v2.LogSink\"\xce\x03\x82\xd3\xe4\x93\x02\x99\x03\x1a\x1b/v2/{sink_name=*/*/sinks/*}:\x04sinkZ*\x1a\"/v2/{sink_name=projects/*/sinks/*}:\x04sinkZ/\x1a\'/v2/{sink_name=organizations/*/sinks/*}:\x04sinkZ)\x1a!/v2/{sink_name=folders/*/sinks/*}:\x04sinkZ1\x1a)/v2/{sink_name=billingAccounts/*/sinks/*}:\x04sinkZ*2\"/v2/{sink_name=projects/*/sinks/*}:\x04sinkZ/2\'/v2/{sink_name=organizations/*/sinks/*}:\x04sinkZ)2!/v2/{sink_name=folders/*/sinks/*}:\x04sinkZ12)/v2/{sink_name=billingAccounts/*/sinks/*}:\x04sink\xda\x41\x1asink_name,sink,update_mask\xda\x41\x0esink_name,sink\x12\xa0\x02\n\nDeleteSink\x12$.google.logging.v2.DeleteSinkRequest\x1a\x16.google.protobuf.Empty\"\xd3\x01\x82\xd3\xe4\x93\x02\xc0\x01*\x1b/v2/{sink_name=*/*/sinks/*}Z$*\"/v2/{sink_name=projects/*/sinks/*}Z)*\'/v2/{sink_name=organizations/*/sinks/*}Z#*!/v2/{sink_name=folders/*/sinks/*}Z+*)/v2/{sink_name=billingAccounts/*/sinks/*}\xda\x41\tsink_name\x12\xb8\x02\n\x0eListExclusions\x12(.google.logging.v2.ListExclusionsRequest\x1a).google.logging.v2.ListExclusionsResponse\"\xd0\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{parent=*/*}/exclusionsZ$\x12\"/v2/{parent=projects/*}/exclusionsZ)\x12\'/v2/{parent=organizations/*}/exclusionsZ#\x12!/v2/{parent=folders/*}/exclusionsZ+\x12)/v2/{parent=billingAccounts/*}/exclusions\xda\x41\x06parent\x12\xa8\x02\n\x0cGetExclusion\x12&.google.logging.v2.GetExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion\"\xce\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{name=*/*/exclusions/*}Z$\x12\"/v2/{name=projects/*/exclusions/*}Z)\x12\'/v2/{name=organizations/*/exclusions/*}Z#\x12!/v2/{name=folders/*/exclusions/*}Z+\x12)/v2/{name=billingAccounts/*/exclusions/*}\xda\x41\x04name\x12\xf1\x02\n\x0f\x43reateExclusion\x12).google.logging.v2.CreateExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion\"\x91\x02\x82\xd3\xe4\x93\x02\xf7\x01\"\x1b/v2/{parent=*/*}/exclusions:\texclusionZ/\"\"/v2/{parent=projects/*}/exclusions:\texclusionZ4\"\'/v2/{parent=organizations/*}/exclusions:\texclusionZ.\"!/v2/{parent=folders/*}/exclusions:\texclusionZ6\")/v2/{parent=billingAccounts/*}/exclusions:\texclusion\xda\x41\x10parent,exclusion\x12\xfb\x02\n\x0fUpdateExclusion\x12).google.logging.v2.UpdateExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion\"\x9b\x02\x82\xd3\xe4\x93\x02\xf7\x01\x32\x1b/v2/{name=*/*/exclusions/*}:\texclusionZ/2\"/v2/{name=projects/*/exclusions/*}:\texclusionZ42\'/v2/{name=organizations/*/exclusions/*}:\texclusionZ.2!/v2/{name=folders/*/exclusions/*}:\texclusionZ62)/v2/{name=billingAccounts/*/exclusions/*}:\texclusion\xda\x41\x1aname,exclusion,update_mask\x12\xa5\x02\n\x0f\x44\x65leteExclusion\x12).google.logging.v2.DeleteExclusionRequest\x1a\x16.google.protobuf.Empty\"\xce\x01\x82\xd3\xe4\x93\x02\xc0\x01*\x1b/v2/{name=*/*/exclusions/*}Z$*\"/v2/{name=projects/*/exclusions/*}Z)*\'/v2/{name=organizations/*/exclusions/*}Z#*!/v2/{name=folders/*/exclusions/*}Z+*)/v2/{name=billingAccounts/*/exclusions/*}\xda\x41\x04name\x12\xad\x01\n\x0fGetCmekSettings\x12).google.logging.v2.GetCmekSettingsRequest\x1a\x1f.google.logging.v2.CmekSettings\"N\x82\xd3\xe4\x93\x02H\x12\x1b/v2/{name=*/*}/cmekSettingsZ)\x12\'/v2/{name=organizations/*}/cmekSettings\x12\xd1\x01\n\x12UpdateCmekSettings\x12,.google.logging.v2.UpdateCmekSettingsRequest\x1a\x1f.google.logging.v2.CmekSettings\"l\x82\xd3\xe4\x93\x02\x66\x32\x1b/v2/{name=*/*}/cmekSettings:\rcmek_settingsZ82\'/v2/{name=organizations/*}/cmekSettings:\rcmek_settings\x1a\xdf\x01\xca\x41\x16logging.googleapis.com\xd2\x41\xc2\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.readB\xbc\x03\n\x15\x63om.google.logging.v2B\x12LoggingConfigProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2\xea\x41`\n+logging.googleapis.com/OrganizationLocation\x12\x31organizations/{organization}/locations/{location}\xea\x41N\n%logging.googleapis.com/FolderLocation\x12%folders/{folder}/locations/{location}\xea\x41g\n-logging.googleapis.com/BillingAccountLocation\x12\x36\x62illingAccounts/{billing_account}/locations/{location}b\x06proto3'
-  ,
-  dependencies=[google_dot_api_dot_client__pb2.DESCRIPTOR,google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,google_dot_api_dot_resource__pb2.DESCRIPTOR,google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,])
+    name="google/cloud/logging_v2/proto/logging_config.proto",
+    package="google.logging.v2",
+    syntax="proto3",
+    serialized_options=b"\n\025com.google.logging.v2B\022LoggingConfigProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2\352A`\n+logging.googleapis.com/OrganizationLocation\0221organizations/{organization}/locations/{location}\352AN\n%logging.googleapis.com/FolderLocation\022%folders/{folder}/locations/{location}\352Ag\n-logging.googleapis.com/BillingAccountLocation\0226billingAccounts/{billing_account}/locations/{location}",
+    serialized_pb=b'\n2google/cloud/logging_v2/proto/logging_config.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto"\x9b\x04\n\tLogBucket\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x34\n\x0b\x63reate_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x16\n\x0eretention_days\x18\x0b \x01(\x05\x12?\n\x0flifecycle_state\x18\x0c \x01(\x0e\x32!.google.logging.v2.LifecycleStateB\x03\xe0\x41\x03:\xa5\x02\xea\x41\xa1\x02\n logging.googleapis.com/LogBucket\x12\x38projects/{project}/locations/{location}/buckets/{bucket}\x12\x42organizations/{organization}/locations/{location}/buckets/{bucket}\x12\x36\x66olders/{folder}/locations/{location}/buckets/{bucket}\x12GbillingAccounts/{billing_account}/locations/{location}/buckets/{bucket}"\xcb\x05\n\x07LogSink\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x1e\n\x0b\x64\x65stination\x18\x03 \x01(\tB\t\xe0\x41\x02\xfa\x41\x03\n\x01*\x12\x13\n\x06\x66ilter\x18\x05 \x01(\tB\x03\xe0\x41\x01\x12\x18\n\x0b\x64\x65scription\x18\x12 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08\x64isabled\x18\x13 \x01(\x08\x42\x03\xe0\x41\x01\x12K\n\x15output_version_format\x18\x06 \x01(\x0e\x32(.google.logging.v2.LogSink.VersionFormatB\x02\x18\x01\x12\x1c\n\x0fwriter_identity\x18\x08 \x01(\tB\x03\xe0\x41\x03\x12\x1d\n\x10include_children\x18\t \x01(\x08\x42\x03\xe0\x41\x01\x12\x43\n\x10\x62igquery_options\x18\x0c \x01(\x0b\x32".google.logging.v2.BigQueryOptionsB\x03\xe0\x41\x01H\x00\x12\x34\n\x0b\x63reate_time\x18\r \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x0e \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03"?\n\rVersionFormat\x12\x1e\n\x1aVERSION_FORMAT_UNSPECIFIED\x10\x00\x12\x06\n\x02V2\x10\x01\x12\x06\n\x02V1\x10\x02:\xbf\x01\xea\x41\xbb\x01\n\x1elogging.googleapis.com/LogSink\x12\x1fprojects/{project}/sinks/{sink}\x12)organizations/{organization}/sinks/{sink}\x12\x1d\x66olders/{folder}/sinks/{sink}\x12.billingAccounts/{billing_account}/sinks/{sink}B\t\n\x07options"g\n\x0f\x42igQueryOptions\x12#\n\x16use_partitioned_tables\x18\x01 \x01(\x08\x42\x03\xe0\x41\x01\x12/\n"uses_timestamp_column_partitioning\x18\x03 \x01(\x08\x42\x03\xe0\x41\x03"\x7f\n\x12ListBucketsRequest\x12\x38\n\x06parent\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\x12 logging.googleapis.com/LogBucket\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01"]\n\x13ListBucketsResponse\x12-\n\x07\x62uckets\x18\x01 \x03(\x0b\x32\x1c.google.logging.v2.LogBucket\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"\xb6\x01\n\x13UpdateBucketRequest\x12\x36\n\x04name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\n logging.googleapis.com/LogBucket\x12\x31\n\x06\x62ucket\x18\x02 \x01(\x0b\x32\x1c.google.logging.v2.LogBucketB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x02"J\n\x10GetBucketRequest\x12\x36\n\x04name\x18\x01 \x01(\tB(\xe0\x41\x02\xfa\x41"\n logging.googleapis.com/LogBucket"{\n\x10ListSinksRequest\x12\x36\n\x06parent\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \x12\x1elogging.googleapis.com/LogSink\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01"W\n\x11ListSinksResponse\x12)\n\x05sinks\x18\x01 \x03(\x0b\x32\x1a.google.logging.v2.LogSink\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"K\n\x0eGetSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink"\x9f\x01\n\x11\x43reateSinkRequest\x12\x36\n\x06parent\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \x12\x1elogging.googleapis.com/LogSink\x12-\n\x04sink\x18\x02 \x01(\x0b\x32\x1a.google.logging.v2.LogSinkB\x03\xe0\x41\x02\x12#\n\x16unique_writer_identity\x18\x03 \x01(\x08\x42\x03\xe0\x41\x01"\xd8\x01\n\x11UpdateSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink\x12-\n\x04sink\x18\x02 \x01(\x0b\x32\x1a.google.logging.v2.LogSinkB\x03\xe0\x41\x02\x12#\n\x16unique_writer_identity\x18\x03 \x01(\x08\x42\x03\xe0\x41\x01\x12\x34\n\x0bupdate_mask\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x01"N\n\x11\x44\x65leteSinkRequest\x12\x39\n\tsink_name\x18\x01 \x01(\tB&\xe0\x41\x02\xfa\x41 \n\x1elogging.googleapis.com/LogSink"\xc2\x03\n\x0cLogExclusion\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x18\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x13\n\x06\x66ilter\x18\x03 \x01(\tB\x03\xe0\x41\x02\x12\x15\n\x08\x64isabled\x18\x04 \x01(\x08\x42\x03\xe0\x41\x01\x12\x34\n\x0b\x63reate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03:\xec\x01\xea\x41\xe8\x01\n#logging.googleapis.com/LogExclusion\x12)projects/{project}/exclusions/{exclusion}\x12\x33organizations/{organization}/exclusions/{exclusion}\x12\'folders/{folder}/exclusions/{exclusion}\x12\x38\x62illingAccounts/{billing_account}/exclusions/{exclusion}"\x85\x01\n\x15ListExclusionsRequest\x12;\n\x06parent\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\x12#logging.googleapis.com/LogExclusion\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x03 \x01(\x05\x42\x03\xe0\x41\x01"f\n\x16ListExclusionsResponse\x12\x33\n\nexclusions\x18\x01 \x03(\x0b\x32\x1f.google.logging.v2.LogExclusion\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"P\n\x13GetExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion"\x8e\x01\n\x16\x43reateExclusionRequest\x12;\n\x06parent\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\x12#logging.googleapis.com/LogExclusion\x12\x37\n\texclusion\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.LogExclusionB\x03\xe0\x41\x02"\xc2\x01\n\x16UpdateExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion\x12\x37\n\texclusion\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.LogExclusionB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x02"S\n\x16\x44\x65leteExclusionRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/LogExclusion"S\n\x16GetCmekSettingsRequest\x12\x39\n\x04name\x18\x01 \x01(\tB+\xe0\x41\x02\xfa\x41%\n#logging.googleapis.com/CmekSettings"\xa1\x01\n\x19UpdateCmekSettingsRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12;\n\rcmek_settings\x18\x02 \x01(\x0b\x32\x1f.google.logging.v2.CmekSettingsB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x01"\x9f\x02\n\x0c\x43mekSettings\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x03\x12\x14\n\x0ckms_key_name\x18\x02 \x01(\t\x12\x1f\n\x12service_account_id\x18\x03 \x01(\tB\x03\xe0\x41\x03:\xc4\x01\xea\x41\xc0\x01\n#logging.googleapis.com/CmekSettings\x12\x1fprojects/{project}/cmekSettings\x12)organizations/{organization}/cmekSettings\x12\x1d\x66olders/{folder}/cmekSettings\x12.billingAccounts/{billing_account}/cmekSettings*S\n\x0eLifecycleState\x12\x1f\n\x1bLIFECYCLE_STATE_UNSPECIFIED\x10\x00\x12\n\n\x06\x41\x43TIVE\x10\x01\x12\x14\n\x10\x44\x45LETE_REQUESTED\x10\x02\x32\xaf\'\n\x0f\x43onfigServiceV2\x12\xdc\x02\n\x0bListBuckets\x12%.google.logging.v2.ListBucketsRequest\x1a&.google.logging.v2.ListBucketsResponse"\xfd\x01\x82\xd3\xe4\x93\x02\xed\x01\x12$/v2/{parent=*/*/locations/*}/bucketsZ-\x12+/v2/{parent=projects/*/locations/*}/bucketsZ2\x12\x30/v2/{parent=organizations/*/locations/*}/bucketsZ,\x12*/v2/{parent=folders/*/locations/*}/bucketsZ4\x12\x32/v2/{parent=billingAccounts/*/locations/*}/buckets\xda\x41\x06parent\x12\xb9\x02\n\tGetBucket\x12#.google.logging.v2.GetBucketRequest\x1a\x1c.google.logging.v2.LogBucket"\xe8\x01\x82\xd3\xe4\x93\x02\xe1\x01\x12$/v2/{name=*/*/locations/*/buckets/*}Z-\x12+/v2/{name=projects/*/locations/*/buckets/*}Z2\x12\x30/v2/{name=organizations/*/locations/*/buckets/*}Z,\x12*/v2/{name=folders/*/locations/*/buckets/*}Z(\x12&/v2/{name=billingAccounts/*/buckets/*}\x12\xf3\x02\n\x0cUpdateBucket\x12&.google.logging.v2.UpdateBucketRequest\x1a\x1c.google.logging.v2.LogBucket"\x9c\x02\x82\xd3\xe4\x93\x02\x95\x02\x32$/v2/{name=*/*/locations/*/buckets/*}:\x06\x62ucketZ52+/v2/{name=projects/*/locations/*/buckets/*}:\x06\x62ucketZ:20/v2/{name=organizations/*/locations/*/buckets/*}:\x06\x62ucketZ42*/v2/{name=folders/*/locations/*/buckets/*}:\x06\x62ucketZ<22/v2/{name=billingAccounts/*/locations/*/buckets/*}:\x06\x62ucket\x12\x90\x02\n\tListSinks\x12#.google.logging.v2.ListSinksRequest\x1a$.google.logging.v2.ListSinksResponse"\xb7\x01\x82\xd3\xe4\x93\x02\xa7\x01\x12\x16/v2/{parent=*/*}/sinksZ\x1f\x12\x1d/v2/{parent=projects/*}/sinksZ$\x12"/v2/{parent=organizations/*}/sinksZ\x1e\x12\x1c/v2/{parent=folders/*}/sinksZ&\x12$/v2/{parent=billingAccounts/*}/sinks\xda\x41\x06parent\x12\x9e\x02\n\x07GetSink\x12!.google.logging.v2.GetSinkRequest\x1a\x1a.google.logging.v2.LogSink"\xd3\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{sink_name=*/*/sinks/*}Z$\x12"/v2/{sink_name=projects/*/sinks/*}Z)\x12\'/v2/{sink_name=organizations/*/sinks/*}Z#\x12!/v2/{sink_name=folders/*/sinks/*}Z+\x12)/v2/{sink_name=billingAccounts/*/sinks/*}\xda\x41\tsink_name\x12\xab\x02\n\nCreateSink\x12$.google.logging.v2.CreateSinkRequest\x1a\x1a.google.logging.v2.LogSink"\xda\x01\x82\xd3\xe4\x93\x02\xc5\x01"\x16/v2/{parent=*/*}/sinks:\x04sinkZ%"\x1d/v2/{parent=projects/*}/sinks:\x04sinkZ*""/v2/{parent=organizations/*}/sinks:\x04sinkZ$"\x1c/v2/{parent=folders/*}/sinks:\x04sinkZ,"$/v2/{parent=billingAccounts/*}/sinks:\x04sink\xda\x41\x0bparent,sink\x12\x9f\x04\n\nUpdateSink\x12$.google.logging.v2.UpdateSinkRequest\x1a\x1a.google.logging.v2.LogSink"\xce\x03\x82\xd3\xe4\x93\x02\x99\x03\x1a\x1b/v2/{sink_name=*/*/sinks/*}:\x04sinkZ*\x1a"/v2/{sink_name=projects/*/sinks/*}:\x04sinkZ/\x1a\'/v2/{sink_name=organizations/*/sinks/*}:\x04sinkZ)\x1a!/v2/{sink_name=folders/*/sinks/*}:\x04sinkZ1\x1a)/v2/{sink_name=billingAccounts/*/sinks/*}:\x04sinkZ*2"/v2/{sink_name=projects/*/sinks/*}:\x04sinkZ/2\'/v2/{sink_name=organizations/*/sinks/*}:\x04sinkZ)2!/v2/{sink_name=folders/*/sinks/*}:\x04sinkZ12)/v2/{sink_name=billingAccounts/*/sinks/*}:\x04sink\xda\x41\x1asink_name,sink,update_mask\xda\x41\x0esink_name,sink\x12\xa0\x02\n\nDeleteSink\x12$.google.logging.v2.DeleteSinkRequest\x1a\x16.google.protobuf.Empty"\xd3\x01\x82\xd3\xe4\x93\x02\xc0\x01*\x1b/v2/{sink_name=*/*/sinks/*}Z$*"/v2/{sink_name=projects/*/sinks/*}Z)*\'/v2/{sink_name=organizations/*/sinks/*}Z#*!/v2/{sink_name=folders/*/sinks/*}Z+*)/v2/{sink_name=billingAccounts/*/sinks/*}\xda\x41\tsink_name\x12\xb8\x02\n\x0eListExclusions\x12(.google.logging.v2.ListExclusionsRequest\x1a).google.logging.v2.ListExclusionsResponse"\xd0\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{parent=*/*}/exclusionsZ$\x12"/v2/{parent=projects/*}/exclusionsZ)\x12\'/v2/{parent=organizations/*}/exclusionsZ#\x12!/v2/{parent=folders/*}/exclusionsZ+\x12)/v2/{parent=billingAccounts/*}/exclusions\xda\x41\x06parent\x12\xa8\x02\n\x0cGetExclusion\x12&.google.logging.v2.GetExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion"\xce\x01\x82\xd3\xe4\x93\x02\xc0\x01\x12\x1b/v2/{name=*/*/exclusions/*}Z$\x12"/v2/{name=projects/*/exclusions/*}Z)\x12\'/v2/{name=organizations/*/exclusions/*}Z#\x12!/v2/{name=folders/*/exclusions/*}Z+\x12)/v2/{name=billingAccounts/*/exclusions/*}\xda\x41\x04name\x12\xf1\x02\n\x0f\x43reateExclusion\x12).google.logging.v2.CreateExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion"\x91\x02\x82\xd3\xe4\x93\x02\xf7\x01"\x1b/v2/{parent=*/*}/exclusions:\texclusionZ/""/v2/{parent=projects/*}/exclusions:\texclusionZ4"\'/v2/{parent=organizations/*}/exclusions:\texclusionZ."!/v2/{parent=folders/*}/exclusions:\texclusionZ6")/v2/{parent=billingAccounts/*}/exclusions:\texclusion\xda\x41\x10parent,exclusion\x12\xfb\x02\n\x0fUpdateExclusion\x12).google.logging.v2.UpdateExclusionRequest\x1a\x1f.google.logging.v2.LogExclusion"\x9b\x02\x82\xd3\xe4\x93\x02\xf7\x01\x32\x1b/v2/{name=*/*/exclusions/*}:\texclusionZ/2"/v2/{name=projects/*/exclusions/*}:\texclusionZ42\'/v2/{name=organizations/*/exclusions/*}:\texclusionZ.2!/v2/{name=folders/*/exclusions/*}:\texclusionZ62)/v2/{name=billingAccounts/*/exclusions/*}:\texclusion\xda\x41\x1aname,exclusion,update_mask\x12\xa5\x02\n\x0f\x44\x65leteExclusion\x12).google.logging.v2.DeleteExclusionRequest\x1a\x16.google.protobuf.Empty"\xce\x01\x82\xd3\xe4\x93\x02\xc0\x01*\x1b/v2/{name=*/*/exclusions/*}Z$*"/v2/{name=projects/*/exclusions/*}Z)*\'/v2/{name=organizations/*/exclusions/*}Z#*!/v2/{name=folders/*/exclusions/*}Z+*)/v2/{name=billingAccounts/*/exclusions/*}\xda\x41\x04name\x12\xad\x01\n\x0fGetCmekSettings\x12).google.logging.v2.GetCmekSettingsRequest\x1a\x1f.google.logging.v2.CmekSettings"N\x82\xd3\xe4\x93\x02H\x12\x1b/v2/{name=*/*}/cmekSettingsZ)\x12\'/v2/{name=organizations/*}/cmekSettings\x12\xd1\x01\n\x12UpdateCmekSettings\x12,.google.logging.v2.UpdateCmekSettingsRequest\x1a\x1f.google.logging.v2.CmekSettings"l\x82\xd3\xe4\x93\x02\x66\x32\x1b/v2/{name=*/*}/cmekSettings:\rcmek_settingsZ82\'/v2/{name=organizations/*}/cmekSettings:\rcmek_settings\x1a\xdf\x01\xca\x41\x16logging.googleapis.com\xd2\x41\xc2\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.readB\xbc\x03\n\x15\x63om.google.logging.v2B\x12LoggingConfigProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2\xea\x41`\n+logging.googleapis.com/OrganizationLocation\x12\x31organizations/{organization}/locations/{location}\xea\x41N\n%logging.googleapis.com/FolderLocation\x12%folders/{folder}/locations/{location}\xea\x41g\n-logging.googleapis.com/BillingAccountLocation\x12\x36\x62illingAccounts/{billing_account}/locations/{location}b\x06proto3',
+    dependencies=[
+        google_dot_api_dot_client__pb2.DESCRIPTOR,
+        google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,
+        google_dot_api_dot_resource__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,
+        google_dot_api_dot_annotations__pb2.DESCRIPTOR,
+    ],
+)
 
 _LIFECYCLESTATE = _descriptor.EnumDescriptor(
-  name='LifecycleState',
-  full_name='google.logging.v2.LifecycleState',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='LIFECYCLE_STATE_UNSPECIFIED', index=0, number=0,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ACTIVE', index=1, number=1,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='DELETE_REQUESTED', index=2, number=2,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=4659,
-  serialized_end=4742,
+    name="LifecycleState",
+    full_name="google.logging.v2.LifecycleState",
+    filename=None,
+    file=DESCRIPTOR,
+    values=[
+        _descriptor.EnumValueDescriptor(
+            name="LIFECYCLE_STATE_UNSPECIFIED",
+            index=0,
+            number=0,
+            serialized_options=None,
+            type=None,
+        ),
+        _descriptor.EnumValueDescriptor(
+            name="ACTIVE", index=1, number=1, serialized_options=None, type=None
+        ),
+        _descriptor.EnumValueDescriptor(
+            name="DELETE_REQUESTED",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+        ),
+    ],
+    containing_type=None,
+    serialized_options=None,
+    serialized_start=4659,
+    serialized_end=4742,
 )
 _sym_db.RegisterEnumDescriptor(_LIFECYCLESTATE)
 
@@ -64,1113 +79,1813 @@ DELETE_REQUESTED = 2
 
 
 _LOGSINK_VERSIONFORMAT = _descriptor.EnumDescriptor(
-  name='VersionFormat',
-  full_name='google.logging.v2.LogSink.VersionFormat',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='VERSION_FORMAT_UNSPECIFIED', index=0, number=0,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='V2', index=1, number=1,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='V1', index=2, number=2,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=1306,
-  serialized_end=1369,
+    name="VersionFormat",
+    full_name="google.logging.v2.LogSink.VersionFormat",
+    filename=None,
+    file=DESCRIPTOR,
+    values=[
+        _descriptor.EnumValueDescriptor(
+            name="VERSION_FORMAT_UNSPECIFIED",
+            index=0,
+            number=0,
+            serialized_options=None,
+            type=None,
+        ),
+        _descriptor.EnumValueDescriptor(
+            name="V2", index=1, number=1, serialized_options=None, type=None
+        ),
+        _descriptor.EnumValueDescriptor(
+            name="V1", index=2, number=2, serialized_options=None, type=None
+        ),
+    ],
+    containing_type=None,
+    serialized_options=None,
+    serialized_start=1306,
+    serialized_end=1369,
 )
 _sym_db.RegisterEnumDescriptor(_LOGSINK_VERSIONFORMAT)
 
 
 _LOGBUCKET = _descriptor.Descriptor(
-  name='LogBucket',
-  full_name='google.logging.v2.LogBucket',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.LogBucket.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='google.logging.v2.LogBucket.description', index=1,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='create_time', full_name='google.logging.v2.LogBucket.create_time', index=2,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='update_time', full_name='google.logging.v2.LogBucket.update_time', index=3,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='retention_days', full_name='google.logging.v2.LogBucket.retention_days', index=4,
-      number=11, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='lifecycle_state', full_name='google.logging.v2.LogBucket.lifecycle_state', index=5,
-      number=12, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=b'\352A\241\002\n logging.googleapis.com/LogBucket\0228projects/{project}/locations/{location}/buckets/{bucket}\022Borganizations/{organization}/locations/{location}/buckets/{bucket}\0226folders/{folder}/locations/{location}/buckets/{bucket}\022GbillingAccounts/{billing_account}/locations/{location}/buckets/{bucket}',
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=317,
-  serialized_end=856,
+    name="LogBucket",
+    full_name="google.logging.v2.LogBucket",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.LogBucket.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="google.logging.v2.LogBucket.description",
+            index=1,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="create_time",
+            full_name="google.logging.v2.LogBucket.create_time",
+            index=2,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="update_time",
+            full_name="google.logging.v2.LogBucket.update_time",
+            index=3,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="retention_days",
+            full_name="google.logging.v2.LogBucket.retention_days",
+            index=4,
+            number=11,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="lifecycle_state",
+            full_name="google.logging.v2.LogBucket.lifecycle_state",
+            index=5,
+            number=12,
+            type=14,
+            cpp_type=8,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=b"\352A\241\002\n logging.googleapis.com/LogBucket\0228projects/{project}/locations/{location}/buckets/{bucket}\022Borganizations/{organization}/locations/{location}/buckets/{bucket}\0226folders/{folder}/locations/{location}/buckets/{bucket}\022GbillingAccounts/{billing_account}/locations/{location}/buckets/{bucket}",
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=317,
+    serialized_end=856,
 )
 
 
 _LOGSINK = _descriptor.Descriptor(
-  name='LogSink',
-  full_name='google.logging.v2.LogSink',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.LogSink.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='destination', full_name='google.logging.v2.LogSink.destination', index=1,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A\003\n\001*', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='filter', full_name='google.logging.v2.LogSink.filter', index=2,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='google.logging.v2.LogSink.description', index=3,
-      number=18, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='disabled', full_name='google.logging.v2.LogSink.disabled', index=4,
-      number=19, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='output_version_format', full_name='google.logging.v2.LogSink.output_version_format', index=5,
-      number=6, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\030\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='writer_identity', full_name='google.logging.v2.LogSink.writer_identity', index=6,
-      number=8, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='include_children', full_name='google.logging.v2.LogSink.include_children', index=7,
-      number=9, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='bigquery_options', full_name='google.logging.v2.LogSink.bigquery_options', index=8,
-      number=12, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='create_time', full_name='google.logging.v2.LogSink.create_time', index=9,
-      number=13, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='update_time', full_name='google.logging.v2.LogSink.update_time', index=10,
-      number=14, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-    _LOGSINK_VERSIONFORMAT,
-  ],
-  serialized_options=b'\352A\273\001\n\036logging.googleapis.com/LogSink\022\037projects/{project}/sinks/{sink}\022)organizations/{organization}/sinks/{sink}\022\035folders/{folder}/sinks/{sink}\022.billingAccounts/{billing_account}/sinks/{sink}',
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-    _descriptor.OneofDescriptor(
-      name='options', full_name='google.logging.v2.LogSink.options',
-      index=0, containing_type=None, fields=[]),
-  ],
-  serialized_start=859,
-  serialized_end=1574,
+    name="LogSink",
+    full_name="google.logging.v2.LogSink",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.LogSink.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="destination",
+            full_name="google.logging.v2.LogSink.destination",
+            index=1,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A\003\n\001*",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="filter",
+            full_name="google.logging.v2.LogSink.filter",
+            index=2,
+            number=5,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="google.logging.v2.LogSink.description",
+            index=3,
+            number=18,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="disabled",
+            full_name="google.logging.v2.LogSink.disabled",
+            index=4,
+            number=19,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="output_version_format",
+            full_name="google.logging.v2.LogSink.output_version_format",
+            index=5,
+            number=6,
+            type=14,
+            cpp_type=8,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\030\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="writer_identity",
+            full_name="google.logging.v2.LogSink.writer_identity",
+            index=6,
+            number=8,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="include_children",
+            full_name="google.logging.v2.LogSink.include_children",
+            index=7,
+            number=9,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="bigquery_options",
+            full_name="google.logging.v2.LogSink.bigquery_options",
+            index=8,
+            number=12,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="create_time",
+            full_name="google.logging.v2.LogSink.create_time",
+            index=9,
+            number=13,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="update_time",
+            full_name="google.logging.v2.LogSink.update_time",
+            index=10,
+            number=14,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[_LOGSINK_VERSIONFORMAT,],
+    serialized_options=b"\352A\273\001\n\036logging.googleapis.com/LogSink\022\037projects/{project}/sinks/{sink}\022)organizations/{organization}/sinks/{sink}\022\035folders/{folder}/sinks/{sink}\022.billingAccounts/{billing_account}/sinks/{sink}",
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[
+        _descriptor.OneofDescriptor(
+            name="options",
+            full_name="google.logging.v2.LogSink.options",
+            index=0,
+            containing_type=None,
+            fields=[],
+        ),
+    ],
+    serialized_start=859,
+    serialized_end=1574,
 )
 
 
 _BIGQUERYOPTIONS = _descriptor.Descriptor(
-  name='BigQueryOptions',
-  full_name='google.logging.v2.BigQueryOptions',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='use_partitioned_tables', full_name='google.logging.v2.BigQueryOptions.use_partitioned_tables', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uses_timestamp_column_partitioning', full_name='google.logging.v2.BigQueryOptions.uses_timestamp_column_partitioning', index=1,
-      number=3, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1576,
-  serialized_end=1679,
+    name="BigQueryOptions",
+    full_name="google.logging.v2.BigQueryOptions",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="use_partitioned_tables",
+            full_name="google.logging.v2.BigQueryOptions.use_partitioned_tables",
+            index=0,
+            number=1,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="uses_timestamp_column_partitioning",
+            full_name="google.logging.v2.BigQueryOptions.uses_timestamp_column_partitioning",
+            index=1,
+            number=3,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1576,
+    serialized_end=1679,
 )
 
 
 _LISTBUCKETSREQUEST = _descriptor.Descriptor(
-  name='ListBucketsRequest',
-  full_name='google.logging.v2.ListBucketsRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='parent', full_name='google.logging.v2.ListBucketsRequest.parent', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A\"\022 logging.googleapis.com/LogBucket', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_token', full_name='google.logging.v2.ListBucketsRequest.page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_size', full_name='google.logging.v2.ListBucketsRequest.page_size', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1681,
-  serialized_end=1808,
+    name="ListBucketsRequest",
+    full_name="google.logging.v2.ListBucketsRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="parent",
+            full_name="google.logging.v2.ListBucketsRequest.parent",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b'\340A\002\372A"\022 logging.googleapis.com/LogBucket',
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_token",
+            full_name="google.logging.v2.ListBucketsRequest.page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_size",
+            full_name="google.logging.v2.ListBucketsRequest.page_size",
+            index=2,
+            number=3,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1681,
+    serialized_end=1808,
 )
 
 
 _LISTBUCKETSRESPONSE = _descriptor.Descriptor(
-  name='ListBucketsResponse',
-  full_name='google.logging.v2.ListBucketsResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='buckets', full_name='google.logging.v2.ListBucketsResponse.buckets', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='next_page_token', full_name='google.logging.v2.ListBucketsResponse.next_page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1810,
-  serialized_end=1903,
+    name="ListBucketsResponse",
+    full_name="google.logging.v2.ListBucketsResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="buckets",
+            full_name="google.logging.v2.ListBucketsResponse.buckets",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="next_page_token",
+            full_name="google.logging.v2.ListBucketsResponse.next_page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1810,
+    serialized_end=1903,
 )
 
 
 _UPDATEBUCKETREQUEST = _descriptor.Descriptor(
-  name='UpdateBucketRequest',
-  full_name='google.logging.v2.UpdateBucketRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.UpdateBucketRequest.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A\"\n logging.googleapis.com/LogBucket', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='bucket', full_name='google.logging.v2.UpdateBucketRequest.bucket', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='update_mask', full_name='google.logging.v2.UpdateBucketRequest.update_mask', index=2,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1906,
-  serialized_end=2088,
+    name="UpdateBucketRequest",
+    full_name="google.logging.v2.UpdateBucketRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.UpdateBucketRequest.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b'\340A\002\372A"\n logging.googleapis.com/LogBucket',
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="bucket",
+            full_name="google.logging.v2.UpdateBucketRequest.bucket",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="update_mask",
+            full_name="google.logging.v2.UpdateBucketRequest.update_mask",
+            index=2,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1906,
+    serialized_end=2088,
 )
 
 
 _GETBUCKETREQUEST = _descriptor.Descriptor(
-  name='GetBucketRequest',
-  full_name='google.logging.v2.GetBucketRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.GetBucketRequest.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A\"\n logging.googleapis.com/LogBucket', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2090,
-  serialized_end=2164,
+    name="GetBucketRequest",
+    full_name="google.logging.v2.GetBucketRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.GetBucketRequest.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b'\340A\002\372A"\n logging.googleapis.com/LogBucket',
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2090,
+    serialized_end=2164,
 )
 
 
 _LISTSINKSREQUEST = _descriptor.Descriptor(
-  name='ListSinksRequest',
-  full_name='google.logging.v2.ListSinksRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='parent', full_name='google.logging.v2.ListSinksRequest.parent', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A \022\036logging.googleapis.com/LogSink', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_token', full_name='google.logging.v2.ListSinksRequest.page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_size', full_name='google.logging.v2.ListSinksRequest.page_size', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2166,
-  serialized_end=2289,
+    name="ListSinksRequest",
+    full_name="google.logging.v2.ListSinksRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="parent",
+            full_name="google.logging.v2.ListSinksRequest.parent",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A \022\036logging.googleapis.com/LogSink",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_token",
+            full_name="google.logging.v2.ListSinksRequest.page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_size",
+            full_name="google.logging.v2.ListSinksRequest.page_size",
+            index=2,
+            number=3,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2166,
+    serialized_end=2289,
 )
 
 
 _LISTSINKSRESPONSE = _descriptor.Descriptor(
-  name='ListSinksResponse',
-  full_name='google.logging.v2.ListSinksResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='sinks', full_name='google.logging.v2.ListSinksResponse.sinks', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='next_page_token', full_name='google.logging.v2.ListSinksResponse.next_page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2291,
-  serialized_end=2378,
+    name="ListSinksResponse",
+    full_name="google.logging.v2.ListSinksResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="sinks",
+            full_name="google.logging.v2.ListSinksResponse.sinks",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="next_page_token",
+            full_name="google.logging.v2.ListSinksResponse.next_page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2291,
+    serialized_end=2378,
 )
 
 
 _GETSINKREQUEST = _descriptor.Descriptor(
-  name='GetSinkRequest',
-  full_name='google.logging.v2.GetSinkRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='sink_name', full_name='google.logging.v2.GetSinkRequest.sink_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A \n\036logging.googleapis.com/LogSink', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2380,
-  serialized_end=2455,
+    name="GetSinkRequest",
+    full_name="google.logging.v2.GetSinkRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="sink_name",
+            full_name="google.logging.v2.GetSinkRequest.sink_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2380,
+    serialized_end=2455,
 )
 
 
 _CREATESINKREQUEST = _descriptor.Descriptor(
-  name='CreateSinkRequest',
-  full_name='google.logging.v2.CreateSinkRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='parent', full_name='google.logging.v2.CreateSinkRequest.parent', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A \022\036logging.googleapis.com/LogSink', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='sink', full_name='google.logging.v2.CreateSinkRequest.sink', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='unique_writer_identity', full_name='google.logging.v2.CreateSinkRequest.unique_writer_identity', index=2,
-      number=3, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2458,
-  serialized_end=2617,
+    name="CreateSinkRequest",
+    full_name="google.logging.v2.CreateSinkRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="parent",
+            full_name="google.logging.v2.CreateSinkRequest.parent",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A \022\036logging.googleapis.com/LogSink",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="sink",
+            full_name="google.logging.v2.CreateSinkRequest.sink",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="unique_writer_identity",
+            full_name="google.logging.v2.CreateSinkRequest.unique_writer_identity",
+            index=2,
+            number=3,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2458,
+    serialized_end=2617,
 )
 
 
 _UPDATESINKREQUEST = _descriptor.Descriptor(
-  name='UpdateSinkRequest',
-  full_name='google.logging.v2.UpdateSinkRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='sink_name', full_name='google.logging.v2.UpdateSinkRequest.sink_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A \n\036logging.googleapis.com/LogSink', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='sink', full_name='google.logging.v2.UpdateSinkRequest.sink', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='unique_writer_identity', full_name='google.logging.v2.UpdateSinkRequest.unique_writer_identity', index=2,
-      number=3, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='update_mask', full_name='google.logging.v2.UpdateSinkRequest.update_mask', index=3,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2620,
-  serialized_end=2836,
+    name="UpdateSinkRequest",
+    full_name="google.logging.v2.UpdateSinkRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="sink_name",
+            full_name="google.logging.v2.UpdateSinkRequest.sink_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="sink",
+            full_name="google.logging.v2.UpdateSinkRequest.sink",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="unique_writer_identity",
+            full_name="google.logging.v2.UpdateSinkRequest.unique_writer_identity",
+            index=2,
+            number=3,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="update_mask",
+            full_name="google.logging.v2.UpdateSinkRequest.update_mask",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2620,
+    serialized_end=2836,
 )
 
 
 _DELETESINKREQUEST = _descriptor.Descriptor(
-  name='DeleteSinkRequest',
-  full_name='google.logging.v2.DeleteSinkRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='sink_name', full_name='google.logging.v2.DeleteSinkRequest.sink_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A \n\036logging.googleapis.com/LogSink', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2838,
-  serialized_end=2916,
+    name="DeleteSinkRequest",
+    full_name="google.logging.v2.DeleteSinkRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="sink_name",
+            full_name="google.logging.v2.DeleteSinkRequest.sink_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2838,
+    serialized_end=2916,
 )
 
 
 _LOGEXCLUSION = _descriptor.Descriptor(
-  name='LogExclusion',
-  full_name='google.logging.v2.LogExclusion',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.LogExclusion.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='description', full_name='google.logging.v2.LogExclusion.description', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='filter', full_name='google.logging.v2.LogExclusion.filter', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='disabled', full_name='google.logging.v2.LogExclusion.disabled', index=3,
-      number=4, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='create_time', full_name='google.logging.v2.LogExclusion.create_time', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='update_time', full_name='google.logging.v2.LogExclusion.update_time', index=5,
-      number=6, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=b'\352A\350\001\n#logging.googleapis.com/LogExclusion\022)projects/{project}/exclusions/{exclusion}\0223organizations/{organization}/exclusions/{exclusion}\022\'folders/{folder}/exclusions/{exclusion}\0228billingAccounts/{billing_account}/exclusions/{exclusion}',
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2919,
-  serialized_end=3369,
+    name="LogExclusion",
+    full_name="google.logging.v2.LogExclusion",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.LogExclusion.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="description",
+            full_name="google.logging.v2.LogExclusion.description",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="filter",
+            full_name="google.logging.v2.LogExclusion.filter",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="disabled",
+            full_name="google.logging.v2.LogExclusion.disabled",
+            index=3,
+            number=4,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="create_time",
+            full_name="google.logging.v2.LogExclusion.create_time",
+            index=4,
+            number=5,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="update_time",
+            full_name="google.logging.v2.LogExclusion.update_time",
+            index=5,
+            number=6,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=b"\352A\350\001\n#logging.googleapis.com/LogExclusion\022)projects/{project}/exclusions/{exclusion}\0223organizations/{organization}/exclusions/{exclusion}\022'folders/{folder}/exclusions/{exclusion}\0228billingAccounts/{billing_account}/exclusions/{exclusion}",
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=2919,
+    serialized_end=3369,
 )
 
 
 _LISTEXCLUSIONSREQUEST = _descriptor.Descriptor(
-  name='ListExclusionsRequest',
-  full_name='google.logging.v2.ListExclusionsRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='parent', full_name='google.logging.v2.ListExclusionsRequest.parent', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A%\022#logging.googleapis.com/LogExclusion', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_token', full_name='google.logging.v2.ListExclusionsRequest.page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_size', full_name='google.logging.v2.ListExclusionsRequest.page_size', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3372,
-  serialized_end=3505,
+    name="ListExclusionsRequest",
+    full_name="google.logging.v2.ListExclusionsRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="parent",
+            full_name="google.logging.v2.ListExclusionsRequest.parent",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A%\022#logging.googleapis.com/LogExclusion",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_token",
+            full_name="google.logging.v2.ListExclusionsRequest.page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_size",
+            full_name="google.logging.v2.ListExclusionsRequest.page_size",
+            index=2,
+            number=3,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=3372,
+    serialized_end=3505,
 )
 
 
 _LISTEXCLUSIONSRESPONSE = _descriptor.Descriptor(
-  name='ListExclusionsResponse',
-  full_name='google.logging.v2.ListExclusionsResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='exclusions', full_name='google.logging.v2.ListExclusionsResponse.exclusions', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='next_page_token', full_name='google.logging.v2.ListExclusionsResponse.next_page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3507,
-  serialized_end=3609,
+    name="ListExclusionsResponse",
+    full_name="google.logging.v2.ListExclusionsResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="exclusions",
+            full_name="google.logging.v2.ListExclusionsResponse.exclusions",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="next_page_token",
+            full_name="google.logging.v2.ListExclusionsResponse.next_page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=3507,
+    serialized_end=3609,
 )
 
 
 _GETEXCLUSIONREQUEST = _descriptor.Descriptor(
-  name='GetExclusionRequest',
-  full_name='google.logging.v2.GetExclusionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.GetExclusionRequest.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A%\n#logging.googleapis.com/LogExclusion', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3611,
-  serialized_end=3691,
+    name="GetExclusionRequest",
+    full_name="google.logging.v2.GetExclusionRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.GetExclusionRequest.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=3611,
+    serialized_end=3691,
 )
 
 
 _CREATEEXCLUSIONREQUEST = _descriptor.Descriptor(
-  name='CreateExclusionRequest',
-  full_name='google.logging.v2.CreateExclusionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='parent', full_name='google.logging.v2.CreateExclusionRequest.parent', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A%\022#logging.googleapis.com/LogExclusion', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='exclusion', full_name='google.logging.v2.CreateExclusionRequest.exclusion', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3694,
-  serialized_end=3836,
+    name="CreateExclusionRequest",
+    full_name="google.logging.v2.CreateExclusionRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="parent",
+            full_name="google.logging.v2.CreateExclusionRequest.parent",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A%\022#logging.googleapis.com/LogExclusion",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="exclusion",
+            full_name="google.logging.v2.CreateExclusionRequest.exclusion",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=3694,
+    serialized_end=3836,
 )
 
 
 _UPDATEEXCLUSIONREQUEST = _descriptor.Descriptor(
-  name='UpdateExclusionRequest',
-  full_name='google.logging.v2.UpdateExclusionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.UpdateExclusionRequest.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A%\n#logging.googleapis.com/LogExclusion', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='exclusion', full_name='google.logging.v2.UpdateExclusionRequest.exclusion', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='update_mask', full_name='google.logging.v2.UpdateExclusionRequest.update_mask', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3839,
-  serialized_end=4033,
+    name="UpdateExclusionRequest",
+    full_name="google.logging.v2.UpdateExclusionRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.UpdateExclusionRequest.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="exclusion",
+            full_name="google.logging.v2.UpdateExclusionRequest.exclusion",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="update_mask",
+            full_name="google.logging.v2.UpdateExclusionRequest.update_mask",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=3839,
+    serialized_end=4033,
 )
 
 
 _DELETEEXCLUSIONREQUEST = _descriptor.Descriptor(
-  name='DeleteExclusionRequest',
-  full_name='google.logging.v2.DeleteExclusionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.DeleteExclusionRequest.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A%\n#logging.googleapis.com/LogExclusion', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4035,
-  serialized_end=4118,
+    name="DeleteExclusionRequest",
+    full_name="google.logging.v2.DeleteExclusionRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.DeleteExclusionRequest.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=4035,
+    serialized_end=4118,
 )
 
 
 _GETCMEKSETTINGSREQUEST = _descriptor.Descriptor(
-  name='GetCmekSettingsRequest',
-  full_name='google.logging.v2.GetCmekSettingsRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.GetCmekSettingsRequest.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A%\n#logging.googleapis.com/CmekSettings', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4120,
-  serialized_end=4203,
+    name="GetCmekSettingsRequest",
+    full_name="google.logging.v2.GetCmekSettingsRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.GetCmekSettingsRequest.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/CmekSettings",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=4120,
+    serialized_end=4203,
 )
 
 
 _UPDATECMEKSETTINGSREQUEST = _descriptor.Descriptor(
-  name='UpdateCmekSettingsRequest',
-  full_name='google.logging.v2.UpdateCmekSettingsRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.UpdateCmekSettingsRequest.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='cmek_settings', full_name='google.logging.v2.UpdateCmekSettingsRequest.cmek_settings', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='update_mask', full_name='google.logging.v2.UpdateCmekSettingsRequest.update_mask', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4206,
-  serialized_end=4367,
+    name="UpdateCmekSettingsRequest",
+    full_name="google.logging.v2.UpdateCmekSettingsRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.UpdateCmekSettingsRequest.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="cmek_settings",
+            full_name="google.logging.v2.UpdateCmekSettingsRequest.cmek_settings",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="update_mask",
+            full_name="google.logging.v2.UpdateCmekSettingsRequest.update_mask",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=4206,
+    serialized_end=4367,
 )
 
 
 _CMEKSETTINGS = _descriptor.Descriptor(
-  name='CmekSettings',
-  full_name='google.logging.v2.CmekSettings',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='name', full_name='google.logging.v2.CmekSettings.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='kms_key_name', full_name='google.logging.v2.CmekSettings.kms_key_name', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='service_account_id', full_name='google.logging.v2.CmekSettings.service_account_id', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\003', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=b'\352A\300\001\n#logging.googleapis.com/CmekSettings\022\037projects/{project}/cmekSettings\022)organizations/{organization}/cmekSettings\022\035folders/{folder}/cmekSettings\022.billingAccounts/{billing_account}/cmekSettings',
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4370,
-  serialized_end=4657,
+    name="CmekSettings",
+    full_name="google.logging.v2.CmekSettings",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="name",
+            full_name="google.logging.v2.CmekSettings.name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="kms_key_name",
+            full_name="google.logging.v2.CmekSettings.kms_key_name",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="service_account_id",
+            full_name="google.logging.v2.CmekSettings.service_account_id",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\003",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=b"\352A\300\001\n#logging.googleapis.com/CmekSettings\022\037projects/{project}/cmekSettings\022)organizations/{organization}/cmekSettings\022\035folders/{folder}/cmekSettings\022.billingAccounts/{billing_account}/cmekSettings",
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=4370,
+    serialized_end=4657,
 )
 
-_LOGBUCKET.fields_by_name['create_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
-_LOGBUCKET.fields_by_name['update_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
-_LOGBUCKET.fields_by_name['lifecycle_state'].enum_type = _LIFECYCLESTATE
-_LOGSINK.fields_by_name['output_version_format'].enum_type = _LOGSINK_VERSIONFORMAT
-_LOGSINK.fields_by_name['bigquery_options'].message_type = _BIGQUERYOPTIONS
-_LOGSINK.fields_by_name['create_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
-_LOGSINK.fields_by_name['update_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_LOGBUCKET.fields_by_name[
+    "create_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_LOGBUCKET.fields_by_name[
+    "update_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_LOGBUCKET.fields_by_name["lifecycle_state"].enum_type = _LIFECYCLESTATE
+_LOGSINK.fields_by_name["output_version_format"].enum_type = _LOGSINK_VERSIONFORMAT
+_LOGSINK.fields_by_name["bigquery_options"].message_type = _BIGQUERYOPTIONS
+_LOGSINK.fields_by_name[
+    "create_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_LOGSINK.fields_by_name[
+    "update_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _LOGSINK_VERSIONFORMAT.containing_type = _LOGSINK
-_LOGSINK.oneofs_by_name['options'].fields.append(
-  _LOGSINK.fields_by_name['bigquery_options'])
-_LOGSINK.fields_by_name['bigquery_options'].containing_oneof = _LOGSINK.oneofs_by_name['options']
-_LISTBUCKETSRESPONSE.fields_by_name['buckets'].message_type = _LOGBUCKET
-_UPDATEBUCKETREQUEST.fields_by_name['bucket'].message_type = _LOGBUCKET
-_UPDATEBUCKETREQUEST.fields_by_name['update_mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
-_LISTSINKSRESPONSE.fields_by_name['sinks'].message_type = _LOGSINK
-_CREATESINKREQUEST.fields_by_name['sink'].message_type = _LOGSINK
-_UPDATESINKREQUEST.fields_by_name['sink'].message_type = _LOGSINK
-_UPDATESINKREQUEST.fields_by_name['update_mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
-_LOGEXCLUSION.fields_by_name['create_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
-_LOGEXCLUSION.fields_by_name['update_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
-_LISTEXCLUSIONSRESPONSE.fields_by_name['exclusions'].message_type = _LOGEXCLUSION
-_CREATEEXCLUSIONREQUEST.fields_by_name['exclusion'].message_type = _LOGEXCLUSION
-_UPDATEEXCLUSIONREQUEST.fields_by_name['exclusion'].message_type = _LOGEXCLUSION
-_UPDATEEXCLUSIONREQUEST.fields_by_name['update_mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
-_UPDATECMEKSETTINGSREQUEST.fields_by_name['cmek_settings'].message_type = _CMEKSETTINGS
-_UPDATECMEKSETTINGSREQUEST.fields_by_name['update_mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
-DESCRIPTOR.message_types_by_name['LogBucket'] = _LOGBUCKET
-DESCRIPTOR.message_types_by_name['LogSink'] = _LOGSINK
-DESCRIPTOR.message_types_by_name['BigQueryOptions'] = _BIGQUERYOPTIONS
-DESCRIPTOR.message_types_by_name['ListBucketsRequest'] = _LISTBUCKETSREQUEST
-DESCRIPTOR.message_types_by_name['ListBucketsResponse'] = _LISTBUCKETSRESPONSE
-DESCRIPTOR.message_types_by_name['UpdateBucketRequest'] = _UPDATEBUCKETREQUEST
-DESCRIPTOR.message_types_by_name['GetBucketRequest'] = _GETBUCKETREQUEST
-DESCRIPTOR.message_types_by_name['ListSinksRequest'] = _LISTSINKSREQUEST
-DESCRIPTOR.message_types_by_name['ListSinksResponse'] = _LISTSINKSRESPONSE
-DESCRIPTOR.message_types_by_name['GetSinkRequest'] = _GETSINKREQUEST
-DESCRIPTOR.message_types_by_name['CreateSinkRequest'] = _CREATESINKREQUEST
-DESCRIPTOR.message_types_by_name['UpdateSinkRequest'] = _UPDATESINKREQUEST
-DESCRIPTOR.message_types_by_name['DeleteSinkRequest'] = _DELETESINKREQUEST
-DESCRIPTOR.message_types_by_name['LogExclusion'] = _LOGEXCLUSION
-DESCRIPTOR.message_types_by_name['ListExclusionsRequest'] = _LISTEXCLUSIONSREQUEST
-DESCRIPTOR.message_types_by_name['ListExclusionsResponse'] = _LISTEXCLUSIONSRESPONSE
-DESCRIPTOR.message_types_by_name['GetExclusionRequest'] = _GETEXCLUSIONREQUEST
-DESCRIPTOR.message_types_by_name['CreateExclusionRequest'] = _CREATEEXCLUSIONREQUEST
-DESCRIPTOR.message_types_by_name['UpdateExclusionRequest'] = _UPDATEEXCLUSIONREQUEST
-DESCRIPTOR.message_types_by_name['DeleteExclusionRequest'] = _DELETEEXCLUSIONREQUEST
-DESCRIPTOR.message_types_by_name['GetCmekSettingsRequest'] = _GETCMEKSETTINGSREQUEST
-DESCRIPTOR.message_types_by_name['UpdateCmekSettingsRequest'] = _UPDATECMEKSETTINGSREQUEST
-DESCRIPTOR.message_types_by_name['CmekSettings'] = _CMEKSETTINGS
-DESCRIPTOR.enum_types_by_name['LifecycleState'] = _LIFECYCLESTATE
+_LOGSINK.oneofs_by_name["options"].fields.append(
+    _LOGSINK.fields_by_name["bigquery_options"]
+)
+_LOGSINK.fields_by_name["bigquery_options"].containing_oneof = _LOGSINK.oneofs_by_name[
+    "options"
+]
+_LISTBUCKETSRESPONSE.fields_by_name["buckets"].message_type = _LOGBUCKET
+_UPDATEBUCKETREQUEST.fields_by_name["bucket"].message_type = _LOGBUCKET
+_UPDATEBUCKETREQUEST.fields_by_name[
+    "update_mask"
+].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
+_LISTSINKSRESPONSE.fields_by_name["sinks"].message_type = _LOGSINK
+_CREATESINKREQUEST.fields_by_name["sink"].message_type = _LOGSINK
+_UPDATESINKREQUEST.fields_by_name["sink"].message_type = _LOGSINK
+_UPDATESINKREQUEST.fields_by_name[
+    "update_mask"
+].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
+_LOGEXCLUSION.fields_by_name[
+    "create_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_LOGEXCLUSION.fields_by_name[
+    "update_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_LISTEXCLUSIONSRESPONSE.fields_by_name["exclusions"].message_type = _LOGEXCLUSION
+_CREATEEXCLUSIONREQUEST.fields_by_name["exclusion"].message_type = _LOGEXCLUSION
+_UPDATEEXCLUSIONREQUEST.fields_by_name["exclusion"].message_type = _LOGEXCLUSION
+_UPDATEEXCLUSIONREQUEST.fields_by_name[
+    "update_mask"
+].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
+_UPDATECMEKSETTINGSREQUEST.fields_by_name["cmek_settings"].message_type = _CMEKSETTINGS
+_UPDATECMEKSETTINGSREQUEST.fields_by_name[
+    "update_mask"
+].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
+DESCRIPTOR.message_types_by_name["LogBucket"] = _LOGBUCKET
+DESCRIPTOR.message_types_by_name["LogSink"] = _LOGSINK
+DESCRIPTOR.message_types_by_name["BigQueryOptions"] = _BIGQUERYOPTIONS
+DESCRIPTOR.message_types_by_name["ListBucketsRequest"] = _LISTBUCKETSREQUEST
+DESCRIPTOR.message_types_by_name["ListBucketsResponse"] = _LISTBUCKETSRESPONSE
+DESCRIPTOR.message_types_by_name["UpdateBucketRequest"] = _UPDATEBUCKETREQUEST
+DESCRIPTOR.message_types_by_name["GetBucketRequest"] = _GETBUCKETREQUEST
+DESCRIPTOR.message_types_by_name["ListSinksRequest"] = _LISTSINKSREQUEST
+DESCRIPTOR.message_types_by_name["ListSinksResponse"] = _LISTSINKSRESPONSE
+DESCRIPTOR.message_types_by_name["GetSinkRequest"] = _GETSINKREQUEST
+DESCRIPTOR.message_types_by_name["CreateSinkRequest"] = _CREATESINKREQUEST
+DESCRIPTOR.message_types_by_name["UpdateSinkRequest"] = _UPDATESINKREQUEST
+DESCRIPTOR.message_types_by_name["DeleteSinkRequest"] = _DELETESINKREQUEST
+DESCRIPTOR.message_types_by_name["LogExclusion"] = _LOGEXCLUSION
+DESCRIPTOR.message_types_by_name["ListExclusionsRequest"] = _LISTEXCLUSIONSREQUEST
+DESCRIPTOR.message_types_by_name["ListExclusionsResponse"] = _LISTEXCLUSIONSRESPONSE
+DESCRIPTOR.message_types_by_name["GetExclusionRequest"] = _GETEXCLUSIONREQUEST
+DESCRIPTOR.message_types_by_name["CreateExclusionRequest"] = _CREATEEXCLUSIONREQUEST
+DESCRIPTOR.message_types_by_name["UpdateExclusionRequest"] = _UPDATEEXCLUSIONREQUEST
+DESCRIPTOR.message_types_by_name["DeleteExclusionRequest"] = _DELETEEXCLUSIONREQUEST
+DESCRIPTOR.message_types_by_name["GetCmekSettingsRequest"] = _GETCMEKSETTINGSREQUEST
+DESCRIPTOR.message_types_by_name[
+    "UpdateCmekSettingsRequest"
+] = _UPDATECMEKSETTINGSREQUEST
+DESCRIPTOR.message_types_by_name["CmekSettings"] = _CMEKSETTINGS
+DESCRIPTOR.enum_types_by_name["LifecycleState"] = _LIFECYCLESTATE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-LogBucket = _reflection.GeneratedProtocolMessageType('LogBucket', (_message.Message,), {
-  'DESCRIPTOR' : _LOGBUCKET,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """Describes a repository of logs (Beta).
+LogBucket = _reflection.GeneratedProtocolMessageType(
+    "LogBucket",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LOGBUCKET,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """Describes a repository of logs (Beta).
   
   
   Attributes:
@@ -1197,15 +1912,18 @@ LogBucket = _reflection.GeneratedProtocolMessageType('LogBucket', (_message.Mess
       lifecycle_state:
           Output only. The bucket lifecycle state.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.LogBucket)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.LogBucket)
+    },
+)
 _sym_db.RegisterMessage(LogBucket)
 
-LogSink = _reflection.GeneratedProtocolMessageType('LogSink', (_message.Message,), {
-  'DESCRIPTOR' : _LOGSINK,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """Describes a sink used to export log entries to one of the
+LogSink = _reflection.GeneratedProtocolMessageType(
+    "LogSink",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LOGSINK,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """Describes a sink used to export log entries to one of the
   following destinations in any project: a Cloud Storage bucket, a
   BigQuery dataset, or a Cloud Pub/Sub topic. A logs filter controls which
   log entries are exported. The sink must be created within a project,
@@ -1290,15 +2008,18 @@ LogSink = _reflection.GeneratedProtocolMessageType('LogSink', (_message.Message,
           Output only. The last update timestamp of the sink.  This
           field may not be present for older sinks.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.LogSink)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.LogSink)
+    },
+)
 _sym_db.RegisterMessage(LogSink)
 
-BigQueryOptions = _reflection.GeneratedProtocolMessageType('BigQueryOptions', (_message.Message,), {
-  'DESCRIPTOR' : _BIGQUERYOPTIONS,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """Options that change functionality of a sink exporting data
+BigQueryOptions = _reflection.GeneratedProtocolMessageType(
+    "BigQueryOptions",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _BIGQUERYOPTIONS,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """Options that change functionality of a sink exporting data
   to BigQuery.
   
   
@@ -1322,15 +2043,18 @@ BigQueryOptions = _reflection.GeneratedProtocolMessageType('BigQueryOptions', (_
           sinks using partitioned tables will have this field set to
           false.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.BigQueryOptions)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.BigQueryOptions)
+    },
+)
 _sym_db.RegisterMessage(BigQueryOptions)
 
-ListBucketsRequest = _reflection.GeneratedProtocolMessageType('ListBucketsRequest', (_message.Message,), {
-  'DESCRIPTOR' : _LISTBUCKETSREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``ListBuckets`` (Beta).
+ListBucketsRequest = _reflection.GeneratedProtocolMessageType(
+    "ListBucketsRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTBUCKETSREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``ListBuckets`` (Beta).
   
   
   Attributes:
@@ -1355,15 +2079,18 @@ ListBucketsRequest = _reflection.GeneratedProtocolMessageType('ListBucketsReques
           ``nextPageToken`` in the response indicates that more results
           might be available.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListBucketsRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListBucketsRequest)
+    },
+)
 _sym_db.RegisterMessage(ListBucketsRequest)
 
-ListBucketsResponse = _reflection.GeneratedProtocolMessageType('ListBucketsResponse', (_message.Message,), {
-  'DESCRIPTOR' : _LISTBUCKETSRESPONSE,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The response from ListBuckets (Beta).
+ListBucketsResponse = _reflection.GeneratedProtocolMessageType(
+    "ListBucketsResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTBUCKETSRESPONSE,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The response from ListBuckets (Beta).
   
   
   Attributes:
@@ -1375,15 +2102,18 @@ ListBucketsResponse = _reflection.GeneratedProtocolMessageType('ListBucketsRespo
           results, call the same method again using the value of
           ``nextPageToken`` as ``pageToken``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListBucketsResponse)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListBucketsResponse)
+    },
+)
 _sym_db.RegisterMessage(ListBucketsResponse)
 
-UpdateBucketRequest = _reflection.GeneratedProtocolMessageType('UpdateBucketRequest', (_message.Message,), {
-  'DESCRIPTOR' : _UPDATEBUCKETREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``UpdateBucket`` (Beta).
+UpdateBucketRequest = _reflection.GeneratedProtocolMessageType(
+    "UpdateBucketRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _UPDATEBUCKETREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``UpdateBucket`` (Beta).
   
   
   Attributes:
@@ -1409,15 +2139,18 @@ UpdateBucketRequest = _reflection.GeneratedProtocolMessageType('UpdateBucketRequ
           /docs/reference/google.protobuf#google.protobuf.FieldMask
           Example: ``updateMask=retention_days``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateBucketRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateBucketRequest)
+    },
+)
 _sym_db.RegisterMessage(UpdateBucketRequest)
 
-GetBucketRequest = _reflection.GeneratedProtocolMessageType('GetBucketRequest', (_message.Message,), {
-  'DESCRIPTOR' : _GETBUCKETREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``GetBucket`` (Beta).
+GetBucketRequest = _reflection.GeneratedProtocolMessageType(
+    "GetBucketRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GETBUCKETREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``GetBucket`` (Beta).
   
   
   Attributes:
@@ -1431,15 +2164,18 @@ GetBucketRequest = _reflection.GeneratedProtocolMessageType('GetBucketRequest', 
           ``"projects/my-project-id/locations/my-location/buckets/my-
           bucket-id"``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.GetBucketRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.GetBucketRequest)
+    },
+)
 _sym_db.RegisterMessage(GetBucketRequest)
 
-ListSinksRequest = _reflection.GeneratedProtocolMessageType('ListSinksRequest', (_message.Message,), {
-  'DESCRIPTOR' : _LISTSINKSREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``ListSinks``.
+ListSinksRequest = _reflection.GeneratedProtocolMessageType(
+    "ListSinksRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTSINKSREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``ListSinks``.
   
   
   Attributes:
@@ -1461,15 +2197,18 @@ ListSinksRequest = _reflection.GeneratedProtocolMessageType('ListSinksRequest', 
           ``nextPageToken`` in the response indicates that more results
           might be available.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListSinksRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListSinksRequest)
+    },
+)
 _sym_db.RegisterMessage(ListSinksRequest)
 
-ListSinksResponse = _reflection.GeneratedProtocolMessageType('ListSinksResponse', (_message.Message,), {
-  'DESCRIPTOR' : _LISTSINKSRESPONSE,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """Result returned from ``ListSinks``.
+ListSinksResponse = _reflection.GeneratedProtocolMessageType(
+    "ListSinksResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTSINKSRESPONSE,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """Result returned from ``ListSinks``.
   
   
   Attributes:
@@ -1481,15 +2220,18 @@ ListSinksResponse = _reflection.GeneratedProtocolMessageType('ListSinksResponse'
           results, call the same method again using the value of
           ``nextPageToken`` as ``pageToken``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListSinksResponse)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListSinksResponse)
+    },
+)
 _sym_db.RegisterMessage(ListSinksResponse)
 
-GetSinkRequest = _reflection.GeneratedProtocolMessageType('GetSinkRequest', (_message.Message,), {
-  'DESCRIPTOR' : _GETSINKREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``GetSink``.
+GetSinkRequest = _reflection.GeneratedProtocolMessageType(
+    "GetSinkRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GETSINKREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``GetSink``.
   
   
   Attributes:
@@ -1501,15 +2243,18 @@ GetSinkRequest = _reflection.GeneratedProtocolMessageType('GetSinkRequest', (_me
           "folders/[FOLDER_ID]/sinks/[SINK_ID]"  Example:
           ``"projects/my-project-id/sinks/my-sink-id"``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.GetSinkRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.GetSinkRequest)
+    },
+)
 _sym_db.RegisterMessage(GetSinkRequest)
 
-CreateSinkRequest = _reflection.GeneratedProtocolMessageType('CreateSinkRequest', (_message.Message,), {
-  'DESCRIPTOR' : _CREATESINKREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``CreateSink``.
+CreateSinkRequest = _reflection.GeneratedProtocolMessageType(
+    "CreateSinkRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _CREATESINKREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``CreateSink``.
   
   
   Attributes:
@@ -1536,15 +2281,18 @@ CreateSinkRequest = _reflection.GeneratedProtocolMessageType('CreateSinkRequest'
           sink. For more information, see ``writer_identity`` in
           [LogSink][google.logging.v2.LogSink].
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.CreateSinkRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.CreateSinkRequest)
+    },
+)
 _sym_db.RegisterMessage(CreateSinkRequest)
 
-UpdateSinkRequest = _reflection.GeneratedProtocolMessageType('UpdateSinkRequest', (_message.Message,), {
-  'DESCRIPTOR' : _UPDATESINKREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``UpdateSink``.
+UpdateSinkRequest = _reflection.GeneratedProtocolMessageType(
+    "UpdateSinkRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _UPDATESINKREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``UpdateSink``.
   
   
   Attributes:
@@ -1586,15 +2334,18 @@ UpdateSinkRequest = _reflection.GeneratedProtocolMessageType('UpdateSinkRequest'
           google.protobuf#google.protobuf.FieldMask  Example:
           ``updateMask=filter``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateSinkRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateSinkRequest)
+    },
+)
 _sym_db.RegisterMessage(UpdateSinkRequest)
 
-DeleteSinkRequest = _reflection.GeneratedProtocolMessageType('DeleteSinkRequest', (_message.Message,), {
-  'DESCRIPTOR' : _DELETESINKREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``DeleteSink``.
+DeleteSinkRequest = _reflection.GeneratedProtocolMessageType(
+    "DeleteSinkRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _DELETESINKREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``DeleteSink``.
   
   
   Attributes:
@@ -1607,15 +2358,18 @@ DeleteSinkRequest = _reflection.GeneratedProtocolMessageType('DeleteSinkRequest'
           "folders/[FOLDER_ID]/sinks/[SINK_ID]"  Example:
           ``"projects/my-project-id/sinks/my-sink-id"``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.DeleteSinkRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.DeleteSinkRequest)
+    },
+)
 _sym_db.RegisterMessage(DeleteSinkRequest)
 
-LogExclusion = _reflection.GeneratedProtocolMessageType('LogExclusion', (_message.Message,), {
-  'DESCRIPTOR' : _LOGEXCLUSION,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """Specifies a set of log entries that are not to be stored
+LogExclusion = _reflection.GeneratedProtocolMessageType(
+    "LogExclusion",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LOGEXCLUSION,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """Specifies a set of log entries that are not to be stored
   in Logging. If your GCP resource receives a large volume of logs, you
   can use exclusions to reduce your chargeable logs. Exclusions are
   processed after log sinks, so you can export log entries before they are
@@ -1654,15 +2408,18 @@ LogExclusion = _reflection.GeneratedProtocolMessageType('LogExclusion', (_messag
           Output only. The last update timestamp of the exclusion.  This
           field may not be present for older exclusions.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.LogExclusion)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.LogExclusion)
+    },
+)
 _sym_db.RegisterMessage(LogExclusion)
 
-ListExclusionsRequest = _reflection.GeneratedProtocolMessageType('ListExclusionsRequest', (_message.Message,), {
-  'DESCRIPTOR' : _LISTEXCLUSIONSREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``ListExclusions``.
+ListExclusionsRequest = _reflection.GeneratedProtocolMessageType(
+    "ListExclusionsRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTEXCLUSIONSREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``ListExclusions``.
   
   
   Attributes:
@@ -1684,15 +2441,18 @@ ListExclusionsRequest = _reflection.GeneratedProtocolMessageType('ListExclusions
           ``nextPageToken`` in the response indicates that more results
           might be available.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListExclusionsRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListExclusionsRequest)
+    },
+)
 _sym_db.RegisterMessage(ListExclusionsRequest)
 
-ListExclusionsResponse = _reflection.GeneratedProtocolMessageType('ListExclusionsResponse', (_message.Message,), {
-  'DESCRIPTOR' : _LISTEXCLUSIONSRESPONSE,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """Result returned from ``ListExclusions``.
+ListExclusionsResponse = _reflection.GeneratedProtocolMessageType(
+    "ListExclusionsResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTEXCLUSIONSRESPONSE,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """Result returned from ``ListExclusions``.
   
   
   Attributes:
@@ -1704,15 +2464,18 @@ ListExclusionsResponse = _reflection.GeneratedProtocolMessageType('ListExclusion
           results, call the same method again using the value of
           ``nextPageToken`` as ``pageToken``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListExclusionsResponse)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListExclusionsResponse)
+    },
+)
 _sym_db.RegisterMessage(ListExclusionsResponse)
 
-GetExclusionRequest = _reflection.GeneratedProtocolMessageType('GetExclusionRequest', (_message.Message,), {
-  'DESCRIPTOR' : _GETEXCLUSIONREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``GetExclusion``.
+GetExclusionRequest = _reflection.GeneratedProtocolMessageType(
+    "GetExclusionRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GETEXCLUSIONREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``GetExclusion``.
   
   
   Attributes:
@@ -1725,15 +2488,18 @@ GetExclusionRequest = _reflection.GeneratedProtocolMessageType('GetExclusionRequ
           Example: ``"projects/my-project-id/exclusions/my-exclusion-
           id"``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.GetExclusionRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.GetExclusionRequest)
+    },
+)
 _sym_db.RegisterMessage(GetExclusionRequest)
 
-CreateExclusionRequest = _reflection.GeneratedProtocolMessageType('CreateExclusionRequest', (_message.Message,), {
-  'DESCRIPTOR' : _CREATEEXCLUSIONREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``CreateExclusion``.
+CreateExclusionRequest = _reflection.GeneratedProtocolMessageType(
+    "CreateExclusionRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _CREATEEXCLUSIONREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``CreateExclusion``.
   
   
   Attributes:
@@ -1749,15 +2515,18 @@ CreateExclusionRequest = _reflection.GeneratedProtocolMessageType('CreateExclusi
           exclusion name that is not already used in the parent
           resource.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.CreateExclusionRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.CreateExclusionRequest)
+    },
+)
 _sym_db.RegisterMessage(CreateExclusionRequest)
 
-UpdateExclusionRequest = _reflection.GeneratedProtocolMessageType('UpdateExclusionRequest', (_message.Message,), {
-  'DESCRIPTOR' : _UPDATEEXCLUSIONREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``UpdateExclusion``.
+UpdateExclusionRequest = _reflection.GeneratedProtocolMessageType(
+    "UpdateExclusionRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _UPDATEEXCLUSIONREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``UpdateExclusion``.
   
   
   Attributes:
@@ -1782,15 +2551,18 @@ UpdateExclusionRequest = _reflection.GeneratedProtocolMessageType('UpdateExclusi
           change the filter and description of an exclusion, specify an
           ``update_mask`` of ``"filter,description"``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateExclusionRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateExclusionRequest)
+    },
+)
 _sym_db.RegisterMessage(UpdateExclusionRequest)
 
-DeleteExclusionRequest = _reflection.GeneratedProtocolMessageType('DeleteExclusionRequest', (_message.Message,), {
-  'DESCRIPTOR' : _DELETEEXCLUSIONREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to ``DeleteExclusion``.
+DeleteExclusionRequest = _reflection.GeneratedProtocolMessageType(
+    "DeleteExclusionRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _DELETEEXCLUSIONREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to ``DeleteExclusion``.
   
   
   Attributes:
@@ -1804,15 +2576,18 @@ DeleteExclusionRequest = _reflection.GeneratedProtocolMessageType('DeleteExclusi
           Example: ``"projects/my-project-id/exclusions/my-exclusion-
           id"``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.DeleteExclusionRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.DeleteExclusionRequest)
+    },
+)
 _sym_db.RegisterMessage(DeleteExclusionRequest)
 
-GetCmekSettingsRequest = _reflection.GeneratedProtocolMessageType('GetCmekSettingsRequest', (_message.Message,), {
-  'DESCRIPTOR' : _GETCMEKSETTINGSREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to
+GetCmekSettingsRequest = _reflection.GeneratedProtocolMessageType(
+    "GetCmekSettingsRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GETCMEKSETTINGSREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to
   [GetCmekSettings][google.logging.v2.ConfigServiceV2.GetCmekSettings].
   
   See `Enabling CMEK for Logs
@@ -1832,15 +2607,18 @@ GetCmekSettingsRequest = _reflection.GeneratedProtocolMessageType('GetCmekSettin
           organizations. Once configured, it applies to all projects and
           folders in the GCP organization.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.GetCmekSettingsRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.GetCmekSettingsRequest)
+    },
+)
 _sym_db.RegisterMessage(GetCmekSettingsRequest)
 
-UpdateCmekSettingsRequest = _reflection.GeneratedProtocolMessageType('UpdateCmekSettingsRequest', (_message.Message,), {
-  'DESCRIPTOR' : _UPDATECMEKSETTINGSREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """The parameters to
+UpdateCmekSettingsRequest = _reflection.GeneratedProtocolMessageType(
+    "UpdateCmekSettingsRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _UPDATECMEKSETTINGSREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """The parameters to
   [UpdateCmekSettings][google.logging.v2.ConfigServiceV2.UpdateCmekSettings].
   
   See `Enabling CMEK for Logs
@@ -1872,15 +2650,18 @@ UpdateCmekSettingsRequest = _reflection.GeneratedProtocolMessageType('UpdateCmek
           [FieldMask][google.protobuf.FieldMask] for more information.
           Example: ``"updateMask=kmsKeyName"``
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateCmekSettingsRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.UpdateCmekSettingsRequest)
+    },
+)
 _sym_db.RegisterMessage(UpdateCmekSettingsRequest)
 
-CmekSettings = _reflection.GeneratedProtocolMessageType('CmekSettings', (_message.Message,), {
-  'DESCRIPTOR' : _CMEKSETTINGS,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_config_pb2'
-  ,
-  '__doc__': """Describes the customer-managed encryption key (CMEK)
+CmekSettings = _reflection.GeneratedProtocolMessageType(
+    "CmekSettings",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _CMEKSETTINGS,
+        "__module__": "google.cloud.logging_v2.proto.logging_config_pb2",
+        "__doc__": """Describes the customer-managed encryption key (CMEK)
   settings associated with a project, folder, organization, billing
   account, or flexible resource.
   
@@ -1927,221 +2708,223 @@ CmekSettings = _reflection.GeneratedProtocolMessageType('CmekSettings', (_messag
           <https://cloud.google.com/logging/docs/routing/managed-
           encryption>`__ for more information.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.CmekSettings)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.CmekSettings)
+    },
+)
 _sym_db.RegisterMessage(CmekSettings)
 
 
 DESCRIPTOR._options = None
-_LOGBUCKET.fields_by_name['create_time']._options = None
-_LOGBUCKET.fields_by_name['update_time']._options = None
-_LOGBUCKET.fields_by_name['lifecycle_state']._options = None
+_LOGBUCKET.fields_by_name["create_time"]._options = None
+_LOGBUCKET.fields_by_name["update_time"]._options = None
+_LOGBUCKET.fields_by_name["lifecycle_state"]._options = None
 _LOGBUCKET._options = None
-_LOGSINK.fields_by_name['name']._options = None
-_LOGSINK.fields_by_name['destination']._options = None
-_LOGSINK.fields_by_name['filter']._options = None
-_LOGSINK.fields_by_name['description']._options = None
-_LOGSINK.fields_by_name['disabled']._options = None
-_LOGSINK.fields_by_name['output_version_format']._options = None
-_LOGSINK.fields_by_name['writer_identity']._options = None
-_LOGSINK.fields_by_name['include_children']._options = None
-_LOGSINK.fields_by_name['bigquery_options']._options = None
-_LOGSINK.fields_by_name['create_time']._options = None
-_LOGSINK.fields_by_name['update_time']._options = None
+_LOGSINK.fields_by_name["name"]._options = None
+_LOGSINK.fields_by_name["destination"]._options = None
+_LOGSINK.fields_by_name["filter"]._options = None
+_LOGSINK.fields_by_name["description"]._options = None
+_LOGSINK.fields_by_name["disabled"]._options = None
+_LOGSINK.fields_by_name["output_version_format"]._options = None
+_LOGSINK.fields_by_name["writer_identity"]._options = None
+_LOGSINK.fields_by_name["include_children"]._options = None
+_LOGSINK.fields_by_name["bigquery_options"]._options = None
+_LOGSINK.fields_by_name["create_time"]._options = None
+_LOGSINK.fields_by_name["update_time"]._options = None
 _LOGSINK._options = None
-_BIGQUERYOPTIONS.fields_by_name['use_partitioned_tables']._options = None
-_BIGQUERYOPTIONS.fields_by_name['uses_timestamp_column_partitioning']._options = None
-_LISTBUCKETSREQUEST.fields_by_name['parent']._options = None
-_LISTBUCKETSREQUEST.fields_by_name['page_token']._options = None
-_LISTBUCKETSREQUEST.fields_by_name['page_size']._options = None
-_UPDATEBUCKETREQUEST.fields_by_name['name']._options = None
-_UPDATEBUCKETREQUEST.fields_by_name['bucket']._options = None
-_UPDATEBUCKETREQUEST.fields_by_name['update_mask']._options = None
-_GETBUCKETREQUEST.fields_by_name['name']._options = None
-_LISTSINKSREQUEST.fields_by_name['parent']._options = None
-_LISTSINKSREQUEST.fields_by_name['page_token']._options = None
-_LISTSINKSREQUEST.fields_by_name['page_size']._options = None
-_GETSINKREQUEST.fields_by_name['sink_name']._options = None
-_CREATESINKREQUEST.fields_by_name['parent']._options = None
-_CREATESINKREQUEST.fields_by_name['sink']._options = None
-_CREATESINKREQUEST.fields_by_name['unique_writer_identity']._options = None
-_UPDATESINKREQUEST.fields_by_name['sink_name']._options = None
-_UPDATESINKREQUEST.fields_by_name['sink']._options = None
-_UPDATESINKREQUEST.fields_by_name['unique_writer_identity']._options = None
-_UPDATESINKREQUEST.fields_by_name['update_mask']._options = None
-_DELETESINKREQUEST.fields_by_name['sink_name']._options = None
-_LOGEXCLUSION.fields_by_name['name']._options = None
-_LOGEXCLUSION.fields_by_name['description']._options = None
-_LOGEXCLUSION.fields_by_name['filter']._options = None
-_LOGEXCLUSION.fields_by_name['disabled']._options = None
-_LOGEXCLUSION.fields_by_name['create_time']._options = None
-_LOGEXCLUSION.fields_by_name['update_time']._options = None
+_BIGQUERYOPTIONS.fields_by_name["use_partitioned_tables"]._options = None
+_BIGQUERYOPTIONS.fields_by_name["uses_timestamp_column_partitioning"]._options = None
+_LISTBUCKETSREQUEST.fields_by_name["parent"]._options = None
+_LISTBUCKETSREQUEST.fields_by_name["page_token"]._options = None
+_LISTBUCKETSREQUEST.fields_by_name["page_size"]._options = None
+_UPDATEBUCKETREQUEST.fields_by_name["name"]._options = None
+_UPDATEBUCKETREQUEST.fields_by_name["bucket"]._options = None
+_UPDATEBUCKETREQUEST.fields_by_name["update_mask"]._options = None
+_GETBUCKETREQUEST.fields_by_name["name"]._options = None
+_LISTSINKSREQUEST.fields_by_name["parent"]._options = None
+_LISTSINKSREQUEST.fields_by_name["page_token"]._options = None
+_LISTSINKSREQUEST.fields_by_name["page_size"]._options = None
+_GETSINKREQUEST.fields_by_name["sink_name"]._options = None
+_CREATESINKREQUEST.fields_by_name["parent"]._options = None
+_CREATESINKREQUEST.fields_by_name["sink"]._options = None
+_CREATESINKREQUEST.fields_by_name["unique_writer_identity"]._options = None
+_UPDATESINKREQUEST.fields_by_name["sink_name"]._options = None
+_UPDATESINKREQUEST.fields_by_name["sink"]._options = None
+_UPDATESINKREQUEST.fields_by_name["unique_writer_identity"]._options = None
+_UPDATESINKREQUEST.fields_by_name["update_mask"]._options = None
+_DELETESINKREQUEST.fields_by_name["sink_name"]._options = None
+_LOGEXCLUSION.fields_by_name["name"]._options = None
+_LOGEXCLUSION.fields_by_name["description"]._options = None
+_LOGEXCLUSION.fields_by_name["filter"]._options = None
+_LOGEXCLUSION.fields_by_name["disabled"]._options = None
+_LOGEXCLUSION.fields_by_name["create_time"]._options = None
+_LOGEXCLUSION.fields_by_name["update_time"]._options = None
 _LOGEXCLUSION._options = None
-_LISTEXCLUSIONSREQUEST.fields_by_name['parent']._options = None
-_LISTEXCLUSIONSREQUEST.fields_by_name['page_token']._options = None
-_LISTEXCLUSIONSREQUEST.fields_by_name['page_size']._options = None
-_GETEXCLUSIONREQUEST.fields_by_name['name']._options = None
-_CREATEEXCLUSIONREQUEST.fields_by_name['parent']._options = None
-_CREATEEXCLUSIONREQUEST.fields_by_name['exclusion']._options = None
-_UPDATEEXCLUSIONREQUEST.fields_by_name['name']._options = None
-_UPDATEEXCLUSIONREQUEST.fields_by_name['exclusion']._options = None
-_UPDATEEXCLUSIONREQUEST.fields_by_name['update_mask']._options = None
-_DELETEEXCLUSIONREQUEST.fields_by_name['name']._options = None
-_GETCMEKSETTINGSREQUEST.fields_by_name['name']._options = None
-_UPDATECMEKSETTINGSREQUEST.fields_by_name['name']._options = None
-_UPDATECMEKSETTINGSREQUEST.fields_by_name['cmek_settings']._options = None
-_UPDATECMEKSETTINGSREQUEST.fields_by_name['update_mask']._options = None
-_CMEKSETTINGS.fields_by_name['name']._options = None
-_CMEKSETTINGS.fields_by_name['service_account_id']._options = None
+_LISTEXCLUSIONSREQUEST.fields_by_name["parent"]._options = None
+_LISTEXCLUSIONSREQUEST.fields_by_name["page_token"]._options = None
+_LISTEXCLUSIONSREQUEST.fields_by_name["page_size"]._options = None
+_GETEXCLUSIONREQUEST.fields_by_name["name"]._options = None
+_CREATEEXCLUSIONREQUEST.fields_by_name["parent"]._options = None
+_CREATEEXCLUSIONREQUEST.fields_by_name["exclusion"]._options = None
+_UPDATEEXCLUSIONREQUEST.fields_by_name["name"]._options = None
+_UPDATEEXCLUSIONREQUEST.fields_by_name["exclusion"]._options = None
+_UPDATEEXCLUSIONREQUEST.fields_by_name["update_mask"]._options = None
+_DELETEEXCLUSIONREQUEST.fields_by_name["name"]._options = None
+_GETCMEKSETTINGSREQUEST.fields_by_name["name"]._options = None
+_UPDATECMEKSETTINGSREQUEST.fields_by_name["name"]._options = None
+_UPDATECMEKSETTINGSREQUEST.fields_by_name["cmek_settings"]._options = None
+_UPDATECMEKSETTINGSREQUEST.fields_by_name["update_mask"]._options = None
+_CMEKSETTINGS.fields_by_name["name"]._options = None
+_CMEKSETTINGS.fields_by_name["service_account_id"]._options = None
 _CMEKSETTINGS._options = None
 
 _CONFIGSERVICEV2 = _descriptor.ServiceDescriptor(
-  name='ConfigServiceV2',
-  full_name='google.logging.v2.ConfigServiceV2',
-  file=DESCRIPTOR,
-  index=0,
-  serialized_options=b'\312A\026logging.googleapis.com\322A\302\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read',
-  serialized_start=4745,
-  serialized_end=9784,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='ListBuckets',
-    full_name='google.logging.v2.ConfigServiceV2.ListBuckets',
+    name="ConfigServiceV2",
+    full_name="google.logging.v2.ConfigServiceV2",
+    file=DESCRIPTOR,
     index=0,
-    containing_service=None,
-    input_type=_LISTBUCKETSREQUEST,
-    output_type=_LISTBUCKETSRESPONSE,
-    serialized_options=b'\202\323\344\223\002\355\001\022$/v2/{parent=*/*/locations/*}/bucketsZ-\022+/v2/{parent=projects/*/locations/*}/bucketsZ2\0220/v2/{parent=organizations/*/locations/*}/bucketsZ,\022*/v2/{parent=folders/*/locations/*}/bucketsZ4\0222/v2/{parent=billingAccounts/*/locations/*}/buckets\332A\006parent',
-  ),
-  _descriptor.MethodDescriptor(
-    name='GetBucket',
-    full_name='google.logging.v2.ConfigServiceV2.GetBucket',
-    index=1,
-    containing_service=None,
-    input_type=_GETBUCKETREQUEST,
-    output_type=_LOGBUCKET,
-    serialized_options=b'\202\323\344\223\002\341\001\022$/v2/{name=*/*/locations/*/buckets/*}Z-\022+/v2/{name=projects/*/locations/*/buckets/*}Z2\0220/v2/{name=organizations/*/locations/*/buckets/*}Z,\022*/v2/{name=folders/*/locations/*/buckets/*}Z(\022&/v2/{name=billingAccounts/*/buckets/*}',
-  ),
-  _descriptor.MethodDescriptor(
-    name='UpdateBucket',
-    full_name='google.logging.v2.ConfigServiceV2.UpdateBucket',
-    index=2,
-    containing_service=None,
-    input_type=_UPDATEBUCKETREQUEST,
-    output_type=_LOGBUCKET,
-    serialized_options=b'\202\323\344\223\002\225\0022$/v2/{name=*/*/locations/*/buckets/*}:\006bucketZ52+/v2/{name=projects/*/locations/*/buckets/*}:\006bucketZ:20/v2/{name=organizations/*/locations/*/buckets/*}:\006bucketZ42*/v2/{name=folders/*/locations/*/buckets/*}:\006bucketZ<22/v2/{name=billingAccounts/*/locations/*/buckets/*}:\006bucket',
-  ),
-  _descriptor.MethodDescriptor(
-    name='ListSinks',
-    full_name='google.logging.v2.ConfigServiceV2.ListSinks',
-    index=3,
-    containing_service=None,
-    input_type=_LISTSINKSREQUEST,
-    output_type=_LISTSINKSRESPONSE,
-    serialized_options=b'\202\323\344\223\002\247\001\022\026/v2/{parent=*/*}/sinksZ\037\022\035/v2/{parent=projects/*}/sinksZ$\022\"/v2/{parent=organizations/*}/sinksZ\036\022\034/v2/{parent=folders/*}/sinksZ&\022$/v2/{parent=billingAccounts/*}/sinks\332A\006parent',
-  ),
-  _descriptor.MethodDescriptor(
-    name='GetSink',
-    full_name='google.logging.v2.ConfigServiceV2.GetSink',
-    index=4,
-    containing_service=None,
-    input_type=_GETSINKREQUEST,
-    output_type=_LOGSINK,
-    serialized_options=b'\202\323\344\223\002\300\001\022\033/v2/{sink_name=*/*/sinks/*}Z$\022\"/v2/{sink_name=projects/*/sinks/*}Z)\022\'/v2/{sink_name=organizations/*/sinks/*}Z#\022!/v2/{sink_name=folders/*/sinks/*}Z+\022)/v2/{sink_name=billingAccounts/*/sinks/*}\332A\tsink_name',
-  ),
-  _descriptor.MethodDescriptor(
-    name='CreateSink',
-    full_name='google.logging.v2.ConfigServiceV2.CreateSink',
-    index=5,
-    containing_service=None,
-    input_type=_CREATESINKREQUEST,
-    output_type=_LOGSINK,
-    serialized_options=b'\202\323\344\223\002\305\001\"\026/v2/{parent=*/*}/sinks:\004sinkZ%\"\035/v2/{parent=projects/*}/sinks:\004sinkZ*\"\"/v2/{parent=organizations/*}/sinks:\004sinkZ$\"\034/v2/{parent=folders/*}/sinks:\004sinkZ,\"$/v2/{parent=billingAccounts/*}/sinks:\004sink\332A\013parent,sink',
-  ),
-  _descriptor.MethodDescriptor(
-    name='UpdateSink',
-    full_name='google.logging.v2.ConfigServiceV2.UpdateSink',
-    index=6,
-    containing_service=None,
-    input_type=_UPDATESINKREQUEST,
-    output_type=_LOGSINK,
-    serialized_options=b'\202\323\344\223\002\231\003\032\033/v2/{sink_name=*/*/sinks/*}:\004sinkZ*\032\"/v2/{sink_name=projects/*/sinks/*}:\004sinkZ/\032\'/v2/{sink_name=organizations/*/sinks/*}:\004sinkZ)\032!/v2/{sink_name=folders/*/sinks/*}:\004sinkZ1\032)/v2/{sink_name=billingAccounts/*/sinks/*}:\004sinkZ*2\"/v2/{sink_name=projects/*/sinks/*}:\004sinkZ/2\'/v2/{sink_name=organizations/*/sinks/*}:\004sinkZ)2!/v2/{sink_name=folders/*/sinks/*}:\004sinkZ12)/v2/{sink_name=billingAccounts/*/sinks/*}:\004sink\332A\032sink_name,sink,update_mask\332A\016sink_name,sink',
-  ),
-  _descriptor.MethodDescriptor(
-    name='DeleteSink',
-    full_name='google.logging.v2.ConfigServiceV2.DeleteSink',
-    index=7,
-    containing_service=None,
-    input_type=_DELETESINKREQUEST,
-    output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-    serialized_options=b'\202\323\344\223\002\300\001*\033/v2/{sink_name=*/*/sinks/*}Z$*\"/v2/{sink_name=projects/*/sinks/*}Z)*\'/v2/{sink_name=organizations/*/sinks/*}Z#*!/v2/{sink_name=folders/*/sinks/*}Z+*)/v2/{sink_name=billingAccounts/*/sinks/*}\332A\tsink_name',
-  ),
-  _descriptor.MethodDescriptor(
-    name='ListExclusions',
-    full_name='google.logging.v2.ConfigServiceV2.ListExclusions',
-    index=8,
-    containing_service=None,
-    input_type=_LISTEXCLUSIONSREQUEST,
-    output_type=_LISTEXCLUSIONSRESPONSE,
-    serialized_options=b'\202\323\344\223\002\300\001\022\033/v2/{parent=*/*}/exclusionsZ$\022\"/v2/{parent=projects/*}/exclusionsZ)\022\'/v2/{parent=organizations/*}/exclusionsZ#\022!/v2/{parent=folders/*}/exclusionsZ+\022)/v2/{parent=billingAccounts/*}/exclusions\332A\006parent',
-  ),
-  _descriptor.MethodDescriptor(
-    name='GetExclusion',
-    full_name='google.logging.v2.ConfigServiceV2.GetExclusion',
-    index=9,
-    containing_service=None,
-    input_type=_GETEXCLUSIONREQUEST,
-    output_type=_LOGEXCLUSION,
-    serialized_options=b'\202\323\344\223\002\300\001\022\033/v2/{name=*/*/exclusions/*}Z$\022\"/v2/{name=projects/*/exclusions/*}Z)\022\'/v2/{name=organizations/*/exclusions/*}Z#\022!/v2/{name=folders/*/exclusions/*}Z+\022)/v2/{name=billingAccounts/*/exclusions/*}\332A\004name',
-  ),
-  _descriptor.MethodDescriptor(
-    name='CreateExclusion',
-    full_name='google.logging.v2.ConfigServiceV2.CreateExclusion',
-    index=10,
-    containing_service=None,
-    input_type=_CREATEEXCLUSIONREQUEST,
-    output_type=_LOGEXCLUSION,
-    serialized_options=b'\202\323\344\223\002\367\001\"\033/v2/{parent=*/*}/exclusions:\texclusionZ/\"\"/v2/{parent=projects/*}/exclusions:\texclusionZ4\"\'/v2/{parent=organizations/*}/exclusions:\texclusionZ.\"!/v2/{parent=folders/*}/exclusions:\texclusionZ6\")/v2/{parent=billingAccounts/*}/exclusions:\texclusion\332A\020parent,exclusion',
-  ),
-  _descriptor.MethodDescriptor(
-    name='UpdateExclusion',
-    full_name='google.logging.v2.ConfigServiceV2.UpdateExclusion',
-    index=11,
-    containing_service=None,
-    input_type=_UPDATEEXCLUSIONREQUEST,
-    output_type=_LOGEXCLUSION,
-    serialized_options=b'\202\323\344\223\002\367\0012\033/v2/{name=*/*/exclusions/*}:\texclusionZ/2\"/v2/{name=projects/*/exclusions/*}:\texclusionZ42\'/v2/{name=organizations/*/exclusions/*}:\texclusionZ.2!/v2/{name=folders/*/exclusions/*}:\texclusionZ62)/v2/{name=billingAccounts/*/exclusions/*}:\texclusion\332A\032name,exclusion,update_mask',
-  ),
-  _descriptor.MethodDescriptor(
-    name='DeleteExclusion',
-    full_name='google.logging.v2.ConfigServiceV2.DeleteExclusion',
-    index=12,
-    containing_service=None,
-    input_type=_DELETEEXCLUSIONREQUEST,
-    output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-    serialized_options=b'\202\323\344\223\002\300\001*\033/v2/{name=*/*/exclusions/*}Z$*\"/v2/{name=projects/*/exclusions/*}Z)*\'/v2/{name=organizations/*/exclusions/*}Z#*!/v2/{name=folders/*/exclusions/*}Z+*)/v2/{name=billingAccounts/*/exclusions/*}\332A\004name',
-  ),
-  _descriptor.MethodDescriptor(
-    name='GetCmekSettings',
-    full_name='google.logging.v2.ConfigServiceV2.GetCmekSettings',
-    index=13,
-    containing_service=None,
-    input_type=_GETCMEKSETTINGSREQUEST,
-    output_type=_CMEKSETTINGS,
-    serialized_options=b'\202\323\344\223\002H\022\033/v2/{name=*/*}/cmekSettingsZ)\022\'/v2/{name=organizations/*}/cmekSettings',
-  ),
-  _descriptor.MethodDescriptor(
-    name='UpdateCmekSettings',
-    full_name='google.logging.v2.ConfigServiceV2.UpdateCmekSettings',
-    index=14,
-    containing_service=None,
-    input_type=_UPDATECMEKSETTINGSREQUEST,
-    output_type=_CMEKSETTINGS,
-    serialized_options=b'\202\323\344\223\002f2\033/v2/{name=*/*}/cmekSettings:\rcmek_settingsZ82\'/v2/{name=organizations/*}/cmekSettings:\rcmek_settings',
-  ),
-])
+    serialized_options=b"\312A\026logging.googleapis.com\322A\302\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read",
+    serialized_start=4745,
+    serialized_end=9784,
+    methods=[
+        _descriptor.MethodDescriptor(
+            name="ListBuckets",
+            full_name="google.logging.v2.ConfigServiceV2.ListBuckets",
+            index=0,
+            containing_service=None,
+            input_type=_LISTBUCKETSREQUEST,
+            output_type=_LISTBUCKETSRESPONSE,
+            serialized_options=b"\202\323\344\223\002\355\001\022$/v2/{parent=*/*/locations/*}/bucketsZ-\022+/v2/{parent=projects/*/locations/*}/bucketsZ2\0220/v2/{parent=organizations/*/locations/*}/bucketsZ,\022*/v2/{parent=folders/*/locations/*}/bucketsZ4\0222/v2/{parent=billingAccounts/*/locations/*}/buckets\332A\006parent",
+        ),
+        _descriptor.MethodDescriptor(
+            name="GetBucket",
+            full_name="google.logging.v2.ConfigServiceV2.GetBucket",
+            index=1,
+            containing_service=None,
+            input_type=_GETBUCKETREQUEST,
+            output_type=_LOGBUCKET,
+            serialized_options=b"\202\323\344\223\002\341\001\022$/v2/{name=*/*/locations/*/buckets/*}Z-\022+/v2/{name=projects/*/locations/*/buckets/*}Z2\0220/v2/{name=organizations/*/locations/*/buckets/*}Z,\022*/v2/{name=folders/*/locations/*/buckets/*}Z(\022&/v2/{name=billingAccounts/*/buckets/*}",
+        ),
+        _descriptor.MethodDescriptor(
+            name="UpdateBucket",
+            full_name="google.logging.v2.ConfigServiceV2.UpdateBucket",
+            index=2,
+            containing_service=None,
+            input_type=_UPDATEBUCKETREQUEST,
+            output_type=_LOGBUCKET,
+            serialized_options=b"\202\323\344\223\002\225\0022$/v2/{name=*/*/locations/*/buckets/*}:\006bucketZ52+/v2/{name=projects/*/locations/*/buckets/*}:\006bucketZ:20/v2/{name=organizations/*/locations/*/buckets/*}:\006bucketZ42*/v2/{name=folders/*/locations/*/buckets/*}:\006bucketZ<22/v2/{name=billingAccounts/*/locations/*/buckets/*}:\006bucket",
+        ),
+        _descriptor.MethodDescriptor(
+            name="ListSinks",
+            full_name="google.logging.v2.ConfigServiceV2.ListSinks",
+            index=3,
+            containing_service=None,
+            input_type=_LISTSINKSREQUEST,
+            output_type=_LISTSINKSRESPONSE,
+            serialized_options=b'\202\323\344\223\002\247\001\022\026/v2/{parent=*/*}/sinksZ\037\022\035/v2/{parent=projects/*}/sinksZ$\022"/v2/{parent=organizations/*}/sinksZ\036\022\034/v2/{parent=folders/*}/sinksZ&\022$/v2/{parent=billingAccounts/*}/sinks\332A\006parent',
+        ),
+        _descriptor.MethodDescriptor(
+            name="GetSink",
+            full_name="google.logging.v2.ConfigServiceV2.GetSink",
+            index=4,
+            containing_service=None,
+            input_type=_GETSINKREQUEST,
+            output_type=_LOGSINK,
+            serialized_options=b"\202\323\344\223\002\300\001\022\033/v2/{sink_name=*/*/sinks/*}Z$\022\"/v2/{sink_name=projects/*/sinks/*}Z)\022'/v2/{sink_name=organizations/*/sinks/*}Z#\022!/v2/{sink_name=folders/*/sinks/*}Z+\022)/v2/{sink_name=billingAccounts/*/sinks/*}\332A\tsink_name",
+        ),
+        _descriptor.MethodDescriptor(
+            name="CreateSink",
+            full_name="google.logging.v2.ConfigServiceV2.CreateSink",
+            index=5,
+            containing_service=None,
+            input_type=_CREATESINKREQUEST,
+            output_type=_LOGSINK,
+            serialized_options=b'\202\323\344\223\002\305\001"\026/v2/{parent=*/*}/sinks:\004sinkZ%"\035/v2/{parent=projects/*}/sinks:\004sinkZ*""/v2/{parent=organizations/*}/sinks:\004sinkZ$"\034/v2/{parent=folders/*}/sinks:\004sinkZ,"$/v2/{parent=billingAccounts/*}/sinks:\004sink\332A\013parent,sink',
+        ),
+        _descriptor.MethodDescriptor(
+            name="UpdateSink",
+            full_name="google.logging.v2.ConfigServiceV2.UpdateSink",
+            index=6,
+            containing_service=None,
+            input_type=_UPDATESINKREQUEST,
+            output_type=_LOGSINK,
+            serialized_options=b"\202\323\344\223\002\231\003\032\033/v2/{sink_name=*/*/sinks/*}:\004sinkZ*\032\"/v2/{sink_name=projects/*/sinks/*}:\004sinkZ/\032'/v2/{sink_name=organizations/*/sinks/*}:\004sinkZ)\032!/v2/{sink_name=folders/*/sinks/*}:\004sinkZ1\032)/v2/{sink_name=billingAccounts/*/sinks/*}:\004sinkZ*2\"/v2/{sink_name=projects/*/sinks/*}:\004sinkZ/2'/v2/{sink_name=organizations/*/sinks/*}:\004sinkZ)2!/v2/{sink_name=folders/*/sinks/*}:\004sinkZ12)/v2/{sink_name=billingAccounts/*/sinks/*}:\004sink\332A\032sink_name,sink,update_mask\332A\016sink_name,sink",
+        ),
+        _descriptor.MethodDescriptor(
+            name="DeleteSink",
+            full_name="google.logging.v2.ConfigServiceV2.DeleteSink",
+            index=7,
+            containing_service=None,
+            input_type=_DELETESINKREQUEST,
+            output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
+            serialized_options=b"\202\323\344\223\002\300\001*\033/v2/{sink_name=*/*/sinks/*}Z$*\"/v2/{sink_name=projects/*/sinks/*}Z)*'/v2/{sink_name=organizations/*/sinks/*}Z#*!/v2/{sink_name=folders/*/sinks/*}Z+*)/v2/{sink_name=billingAccounts/*/sinks/*}\332A\tsink_name",
+        ),
+        _descriptor.MethodDescriptor(
+            name="ListExclusions",
+            full_name="google.logging.v2.ConfigServiceV2.ListExclusions",
+            index=8,
+            containing_service=None,
+            input_type=_LISTEXCLUSIONSREQUEST,
+            output_type=_LISTEXCLUSIONSRESPONSE,
+            serialized_options=b"\202\323\344\223\002\300\001\022\033/v2/{parent=*/*}/exclusionsZ$\022\"/v2/{parent=projects/*}/exclusionsZ)\022'/v2/{parent=organizations/*}/exclusionsZ#\022!/v2/{parent=folders/*}/exclusionsZ+\022)/v2/{parent=billingAccounts/*}/exclusions\332A\006parent",
+        ),
+        _descriptor.MethodDescriptor(
+            name="GetExclusion",
+            full_name="google.logging.v2.ConfigServiceV2.GetExclusion",
+            index=9,
+            containing_service=None,
+            input_type=_GETEXCLUSIONREQUEST,
+            output_type=_LOGEXCLUSION,
+            serialized_options=b"\202\323\344\223\002\300\001\022\033/v2/{name=*/*/exclusions/*}Z$\022\"/v2/{name=projects/*/exclusions/*}Z)\022'/v2/{name=organizations/*/exclusions/*}Z#\022!/v2/{name=folders/*/exclusions/*}Z+\022)/v2/{name=billingAccounts/*/exclusions/*}\332A\004name",
+        ),
+        _descriptor.MethodDescriptor(
+            name="CreateExclusion",
+            full_name="google.logging.v2.ConfigServiceV2.CreateExclusion",
+            index=10,
+            containing_service=None,
+            input_type=_CREATEEXCLUSIONREQUEST,
+            output_type=_LOGEXCLUSION,
+            serialized_options=b'\202\323\344\223\002\367\001"\033/v2/{parent=*/*}/exclusions:\texclusionZ/""/v2/{parent=projects/*}/exclusions:\texclusionZ4"\'/v2/{parent=organizations/*}/exclusions:\texclusionZ."!/v2/{parent=folders/*}/exclusions:\texclusionZ6")/v2/{parent=billingAccounts/*}/exclusions:\texclusion\332A\020parent,exclusion',
+        ),
+        _descriptor.MethodDescriptor(
+            name="UpdateExclusion",
+            full_name="google.logging.v2.ConfigServiceV2.UpdateExclusion",
+            index=11,
+            containing_service=None,
+            input_type=_UPDATEEXCLUSIONREQUEST,
+            output_type=_LOGEXCLUSION,
+            serialized_options=b"\202\323\344\223\002\367\0012\033/v2/{name=*/*/exclusions/*}:\texclusionZ/2\"/v2/{name=projects/*/exclusions/*}:\texclusionZ42'/v2/{name=organizations/*/exclusions/*}:\texclusionZ.2!/v2/{name=folders/*/exclusions/*}:\texclusionZ62)/v2/{name=billingAccounts/*/exclusions/*}:\texclusion\332A\032name,exclusion,update_mask",
+        ),
+        _descriptor.MethodDescriptor(
+            name="DeleteExclusion",
+            full_name="google.logging.v2.ConfigServiceV2.DeleteExclusion",
+            index=12,
+            containing_service=None,
+            input_type=_DELETEEXCLUSIONREQUEST,
+            output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
+            serialized_options=b"\202\323\344\223\002\300\001*\033/v2/{name=*/*/exclusions/*}Z$*\"/v2/{name=projects/*/exclusions/*}Z)*'/v2/{name=organizations/*/exclusions/*}Z#*!/v2/{name=folders/*/exclusions/*}Z+*)/v2/{name=billingAccounts/*/exclusions/*}\332A\004name",
+        ),
+        _descriptor.MethodDescriptor(
+            name="GetCmekSettings",
+            full_name="google.logging.v2.ConfigServiceV2.GetCmekSettings",
+            index=13,
+            containing_service=None,
+            input_type=_GETCMEKSETTINGSREQUEST,
+            output_type=_CMEKSETTINGS,
+            serialized_options=b"\202\323\344\223\002H\022\033/v2/{name=*/*}/cmekSettingsZ)\022'/v2/{name=organizations/*}/cmekSettings",
+        ),
+        _descriptor.MethodDescriptor(
+            name="UpdateCmekSettings",
+            full_name="google.logging.v2.ConfigServiceV2.UpdateCmekSettings",
+            index=14,
+            containing_service=None,
+            input_type=_UPDATECMEKSETTINGSREQUEST,
+            output_type=_CMEKSETTINGS,
+            serialized_options=b"\202\323\344\223\002f2\033/v2/{name=*/*}/cmekSettings:\rcmek_settingsZ82'/v2/{name=organizations/*}/cmekSettings:\rcmek_settings",
+        ),
+    ],
+)
 _sym_db.RegisterServiceDescriptor(_CONFIGSERVICEV2)
 
-DESCRIPTOR.services_by_name['ConfigServiceV2'] = _CONFIGSERVICEV2
+DESCRIPTOR.services_by_name["ConfigServiceV2"] = _CONFIGSERVICEV2
 
 # @@protoc_insertion_point(module_scope)

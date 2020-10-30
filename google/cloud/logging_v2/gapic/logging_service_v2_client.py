@@ -44,22 +44,18 @@ from google.protobuf import empty_pb2
 from google.protobuf import field_mask_pb2
 
 
-
-_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution(
-    'google-cloud-logging',
-).version
+_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-logging",).version
 
 
 class LoggingServiceV2Client(object):
     """Service for ingesting and querying logs."""
 
-    SERVICE_ADDRESS = 'logging.googleapis.com:443'
+    SERVICE_ADDRESS = "logging.googleapis.com:443"
     """The default address of the service."""
 
     # The name of the interface for this client. This is the key used to
     # find the method configuration in the client_config dictionary.
-    _INTERFACE_NAME = 'google.logging.v2.LoggingServiceV2'
-
+    _INTERFACE_NAME = "google.logging.v2.LoggingServiceV2"
 
     @classmethod
     def from_service_account_file(cls, filename, *args, **kwargs):
@@ -75,57 +71,54 @@ class LoggingServiceV2Client(object):
         Returns:
             LoggingServiceV2Client: The constructed client.
         """
-        credentials = service_account.Credentials.from_service_account_file(
-            filename)
-        kwargs['credentials'] = credentials
+        credentials = service_account.Credentials.from_service_account_file(filename)
+        kwargs["credentials"] = credentials
         return cls(*args, **kwargs)
 
     from_service_account_json = from_service_account_file
-
 
     @classmethod
     def billing_account_path(cls, billing_account):
         """Return a fully-qualified billing_account string."""
         return google.api_core.path_template.expand(
-            'billingAccounts/{billing_account}',
-            billing_account=billing_account,
+            "billingAccounts/{billing_account}", billing_account=billing_account,
         )
 
     @classmethod
     def folder_path(cls, folder):
         """Return a fully-qualified folder string."""
-        return google.api_core.path_template.expand(
-            'folders/{folder}',
-            folder=folder,
-        )
+        return google.api_core.path_template.expand("folders/{folder}", folder=folder,)
 
     @classmethod
     def log_path(cls, project, log):
         """Return a fully-qualified log string."""
         return google.api_core.path_template.expand(
-            'projects/{project}/logs/{log}',
-            project=project,
-            log=log,
+            "projects/{project}/logs/{log}", project=project, log=log,
         )
 
     @classmethod
     def organization_path(cls, organization):
         """Return a fully-qualified organization string."""
         return google.api_core.path_template.expand(
-            'organizations/{organization}',
-            organization=organization,
+            "organizations/{organization}", organization=organization,
         )
 
     @classmethod
     def project_path(cls, project):
         """Return a fully-qualified project string."""
         return google.api_core.path_template.expand(
-            'projects/{project}',
-            project=project,
+            "projects/{project}", project=project,
         )
 
-    def __init__(self, transport=None, channel=None, credentials=None,
-            client_config=None, client_info=None, client_options=None):
+    def __init__(
+        self,
+        transport=None,
+        channel=None,
+        credentials=None,
+        client_config=None,
+        client_info=None,
+        client_options=None,
+    ):
         """Constructor.
 
         Args:
@@ -161,20 +154,27 @@ class LoggingServiceV2Client(object):
         """
         # Raise deprecation warnings for things we want to go away.
         if client_config is not None:
-            warnings.warn('The `client_config` argument is deprecated.',
-                          PendingDeprecationWarning, stacklevel=2)
+            warnings.warn(
+                "The `client_config` argument is deprecated.",
+                PendingDeprecationWarning,
+                stacklevel=2,
+            )
         else:
             client_config = logging_service_v2_client_config.config
 
         if channel:
-            warnings.warn('The `channel` argument is deprecated; use '
-                          '`transport` instead.',
-                          PendingDeprecationWarning, stacklevel=2)
+            warnings.warn(
+                "The `channel` argument is deprecated; use " "`transport` instead.",
+                PendingDeprecationWarning,
+                stacklevel=2,
+            )
 
         api_endpoint = self.SERVICE_ADDRESS
         if client_options:
             if type(client_options) == dict:
-                client_options = google.api_core.client_options.from_dict(client_options)
+                client_options = google.api_core.client_options.from_dict(
+                    client_options
+                )
             if client_options.api_endpoint:
                 api_endpoint = client_options.api_endpoint
 
@@ -191,15 +191,13 @@ class LoggingServiceV2Client(object):
             else:
                 if credentials:
                     raise ValueError(
-                        'Received both a transport instance and '
-                        'credentials; these are mutually exclusive.'
+                        "Received both a transport instance and "
+                        "credentials; these are mutually exclusive."
                     )
                 self.transport = transport
         else:
             self.transport = logging_service_v2_grpc_transport.LoggingServiceV2GrpcTransport(
-                address=api_endpoint,
-                channel=channel,
-                credentials=credentials,
+                address=api_endpoint, channel=channel, credentials=credentials,
             )
 
         if client_info is None:
@@ -215,7 +213,7 @@ class LoggingServiceV2Client(object):
         # (Ordinarily, these are the defaults specified in the `*_config.py`
         # file next to this one.)
         self._method_configs = google.api_core.gapic_v1.config.parse_method_configs(
-            client_config['interfaces'][self._INTERFACE_NAME],
+            client_config["interfaces"][self._INTERFACE_NAME],
         )
 
         # Save a dictionary of cached API call functions.
@@ -226,16 +224,17 @@ class LoggingServiceV2Client(object):
 
     # Service calls
     def write_log_entries(
-            self,
-            entries,
-            log_name=None,
-            resource=None,
-            labels=None,
-            partial_success=None,
-            dry_run=None,
-            retry=google.api_core.gapic_v1.method.DEFAULT,
-            timeout=google.api_core.gapic_v1.method.DEFAULT,
-            metadata=None):
+        self,
+        entries,
+        log_name=None,
+        resource=None,
+        labels=None,
+        partial_success=None,
+        dry_run=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
         """
         Writes log entries to Logging. This API method is the
         only way to send log entries to Logging. This method
@@ -349,11 +348,13 @@ class LoggingServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if 'write_log_entries' not in self._inner_api_calls:
-            self._inner_api_calls['write_log_entries'] = google.api_core.gapic_v1.method.wrap_method(
+        if "write_log_entries" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "write_log_entries"
+            ] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.write_log_entries,
-                default_retry=self._method_configs['WriteLogEntries'].retry,
-                default_timeout=self._method_configs['WriteLogEntries'].timeout,
+                default_retry=self._method_configs["WriteLogEntries"].retry,
+                default_timeout=self._method_configs["WriteLogEntries"].timeout,
                 client_info=self._client_info,
             )
 
@@ -365,14 +366,17 @@ class LoggingServiceV2Client(object):
             partial_success=partial_success,
             dry_run=dry_run,
         )
-        return self._inner_api_calls['write_log_entries'](request, retry=retry, timeout=timeout, metadata=metadata)
+        return self._inner_api_calls["write_log_entries"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
 
     def delete_log(
-            self,
-            log_name,
-            retry=google.api_core.gapic_v1.method.DEFAULT,
-            timeout=google.api_core.gapic_v1.method.DEFAULT,
-            metadata=None):
+        self,
+        log_name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
         """
         Deletes all the log entries in a log. The log reappears if it receives new
         entries. Log entries written shortly before the delete operation might not
@@ -420,39 +424,44 @@ class LoggingServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if 'delete_log' not in self._inner_api_calls:
-            self._inner_api_calls['delete_log'] = google.api_core.gapic_v1.method.wrap_method(
+        if "delete_log" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_log"
+            ] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.delete_log,
-                default_retry=self._method_configs['DeleteLog'].retry,
-                default_timeout=self._method_configs['DeleteLog'].timeout,
+                default_retry=self._method_configs["DeleteLog"].retry,
+                default_timeout=self._method_configs["DeleteLog"].timeout,
                 client_info=self._client_info,
             )
 
-        request = logging_pb2.DeleteLogRequest(
-            log_name=log_name,
-        )
+        request = logging_pb2.DeleteLogRequest(log_name=log_name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [('log_name', log_name)]
+            routing_header = [("log_name", log_name)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
             metadata.append(routing_metadata)
 
-        self._inner_api_calls['delete_log'](request, retry=retry, timeout=timeout, metadata=metadata)
+        self._inner_api_calls["delete_log"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
 
     def list_log_entries(
-            self,
-            resource_names,
-            filter_=None,
-            order_by=None,
-            page_size=None,
-            retry=google.api_core.gapic_v1.method.DEFAULT,
-            timeout=google.api_core.gapic_v1.method.DEFAULT,
-            metadata=None):
+        self,
+        resource_names,
+        filter_=None,
+        order_by=None,
+        page_size=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
         """
         Lists log entries. Use this method to retrieve log entries that
         originated from a project/folder/organization/billing account. For ways
@@ -536,11 +545,13 @@ class LoggingServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if 'list_log_entries' not in self._inner_api_calls:
-            self._inner_api_calls['list_log_entries'] = google.api_core.gapic_v1.method.wrap_method(
+        if "list_log_entries" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "list_log_entries"
+            ] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.list_log_entries,
-                default_retry=self._method_configs['ListLogEntries'].retry,
-                default_timeout=self._method_configs['ListLogEntries'].timeout,
+                default_retry=self._method_configs["ListLogEntries"].retry,
+                default_timeout=self._method_configs["ListLogEntries"].timeout,
                 client_info=self._client_info,
             )
 
@@ -552,20 +563,26 @@ class LoggingServiceV2Client(object):
         )
         iterator = google.api_core.page_iterator.GRPCIterator(
             client=None,
-            method=functools.partial(self._inner_api_calls['list_log_entries'], retry=retry, timeout=timeout, metadata=metadata),
+            method=functools.partial(
+                self._inner_api_calls["list_log_entries"],
+                retry=retry,
+                timeout=timeout,
+                metadata=metadata,
+            ),
             request=request,
-            items_field='entries',
-            request_token_field='page_token',
-            response_token_field='next_page_token',
+            items_field="entries",
+            request_token_field="page_token",
+            response_token_field="next_page_token",
         )
         return iterator
 
     def list_monitored_resource_descriptors(
-            self,
-            page_size=None,
-            retry=google.api_core.gapic_v1.method.DEFAULT,
-            timeout=google.api_core.gapic_v1.method.DEFAULT,
-            metadata=None):
+        self,
+        page_size=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
         """
         Lists the descriptors for monitored resource types used by Logging.
 
@@ -617,11 +634,17 @@ class LoggingServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if 'list_monitored_resource_descriptors' not in self._inner_api_calls:
-            self._inner_api_calls['list_monitored_resource_descriptors'] = google.api_core.gapic_v1.method.wrap_method(
+        if "list_monitored_resource_descriptors" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "list_monitored_resource_descriptors"
+            ] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.list_monitored_resource_descriptors,
-                default_retry=self._method_configs['ListMonitoredResourceDescriptors'].retry,
-                default_timeout=self._method_configs['ListMonitoredResourceDescriptors'].timeout,
+                default_retry=self._method_configs[
+                    "ListMonitoredResourceDescriptors"
+                ].retry,
+                default_timeout=self._method_configs[
+                    "ListMonitoredResourceDescriptors"
+                ].timeout,
                 client_info=self._client_info,
             )
 
@@ -630,21 +653,27 @@ class LoggingServiceV2Client(object):
         )
         iterator = google.api_core.page_iterator.GRPCIterator(
             client=None,
-            method=functools.partial(self._inner_api_calls['list_monitored_resource_descriptors'], retry=retry, timeout=timeout, metadata=metadata),
+            method=functools.partial(
+                self._inner_api_calls["list_monitored_resource_descriptors"],
+                retry=retry,
+                timeout=timeout,
+                metadata=metadata,
+            ),
             request=request,
-            items_field='resource_descriptors',
-            request_token_field='page_token',
-            response_token_field='next_page_token',
+            items_field="resource_descriptors",
+            request_token_field="page_token",
+            response_token_field="next_page_token",
         )
         return iterator
 
     def list_logs(
-            self,
-            parent,
-            page_size=None,
-            retry=google.api_core.gapic_v1.method.DEFAULT,
-            timeout=google.api_core.gapic_v1.method.DEFAULT,
-            metadata=None):
+        self,
+        parent,
+        page_size=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
         """
         Lists the logs in projects, organizations, folders, or billing accounts.
         Only logs that have entries are listed.
@@ -707,35 +736,41 @@ class LoggingServiceV2Client(object):
             ValueError: If the parameters are invalid.
         """
         # Wrap the transport method to add retry and timeout logic.
-        if 'list_logs' not in self._inner_api_calls:
-            self._inner_api_calls['list_logs'] = google.api_core.gapic_v1.method.wrap_method(
+        if "list_logs" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "list_logs"
+            ] = google.api_core.gapic_v1.method.wrap_method(
                 self.transport.list_logs,
-                default_retry=self._method_configs['ListLogs'].retry,
-                default_timeout=self._method_configs['ListLogs'].timeout,
+                default_retry=self._method_configs["ListLogs"].retry,
+                default_timeout=self._method_configs["ListLogs"].timeout,
                 client_info=self._client_info,
             )
 
-        request = logging_pb2.ListLogsRequest(
-            parent=parent,
-            page_size=page_size,
-        )
+        request = logging_pb2.ListLogsRequest(parent=parent, page_size=page_size,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
         try:
-            routing_header = [('parent', parent)]
+            routing_header = [("parent", parent)]
         except AttributeError:
             pass
         else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(routing_header)
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
             metadata.append(routing_metadata)
 
         iterator = google.api_core.page_iterator.GRPCIterator(
             client=None,
-            method=functools.partial(self._inner_api_calls['list_logs'], retry=retry, timeout=timeout, metadata=metadata),
+            method=functools.partial(
+                self._inner_api_calls["list_logs"],
+                retry=retry,
+                timeout=timeout,
+                metadata=metadata,
+            ),
             request=request,
-            items_field='log_names',
-            request_token_field='page_token',
-            response_token_field='next_page_token',
+            items_field="log_names",
+            request_token_field="page_token",
+            response_token_field="next_page_token",
         )
         return iterator

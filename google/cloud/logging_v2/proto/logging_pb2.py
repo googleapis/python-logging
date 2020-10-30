@@ -6,6 +6,7 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
+
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
@@ -13,10 +14,16 @@ _sym_db = _symbol_database.Default()
 
 from google.api import client_pb2 as google_dot_api_dot_client__pb2
 from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
-from google.api import monitored_resource_pb2 as google_dot_api_dot_monitored__resource__pb2
+from google.api import (
+    monitored_resource_pb2 as google_dot_api_dot_monitored__resource__pb2,
+)
 from google.api import resource_pb2 as google_dot_api_dot_resource__pb2
-from google.cloud.logging_v2.proto import log_entry_pb2 as google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2
-from google.cloud.logging_v2.proto import logging_config_pb2 as google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2
+from google.cloud.logging_v2.proto import (
+    log_entry_pb2 as google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2,
+)
+from google.cloud.logging_v2.proto import (
+    logging_config_pb2 as google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2,
+)
 from google.protobuf import duration_pb2 as google_dot_protobuf_dot_duration__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
@@ -25,524 +32,835 @@ from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
-  name='google/cloud/logging_v2/proto/logging.proto',
-  package='google.logging.v2',
-  syntax='proto3',
-  serialized_options=b'\n\025com.google.logging.v2B\014LoggingProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2',
-  serialized_pb=b'\n+google/cloud/logging_v2/proto/logging.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a#google/api/monitored_resource.proto\x1a\x19google/api/resource.proto\x1a-google/cloud/logging_v2/proto/log_entry.proto\x1a\x32google/cloud/logging_v2/proto/logging_config.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto\x1a\x1cgoogle/api/annotations.proto\"H\n\x10\x44\x65leteLogRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB\"\xe0\x41\x02\xfa\x41\x1c\n\x1alogging.googleapis.com/Log\"\xe6\x02\n\x16WriteLogEntriesRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB\"\xe0\x41\x01\xfa\x41\x1c\n\x1alogging.googleapis.com/Log\x12\x34\n\x08resource\x18\x02 \x01(\x0b\x32\x1d.google.api.MonitoredResourceB\x03\xe0\x41\x01\x12J\n\x06labels\x18\x03 \x03(\x0b\x32\x35.google.logging.v2.WriteLogEntriesRequest.LabelsEntryB\x03\xe0\x41\x01\x12\x31\n\x07\x65ntries\x18\x04 \x03(\x0b\x32\x1b.google.logging.v2.LogEntryB\x03\xe0\x41\x02\x12\x1c\n\x0fpartial_success\x18\x05 \x01(\x08\x42\x03\xe0\x41\x01\x12\x14\n\x07\x64ry_run\x18\x06 \x01(\x08\x42\x03\xe0\x41\x01\x1a-\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x19\n\x17WriteLogEntriesResponse\"\xc8\x01\n\x1cWriteLogEntriesPartialErrors\x12]\n\x10log_entry_errors\x18\x01 \x03(\x0b\x32\x43.google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry\x1aI\n\x13LogEntryErrorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.google.rpc.Status:\x02\x38\x01\"\xb0\x01\n\x15ListLogEntriesRequest\x12:\n\x0eresource_names\x18\x08 \x03(\tB\"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x13\n\x06\x66ilter\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08order_by\x18\x03 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x04 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x05 \x01(\tB\x03\xe0\x41\x01\"_\n\x16ListLogEntriesResponse\x12,\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x1b.google.logging.v2.LogEntry\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"Z\n\'ListMonitoredResourceDescriptorsRequest\x12\x16\n\tpage_size\x18\x01 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01\"\x8a\x01\n(ListMonitoredResourceDescriptorsResponse\x12\x45\n\x14resource_descriptors\x18\x01 \x03(\x0b\x32\'.google.api.MonitoredResourceDescriptor\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"v\n\x0fListLogsRequest\x12\x32\n\x06parent\x18\x01 \x01(\tB\"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x16\n\tpage_size\x18\x02 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x03 \x01(\tB\x03\xe0\x41\x01\">\n\x10ListLogsResponse\x12\x11\n\tlog_names\x18\x03 \x03(\t\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t2\xdd\n\n\x10LoggingServiceV2\x12\x93\x02\n\tDeleteLog\x12#.google.logging.v2.DeleteLogRequest\x1a\x16.google.protobuf.Empty\"\xc8\x01\x82\xd3\xe4\x93\x02\xb6\x01* /v2/{log_name=projects/*/logs/*}Z\x1b*\x19/v2/{log_name=*/*/logs/*}Z\'*%/v2/{log_name=organizations/*/logs/*}Z!*\x1f/v2/{log_name=folders/*/logs/*}Z)*\'/v2/{log_name=billingAccounts/*/logs/*}\xda\x41\x08log_name\x12\xa9\x01\n\x0fWriteLogEntries\x12).google.logging.v2.WriteLogEntriesRequest\x1a*.google.logging.v2.WriteLogEntriesResponse\"?\x82\xd3\xe4\x93\x02\x16\"\x11/v2/entries:write:\x01*\xda\x41 log_name,resource,labels,entries\x12\xa3\x01\n\x0eListLogEntries\x12(.google.logging.v2.ListLogEntriesRequest\x1a).google.logging.v2.ListLogEntriesResponse\"<\x82\xd3\xe4\x93\x02\x15\"\x10/v2/entries:list:\x01*\xda\x41\x1eresource_names,filter,order_by\x12\xc5\x01\n ListMonitoredResourceDescriptors\x12:.google.logging.v2.ListMonitoredResourceDescriptorsRequest\x1a;.google.logging.v2.ListMonitoredResourceDescriptorsResponse\"(\x82\xd3\xe4\x93\x02\"\x12 /v2/monitoredResourceDescriptors\x12\x88\x02\n\x08ListLogs\x12\".google.logging.v2.ListLogsRequest\x1a#.google.logging.v2.ListLogsResponse\"\xb2\x01\x82\xd3\xe4\x93\x02\xa2\x01\x12\x15/v2/{parent=*/*}/logsZ\x1e\x12\x1c/v2/{parent=projects/*}/logsZ#\x12!/v2/{parent=organizations/*}/logsZ\x1d\x12\x1b/v2/{parent=folders/*}/logsZ%\x12#/v2/{parent=billingAccounts/*}/logs\xda\x41\x06parent\x1a\x8d\x02\xca\x41\x16logging.googleapis.com\xd2\x41\xf0\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.writeB\x98\x01\n\x15\x63om.google.logging.v2B\x0cLoggingProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2b\x06proto3'
-  ,
-  dependencies=[google_dot_api_dot_client__pb2.DESCRIPTOR,google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,google_dot_api_dot_monitored__resource__pb2.DESCRIPTOR,google_dot_api_dot_resource__pb2.DESCRIPTOR,google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2.DESCRIPTOR,google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.DESCRIPTOR,google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,])
-
-
+    name="google/cloud/logging_v2/proto/logging.proto",
+    package="google.logging.v2",
+    syntax="proto3",
+    serialized_options=b"\n\025com.google.logging.v2B\014LoggingProtoP\001Z8google.golang.org/genproto/googleapis/logging/v2;logging\370\001\001\252\002\027Google.Cloud.Logging.V2\312\002\027Google\\Cloud\\Logging\\V2",
+    serialized_pb=b'\n+google/cloud/logging_v2/proto/logging.proto\x12\x11google.logging.v2\x1a\x17google/api/client.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a#google/api/monitored_resource.proto\x1a\x19google/api/resource.proto\x1a-google/cloud/logging_v2/proto/log_entry.proto\x1a\x32google/cloud/logging_v2/proto/logging_config.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto\x1a\x1cgoogle/api/annotations.proto"H\n\x10\x44\x65leteLogRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\n\x1alogging.googleapis.com/Log"\xe6\x02\n\x16WriteLogEntriesRequest\x12\x34\n\x08log_name\x18\x01 \x01(\tB"\xe0\x41\x01\xfa\x41\x1c\n\x1alogging.googleapis.com/Log\x12\x34\n\x08resource\x18\x02 \x01(\x0b\x32\x1d.google.api.MonitoredResourceB\x03\xe0\x41\x01\x12J\n\x06labels\x18\x03 \x03(\x0b\x32\x35.google.logging.v2.WriteLogEntriesRequest.LabelsEntryB\x03\xe0\x41\x01\x12\x31\n\x07\x65ntries\x18\x04 \x03(\x0b\x32\x1b.google.logging.v2.LogEntryB\x03\xe0\x41\x02\x12\x1c\n\x0fpartial_success\x18\x05 \x01(\x08\x42\x03\xe0\x41\x01\x12\x14\n\x07\x64ry_run\x18\x06 \x01(\x08\x42\x03\xe0\x41\x01\x1a-\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"\x19\n\x17WriteLogEntriesResponse"\xc8\x01\n\x1cWriteLogEntriesPartialErrors\x12]\n\x10log_entry_errors\x18\x01 \x03(\x0b\x32\x43.google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry\x1aI\n\x13LogEntryErrorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.google.rpc.Status:\x02\x38\x01"\xb0\x01\n\x15ListLogEntriesRequest\x12:\n\x0eresource_names\x18\x08 \x03(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x13\n\x06\x66ilter\x18\x02 \x01(\tB\x03\xe0\x41\x01\x12\x15\n\x08order_by\x18\x03 \x01(\tB\x03\xe0\x41\x01\x12\x16\n\tpage_size\x18\x04 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x05 \x01(\tB\x03\xe0\x41\x01"_\n\x16ListLogEntriesResponse\x12,\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\x1b.google.logging.v2.LogEntry\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"Z\n\'ListMonitoredResourceDescriptorsRequest\x12\x16\n\tpage_size\x18\x01 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x02 \x01(\tB\x03\xe0\x41\x01"\x8a\x01\n(ListMonitoredResourceDescriptorsResponse\x12\x45\n\x14resource_descriptors\x18\x01 \x03(\x0b\x32\'.google.api.MonitoredResourceDescriptor\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"v\n\x0fListLogsRequest\x12\x32\n\x06parent\x18\x01 \x01(\tB"\xe0\x41\x02\xfa\x41\x1c\x12\x1alogging.googleapis.com/Log\x12\x16\n\tpage_size\x18\x02 \x01(\x05\x42\x03\xe0\x41\x01\x12\x17\n\npage_token\x18\x03 \x01(\tB\x03\xe0\x41\x01">\n\x10ListLogsResponse\x12\x11\n\tlog_names\x18\x03 \x03(\t\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t2\xdd\n\n\x10LoggingServiceV2\x12\x93\x02\n\tDeleteLog\x12#.google.logging.v2.DeleteLogRequest\x1a\x16.google.protobuf.Empty"\xc8\x01\x82\xd3\xe4\x93\x02\xb6\x01* /v2/{log_name=projects/*/logs/*}Z\x1b*\x19/v2/{log_name=*/*/logs/*}Z\'*%/v2/{log_name=organizations/*/logs/*}Z!*\x1f/v2/{log_name=folders/*/logs/*}Z)*\'/v2/{log_name=billingAccounts/*/logs/*}\xda\x41\x08log_name\x12\xa9\x01\n\x0fWriteLogEntries\x12).google.logging.v2.WriteLogEntriesRequest\x1a*.google.logging.v2.WriteLogEntriesResponse"?\x82\xd3\xe4\x93\x02\x16"\x11/v2/entries:write:\x01*\xda\x41 log_name,resource,labels,entries\x12\xa3\x01\n\x0eListLogEntries\x12(.google.logging.v2.ListLogEntriesRequest\x1a).google.logging.v2.ListLogEntriesResponse"<\x82\xd3\xe4\x93\x02\x15"\x10/v2/entries:list:\x01*\xda\x41\x1eresource_names,filter,order_by\x12\xc5\x01\n ListMonitoredResourceDescriptors\x12:.google.logging.v2.ListMonitoredResourceDescriptorsRequest\x1a;.google.logging.v2.ListMonitoredResourceDescriptorsResponse"(\x82\xd3\xe4\x93\x02"\x12 /v2/monitoredResourceDescriptors\x12\x88\x02\n\x08ListLogs\x12".google.logging.v2.ListLogsRequest\x1a#.google.logging.v2.ListLogsResponse"\xb2\x01\x82\xd3\xe4\x93\x02\xa2\x01\x12\x15/v2/{parent=*/*}/logsZ\x1e\x12\x1c/v2/{parent=projects/*}/logsZ#\x12!/v2/{parent=organizations/*}/logsZ\x1d\x12\x1b/v2/{parent=folders/*}/logsZ%\x12#/v2/{parent=billingAccounts/*}/logs\xda\x41\x06parent\x1a\x8d\x02\xca\x41\x16logging.googleapis.com\xd2\x41\xf0\x01https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.writeB\x98\x01\n\x15\x63om.google.logging.v2B\x0cLoggingProtoP\x01Z8google.golang.org/genproto/googleapis/logging/v2;logging\xf8\x01\x01\xaa\x02\x17Google.Cloud.Logging.V2\xca\x02\x17Google\\Cloud\\Logging\\V2b\x06proto3',
+    dependencies=[
+        google_dot_api_dot_client__pb2.DESCRIPTOR,
+        google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,
+        google_dot_api_dot_monitored__resource__pb2.DESCRIPTOR,
+        google_dot_api_dot_resource__pb2.DESCRIPTOR,
+        google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2.DESCRIPTOR,
+        google_dot_cloud_dot_logging__v2_dot_proto_dot_logging__config__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,
+        google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,
+        google_dot_rpc_dot_status__pb2.DESCRIPTOR,
+        google_dot_api_dot_annotations__pb2.DESCRIPTOR,
+    ],
+)
 
 
 _DELETELOGREQUEST = _descriptor.Descriptor(
-  name='DeleteLogRequest',
-  full_name='google.logging.v2.DeleteLogRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='log_name', full_name='google.logging.v2.DeleteLogRequest.log_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A\034\n\032logging.googleapis.com/Log', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=436,
-  serialized_end=508,
+    name="DeleteLogRequest",
+    full_name="google.logging.v2.DeleteLogRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="log_name",
+            full_name="google.logging.v2.DeleteLogRequest.log_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A\034\n\032logging.googleapis.com/Log",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=436,
+    serialized_end=508,
 )
 
 
 _WRITELOGENTRIESREQUEST_LABELSENTRY = _descriptor.Descriptor(
-  name='LabelsEntry',
-  full_name='google.logging.v2.WriteLogEntriesRequest.LabelsEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='google.logging.v2.WriteLogEntriesRequest.LabelsEntry.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='google.logging.v2.WriteLogEntriesRequest.LabelsEntry.value', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=b'8\001',
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=824,
-  serialized_end=869,
+    name="LabelsEntry",
+    full_name="google.logging.v2.WriteLogEntriesRequest.LabelsEntry",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="key",
+            full_name="google.logging.v2.WriteLogEntriesRequest.LabelsEntry.key",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="value",
+            full_name="google.logging.v2.WriteLogEntriesRequest.LabelsEntry.value",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=b"8\001",
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=824,
+    serialized_end=869,
 )
 
 _WRITELOGENTRIESREQUEST = _descriptor.Descriptor(
-  name='WriteLogEntriesRequest',
-  full_name='google.logging.v2.WriteLogEntriesRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='log_name', full_name='google.logging.v2.WriteLogEntriesRequest.log_name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001\372A\034\n\032logging.googleapis.com/Log', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='resource', full_name='google.logging.v2.WriteLogEntriesRequest.resource', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='labels', full_name='google.logging.v2.WriteLogEntriesRequest.labels', index=2,
-      number=3, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='entries', full_name='google.logging.v2.WriteLogEntriesRequest.entries', index=3,
-      number=4, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='partial_success', full_name='google.logging.v2.WriteLogEntriesRequest.partial_success', index=4,
-      number=5, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='dry_run', full_name='google.logging.v2.WriteLogEntriesRequest.dry_run', index=5,
-      number=6, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[_WRITELOGENTRIESREQUEST_LABELSENTRY, ],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=511,
-  serialized_end=869,
+    name="WriteLogEntriesRequest",
+    full_name="google.logging.v2.WriteLogEntriesRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="log_name",
+            full_name="google.logging.v2.WriteLogEntriesRequest.log_name",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001\372A\034\n\032logging.googleapis.com/Log",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="resource",
+            full_name="google.logging.v2.WriteLogEntriesRequest.resource",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="labels",
+            full_name="google.logging.v2.WriteLogEntriesRequest.labels",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="entries",
+            full_name="google.logging.v2.WriteLogEntriesRequest.entries",
+            index=3,
+            number=4,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="partial_success",
+            full_name="google.logging.v2.WriteLogEntriesRequest.partial_success",
+            index=4,
+            number=5,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="dry_run",
+            full_name="google.logging.v2.WriteLogEntriesRequest.dry_run",
+            index=5,
+            number=6,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[_WRITELOGENTRIESREQUEST_LABELSENTRY,],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=511,
+    serialized_end=869,
 )
 
 
 _WRITELOGENTRIESRESPONSE = _descriptor.Descriptor(
-  name='WriteLogEntriesResponse',
-  full_name='google.logging.v2.WriteLogEntriesResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=871,
-  serialized_end=896,
+    name="WriteLogEntriesResponse",
+    full_name="google.logging.v2.WriteLogEntriesResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=871,
+    serialized_end=896,
 )
 
 
 _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY = _descriptor.Descriptor(
-  name='LogEntryErrorsEntry',
-  full_name='google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry.key', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry.value', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=b'8\001',
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1026,
-  serialized_end=1099,
+    name="LogEntryErrorsEntry",
+    full_name="google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="key",
+            full_name="google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry.key",
+            index=0,
+            number=1,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="value",
+            full_name="google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry.value",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=b"8\001",
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1026,
+    serialized_end=1099,
 )
 
 _WRITELOGENTRIESPARTIALERRORS = _descriptor.Descriptor(
-  name='WriteLogEntriesPartialErrors',
-  full_name='google.logging.v2.WriteLogEntriesPartialErrors',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='log_entry_errors', full_name='google.logging.v2.WriteLogEntriesPartialErrors.log_entry_errors', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[_WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY, ],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=899,
-  serialized_end=1099,
+    name="WriteLogEntriesPartialErrors",
+    full_name="google.logging.v2.WriteLogEntriesPartialErrors",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="log_entry_errors",
+            full_name="google.logging.v2.WriteLogEntriesPartialErrors.log_entry_errors",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[_WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY,],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=899,
+    serialized_end=1099,
 )
 
 
 _LISTLOGENTRIESREQUEST = _descriptor.Descriptor(
-  name='ListLogEntriesRequest',
-  full_name='google.logging.v2.ListLogEntriesRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='resource_names', full_name='google.logging.v2.ListLogEntriesRequest.resource_names', index=0,
-      number=8, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A\034\022\032logging.googleapis.com/Log', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='filter', full_name='google.logging.v2.ListLogEntriesRequest.filter', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='order_by', full_name='google.logging.v2.ListLogEntriesRequest.order_by', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_size', full_name='google.logging.v2.ListLogEntriesRequest.page_size', index=3,
-      number=4, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_token', full_name='google.logging.v2.ListLogEntriesRequest.page_token', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1102,
-  serialized_end=1278,
+    name="ListLogEntriesRequest",
+    full_name="google.logging.v2.ListLogEntriesRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="resource_names",
+            full_name="google.logging.v2.ListLogEntriesRequest.resource_names",
+            index=0,
+            number=8,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A\034\022\032logging.googleapis.com/Log",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="filter",
+            full_name="google.logging.v2.ListLogEntriesRequest.filter",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="order_by",
+            full_name="google.logging.v2.ListLogEntriesRequest.order_by",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_size",
+            full_name="google.logging.v2.ListLogEntriesRequest.page_size",
+            index=3,
+            number=4,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_token",
+            full_name="google.logging.v2.ListLogEntriesRequest.page_token",
+            index=4,
+            number=5,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1102,
+    serialized_end=1278,
 )
 
 
 _LISTLOGENTRIESRESPONSE = _descriptor.Descriptor(
-  name='ListLogEntriesResponse',
-  full_name='google.logging.v2.ListLogEntriesResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='entries', full_name='google.logging.v2.ListLogEntriesResponse.entries', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='next_page_token', full_name='google.logging.v2.ListLogEntriesResponse.next_page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1280,
-  serialized_end=1375,
+    name="ListLogEntriesResponse",
+    full_name="google.logging.v2.ListLogEntriesResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="entries",
+            full_name="google.logging.v2.ListLogEntriesResponse.entries",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="next_page_token",
+            full_name="google.logging.v2.ListLogEntriesResponse.next_page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1280,
+    serialized_end=1375,
 )
 
 
 _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST = _descriptor.Descriptor(
-  name='ListMonitoredResourceDescriptorsRequest',
-  full_name='google.logging.v2.ListMonitoredResourceDescriptorsRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='page_size', full_name='google.logging.v2.ListMonitoredResourceDescriptorsRequest.page_size', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_token', full_name='google.logging.v2.ListMonitoredResourceDescriptorsRequest.page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1377,
-  serialized_end=1467,
+    name="ListMonitoredResourceDescriptorsRequest",
+    full_name="google.logging.v2.ListMonitoredResourceDescriptorsRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="page_size",
+            full_name="google.logging.v2.ListMonitoredResourceDescriptorsRequest.page_size",
+            index=0,
+            number=1,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_token",
+            full_name="google.logging.v2.ListMonitoredResourceDescriptorsRequest.page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1377,
+    serialized_end=1467,
 )
 
 
 _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE = _descriptor.Descriptor(
-  name='ListMonitoredResourceDescriptorsResponse',
-  full_name='google.logging.v2.ListMonitoredResourceDescriptorsResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='resource_descriptors', full_name='google.logging.v2.ListMonitoredResourceDescriptorsResponse.resource_descriptors', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='next_page_token', full_name='google.logging.v2.ListMonitoredResourceDescriptorsResponse.next_page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1470,
-  serialized_end=1608,
+    name="ListMonitoredResourceDescriptorsResponse",
+    full_name="google.logging.v2.ListMonitoredResourceDescriptorsResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="resource_descriptors",
+            full_name="google.logging.v2.ListMonitoredResourceDescriptorsResponse.resource_descriptors",
+            index=0,
+            number=1,
+            type=11,
+            cpp_type=10,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="next_page_token",
+            full_name="google.logging.v2.ListMonitoredResourceDescriptorsResponse.next_page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1470,
+    serialized_end=1608,
 )
 
 
 _LISTLOGSREQUEST = _descriptor.Descriptor(
-  name='ListLogsRequest',
-  full_name='google.logging.v2.ListLogsRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='parent', full_name='google.logging.v2.ListLogsRequest.parent', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\002\372A\034\022\032logging.googleapis.com/Log', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_size', full_name='google.logging.v2.ListLogsRequest.page_size', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='page_token', full_name='google.logging.v2.ListLogsRequest.page_token', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=b'\340A\001', file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1610,
-  serialized_end=1728,
+    name="ListLogsRequest",
+    full_name="google.logging.v2.ListLogsRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="parent",
+            full_name="google.logging.v2.ListLogsRequest.parent",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\002\372A\034\022\032logging.googleapis.com/Log",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_size",
+            full_name="google.logging.v2.ListLogsRequest.page_size",
+            index=1,
+            number=2,
+            type=5,
+            cpp_type=1,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="page_token",
+            full_name="google.logging.v2.ListLogsRequest.page_token",
+            index=2,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\001",
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1610,
+    serialized_end=1728,
 )
 
 
 _LISTLOGSRESPONSE = _descriptor.Descriptor(
-  name='ListLogsResponse',
-  full_name='google.logging.v2.ListLogsResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='log_names', full_name='google.logging.v2.ListLogsResponse.log_names', index=0,
-      number=3, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='next_page_token', full_name='google.logging.v2.ListLogsResponse.next_page_token', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1730,
-  serialized_end=1792,
+    name="ListLogsResponse",
+    full_name="google.logging.v2.ListLogsResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="log_names",
+            full_name="google.logging.v2.ListLogsResponse.log_names",
+            index=0,
+            number=3,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="next_page_token",
+            full_name="google.logging.v2.ListLogsResponse.next_page_token",
+            index=1,
+            number=2,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=1730,
+    serialized_end=1792,
 )
 
 _WRITELOGENTRIESREQUEST_LABELSENTRY.containing_type = _WRITELOGENTRIESREQUEST
-_WRITELOGENTRIESREQUEST.fields_by_name['resource'].message_type = google_dot_api_dot_monitored__resource__pb2._MONITOREDRESOURCE
-_WRITELOGENTRIESREQUEST.fields_by_name['labels'].message_type = _WRITELOGENTRIESREQUEST_LABELSENTRY
-_WRITELOGENTRIESREQUEST.fields_by_name['entries'].message_type = google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2._LOGENTRY
-_WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY.fields_by_name['value'].message_type = google_dot_rpc_dot_status__pb2._STATUS
-_WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY.containing_type = _WRITELOGENTRIESPARTIALERRORS
-_WRITELOGENTRIESPARTIALERRORS.fields_by_name['log_entry_errors'].message_type = _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY
-_LISTLOGENTRIESRESPONSE.fields_by_name['entries'].message_type = google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2._LOGENTRY
-_LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE.fields_by_name['resource_descriptors'].message_type = google_dot_api_dot_monitored__resource__pb2._MONITOREDRESOURCEDESCRIPTOR
-DESCRIPTOR.message_types_by_name['DeleteLogRequest'] = _DELETELOGREQUEST
-DESCRIPTOR.message_types_by_name['WriteLogEntriesRequest'] = _WRITELOGENTRIESREQUEST
-DESCRIPTOR.message_types_by_name['WriteLogEntriesResponse'] = _WRITELOGENTRIESRESPONSE
-DESCRIPTOR.message_types_by_name['WriteLogEntriesPartialErrors'] = _WRITELOGENTRIESPARTIALERRORS
-DESCRIPTOR.message_types_by_name['ListLogEntriesRequest'] = _LISTLOGENTRIESREQUEST
-DESCRIPTOR.message_types_by_name['ListLogEntriesResponse'] = _LISTLOGENTRIESRESPONSE
-DESCRIPTOR.message_types_by_name['ListMonitoredResourceDescriptorsRequest'] = _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST
-DESCRIPTOR.message_types_by_name['ListMonitoredResourceDescriptorsResponse'] = _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE
-DESCRIPTOR.message_types_by_name['ListLogsRequest'] = _LISTLOGSREQUEST
-DESCRIPTOR.message_types_by_name['ListLogsResponse'] = _LISTLOGSRESPONSE
+_WRITELOGENTRIESREQUEST.fields_by_name[
+    "resource"
+].message_type = google_dot_api_dot_monitored__resource__pb2._MONITOREDRESOURCE
+_WRITELOGENTRIESREQUEST.fields_by_name[
+    "labels"
+].message_type = _WRITELOGENTRIESREQUEST_LABELSENTRY
+_WRITELOGENTRIESREQUEST.fields_by_name[
+    "entries"
+].message_type = (
+    google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2._LOGENTRY
+)
+_WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY.fields_by_name[
+    "value"
+].message_type = google_dot_rpc_dot_status__pb2._STATUS
+_WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY.containing_type = (
+    _WRITELOGENTRIESPARTIALERRORS
+)
+_WRITELOGENTRIESPARTIALERRORS.fields_by_name[
+    "log_entry_errors"
+].message_type = _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY
+_LISTLOGENTRIESRESPONSE.fields_by_name[
+    "entries"
+].message_type = (
+    google_dot_cloud_dot_logging__v2_dot_proto_dot_log__entry__pb2._LOGENTRY
+)
+_LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE.fields_by_name[
+    "resource_descriptors"
+].message_type = (
+    google_dot_api_dot_monitored__resource__pb2._MONITOREDRESOURCEDESCRIPTOR
+)
+DESCRIPTOR.message_types_by_name["DeleteLogRequest"] = _DELETELOGREQUEST
+DESCRIPTOR.message_types_by_name["WriteLogEntriesRequest"] = _WRITELOGENTRIESREQUEST
+DESCRIPTOR.message_types_by_name["WriteLogEntriesResponse"] = _WRITELOGENTRIESRESPONSE
+DESCRIPTOR.message_types_by_name[
+    "WriteLogEntriesPartialErrors"
+] = _WRITELOGENTRIESPARTIALERRORS
+DESCRIPTOR.message_types_by_name["ListLogEntriesRequest"] = _LISTLOGENTRIESREQUEST
+DESCRIPTOR.message_types_by_name["ListLogEntriesResponse"] = _LISTLOGENTRIESRESPONSE
+DESCRIPTOR.message_types_by_name[
+    "ListMonitoredResourceDescriptorsRequest"
+] = _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST
+DESCRIPTOR.message_types_by_name[
+    "ListMonitoredResourceDescriptorsResponse"
+] = _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE
+DESCRIPTOR.message_types_by_name["ListLogsRequest"] = _LISTLOGSREQUEST
+DESCRIPTOR.message_types_by_name["ListLogsResponse"] = _LISTLOGSRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-DeleteLogRequest = _reflection.GeneratedProtocolMessageType('DeleteLogRequest', (_message.Message,), {
-  'DESCRIPTOR' : _DELETELOGREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """The parameters to DeleteLog.
+DeleteLogRequest = _reflection.GeneratedProtocolMessageType(
+    "DeleteLogRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _DELETELOGREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """The parameters to DeleteLog.
   
   
   Attributes:
@@ -557,22 +875,27 @@ DeleteLogRequest = _reflection.GeneratedProtocolMessageType('DeleteLogRequest', 
           rcemanager.googleapis.com%2Factivity"``. For more information
           about log names, see [LogEntry][google.logging.v2.LogEntry].
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.DeleteLogRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.DeleteLogRequest)
+    },
+)
 _sym_db.RegisterMessage(DeleteLogRequest)
 
-WriteLogEntriesRequest = _reflection.GeneratedProtocolMessageType('WriteLogEntriesRequest', (_message.Message,), {
-
-  'LabelsEntry' : _reflection.GeneratedProtocolMessageType('LabelsEntry', (_message.Message,), {
-    'DESCRIPTOR' : _WRITELOGENTRIESREQUEST_LABELSENTRY,
-    '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-    # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesRequest.LabelsEntry)
-    })
-  ,
-  'DESCRIPTOR' : _WRITELOGENTRIESREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """The parameters to WriteLogEntries.
+WriteLogEntriesRequest = _reflection.GeneratedProtocolMessageType(
+    "WriteLogEntriesRequest",
+    (_message.Message,),
+    {
+        "LabelsEntry": _reflection.GeneratedProtocolMessageType(
+            "LabelsEntry",
+            (_message.Message,),
+            {
+                "DESCRIPTOR": _WRITELOGENTRIESREQUEST_LABELSENTRY,
+                "__module__": "google.cloud.logging_v2.proto.logging_pb2"
+                # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesRequest.LabelsEntry)
+            },
+        ),
+        "DESCRIPTOR": _WRITELOGENTRIESREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """The parameters to WriteLogEntries.
   
   
   Attributes:
@@ -642,34 +965,42 @@ WriteLogEntriesRequest = _reflection.GeneratedProtocolMessageType('WriteLogEntri
           checking whether the logging API endpoints are working
           properly before sending valuable data.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesRequest)
+    },
+)
 _sym_db.RegisterMessage(WriteLogEntriesRequest)
 _sym_db.RegisterMessage(WriteLogEntriesRequest.LabelsEntry)
 
-WriteLogEntriesResponse = _reflection.GeneratedProtocolMessageType('WriteLogEntriesResponse', (_message.Message,), {
-  'DESCRIPTOR' : _WRITELOGENTRIESRESPONSE,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """Result returned from WriteLogEntries.
+WriteLogEntriesResponse = _reflection.GeneratedProtocolMessageType(
+    "WriteLogEntriesResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _WRITELOGENTRIESRESPONSE,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """Result returned from WriteLogEntries.
   
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesResponse)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesResponse)
+    },
+)
 _sym_db.RegisterMessage(WriteLogEntriesResponse)
 
-WriteLogEntriesPartialErrors = _reflection.GeneratedProtocolMessageType('WriteLogEntriesPartialErrors', (_message.Message,), {
-
-  'LogEntryErrorsEntry' : _reflection.GeneratedProtocolMessageType('LogEntryErrorsEntry', (_message.Message,), {
-    'DESCRIPTOR' : _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY,
-    '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-    # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry)
-    })
-  ,
-  'DESCRIPTOR' : _WRITELOGENTRIESPARTIALERRORS,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """Error details for WriteLogEntries with partial success.
+WriteLogEntriesPartialErrors = _reflection.GeneratedProtocolMessageType(
+    "WriteLogEntriesPartialErrors",
+    (_message.Message,),
+    {
+        "LogEntryErrorsEntry": _reflection.GeneratedProtocolMessageType(
+            "LogEntryErrorsEntry",
+            (_message.Message,),
+            {
+                "DESCRIPTOR": _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY,
+                "__module__": "google.cloud.logging_v2.proto.logging_pb2"
+                # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesPartialErrors.LogEntryErrorsEntry)
+            },
+        ),
+        "DESCRIPTOR": _WRITELOGENTRIESPARTIALERRORS,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """Error details for WriteLogEntries with partial success.
   
   
   Attributes:
@@ -680,16 +1011,19 @@ WriteLogEntriesPartialErrors = _reflection.GeneratedProtocolMessageType('WriteLo
           ``WriteLogEntriesRequest.entries``.  Failed requests for which
           no entries are written will not include per-entry errors.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesPartialErrors)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.WriteLogEntriesPartialErrors)
+    },
+)
 _sym_db.RegisterMessage(WriteLogEntriesPartialErrors)
 _sym_db.RegisterMessage(WriteLogEntriesPartialErrors.LogEntryErrorsEntry)
 
-ListLogEntriesRequest = _reflection.GeneratedProtocolMessageType('ListLogEntriesRequest', (_message.Message,), {
-  'DESCRIPTOR' : _LISTLOGENTRIESREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """The parameters to ``ListLogEntries``.
+ListLogEntriesRequest = _reflection.GeneratedProtocolMessageType(
+    "ListLogEntriesRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTLOGENTRIESREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """The parameters to ``ListLogEntries``.
   
   
   Attributes:
@@ -731,15 +1065,18 @@ ListLogEntriesRequest = _reflection.GeneratedProtocolMessageType('ListLogEntries
           The values of other method parameters should be identical to
           those in the previous call.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogEntriesRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogEntriesRequest)
+    },
+)
 _sym_db.RegisterMessage(ListLogEntriesRequest)
 
-ListLogEntriesResponse = _reflection.GeneratedProtocolMessageType('ListLogEntriesResponse', (_message.Message,), {
-  'DESCRIPTOR' : _LISTLOGENTRIESRESPONSE,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """Result returned from ``ListLogEntries``.
+ListLogEntriesResponse = _reflection.GeneratedProtocolMessageType(
+    "ListLogEntriesResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTLOGENTRIESRESPONSE,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """Result returned from ``ListLogEntries``.
   
   
   Attributes:
@@ -761,15 +1098,18 @@ ListLogEntriesResponse = _reflection.GeneratedProtocolMessageType('ListLogEntrie
           name or resource type, or to narrow the time range of the
           search.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogEntriesResponse)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogEntriesResponse)
+    },
+)
 _sym_db.RegisterMessage(ListLogEntriesResponse)
 
-ListMonitoredResourceDescriptorsRequest = _reflection.GeneratedProtocolMessageType('ListMonitoredResourceDescriptorsRequest', (_message.Message,), {
-  'DESCRIPTOR' : _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """The parameters to ListMonitoredResourceDescriptors
+ListMonitoredResourceDescriptorsRequest = _reflection.GeneratedProtocolMessageType(
+    "ListMonitoredResourceDescriptorsRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTMONITOREDRESOURCEDESCRIPTORSREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """The parameters to ListMonitoredResourceDescriptors
   
   
   Attributes:
@@ -785,15 +1125,18 @@ ListMonitoredResourceDescriptorsRequest = _reflection.GeneratedProtocolMessageTy
           values of other method parameters should be identical to those
           in the previous call.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListMonitoredResourceDescriptorsRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListMonitoredResourceDescriptorsRequest)
+    },
+)
 _sym_db.RegisterMessage(ListMonitoredResourceDescriptorsRequest)
 
-ListMonitoredResourceDescriptorsResponse = _reflection.GeneratedProtocolMessageType('ListMonitoredResourceDescriptorsResponse', (_message.Message,), {
-  'DESCRIPTOR' : _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """Result returned from ListMonitoredResourceDescriptors.
+ListMonitoredResourceDescriptorsResponse = _reflection.GeneratedProtocolMessageType(
+    "ListMonitoredResourceDescriptorsResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """Result returned from ListMonitoredResourceDescriptors.
   
   
   Attributes:
@@ -805,15 +1148,18 @@ ListMonitoredResourceDescriptorsResponse = _reflection.GeneratedProtocolMessageT
           set of results, call this method again using the value of
           ``nextPageToken`` as ``pageToken``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListMonitoredResourceDescriptorsResponse)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListMonitoredResourceDescriptorsResponse)
+    },
+)
 _sym_db.RegisterMessage(ListMonitoredResourceDescriptorsResponse)
 
-ListLogsRequest = _reflection.GeneratedProtocolMessageType('ListLogsRequest', (_message.Message,), {
-  'DESCRIPTOR' : _LISTLOGSREQUEST,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """The parameters to ListLogs.
+ListLogsRequest = _reflection.GeneratedProtocolMessageType(
+    "ListLogsRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTLOGSREQUEST,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """The parameters to ListLogs.
   
   
   Attributes:
@@ -834,15 +1180,18 @@ ListLogsRequest = _reflection.GeneratedProtocolMessageType('ListLogsRequest', (_
           values of other method parameters should be identical to those
           in the previous call.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogsRequest)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogsRequest)
+    },
+)
 _sym_db.RegisterMessage(ListLogsRequest)
 
-ListLogsResponse = _reflection.GeneratedProtocolMessageType('ListLogsResponse', (_message.Message,), {
-  'DESCRIPTOR' : _LISTLOGSRESPONSE,
-  '__module__' : 'google.cloud.logging_v2.proto.logging_pb2'
-  ,
-  '__doc__': """Result returned from ListLogs.
+ListLogsResponse = _reflection.GeneratedProtocolMessageType(
+    "ListLogsResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _LISTLOGSRESPONSE,
+        "__module__": "google.cloud.logging_v2.proto.logging_pb2",
+        "__doc__": """Result returned from ListLogs.
   
   
   Attributes:
@@ -856,89 +1205,91 @@ ListLogsResponse = _reflection.GeneratedProtocolMessageType('ListLogsResponse', 
           set of results, call this method again using the value of
           ``nextPageToken`` as ``pageToken``.
   """,
-  # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogsResponse)
-  })
+        # @@protoc_insertion_point(class_scope:google.logging.v2.ListLogsResponse)
+    },
+)
 _sym_db.RegisterMessage(ListLogsResponse)
 
 
 DESCRIPTOR._options = None
-_DELETELOGREQUEST.fields_by_name['log_name']._options = None
+_DELETELOGREQUEST.fields_by_name["log_name"]._options = None
 _WRITELOGENTRIESREQUEST_LABELSENTRY._options = None
-_WRITELOGENTRIESREQUEST.fields_by_name['log_name']._options = None
-_WRITELOGENTRIESREQUEST.fields_by_name['resource']._options = None
-_WRITELOGENTRIESREQUEST.fields_by_name['labels']._options = None
-_WRITELOGENTRIESREQUEST.fields_by_name['entries']._options = None
-_WRITELOGENTRIESREQUEST.fields_by_name['partial_success']._options = None
-_WRITELOGENTRIESREQUEST.fields_by_name['dry_run']._options = None
+_WRITELOGENTRIESREQUEST.fields_by_name["log_name"]._options = None
+_WRITELOGENTRIESREQUEST.fields_by_name["resource"]._options = None
+_WRITELOGENTRIESREQUEST.fields_by_name["labels"]._options = None
+_WRITELOGENTRIESREQUEST.fields_by_name["entries"]._options = None
+_WRITELOGENTRIESREQUEST.fields_by_name["partial_success"]._options = None
+_WRITELOGENTRIESREQUEST.fields_by_name["dry_run"]._options = None
 _WRITELOGENTRIESPARTIALERRORS_LOGENTRYERRORSENTRY._options = None
-_LISTLOGENTRIESREQUEST.fields_by_name['resource_names']._options = None
-_LISTLOGENTRIESREQUEST.fields_by_name['filter']._options = None
-_LISTLOGENTRIESREQUEST.fields_by_name['order_by']._options = None
-_LISTLOGENTRIESREQUEST.fields_by_name['page_size']._options = None
-_LISTLOGENTRIESREQUEST.fields_by_name['page_token']._options = None
-_LISTMONITOREDRESOURCEDESCRIPTORSREQUEST.fields_by_name['page_size']._options = None
-_LISTMONITOREDRESOURCEDESCRIPTORSREQUEST.fields_by_name['page_token']._options = None
-_LISTLOGSREQUEST.fields_by_name['parent']._options = None
-_LISTLOGSREQUEST.fields_by_name['page_size']._options = None
-_LISTLOGSREQUEST.fields_by_name['page_token']._options = None
+_LISTLOGENTRIESREQUEST.fields_by_name["resource_names"]._options = None
+_LISTLOGENTRIESREQUEST.fields_by_name["filter"]._options = None
+_LISTLOGENTRIESREQUEST.fields_by_name["order_by"]._options = None
+_LISTLOGENTRIESREQUEST.fields_by_name["page_size"]._options = None
+_LISTLOGENTRIESREQUEST.fields_by_name["page_token"]._options = None
+_LISTMONITOREDRESOURCEDESCRIPTORSREQUEST.fields_by_name["page_size"]._options = None
+_LISTMONITOREDRESOURCEDESCRIPTORSREQUEST.fields_by_name["page_token"]._options = None
+_LISTLOGSREQUEST.fields_by_name["parent"]._options = None
+_LISTLOGSREQUEST.fields_by_name["page_size"]._options = None
+_LISTLOGSREQUEST.fields_by_name["page_token"]._options = None
 
 _LOGGINGSERVICEV2 = _descriptor.ServiceDescriptor(
-  name='LoggingServiceV2',
-  full_name='google.logging.v2.LoggingServiceV2',
-  file=DESCRIPTOR,
-  index=0,
-  serialized_options=b'\312A\026logging.googleapis.com\322A\360\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write',
-  serialized_start=1795,
-  serialized_end=3168,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='DeleteLog',
-    full_name='google.logging.v2.LoggingServiceV2.DeleteLog',
+    name="LoggingServiceV2",
+    full_name="google.logging.v2.LoggingServiceV2",
+    file=DESCRIPTOR,
     index=0,
-    containing_service=None,
-    input_type=_DELETELOGREQUEST,
-    output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-    serialized_options=b'\202\323\344\223\002\266\001* /v2/{log_name=projects/*/logs/*}Z\033*\031/v2/{log_name=*/*/logs/*}Z\'*%/v2/{log_name=organizations/*/logs/*}Z!*\037/v2/{log_name=folders/*/logs/*}Z)*\'/v2/{log_name=billingAccounts/*/logs/*}\332A\010log_name',
-  ),
-  _descriptor.MethodDescriptor(
-    name='WriteLogEntries',
-    full_name='google.logging.v2.LoggingServiceV2.WriteLogEntries',
-    index=1,
-    containing_service=None,
-    input_type=_WRITELOGENTRIESREQUEST,
-    output_type=_WRITELOGENTRIESRESPONSE,
-    serialized_options=b'\202\323\344\223\002\026\"\021/v2/entries:write:\001*\332A log_name,resource,labels,entries',
-  ),
-  _descriptor.MethodDescriptor(
-    name='ListLogEntries',
-    full_name='google.logging.v2.LoggingServiceV2.ListLogEntries',
-    index=2,
-    containing_service=None,
-    input_type=_LISTLOGENTRIESREQUEST,
-    output_type=_LISTLOGENTRIESRESPONSE,
-    serialized_options=b'\202\323\344\223\002\025\"\020/v2/entries:list:\001*\332A\036resource_names,filter,order_by',
-  ),
-  _descriptor.MethodDescriptor(
-    name='ListMonitoredResourceDescriptors',
-    full_name='google.logging.v2.LoggingServiceV2.ListMonitoredResourceDescriptors',
-    index=3,
-    containing_service=None,
-    input_type=_LISTMONITOREDRESOURCEDESCRIPTORSREQUEST,
-    output_type=_LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE,
-    serialized_options=b'\202\323\344\223\002\"\022 /v2/monitoredResourceDescriptors',
-  ),
-  _descriptor.MethodDescriptor(
-    name='ListLogs',
-    full_name='google.logging.v2.LoggingServiceV2.ListLogs',
-    index=4,
-    containing_service=None,
-    input_type=_LISTLOGSREQUEST,
-    output_type=_LISTLOGSRESPONSE,
-    serialized_options=b'\202\323\344\223\002\242\001\022\025/v2/{parent=*/*}/logsZ\036\022\034/v2/{parent=projects/*}/logsZ#\022!/v2/{parent=organizations/*}/logsZ\035\022\033/v2/{parent=folders/*}/logsZ%\022#/v2/{parent=billingAccounts/*}/logs\332A\006parent',
-  ),
-])
+    serialized_options=b"\312A\026logging.googleapis.com\322A\360\001https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write",
+    serialized_start=1795,
+    serialized_end=3168,
+    methods=[
+        _descriptor.MethodDescriptor(
+            name="DeleteLog",
+            full_name="google.logging.v2.LoggingServiceV2.DeleteLog",
+            index=0,
+            containing_service=None,
+            input_type=_DELETELOGREQUEST,
+            output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
+            serialized_options=b"\202\323\344\223\002\266\001* /v2/{log_name=projects/*/logs/*}Z\033*\031/v2/{log_name=*/*/logs/*}Z'*%/v2/{log_name=organizations/*/logs/*}Z!*\037/v2/{log_name=folders/*/logs/*}Z)*'/v2/{log_name=billingAccounts/*/logs/*}\332A\010log_name",
+        ),
+        _descriptor.MethodDescriptor(
+            name="WriteLogEntries",
+            full_name="google.logging.v2.LoggingServiceV2.WriteLogEntries",
+            index=1,
+            containing_service=None,
+            input_type=_WRITELOGENTRIESREQUEST,
+            output_type=_WRITELOGENTRIESRESPONSE,
+            serialized_options=b'\202\323\344\223\002\026"\021/v2/entries:write:\001*\332A log_name,resource,labels,entries',
+        ),
+        _descriptor.MethodDescriptor(
+            name="ListLogEntries",
+            full_name="google.logging.v2.LoggingServiceV2.ListLogEntries",
+            index=2,
+            containing_service=None,
+            input_type=_LISTLOGENTRIESREQUEST,
+            output_type=_LISTLOGENTRIESRESPONSE,
+            serialized_options=b'\202\323\344\223\002\025"\020/v2/entries:list:\001*\332A\036resource_names,filter,order_by',
+        ),
+        _descriptor.MethodDescriptor(
+            name="ListMonitoredResourceDescriptors",
+            full_name="google.logging.v2.LoggingServiceV2.ListMonitoredResourceDescriptors",
+            index=3,
+            containing_service=None,
+            input_type=_LISTMONITOREDRESOURCEDESCRIPTORSREQUEST,
+            output_type=_LISTMONITOREDRESOURCEDESCRIPTORSRESPONSE,
+            serialized_options=b'\202\323\344\223\002"\022 /v2/monitoredResourceDescriptors',
+        ),
+        _descriptor.MethodDescriptor(
+            name="ListLogs",
+            full_name="google.logging.v2.LoggingServiceV2.ListLogs",
+            index=4,
+            containing_service=None,
+            input_type=_LISTLOGSREQUEST,
+            output_type=_LISTLOGSRESPONSE,
+            serialized_options=b"\202\323\344\223\002\242\001\022\025/v2/{parent=*/*}/logsZ\036\022\034/v2/{parent=projects/*}/logsZ#\022!/v2/{parent=organizations/*}/logsZ\035\022\033/v2/{parent=folders/*}/logsZ%\022#/v2/{parent=billingAccounts/*}/logs\332A\006parent",
+        ),
+    ],
+)
 _sym_db.RegisterServiceDescriptor(_LOGGINGSERVICEV2)
 
-DESCRIPTOR.services_by_name['LoggingServiceV2'] = _LOGGINGSERVICEV2
+DESCRIPTOR.services_by_name["LoggingServiceV2"] = _LOGGINGSERVICEV2
 
 # @@protoc_insertion_point(module_scope)
