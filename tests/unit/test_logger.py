@@ -36,7 +36,7 @@ class TestLogger(unittest.TestCase):
 
     @staticmethod
     def _get_target_class():
-        from google.cloud.logging.logger import Logger
+        from google.cloud.logging_v2.logger import Logger
 
         return Logger
 
@@ -75,7 +75,7 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(logger.labels, LABELS)
 
     def test_batch_w_bound_client(self):
-        from google.cloud.logging.logger import Batch
+        from google.cloud.logging_v2.logger import Batch
 
         conn = object()
         client = _Client(self.PROJECT, conn)
@@ -86,7 +86,7 @@ class TestLogger(unittest.TestCase):
         self.assertIs(batch.client, client)
 
     def test_batch_w_alternate_client(self):
-        from google.cloud.logging.logger import Batch
+        from google.cloud.logging_v2.logger import Batch
 
         conn1 = object()
         conn2 = object()
@@ -117,7 +117,7 @@ class TestLogger(unittest.TestCase):
 
     def test_log_empty_w_explicit(self):
         import datetime
-        from google.cloud.logging.resource import Resource
+        from google.cloud.logging_v2.resource import Resource
 
         ALT_LOG_NAME = "projects/foo/logs/alt.log.name"
         DEFAULT_LABELS = {"foo": "spam"}
@@ -207,7 +207,7 @@ class TestLogger(unittest.TestCase):
 
     def test_log_text_explicit(self):
         import datetime
-        from google.cloud.logging.resource import Resource
+        from google.cloud.logging_v2.resource import Resource
 
         ALT_LOG_NAME = "projects/foo/logs/alt.log.name"
         TEXT = "TEXT"
@@ -300,7 +300,7 @@ class TestLogger(unittest.TestCase):
 
     def test_log_struct_w_explicit(self):
         import datetime
-        from google.cloud.logging.resource import Resource
+        from google.cloud.logging_v2.resource import Resource
 
         ALT_LOG_NAME = "projects/foo/logs/alt.log.name"
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
@@ -405,7 +405,7 @@ class TestLogger(unittest.TestCase):
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
-        from google.cloud.logging.resource import Resource
+        from google.cloud.logging_v2.resource import Resource
 
         message = Struct(fields={"foo": Value(bool_value=True)})
         ALT_LOG_NAME = "projects/foo/logs/alt.log.name"
@@ -485,7 +485,7 @@ class TestLogger(unittest.TestCase):
 
     def test_list_entries_defaults(self):
         import six
-        from google.cloud.logging.client import Client
+        from google.cloud.logging_v2.client import Client
 
         TOKEN = "TOKEN"
 
@@ -526,8 +526,8 @@ class TestLogger(unittest.TestCase):
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
     def test_list_entries_explicit(self):
-        from google.cloud.logging import DESCENDING
-        from google.cloud.logging.client import Client
+        from google.cloud.logging_v2 import DESCENDING
+        from google.cloud.logging_v2.client import Client
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
@@ -586,8 +586,8 @@ class TestLogger(unittest.TestCase):
         self.assertLess(yesterday - timestamp, timedelta(minutes=1))
 
     def test_list_entries_explicit_timestamp(self):
-        from google.cloud.logging import DESCENDING
-        from google.cloud.logging.client import Client
+        from google.cloud.logging_v2 import DESCENDING
+        from google.cloud.logging_v2.client import Client
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
@@ -637,7 +637,7 @@ class TestBatch(unittest.TestCase):
 
     @staticmethod
     def _get_target_class():
-        from google.cloud.logging.logger import Batch
+        from google.cloud.logging_v2.logger import Batch
 
         return Batch
 
@@ -653,7 +653,7 @@ class TestBatch(unittest.TestCase):
         self.assertEqual(len(batch.entries), 0)
 
     def test_log_empty_defaults(self):
-        from google.cloud.logging.entries import LogEntry
+        from google.cloud.logging_v2.entries import LogEntry
 
         ENTRY = LogEntry()
         client = _Client(project=self.PROJECT, connection=_make_credentials())
@@ -664,8 +664,8 @@ class TestBatch(unittest.TestCase):
 
     def test_log_empty_explicit(self):
         import datetime
-        from google.cloud.logging.resource import Resource
-        from google.cloud.logging.entries import LogEntry
+        from google.cloud.logging_v2.resource import Resource
+        from google.cloud.logging_v2.entries import LogEntry
 
         LABELS = {"foo": "bar", "baz": "qux"}
         IID = "IID"
@@ -709,8 +709,8 @@ class TestBatch(unittest.TestCase):
         self.assertEqual(batch.entries, [ENTRY])
 
     def test_log_text_defaults(self):
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
-        from google.cloud.logging.entries import TextEntry
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.entries import TextEntry
 
         TEXT = "This is the entry text"
         ENTRY = TextEntry(payload=TEXT, resource=_GLOBAL_RESOURCE)
@@ -722,8 +722,8 @@ class TestBatch(unittest.TestCase):
 
     def test_log_text_explicit(self):
         import datetime
-        from google.cloud.logging.resource import Resource
-        from google.cloud.logging.entries import TextEntry
+        from google.cloud.logging_v2.resource import Resource
+        from google.cloud.logging_v2.entries import TextEntry
 
         TEXT = "This is the entry text"
         LABELS = {"foo": "bar", "baz": "qux"}
@@ -770,8 +770,8 @@ class TestBatch(unittest.TestCase):
         self.assertEqual(batch.entries, [ENTRY])
 
     def test_log_struct_defaults(self):
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
-        from google.cloud.logging.entries import StructEntry
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.entries import StructEntry
 
         STRUCT = {"message": "Message text", "weather": "partly cloudy"}
         ENTRY = StructEntry(payload=STRUCT, resource=_GLOBAL_RESOURCE)
@@ -783,8 +783,8 @@ class TestBatch(unittest.TestCase):
 
     def test_log_struct_explicit(self):
         import datetime
-        from google.cloud.logging.resource import Resource
-        from google.cloud.logging.entries import StructEntry
+        from google.cloud.logging_v2.resource import Resource
+        from google.cloud.logging_v2.entries import StructEntry
 
         STRUCT = {"message": "Message text", "weather": "partly cloudy"}
         LABELS = {"foo": "bar", "baz": "qux"}
@@ -831,8 +831,8 @@ class TestBatch(unittest.TestCase):
         self.assertEqual(batch.entries, [ENTRY])
 
     def test_log_proto_defaults(self):
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
-        from google.cloud.logging.entries import ProtobufEntry
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.entries import ProtobufEntry
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
 
@@ -846,8 +846,8 @@ class TestBatch(unittest.TestCase):
 
     def test_log_proto_explicit(self):
         import datetime
-        from google.cloud.logging.resource import Resource
-        from google.cloud.logging.entries import ProtobufEntry
+        from google.cloud.logging_v2.resource import Resource
+        from google.cloud.logging_v2.entries import ProtobufEntry
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
 
@@ -895,8 +895,8 @@ class TestBatch(unittest.TestCase):
         self.assertEqual(batch.entries, [ENTRY])
 
     def test_commit_w_unknown_entry_type(self):
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
-        from google.cloud.logging.entries import LogEntry
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.entries import LogEntry
 
         logger = _Logger()
         client = _Client(project=self.PROJECT, connection=_make_credentials())
@@ -913,8 +913,8 @@ class TestBatch(unittest.TestCase):
         )
 
     def test_commit_w_resource_specified(self):
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
-        from google.cloud.logging.resource import Resource
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.resource import Resource
 
         logger = _Logger()
         client = _Client(project=self.PROJECT, connection=_make_credentials())
@@ -944,7 +944,7 @@ class TestBatch(unittest.TestCase):
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
         from google.cloud._helpers import _datetime_to_rfc3339
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
 
         TEXT = "This is the entry text"
         STRUCT = {"message": TEXT, "weather": "partly cloudy"}
@@ -1031,8 +1031,8 @@ class TestBatch(unittest.TestCase):
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
-        from google.cloud.logging.logger import Logger
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.logger import Logger
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
 
         TEXT = "This is the entry text"
         STRUCT = {"message": TEXT, "weather": "partly cloudy"}
@@ -1083,8 +1083,8 @@ class TestBatch(unittest.TestCase):
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
-        from google.cloud.logging.logger import Logger
-        from google.cloud.logging.entries import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.logger import Logger
+        from google.cloud.logging_v2.entries import _GLOBAL_RESOURCE
 
         TEXT = "This is the entry text"
         STRUCT = {"message": TEXT, "weather": "partly cloudy"}
@@ -1133,9 +1133,9 @@ class TestBatch(unittest.TestCase):
         import datetime
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
-        from google.cloud.logging.entries import TextEntry
-        from google.cloud.logging.entries import StructEntry
-        from google.cloud.logging.entries import ProtobufEntry
+        from google.cloud.logging_v2.entries import TextEntry
+        from google.cloud.logging_v2.entries import StructEntry
+        from google.cloud.logging_v2.entries import ProtobufEntry
 
         TEXT = "This is the entry text"
         STRUCT = {"message": TEXT, "weather": "partly cloudy"}

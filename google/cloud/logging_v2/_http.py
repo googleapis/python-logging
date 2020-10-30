@@ -19,10 +19,10 @@ import functools
 from google.api_core import page_iterator
 from google.cloud import _http
 
-from google.cloud.logging import __version__
-from google.cloud.logging._helpers import entry_from_resource
-from google.cloud.logging.sink import Sink
-from google.cloud.logging.metric import Metric
+from google.cloud.logging_v2 import __version__
+from google.cloud.logging_v2._helpers import entry_from_resource
+from google.cloud.logging_v2.sink import Sink
+from google.cloud.logging_v2.metric import Metric
 
 
 class Connection(_http.JSONConnection):

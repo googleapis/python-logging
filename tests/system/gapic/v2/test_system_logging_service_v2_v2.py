@@ -26,7 +26,7 @@ class TestSystemLoggingServiceV2(object):
     def test_write_log_entries(self):
         _, project_id = google.auth.default()
 
-        client = logging_v2.LoggingServiceV2Client()
+        client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
         log_name = client.log_path(project_id, "test-{0}".format(time.time()))
         resource = {}
         labels = {}

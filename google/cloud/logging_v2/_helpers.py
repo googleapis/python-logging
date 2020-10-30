@@ -22,10 +22,10 @@ from datetime import timezone
 
 import requests
 
-from google.cloud.logging.entries import LogEntry
-from google.cloud.logging.entries import ProtobufEntry
-from google.cloud.logging.entries import StructEntry
-from google.cloud.logging.entries import TextEntry
+from google.cloud.logging_v2.entries import LogEntry
+from google.cloud.logging_v2.entries import ProtobufEntry
+from google.cloud.logging_v2.entries import StructEntry
+from google.cloud.logging_v2.entries import TextEntry
 
 try:
     from google.cloud.logging_v2.gapic.enums import LogSeverity

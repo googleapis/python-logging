@@ -68,7 +68,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup Request
         log_name = client.log_path("[PROJECT]", "[LOG]")
@@ -86,7 +86,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup request
         log_name = client.log_path("[PROJECT]", "[LOG]")
@@ -104,7 +104,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup Request
         entries = []
@@ -123,7 +123,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup request
         entries = []
@@ -144,7 +144,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup Request
         resource_names = []
@@ -167,7 +167,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup request
         resource_names = []
@@ -194,7 +194,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         paged_list_response = client.list_monitored_resource_descriptors()
         resources = list(paged_list_response)
@@ -212,7 +212,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         paged_list_response = client.list_monitored_resource_descriptors()
         with pytest.raises(CustomException):
@@ -231,7 +231,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup Request
         parent = client.project_path("[PROJECT]")
@@ -252,7 +252,7 @@ class TestLoggingServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.LoggingServiceV2Client()
+            client = logging_v2.gapic.logging_service_v2_client.LoggingServiceV2Client()
 
         # Setup request
         parent = client.project_path("[PROJECT]")

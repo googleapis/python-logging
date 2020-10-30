@@ -76,7 +76,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup Request
         parent = client.project_path("[PROJECT]")
@@ -97,7 +97,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup request
         parent = client.project_path("[PROJECT]")
@@ -125,7 +125,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup Request
         metric_name = client.metric_path("[PROJECT]", "[METRIC]")
@@ -146,7 +146,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup request
         metric_name = client.metric_path("[PROJECT]", "[METRIC]")
@@ -173,7 +173,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup Request
         parent = client.project_path("[PROJECT]")
@@ -195,7 +195,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup request
         parent = client.project_path("[PROJECT]")
@@ -223,7 +223,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup Request
         metric_name = client.metric_path("[PROJECT]", "[METRIC]")
@@ -245,7 +245,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup request
         metric_name = client.metric_path("[PROJECT]", "[METRIC]")
@@ -259,7 +259,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup Request
         metric_name = client.metric_path("[PROJECT]", "[METRIC]")
@@ -279,7 +279,7 @@ class TestMetricsServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.MetricsServiceV2Client()
+            client = logging_v2.gapic.metrics_service_v2_client.MetricsServiceV2Client()
 
         # Setup request
         metric_name = client.metric_path("[PROJECT]", "[METRIC]")

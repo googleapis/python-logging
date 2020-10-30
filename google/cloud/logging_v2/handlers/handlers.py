@@ -16,8 +16,8 @@
 
 import logging
 
-from google.cloud.logging.handlers.transports import BackgroundThreadTransport
-from google.cloud.logging.logger import _GLOBAL_RESOURCE
+from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
+from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 
 DEFAULT_LOGGER_NAME = "python"
 
@@ -67,7 +67,7 @@ class CloudLoggingHandler(logging.StreamHandler):
 
         import logging
         import google.cloud.logging
-        from google.cloud.logging.handlers import CloudLoggingHandler
+        from google.cloud.logging_v2.handlers import CloudLoggingHandler
 
         client = google.cloud.logging.Client()
         handler = CloudLoggingHandler(client)
@@ -135,7 +135,7 @@ def setup_logging(
 
         import logging
         import google.cloud.logging
-        from google.cloud.logging.handlers import CloudLoggingHandler
+        from google.cloud.logging_v2.handlers import CloudLoggingHandler
 
         client = google.cloud.logging.Client()
         handler = CloudLoggingHandler(client)
