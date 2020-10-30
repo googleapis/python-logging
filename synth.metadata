@@ -11,8 +11,8 @@
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "0dc0a6c0f1a9f979bc0690f0caa5fbafa3000c2c",
-        "internalRef": "327026955"
+        "sha": "438e61571a44e1cd58f99cf8a8eb6163d0f0ee39",
+        "internalRef": "336682434"
       }
     },
     {
@@ -63,37 +63,23 @@
     "docs/_templates/layout.html",
     "docs/conf.py",
     "google/cloud/logging/handlers/_helpers.py",
-    "google/cloud/logging_v2/gapic/__init__.py",
     "google/cloud/logging_v2/gapic/config_service_v2_client.py",
-    "google/cloud/logging_v2/gapic/config_service_v2_client_config.py",
-    "google/cloud/logging_v2/gapic/enums.py",
     "google/cloud/logging_v2/gapic/logging_service_v2_client.py",
-    "google/cloud/logging_v2/gapic/logging_service_v2_client_config.py",
     "google/cloud/logging_v2/gapic/metrics_service_v2_client.py",
-    "google/cloud/logging_v2/gapic/metrics_service_v2_client_config.py",
-    "google/cloud/logging_v2/gapic/transports/__init__.py",
     "google/cloud/logging_v2/gapic/transports/config_service_v2_grpc_transport.py",
     "google/cloud/logging_v2/gapic/transports/logging_service_v2_grpc_transport.py",
     "google/cloud/logging_v2/gapic/transports/metrics_service_v2_grpc_transport.py",
-    "google/cloud/logging_v2/proto/__init__.py",
     "google/cloud/logging_v2/proto/log_entry.proto",
     "google/cloud/logging_v2/proto/log_entry_pb2.py",
-    "google/cloud/logging_v2/proto/log_entry_pb2_grpc.py",
     "google/cloud/logging_v2/proto/logging.proto",
     "google/cloud/logging_v2/proto/logging_config.proto",
     "google/cloud/logging_v2/proto/logging_config_pb2.py",
-    "google/cloud/logging_v2/proto/logging_config_pb2_grpc.py",
     "google/cloud/logging_v2/proto/logging_metrics.proto",
     "google/cloud/logging_v2/proto/logging_metrics_pb2.py",
-    "google/cloud/logging_v2/proto/logging_metrics_pb2_grpc.py",
     "google/cloud/logging_v2/proto/logging_pb2.py",
-    "google/cloud/logging_v2/proto/logging_pb2_grpc.py",
     "noxfile.py",
     "renovate.json",
     "setup.cfg",
-    "tests/unit/gapic/v2/test_config_service_v2_client_v2.py",
-    "tests/unit/gapic/v2/test_logging_service_v2_client_v2.py",
-    "tests/unit/gapic/v2/test_metrics_service_v2_client_v2.py",
     "tests/unit/test_logger.py"
   ]
 }
