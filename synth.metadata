@@ -19,7 +19,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "cdddf139b36000b3a7c65fd2a7781e253262359a"
+        "sha": "09c48461232ce929c34386259eb59018ad2d8eef"
       }
     }
   ],
@@ -62,6 +62,7 @@
     "docs/_static/custom.css",
     "docs/_templates/layout.html",
     "docs/conf.py",
+    "docs/multiprocessing.rst",
     "google/cloud/logging/handlers/_helpers.py",
     "google/cloud/logging_v2/gapic/__init__.py",
     "google/cloud/logging_v2/gapic/config_service_v2_client.py",
