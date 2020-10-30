@@ -22,17 +22,19 @@ except pkg_resources.DistributionNotFound:
     __version__ = None
 
 
-from google.cloud.logging_v2 import client
-from google.cloud.logging_v2 import entries
+from google.cloud.logging_v2.client import Client
+from google.cloud.logging_v2.entries import logger_name_from_path
+from google.cloud.logging_v2.entries import LogEntry
+from google.cloud.logging_v2.entries import TextEntry
+from google.cloud.logging_v2.entries import StructEntry
+from google.cloud.logging_v2.entries import ProtobufEntry
 from google.cloud.logging_v2 import handlers
-from google.cloud.logging_v2 import logger
-from google.cloud.logging_v2 import metric
-from google.cloud.logging_v2 import sink
+from google.cloud.logging_v2.logger import Logger
+from google.cloud.logging_v2.logger import Batch
+from google.cloud.logging_v2.metric import Metric
+from google.cloud.logging_v2.resource import Resource
+from google.cloud.logging_v2.sink import Sink
 from google.cloud.logging_v2 import types
-from google.cloud.logging_v2.gapic import enums
-from google.cloud.logging_v2.gapic import config_service_v2_client
-from google.cloud.logging_v2.gapic import logging_service_v2_client
-from google.cloud.logging_v2.gapic import metrics_service_v2_client
 
 
 
@@ -42,33 +44,21 @@ DESCENDING = "timestamp desc"
 """Query string to order by decending timestamps."""
 
 
-class LoggingServiceV2Client(logging_service_v2_client.LoggingServiceV2Client):
-    __doc__ = logging_service_v2_client.LoggingServiceV2Client.__doc__
-    enums = enums
-
-
-class ConfigServiceV2Client(config_service_v2_client.ConfigServiceV2Client):
-    __doc__ = config_service_v2_client.ConfigServiceV2Client.__doc__
-    enums = enums
-
-
-class MetricsServiceV2Client(metrics_service_v2_client.MetricsServiceV2Client):
-    __doc__ = metrics_service_v2_client.MetricsServiceV2Client.__doc__
-    enums = enums
-
-
 __all__ = (
     "__version__",
     "ASCENDING",
-    "client",
-    "ConfigServiceV2Client",
+    "Batch",
+    "Client",
     "DESCENDING",
-    "enums",
     "handlers",
-    "logger",
-    "LoggingServiceV2Client",
-    "metric",
-    "MetricsServiceV2Client",
-    "sink",
+    "logger_name_from_path",
+    "Logger",
+    "LogEntry",
+    "Metric",
+    "ProtobufEntry",
+    "Resource",
+    "Sink",
+    "StructEntry",
+    "TextEntry",
     "types",
 )
