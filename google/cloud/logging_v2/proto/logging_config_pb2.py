@@ -443,7 +443,7 @@ _LOGSINK = _descriptor.Descriptor(
     ],
     extensions=[],
     nested_types=[],
-    enum_types=[_LOGSINK_VERSIONFORMAT],
+    enum_types=[_LOGSINK_VERSIONFORMAT,],
     serialized_options=b"\352A\273\001\n\036logging.googleapis.com/LogSink\022\037projects/{project}/sinks/{sink}\022)organizations/{organization}/sinks/{sink}\022\035folders/{folder}/sinks/{sink}\022.billingAccounts/{billing_account}/sinks/{sink}",
     is_extendable=False,
     syntax="proto3",
@@ -455,7 +455,7 @@ _LOGSINK = _descriptor.Descriptor(
             index=0,
             containing_type=None,
             fields=[],
-        )
+        ),
     ],
     serialized_start=859,
     serialized_end=1574,
@@ -750,7 +750,7 @@ _GETBUCKETREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b'\340A\002\372A"\n logging.googleapis.com/LogBucket',
             file=DESCRIPTOR,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -921,7 +921,7 @@ _GETSINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
             file=DESCRIPTOR,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1128,7 +1128,7 @@ _DELETESINKREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A \n\036logging.googleapis.com/LogSink",
             file=DESCRIPTOR,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1428,7 +1428,7 @@ _GETEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
             file=DESCRIPTOR,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1599,7 +1599,7 @@ _DELETEEXCLUSIONREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/LogExclusion",
             file=DESCRIPTOR,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1638,7 +1638,7 @@ _GETCMEKSETTINGSREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=b"\340A\002\372A%\n#logging.googleapis.com/CmekSettings",
             file=DESCRIPTOR,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],

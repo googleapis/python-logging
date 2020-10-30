@@ -46,7 +46,7 @@ from google.protobuf import empty_pb2
 from google.protobuf import field_mask_pb2
 
 
-_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-logging").version
+_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-logging",).version
 
 
 class MetricsServiceV2Client(object):
@@ -83,14 +83,14 @@ class MetricsServiceV2Client(object):
     def log_metric_path(cls, project, metric):
         """Return a fully-qualified log_metric string."""
         return google.api_core.path_template.expand(
-            "projects/{project}/metrics/{metric}", project=project, metric=metric
+            "projects/{project}/metrics/{metric}", project=project, metric=metric,
         )
 
     @classmethod
     def project_path(cls, project):
         """Return a fully-qualified project string."""
         return google.api_core.path_template.expand(
-            "projects/{project}", project=project
+            "projects/{project}", project=project,
         )
 
     def __init__(
@@ -180,12 +180,12 @@ class MetricsServiceV2Client(object):
                 self.transport = transport
         else:
             self.transport = metrics_service_v2_grpc_transport.MetricsServiceV2GrpcTransport(
-                address=api_endpoint, channel=channel, credentials=credentials
+                address=api_endpoint, channel=channel, credentials=credentials,
             )
 
         if client_info is None:
             client_info = google.api_core.gapic_v1.client_info.ClientInfo(
-                gapic_version=_GAPIC_LIBRARY_VERSION
+                gapic_version=_GAPIC_LIBRARY_VERSION,
             )
         else:
             client_info.gapic_version = _GAPIC_LIBRARY_VERSION
@@ -196,7 +196,7 @@ class MetricsServiceV2Client(object):
         # (Ordinarily, these are the defaults specified in the `*_config.py`
         # file next to this one.)
         self._method_configs = google.api_core.gapic_v1.config.parse_method_configs(
-            client_config["interfaces"][self._INTERFACE_NAME]
+            client_config["interfaces"][self._INTERFACE_NAME],
         )
 
         # Save a dictionary of cached API call functions.
@@ -283,7 +283,7 @@ class MetricsServiceV2Client(object):
             )
 
         request = logging_metrics_pb2.ListLogMetricsRequest(
-            parent=parent, page_size=page_size
+            parent=parent, page_size=page_size,
         )
         if metadata is None:
             metadata = []
@@ -368,7 +368,7 @@ class MetricsServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_metrics_pb2.GetLogMetricRequest(metric_name=metric_name)
+        request = logging_metrics_pb2.GetLogMetricRequest(metric_name=metric_name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -454,7 +454,7 @@ class MetricsServiceV2Client(object):
             )
 
         request = logging_metrics_pb2.CreateLogMetricRequest(
-            parent=parent, metric=metric
+            parent=parent, metric=metric,
         )
         if metadata is None:
             metadata = []
@@ -541,7 +541,7 @@ class MetricsServiceV2Client(object):
             )
 
         request = logging_metrics_pb2.UpdateLogMetricRequest(
-            metric_name=metric_name, metric=metric
+            metric_name=metric_name, metric=metric,
         )
         if metadata is None:
             metadata = []
@@ -612,7 +612,7 @@ class MetricsServiceV2Client(object):
                 client_info=self._client_info,
             )
 
-        request = logging_metrics_pb2.DeleteLogMetricRequest(metric_name=metric_name)
+        request = logging_metrics_pb2.DeleteLogMetricRequest(metric_name=metric_name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)

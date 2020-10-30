@@ -19,7 +19,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "db4f15fedc76e04018e6e43ec403e804e1142158"
+        "sha": "cf2eff09d0f5319a4dc5cdce2b6356d85af4a798"
       }
     }
   ],
@@ -80,7 +80,6 @@
     "docs/_templates/layout.html",
     "docs/conf.py",
     "docs/multiprocessing.rst",
-    "google/cloud/logging/handlers/_helpers.py",
     "google/cloud/logging_v2/gapic/__init__.py",
     "google/cloud/logging_v2/gapic/config_service_v2_client.py",
     "google/cloud/logging_v2/gapic/config_service_v2_client_config.py",
@@ -119,7 +118,6 @@
     "testing/.gitignore",
     "tests/unit/gapic/v2/test_config_service_v2_client_v2.py",
     "tests/unit/gapic/v2/test_logging_service_v2_client_v2.py",
-    "tests/unit/gapic/v2/test_metrics_service_v2_client_v2.py",
-    "tests/unit/test_logger.py"
+    "tests/unit/gapic/v2/test_metrics_service_v2_client_v2.py"
   ]
 }
