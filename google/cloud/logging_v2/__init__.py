@@ -14,17 +14,27 @@
 
 from __future__ import absolute_import
 
-from pkg_resources import get_distribution
+import pkg_resources
+
+try:
+    __version__ = pkg_resources.get_distribution("google-cloud-logging").version
+except pkg_resources.DistributionNotFound:
+    __version__ = None
 
 
+from google.cloud.logging_v2 import client
+from google.cloud.logging_v2 import entries
+from google.cloud.logging_v2 import handlers
+from google.cloud.logging_v2 import logger
+from google.cloud.logging_v2 import metric
+from google.cloud.logging_v2 import sink
 from google.cloud.logging_v2 import types
-from google.cloud.logging_v2.gapic import config_service_v2_client
 from google.cloud.logging_v2.gapic import enums
+from google.cloud.logging_v2.gapic import config_service_v2_client
 from google.cloud.logging_v2.gapic import logging_service_v2_client
 from google.cloud.logging_v2.gapic import metrics_service_v2_client
 
 
-__version__ = get_distribution("google-cloud-logging").version
 
 ASCENDING = "timestamp asc"
 """Query string to order by ascending timestamps."""
@@ -48,11 +58,17 @@ class MetricsServiceV2Client(metrics_service_v2_client.MetricsServiceV2Client):
 
 
 __all__ = (
-    "enums",
-    "types",
-    "LoggingServiceV2Client",
-    "ConfigServiceV2Client",
-    "MetricsServiceV2Client",
+    "__version__",
     "ASCENDING",
+    "client",
+    "ConfigServiceV2Client",
     "DESCENDING",
+    "enums",
+    "handlers",
+    "logger",
+    "LoggingServiceV2Client",
+    "metric",
+    "MetricsServiceV2Client",
+    "sink",
+    "types",
 )
