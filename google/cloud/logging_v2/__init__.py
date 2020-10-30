@@ -37,7 +37,6 @@ from google.cloud.logging_v2.sink import Sink
 from google.cloud.logging_v2 import types
 
 
-
 ASCENDING = "timestamp asc"
 """Query string to order by ascending timestamps."""
 DESCENDING = "timestamp desc"
