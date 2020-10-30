@@ -30,13 +30,13 @@ class TestConnection(unittest.TestCase):
 
     @staticmethod
     def _get_default_timeout():
-        from google.cloud.logging._http import _http
+        from google.cloud.logging_v2._http import _http
 
         return _http._DEFAULT_TIMEOUT
 
     @staticmethod
     def _get_target_class():
-        from google.cloud.logging._http import Connection
+        from google.cloud.logging_v2._http import Connection
 
         return Connection
 
@@ -105,7 +105,7 @@ class Test_LoggingAPI(unittest.TestCase):
 
     @staticmethod
     def _get_target_class():
-        from google.cloud.logging._http import _LoggingAPI
+        from google.cloud.logging_v2._http import _LoggingAPI
 
         return _LoggingAPI
 
@@ -129,9 +129,9 @@ class Test_LoggingAPI(unittest.TestCase):
 
     def test_list_entries_no_paging(self):
         import six
-        from google.cloud.logging.client import Client
-        from google.cloud.logging.entries import TextEntry
-        from google.cloud.logging.logger import Logger
+        from google.cloud.logging_v2.client import Client
+        from google.cloud.logging_v2.entries import TextEntry
+        from google.cloud.logging_v2.logger import Logger
 
         NOW, TIMESTAMP = self._make_timestamp()
         IID = "IID"
@@ -183,11 +183,11 @@ class Test_LoggingAPI(unittest.TestCase):
         )
 
     def test_list_entries_w_paging(self):
-        from google.cloud.logging import DESCENDING
-        from google.cloud.logging.client import Client
-        from google.cloud.logging.logger import Logger
-        from google.cloud.logging.entries import ProtobufEntry
-        from google.cloud.logging.entries import StructEntry
+        from google.cloud.logging_v2 import DESCENDING
+        from google.cloud.logging_v2.client import Client
+        from google.cloud.logging_v2.logger import Logger
+        from google.cloud.logging_v2.entries import ProtobufEntry
+        from google.cloud.logging_v2.entries import StructEntry
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
@@ -339,7 +339,7 @@ class Test_SinksAPI(unittest.TestCase):
 
     @staticmethod
     def _get_target_class():
-        from google.cloud.logging._http import _SinksAPI
+        from google.cloud.logging_v2._http import _SinksAPI
 
         return _SinksAPI
 
@@ -355,7 +355,7 @@ class Test_SinksAPI(unittest.TestCase):
 
     def test_list_sinks_no_paging(self):
         import six
-        from google.cloud.logging.sink import Sink
+        from google.cloud.logging_v2.sink import Sink
 
         TOKEN = "TOKEN"
         RETURNED = {
@@ -395,7 +395,7 @@ class Test_SinksAPI(unittest.TestCase):
         )
 
     def test_list_sinks_w_paging(self):
-        from google.cloud.logging.sink import Sink
+        from google.cloud.logging_v2.sink import Sink
 
         TOKEN = "TOKEN"
         PAGE_SIZE = 42
@@ -619,7 +619,7 @@ class Test_MetricsAPI(unittest.TestCase):
 
     @staticmethod
     def _get_target_class():
-        from google.cloud.logging._http import _MetricsAPI
+        from google.cloud.logging_v2._http import _MetricsAPI
 
         return _MetricsAPI
 
@@ -628,7 +628,7 @@ class Test_MetricsAPI(unittest.TestCase):
 
     def test_list_metrics_no_paging(self):
         import six
-        from google.cloud.logging.metric import Metric
+        from google.cloud.logging_v2.metric import Metric
 
         TOKEN = "TOKEN"
         RETURNED = {
@@ -662,7 +662,7 @@ class Test_MetricsAPI(unittest.TestCase):
         )
 
     def test_list_metrics_w_paging(self):
-        from google.cloud.logging.metric import Metric
+        from google.cloud.logging_v2.metric import Metric
 
         TOKEN = "TOKEN"
         PAGE_SIZE = 42

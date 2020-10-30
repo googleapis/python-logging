@@ -22,7 +22,7 @@ from google.protobuf.any_pb2 import Any
 from google.protobuf.json_format import MessageToDict
 from google.protobuf.json_format import Parse
 
-from google.cloud.logging.resource import Resource
+from google.cloud.logging_v2.resource import Resource
 from google.cloud._helpers import _name_from_project_path
 from google.cloud._helpers import _rfc3339_nanos_to_datetime
 from google.cloud._helpers import _datetime_to_rfc3339

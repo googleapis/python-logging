@@ -75,7 +75,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         parent = client.project_path("[PROJECT]")
@@ -96,7 +96,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         parent = client.project_path("[PROJECT]")
@@ -130,7 +130,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         sink_name = client.sink_path("[PROJECT]", "[SINK]")
@@ -149,7 +149,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         sink_name = client.sink_path("[PROJECT]", "[SINK]")
@@ -182,7 +182,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         parent = client.project_path("[PROJECT]")
@@ -204,7 +204,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         parent = client.project_path("[PROJECT]")
@@ -238,7 +238,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         sink_name = client.sink_path("[PROJECT]", "[SINK]")
@@ -260,7 +260,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         sink_name = client.sink_path("[PROJECT]", "[SINK]")
@@ -274,7 +274,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         sink_name = client.sink_path("[PROJECT]", "[SINK]")
@@ -292,7 +292,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         sink_name = client.sink_path("[PROJECT]", "[SINK]")
@@ -318,7 +318,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         parent = client.project_path("[PROJECT]")
@@ -339,7 +339,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         parent = client.project_path("[PROJECT]")
@@ -367,7 +367,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
@@ -386,7 +386,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
@@ -413,7 +413,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         parent = client.project_path("[PROJECT]")
@@ -435,7 +435,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         parent = client.project_path("[PROJECT]")
@@ -463,7 +463,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
@@ -486,7 +486,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
@@ -501,7 +501,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup Request
         name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
@@ -519,7 +519,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         # Setup request
         name = client.exclusion_path("[PROJECT]", "[EXCLUSION]")
@@ -544,7 +544,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         response = client.get_cmek_settings()
         assert expected_response == response
@@ -560,7 +560,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         with pytest.raises(CustomException):
             client.get_cmek_settings()
@@ -582,7 +582,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         response = client.update_cmek_settings()
         assert expected_response == response
@@ -598,7 +598,7 @@ class TestConfigServiceV2Client(object):
         patch = mock.patch("google.api_core.grpc_helpers.create_channel")
         with patch as create_channel:
             create_channel.return_value = channel
-            client = logging_v2.ConfigServiceV2Client()
+            client = logging_v2.gapic.config_service_v2_client.ConfigServiceV2Client()
 
         with pytest.raises(CustomException):
             client.update_cmek_settings()

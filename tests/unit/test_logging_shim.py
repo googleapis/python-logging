@@ -1,4 +1,5 @@
-# Copyright 2017 Google LLC All Rights Reserved.
+# -*- coding: utf-8 -*-
+# Copyright 2020 Google LLC All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud.logging.handlers.middleware.request import RequestMiddleware
+import unittest
 
-__all__ = ["RequestMiddleware"]
+
+class TestLoggingShim(unittest.TestCase):
+    def test_shim_matches_logging_v2(self):
+        from google.cloud import logging
+        from google.cloud import logging_v2
+
+        self.assertEqual(logging.__all__, logging_v2.__all__)
+
+        for name in logging.__all__:
+            found = getattr(logging, name)
+            expected = getattr(logging_v2, name)
+            self.assertIs(found, expected)

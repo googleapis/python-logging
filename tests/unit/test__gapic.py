@@ -19,8 +19,8 @@ import google.auth.credentials
 from google.protobuf import empty_pb2
 import mock
 
-import google.cloud.logging
-from google.cloud.logging import _gapic
+import google.cloud.logging_v2
+from google.cloud.logging_v2 import _gapic
 from google.cloud.logging_v2.gapic import config_service_v2_client
 from google.cloud.logging_v2.gapic import logging_service_v2_client
 from google.cloud.logging_v2.gapic import metrics_service_v2_client
@@ -63,14 +63,14 @@ class Test_LoggingAPI(object):
         channel.ListLogEntries.response = logging_pb2.ListLogEntriesResponse(
             entries=[log_entry_msg]
         )
-        result = api.list_entries([PROJECT], FILTER, google.cloud.logging.DESCENDING)
+        result = api.list_entries([PROJECT], FILTER, google.cloud.logging_v2.DESCENDING)
 
         entries = list(result)
 
         # Check the response
         assert len(entries) == 1
         entry = entries[0]
-        assert isinstance(entry, google.cloud.logging.entries.TextEntry)
+        assert isinstance(entry, google.cloud.logging_v2.entries.TextEntry)
         assert entry.payload == "text"
 
         # Check the request
@@ -78,7 +78,7 @@ class Test_LoggingAPI(object):
         request = channel.ListLogEntries.requests[0]
         assert request.project_ids == [PROJECT]
         assert request.filter == FILTER
-        assert request.order_by == google.cloud.logging.DESCENDING
+        assert request.order_by == google.cloud.logging_v2.DESCENDING
 
     def test_list_entries_with_options(self):
         channel, api = self.make_logging_api()
@@ -88,7 +88,7 @@ class Test_LoggingAPI(object):
         result = api.list_entries(
             [PROJECT],
             FILTER,
-            google.cloud.logging.ASCENDING,
+            google.cloud.logging_v2.ASCENDING,
             page_size=42,
             page_token="token",
         )
@@ -100,7 +100,7 @@ class Test_LoggingAPI(object):
         request = channel.ListLogEntries.requests[0]
         assert request.project_ids == [PROJECT]
         assert request.filter == FILTER
-        assert request.order_by == google.cloud.logging.ASCENDING
+        assert request.order_by == google.cloud.logging_v2.ASCENDING
         assert request.page_size == 42
         assert request.page_token == "token"
 
@@ -175,7 +175,7 @@ class Test_SinksAPI(object):
         # Check the response
         assert len(sinks) == 1
         sink = sinks[0]
-        assert isinstance(sink, google.cloud.logging.sink.Sink)
+        assert isinstance(sink, google.cloud.logging_v2.sink.Sink)
         assert sink.name == self.SINK_PATH
         assert sink.destination == self.DESTINATION_URI
         assert sink.filter_ == FILTER
@@ -339,7 +339,7 @@ class Test_MetricsAPI(object):
         # Check the response
         assert len(metrics) == 1
         metric = metrics[0]
-        assert isinstance(metric, google.cloud.logging.metric.Metric)
+        assert isinstance(metric, google.cloud.logging_v2.metric.Metric)
         assert metric.name == self.METRIC_PATH
         assert metric.description == self.DESCRIPTION
         assert metric.filter_ == FILTER
@@ -443,7 +443,7 @@ class Test_MetricsAPI(object):
 class Test__parse_log_entry(unittest.TestCase):
     @staticmethod
     def _call_fut(*args, **kwargs):
-        from google.cloud.logging._gapic import _parse_log_entry
+        from google.cloud.logging_v2._gapic import _parse_log_entry
 
         return _parse_log_entry(*args, **kwargs)
 
@@ -455,7 +455,7 @@ class Test__parse_log_entry(unittest.TestCase):
         expected = {"logName": entry_pb.log_name, "textPayload": entry_pb.text_payload}
         self.assertEqual(result, expected)
 
-    @mock.patch("google.cloud.logging._gapic.MessageToDict", side_effect=TypeError)
+    @mock.patch("google.cloud.logging_v2._gapic.MessageToDict", side_effect=TypeError)
     def test_non_registry_failure(self, msg_to_dict_mock):
         entry_pb = mock.Mock(spec=["HasField"])
         entry_pb.HasField.return_value = False
@@ -522,7 +522,7 @@ class Test__parse_log_entry(unittest.TestCase):
 class Test__log_entry_mapping_to_pb(unittest.TestCase):
     @staticmethod
     def _call_fut(*args, **kwargs):
-        from google.cloud.logging._gapic import _log_entry_mapping_to_pb
+        from google.cloud.logging_v2._gapic import _log_entry_mapping_to_pb
 
         return _log_entry_mapping_to_pb(*args, **kwargs)
 
@@ -582,7 +582,7 @@ class Test__log_entry_mapping_to_pb(unittest.TestCase):
         self.assertEqual(result, entry_pb)
 
 
-@mock.patch("google.cloud.logging._gapic.LoggingServiceV2Client", autospec=True)
+@mock.patch("google.cloud.logging_v2._gapic.LoggingServiceV2Client", autospec=True)
 def test_make_logging_api(gapic_client):
     client = mock.Mock(spec=["_credentials", "_client_info"])
     api = _gapic.make_logging_api(client)
@@ -593,7 +593,7 @@ def test_make_logging_api(gapic_client):
     )
 
 
-@mock.patch("google.cloud.logging._gapic.MetricsServiceV2Client", autospec=True)
+@mock.patch("google.cloud.logging_v2._gapic.MetricsServiceV2Client", autospec=True)
 def test_make_metrics_api(gapic_client):
     client = mock.Mock(spec=["_credentials", "_client_info"])
     api = _gapic.make_metrics_api(client)
@@ -604,7 +604,7 @@ def test_make_metrics_api(gapic_client):
     )
 
 
-@mock.patch("google.cloud.logging._gapic.ConfigServiceV2Client", autospec=True)
+@mock.patch("google.cloud.logging_v2._gapic.ConfigServiceV2Client", autospec=True)
 def test_make_sinks_api(gapic_client):
     client = mock.Mock(spec=["_credentials", "_client_info"])
     api = _gapic.make_sinks_api(client)

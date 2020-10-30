@@ -21,9 +21,9 @@ and labels for App Engine logs.
 import logging
 import os
 
-from google.cloud.logging.handlers._helpers import get_trace_id
-from google.cloud.logging.handlers.transports import BackgroundThreadTransport
-from google.cloud.logging.resource import Resource
+from google.cloud.logging_v2.handlers._helpers import get_trace_id
+from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
+from google.cloud.logging_v2.resource import Resource
 
 _DEFAULT_GAE_LOGGER_NAME = "app"
 
