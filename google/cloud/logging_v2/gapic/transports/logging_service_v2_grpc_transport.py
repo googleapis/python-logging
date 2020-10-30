@@ -59,7 +59,7 @@ class LoggingServiceV2GrpcTransport(object):
         # exception (channels come with credentials baked in already).
         if channel is not None and credentials is not None:
             raise ValueError(
-                "The `channel` and `credentials` arguments are mutually " "exclusive.",
+                "The `channel` and `credentials` arguments are mutually " "exclusive."
             )
 
         # Create the channel.
@@ -78,7 +78,7 @@ class LoggingServiceV2GrpcTransport(object):
         # gRPC uses objects called "stubs" that are bound to the
         # channel and provide a basic method for each RPC.
         self._stubs = {
-            "logging_service_v2_stub": logging_pb2_grpc.LoggingServiceV2Stub(channel),
+            "logging_service_v2_stub": logging_pb2_grpc.LoggingServiceV2Stub(channel)
         }
 
     @classmethod
@@ -114,22 +114,6 @@ class LoggingServiceV2GrpcTransport(object):
         return self._channel
 
     @property
-    def delete_log(self):
-        """Return the gRPC stub for :meth:`LoggingServiceV2Client.delete_log`.
-
-        Deletes all the log entries in a log. The log reappears if it receives new
-        entries. Log entries written shortly before the delete operation might not
-        be deleted. Entries received after the delete operation with a timestamp
-        before the operation will be deleted.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["logging_service_v2_stub"].DeleteLog
-
-    @property
     def write_log_entries(self):
         """Return the gRPC stub for :meth:`LoggingServiceV2Client.write_log_entries`.
 
@@ -147,6 +131,22 @@ class LoggingServiceV2GrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["logging_service_v2_stub"].WriteLogEntries
+
+    @property
+    def delete_log(self):
+        """Return the gRPC stub for :meth:`LoggingServiceV2Client.delete_log`.
+
+        Deletes all the log entries in a log. The log reappears if it receives new
+        entries. Log entries written shortly before the delete operation might not
+        be deleted. Entries received after the delete operation with a timestamp
+        before the operation will be deleted.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["logging_service_v2_stub"].DeleteLog
 
     @property
     def list_log_entries(self):
