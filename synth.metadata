@@ -3,30 +3,30 @@
     {
       "git": {
         "name": ".",
-        "remote": "git@github.com:googleapis/python-logging.git",
-        "sha": "98029b5a0d997963a7a30758933e0cc8ee8f5127"
+        "remote": "git@github.com:googleapis/python-logging",
+        "sha": "231474afcd5a84549d68e8b7ae9c0c912b43431b"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "fd31b1600fc496d6127665d29f095371d985c637",
-        "internalRef": "336344634"
+        "sha": "7f31f40209008ad24058579e7112e45fc9d5715e",
+        "internalRef": "339939234"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "befc24dcdeb8e57ec1259826fd33120b05137e8f"
+        "sha": "b19b401571e77192f8dd38eab5fb2300a0de9324"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "befc24dcdeb8e57ec1259826fd33120b05137e8f"
+        "sha": "b19b401571e77192f8dd38eab5fb2300a0de9324"
       }
     }
   ],
