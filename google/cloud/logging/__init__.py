@@ -15,122 +15,39 @@
 # limitations under the License.
 #
 
-from google.cloud.logging_v2.services.config_service_v2.async_client import (
-    ConfigServiceV2AsyncClient,
-)
-from google.cloud.logging_v2.services.config_service_v2.client import (
-    ConfigServiceV2Client,
-)
-from google.cloud.logging_v2.services.logging_service_v2.async_client import (
-    LoggingServiceV2AsyncClient,
-)
-from google.cloud.logging_v2.services.logging_service_v2.client import (
-    LoggingServiceV2Client,
-)
-from google.cloud.logging_v2.services.metrics_service_v2.async_client import (
-    MetricsServiceV2AsyncClient,
-)
-from google.cloud.logging_v2.services.metrics_service_v2.client import (
-    MetricsServiceV2Client,
-)
-from google.cloud.logging_v2.types.log_entry import LogEntry
-from google.cloud.logging_v2.types.log_entry import LogEntryOperation
-from google.cloud.logging_v2.types.log_entry import LogEntrySourceLocation
-from google.cloud.logging_v2.types.logging import DeleteLogRequest
-from google.cloud.logging_v2.types.logging import ListLogEntriesRequest
-from google.cloud.logging_v2.types.logging import ListLogEntriesResponse
-from google.cloud.logging_v2.types.logging import ListLogsRequest
-from google.cloud.logging_v2.types.logging import ListLogsResponse
-from google.cloud.logging_v2.types.logging import (
-    ListMonitoredResourceDescriptorsRequest,
-)
-from google.cloud.logging_v2.types.logging import (
-    ListMonitoredResourceDescriptorsResponse,
-)
-from google.cloud.logging_v2.types.logging import WriteLogEntriesPartialErrors
-from google.cloud.logging_v2.types.logging import WriteLogEntriesRequest
-from google.cloud.logging_v2.types.logging import WriteLogEntriesResponse
-from google.cloud.logging_v2.types.logging_config import BigQueryOptions
-from google.cloud.logging_v2.types.logging_config import CmekSettings
-from google.cloud.logging_v2.types.logging_config import CreateExclusionRequest
-from google.cloud.logging_v2.types.logging_config import CreateSinkRequest
-from google.cloud.logging_v2.types.logging_config import DeleteExclusionRequest
-from google.cloud.logging_v2.types.logging_config import DeleteSinkRequest
-from google.cloud.logging_v2.types.logging_config import GetBucketRequest
-from google.cloud.logging_v2.types.logging_config import GetCmekSettingsRequest
-from google.cloud.logging_v2.types.logging_config import GetExclusionRequest
-from google.cloud.logging_v2.types.logging_config import GetSinkRequest
-from google.cloud.logging_v2.types.logging_config import LifecycleState
-from google.cloud.logging_v2.types.logging_config import ListBucketsRequest
-from google.cloud.logging_v2.types.logging_config import ListBucketsResponse
-from google.cloud.logging_v2.types.logging_config import ListExclusionsRequest
-from google.cloud.logging_v2.types.logging_config import ListExclusionsResponse
-from google.cloud.logging_v2.types.logging_config import ListSinksRequest
-from google.cloud.logging_v2.types.logging_config import ListSinksResponse
-from google.cloud.logging_v2.types.logging_config import LogBucket
-from google.cloud.logging_v2.types.logging_config import LogExclusion
-from google.cloud.logging_v2.types.logging_config import LogSink
-from google.cloud.logging_v2.types.logging_config import UpdateBucketRequest
-from google.cloud.logging_v2.types.logging_config import UpdateCmekSettingsRequest
-from google.cloud.logging_v2.types.logging_config import UpdateExclusionRequest
-from google.cloud.logging_v2.types.logging_config import UpdateSinkRequest
-from google.cloud.logging_v2.types.logging_metrics import CreateLogMetricRequest
-from google.cloud.logging_v2.types.logging_metrics import DeleteLogMetricRequest
-from google.cloud.logging_v2.types.logging_metrics import GetLogMetricRequest
-from google.cloud.logging_v2.types.logging_metrics import ListLogMetricsRequest
-from google.cloud.logging_v2.types.logging_metrics import ListLogMetricsResponse
-from google.cloud.logging_v2.types.logging_metrics import LogMetric
-from google.cloud.logging_v2.types.logging_metrics import UpdateLogMetricRequest
+from google.cloud.logging_v2 import __version__
+from google.cloud.logging_v2 import ASCENDING
+from google.cloud.logging_v2 import DESCENDING
+
+from google.cloud.logging_v2.client import Client
+from google.cloud.logging_v2.entries import logger_name_from_path
+from google.cloud.logging_v2.entries import LogEntry
+from google.cloud.logging_v2.entries import TextEntry
+from google.cloud.logging_v2.entries import StructEntry
+from google.cloud.logging_v2.entries import ProtobufEntry
+from google.cloud.logging_v2 import handlers
+from google.cloud.logging_v2.logger import Logger
+from google.cloud.logging_v2.logger import Batch
+from google.cloud.logging_v2.metric import Metric
+from google.cloud.logging_v2.resource import Resource
+from google.cloud.logging_v2.sink import Sink
+from google.cloud.logging_v2 import types
 
 __all__ = (
-    "BigQueryOptions",
-    "CmekSettings",
-    "ConfigServiceV2AsyncClient",
-    "ConfigServiceV2Client",
-    "CreateExclusionRequest",
-    "CreateLogMetricRequest",
-    "CreateSinkRequest",
-    "DeleteExclusionRequest",
-    "DeleteLogMetricRequest",
-    "DeleteLogRequest",
-    "DeleteSinkRequest",
-    "GetBucketRequest",
-    "GetCmekSettingsRequest",
-    "GetExclusionRequest",
-    "GetLogMetricRequest",
-    "GetSinkRequest",
-    "LifecycleState",
-    "ListBucketsRequest",
-    "ListBucketsResponse",
-    "ListExclusionsRequest",
-    "ListExclusionsResponse",
-    "ListLogEntriesRequest",
-    "ListLogEntriesResponse",
-    "ListLogMetricsRequest",
-    "ListLogMetricsResponse",
-    "ListLogsRequest",
-    "ListLogsResponse",
-    "ListMonitoredResourceDescriptorsRequest",
-    "ListMonitoredResourceDescriptorsResponse",
-    "ListSinksRequest",
-    "ListSinksResponse",
-    "LogBucket",
+    "__version__",
+    "ASCENDING",
+    "Batch",
+    "Client",
+    "DESCENDING",
+    "handlers",
+    "logger_name_from_path",
+    "Logger",
     "LogEntry",
-    "LogEntryOperation",
-    "LogEntrySourceLocation",
-    "LogExclusion",
-    "LogMetric",
-    "LogSink",
-    "LoggingServiceV2AsyncClient",
-    "LoggingServiceV2Client",
-    "MetricsServiceV2AsyncClient",
-    "MetricsServiceV2Client",
-    "UpdateBucketRequest",
-    "UpdateCmekSettingsRequest",
-    "UpdateExclusionRequest",
-    "UpdateLogMetricRequest",
-    "UpdateSinkRequest",
-    "WriteLogEntriesPartialErrors",
-    "WriteLogEntriesRequest",
-    "WriteLogEntriesResponse",
+    "Metric",
+    "ProtobufEntry",
+    "Resource",
+    "Sink",
+    "StructEntry",
+    "TextEntry",
+    "types",
 )

@@ -16,22 +16,31 @@
 client."""
 
 import functools
+import json
+import types
 
-from google.cloud.logging_v2.gapic.config_service_v2_client import ConfigServiceV2Client
-from google.cloud.logging_v2.gapic.logging_service_v2_client import (
-    LoggingServiceV2Client,
-)
-from google.cloud.logging_v2.gapic.metrics_service_v2_client import (
-    MetricsServiceV2Client,
-)
-from google.cloud.logging_v2.proto.logging_config_pb2 import LogSink
-from google.cloud.logging_v2.proto.logging_metrics_pb2 import LogMetric
-from google.cloud.logging_v2.proto.log_entry_pb2 import LogEntry
+from typing import Iterable
+
+from google.api import monitored_resource_pb2
+from google.cloud.logging_v2.services.config_service_v2 import ConfigServiceV2Client
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
+from google.cloud.logging_v2.services.metrics_service_v2 import MetricsServiceV2Client
+from google.cloud.logging_v2.types import CreateSinkRequest
+from google.cloud.logging_v2.types import UpdateSinkRequest
+from google.cloud.logging_v2.types import ListSinksRequest
+from google.cloud.logging_v2.types import ListLogMetricsRequest
+from google.cloud.logging_v2.types import ListLogEntriesRequest
+from google.cloud.logging_v2.types import WriteLogEntriesRequest
+from google.cloud.logging_v2.types import LogSink
+from google.cloud.logging_v2.types import LogMetric
+from google.cloud.logging_v2.types import LogEntry as LogEntryPB
+
 from google.protobuf.json_format import MessageToDict
 from google.protobuf.json_format import ParseDict
 
 from google.cloud.logging_v2._helpers import entry_from_resource
 from google.cloud.logging_v2.sink import Sink
+from google.cloud.logging_v2.entries import LogEntry
 from google.cloud.logging_v2.metric import Metric
 
 
@@ -51,7 +60,7 @@ class _LoggingAPI(object):
         self._client = client
 
     def list_entries(
-        self, projects, filter_="", order_by="", page_size=0, page_token=None
+        self, projects, *, filter_="", order_by="", page_size=0, page_token=None
     ):
         """Return a page of log entry resources.
 
@@ -81,62 +90,65 @@ class _LoggingAPI(object):
         :returns: Iterator of :class:`~google.cloud.logging.entries._BaseEntry`
                   accessible to the current API.
         """
-        page_iter = self._gapic_api.list_log_entries(
-            [],
-            project_ids=projects,
-            filter_=filter_,
+        # full resource names are expected by the API
+        projects = [f"projects/{p}" for p in projects]
+        request = ListLogEntriesRequest(
+            resource_names=projects,
+            filter=filter_,
             order_by=order_by,
             page_size=page_size,
+            page_token=page_token
         )
-        page_iter.client = self._client
-        page_iter.next_page_token = page_token
+
+        response = self._gapic_api.list_log_entries(request=request)
+        page_iter = iter(response)
 
         # We attach a mutable loggers dictionary so that as Logger
         # objects are created by entry_from_resource, they can be
         # re-used by other log entries from the same logger.
         loggers = {}
-        page_iter.item_to_value = functools.partial(_item_to_entry, loggers=loggers)
-        return page_iter
 
-    def write_entries(self, entries, logger_name=None, resource=None, labels=None):
-        """API call:  log an entry resource via a POST request
+        def log_entries_pager(page_iter):
+            for page in page_iter:
+                log_entry_dict = _parse_log_entry(LogEntryPB.pb(page))
+                yield entry_from_resource(log_entry_dict, self._client, loggers)
 
-        :type entries: sequence of mapping
-        :param entries: the log entry resources to log.
+        return log_entries_pager(page_iter)
 
-        :type logger_name: str
-        :param logger_name: name of default logger to which to log the entries;
-                            individual entries may override.
+    def write_entries(self, entries, *, logger_name=None, resource=None, labels=None):
+        """Log an entry resource via a POST request
 
-        :type resource: mapping
-        :param resource: default resource to associate with entries;
-                         individual entries may override.
-
-        :type labels: mapping
-        :param labels: default labels to associate with entries;
-                       individual entries may override.
+        Args:
+            entries (Sequence[Mapping[str, ...]]): sequence of mappings representing
+                the log entry resources to log.
+            logger_name (Optional[str]): name of default logger to which to log the entries;
+                individual entries may override.
+            resource(Optional[Mapping[str, ...]]): default resource to associate with entries;
+                individual entries may override.
+            labels (Optional[Mapping[str, ...]]): default labels to associate with entries;
+                individual entries may override.
         """
         partial_success = False
-        entry_pbs = [_log_entry_mapping_to_pb(entry) for entry in entries]
-        self._gapic_api.write_log_entries(
-            entry_pbs,
+        log_entry_pbs = [_log_entry_mapping_to_pb(entry) for entry in entries]
+
+        request = WriteLogEntriesRequest(
             log_name=logger_name,
             resource=resource,
             labels=labels,
+            entries=log_entry_pbs,
             partial_success=partial_success,
         )
+        self._gapic_api.write_log_entries(request=request)
 
     def logger_delete(self, project, logger_name):
-        """API call:  delete all entries in a logger via a DELETE request
+        """Delete all entries in a logger.
 
-        :type project: str
-        :param project: ID of project containing the log entries to delete
-
-        :type logger_name: str
-        :param logger_name: name of logger containing the log entries to delete
+        Args:
+            project (str): ID of project containing the log entries to delete
+            logger_name (str): name of logger containing the log entries to delete
         """
-        path = "projects/%s/logs/%s" % (project, logger_name)
-        self._gapic_api.delete_log(path)
+        path = f"projects/{project}/logs/{logger_name}"
+        self._gapic_api.delete_log(log_name=path)
 
 
 class _SinksAPI(object):
@@ -157,135 +169,130 @@ class _SinksAPI(object):
     def list_sinks(self, project, page_size=0, page_token=None):
         """List sinks for the project associated with this client.
 
-        :type project: str
-        :param project: ID of the project whose sinks are to be listed.
-
-        :type page_size: int
-        :param page_size: maximum number of sinks to return, If not passed,
-                          defaults to a value set by the API.
-
-        :type page_token: str
-        :param page_token: opaque marker for the next "page" of sinks. If not
-                           passed, the API will return the first page of
-                           sinks.
-
-        :rtype: tuple, (list, str)
-        :returns: list of mappings, plus a "next page token" string:
-                  if not None, indicates that more sinks can be retrieved
-                  with another call (pass that value as ``page_token``).
+        Args:
+            project (str): ID of the project whose sinks are to be listed.
+            page_size (int): Maximum number of sinks to return, If not passed,
+                defaults to a value set by the API.
+            page_token (str): Opaque marker for the next "page" of sinks. If not
+                passed, the API will return the first page of
+                sinks.
+        
+        Returns:
+            Iterable[logging_v2.Sink]: Iterable of sinks.
         """
-        path = "projects/%s" % (project,)
-        page_iter = self._gapic_api.list_sinks(path, page_size=page_size)
-        page_iter.client = self._client
-        page_iter.next_page_token = page_token
-        page_iter.item_to_value = _item_to_sink
-        return page_iter
+        path = f"projects/{project}"
+        request = ListSinksRequest(
+            parent=path, page_size=page_size, page_token=page_token
+        )
+        response = self._gapic_api.list_sinks(request)
+        page_iter = iter(response)
+
+        def sinks_pager(page_iter):
+            for page in page_iter:
+                # Convert the GAPIC sink type into the handwritten `Sink` type
+                yield Sink.from_api_repr(LogSink.to_dict(page), client=self._client)
+
+        return sinks_pager(page_iter)
 
     def sink_create(
-        self, project, sink_name, filter_, destination, unique_writer_identity=False
+        self, project, sink_name, filter_, destination, *, unique_writer_identity=False
     ):
-        """API call:  create a sink resource.
+        """Create a sink resource.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create
 
-        :type project: str
-        :param project: ID of the project in which to create the sink.
+        Args:
+            project (str): ID of the project in which to create the sink.
+            sink_name (str): The name of the sink.
+            filter_ (str): The advanced logs filter expression defining the
+                entries exported by the sink.
+            destination (str): Destination URI for the entries exported by
+                the sink.
+            unique_writer_identity (Optional[bool]):  determines the kind of
+                IAM identity returned as writer_identity in the new sink.
 
-        :type sink_name: str
-        :param sink_name: the name of the sink
-
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the sink.
-
-        :type destination: str
-        :param destination: destination URI for the entries exported by
-                            the sink.
-
-        :type unique_writer_identity: bool
-        :param unique_writer_identity: (Optional) determines the kind of
-                                       IAM identity returned as
-                                       writer_identity in the new sink.
-
-        :rtype: dict
-        :returns: The sink resource returned from the API (converted from a
-                  protobuf to a dictionary).
+        Returns:
+            dict: The sink resource returned from the API (converted from a
+                protobuf to a dictionary).
         """
-        parent = "projects/%s" % (project,)
+        parent = f"projects/{project}"
         sink_pb = LogSink(name=sink_name, filter=filter_, destination=destination)
-        created_pb = self._gapic_api.create_sink(
-            parent, sink_pb, unique_writer_identity=unique_writer_identity
+        request = CreateSinkRequest(
+            parent=parent, sink=sink_pb, unique_writer_identity=unique_writer_identity
         )
-        return MessageToDict(created_pb)
+        created_pb = self._gapic_api.create_sink(request=request)
+        return MessageToDict(
+            LogSink.pb(created_pb),
+            preserving_proto_field_name=False,
+            including_default_value_fields=False,
+        )
 
     def sink_get(self, project, sink_name):
-        """API call:  retrieve a sink resource.
+        """Retrieve a sink resource.
 
-        :type project: str
-        :param project: ID of the project containing the sink.
+        Args:
+            project (str): ID of the project containing the sink.
+            sink_name (str): the name of the sink
 
-        :type sink_name: str
-        :param sink_name: the name of the sink
-
-        :rtype: dict
-        :returns: The sink object returned from the API (converted from a
+        Returns:            
+            dict: The sink object returned from the API (converted from a
                   protobuf to a dictionary).
         """
-        path = "projects/%s/sinks/%s" % (project, sink_name)
-        sink_pb = self._gapic_api.get_sink(path)
+        path = f"projects/{project}/sinks/{sink_name}"
+        sink_pb = self._gapic_api.get_sink(sink_name=path)
         # NOTE: LogSink message type does not have an ``Any`` field
         #       so `MessageToDict`` can safely be used.
-        return MessageToDict(sink_pb)
+        return MessageToDict(
+            LogSink.pb(sink_pb),
+            preserving_proto_field_name=False,
+            including_default_value_fields=False,
+        )
 
     def sink_update(
-        self, project, sink_name, filter_, destination, unique_writer_identity=False
+        self, project, sink_name, filter_, destination, *, unique_writer_identity=False
     ):
-        """API call:  update a sink resource.
+        """Update a sink resource.
 
-        :type project: str
-        :param project: ID of the project containing the sink.
+        Args:
+            project (str): ID of the project containing the sink.
+            sink_name (str): The name of the sink
+            filter_ (str): The advanced logs filter expression defining the
+                entries exported by the sink.
+            destination (str):
+            destionation (str): destination URI for the entries exported by
+                the sink.
+            unique_writer_identity (Optional[bool]): determines the kind of
+                IAM identity returned as writer_identity in the new sink.
 
-        :type sink_name: str
-        :param sink_name: the name of the sink
-
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the sink.
-
-        :type destination: str
-        :param destination: destination URI for the entries exported by
-                            the sink.
-
-        :type unique_writer_identity: bool
-        :param unique_writer_identity: (Optional) determines the kind of
-                                       IAM identity returned as
-                                       writer_identity in the new sink.
-
-        :rtype: dict
-        :returns: The sink resource returned from the API (converted from a
+        returns:
+            dict: The sink resource returned from the API (converted from a
                   protobuf to a dictionary).
         """
-        path = "projects/%s/sinks/%s" % (project, sink_name)
+        path = f"projects/{project}/sinks/{sink_name}"
         sink_pb = LogSink(name=path, filter=filter_, destination=destination)
-        sink_pb = self._gapic_api.update_sink(
-            path, sink_pb, unique_writer_identity=unique_writer_identity
+
+        request = UpdateSinkRequest(
+            sink_name=path, sink=sink_pb, unique_writer_identity=unique_writer_identity
         )
+        sink_pb = self._gapic_api.update_sink(request=request)
         # NOTE: LogSink message type does not have an ``Any`` field
         #       so `MessageToDict`` can safely be used.
-        return MessageToDict(sink_pb)
+        return MessageToDict(
+            LogSink.pb(sink_pb),
+            preserving_proto_field_name=False,
+            including_default_value_fields=False,
+        )
 
     def sink_delete(self, project, sink_name):
-        """API call:  delete a sink resource.
+        """Delete a sink resource.
 
-        :type project: str
-        :param project: ID of the project containing the sink.
-
-        :type sink_name: str
-        :param sink_name: the name of the sink
+        Args:
+            project (str): ID of the project containing the sink.
+            sink_name (str): The name of the sink
         """
-        path = "projects/%s/sinks/%s" % (project, sink_name)
-        self._gapic_api.delete_sink(path)
+        path = f"projects/{project}/sinks/{sink_name}"
+        self._gapic_api.delete_sink(sink_name=path)
 
 
 class _MetricsAPI(object):
@@ -307,110 +314,105 @@ class _MetricsAPI(object):
     def list_metrics(self, project, page_size=0, page_token=None):
         """List metrics for the project associated with this client.
 
-        :type project: str
-        :param project: ID of the project whose metrics are to be listed.
-
-        :type page_size: int
-        :param page_size: maximum number of metrics to return, If not passed,
-                          defaults to a value set by the API.
-
-        :type page_token: str
-        :param page_token: opaque marker for the next "page" of metrics. If not
-                           passed, the API will return the first page of
-                           metrics.
-
-        :rtype: :class:`~google.api_core.page_iterator.Iterator`
-        :returns: Iterator of
-                  :class:`~google.cloud.logging.metric.Metric`
-                  accessible to the current API.
+        Args:
+            project (str): ID of the project whose metrics are to be listed.
+            page_size (int): Maximum number of metrics to return, If not passed,
+                defaults to a value set by the API.
+            page_token (str): Opaque marker for the next "page" of metrics. If not
+                passed, the API will return the first page of
+                sinks.
+        
+        Returns:
+            Iterable[logging_v2.Metric]: Iterable of metrics.
         """
-        path = "projects/%s" % (project,)
-        page_iter = self._gapic_api.list_log_metrics(path, page_size=page_size)
-        page_iter.client = self._client
-        page_iter.next_page_token = page_token
-        page_iter.item_to_value = _item_to_metric
-        return page_iter
+        path = f"projects/{project}"
+        request = ListLogMetricsRequest(
+            parent=path, page_size=page_size, page_token=page_token,
+        )
+        response = self._gapic_api.list_log_metrics(request=request)
+        page_iter = iter(response)
+
+        def metrics_pager(page_iter):
+            for page in page_iter:
+                # Convert GAPIC metrics type into handwritten `Metric` type
+                yield Metric.from_api_repr(LogMetric.to_dict(page), client=self._client)
+
+        return metrics_pager(page_iter)
 
     def metric_create(self, project, metric_name, filter_, description):
-        """API call:  create a metric resource.
+        """Create a metric resource.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/create
 
-        :type project: str
-        :param project: ID of the project in which to create the metric.
-
-        :type metric_name: str
-        :param metric_name: the name of the metric
-
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the metric.
-
-        :type description: str
-        :param description: description of the metric.
+        Args:
+            project (str): ID of the project in which to create the metric.
+            metric_name (str): The name of the metric
+            filter_ (str): The advanced logs filter expression defining the
+                entries exported by the metric.
+            description (str): description of the metric.
         """
-        parent = "projects/%s" % (project,)
+        parent = f"projects/{project}"
         metric_pb = LogMetric(name=metric_name, filter=filter_, description=description)
-        self._gapic_api.create_log_metric(parent, metric_pb)
+        self._gapic_api.create_log_metric(parent=parent, metric=metric_pb)
 
     def metric_get(self, project, metric_name):
         """API call:  retrieve a metric resource.
 
-        :type project: str
-        :param project: ID of the project containing the metric.
+        Args:
+            project (str): ID of the project containing the metric.
+            metric_name (str): The name of the metric
 
-        :type metric_name: str
-        :param metric_name: the name of the metric
-
-        :rtype: dict
-        :returns: The metric object returned from the API (converted from a
+        Returns:
+            dict: The metric object returned from the API (converted from a
                   protobuf to a dictionary).
         """
-        path = "projects/%s/metrics/%s" % (project, metric_name)
-        metric_pb = self._gapic_api.get_log_metric(path)
+        path = f"projects/{project}/metrics/{metric_name}"
+        metric_pb = self._gapic_api.get_log_metric(metric_name=path)
         # NOTE: LogMetric message type does not have an ``Any`` field
         #       so `MessageToDict`` can safely be used.
-        return MessageToDict(metric_pb)
+        return MessageToDict(
+            LogMetric.pb(metric_pb),
+            preserving_proto_field_name=False,
+            including_default_value_fields=False,
+        )
 
     def metric_update(self, project, metric_name, filter_, description):
-        """API call:  update a metric resource.
+        """Update a metric resource.
 
-        :type project: str
-        :param project: ID of the project containing the metric.
+        Args:
+            project (str): ID of the project containing the metric.
+            metric_name (str): the name of the metric
+            filter_ (str): the advanced logs filter expression defining the
+                entries exported by the metric.
+            description (str): description of the metric.
 
-        :type metric_name: str
-        :param metric_name: the name of the metric
-
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the metric.
-
-        :type description: str
-        :param description: description of the metric.
-
-        :rtype: dict
-        :returns: The metric object returned from the API (converted from a
+        Returns:
+            The metric object returned from the API (converted from a
                   protobuf to a dictionary).
         """
-        path = "projects/%s/metrics/%s" % (project, metric_name)
+        path = f"projects/{project}/metrics/{metric_name}"
         metric_pb = LogMetric(name=path, filter=filter_, description=description)
-        metric_pb = self._gapic_api.update_log_metric(path, metric_pb)
+        metric_pb = self._gapic_api.update_log_metric(
+            metric_name=path, metric=metric_pb
+        )
         # NOTE: LogMetric message type does not have an ``Any`` field
         #       so `MessageToDict`` can safely be used.
-        return MessageToDict(metric_pb)
+        return MessageToDict(
+            LogMetric.pb(metric_pb),
+            preserving_proto_field_name=False,
+            including_default_value_fields=False,
+        )
 
     def metric_delete(self, project, metric_name):
-        """API call:  delete a metric resource.
+        """Delete a metric resource.
 
-        :type project: str
-        :param project: ID of the project containing the metric.
-
-        :type metric_name: str
-        :param metric_name: the name of the metric
+        Args:
+            project (str): ID of the project containing the metric.
+            metric_name (str): The name of the metric
         """
-        path = "projects/%s/metrics/%s" % (project, metric_name)
-        self._gapic_api.delete_log_metric(path)
+        path = f"projects/{project}/metrics/{metric_name}"
+        self._gapic_api.delete_log_metric(metric_name=path)
 
 
 def _parse_log_entry(entry_pb):
@@ -421,21 +423,27 @@ def _parse_log_entry(entry_pb):
     ``google.protobuf`` registry. To help with parsing unregistered types,
     this function will remove ``proto_payload`` before parsing.
 
-    :type entry_pb: :class:`.log_entry_pb2.LogEntry`
-    :param entry_pb: Log entry protobuf.
+    Args:
+        entry_pb (LogEntry): Log entry protobuf.
 
-    :rtype: dict
-    :returns: The parsed log entry. The ``protoPayload`` key may contain
+    Returns:
+        dict: The parsed log entry. The ``protoPayload`` key may contain
               the raw ``Any`` protobuf from ``entry_pb.proto_payload`` if
               it could not be parsed.
     """
     try:
-        return MessageToDict(entry_pb)
+        return MessageToDict(entry_pb,
+            preserving_proto_field_name=False,
+            including_default_value_fields=False,
+        )
     except TypeError:
         if entry_pb.HasField("proto_payload"):
             proto_payload = entry_pb.proto_payload
             entry_pb.ClearField("proto_payload")
-            entry_mapping = MessageToDict(entry_pb)
+            entry_mapping = MessageToDict(entry_pb,
+                preserving_proto_field_name=False,
+                including_default_value_fields=False,
+            )
             entry_mapping["protoPayload"] = proto_payload
             return entry_mapping
         else:
@@ -448,7 +456,7 @@ def _log_entry_mapping_to_pb(mapping):
     Performs "impedance matching" between the protobuf attrs and
     the keys expected in the JSON API.
     """
-    entry_pb = LogEntry()
+    entry_pb = LogEntryPB.pb(LogEntryPB())
     # NOTE: We assume ``mapping`` was created in ``Batch.commit``
     #       or ``Logger._make_entry_resource``. In either case, if
     #       the ``protoPayload`` key is present, we assume that the
@@ -457,89 +465,22 @@ def _log_entry_mapping_to_pb(mapping):
     #       of the corresponding ``proto_payload`` in the log entry
     #       (it is an ``Any`` field).
     ParseDict(mapping, entry_pb)
-    return entry_pb
-
-
-def _item_to_entry(iterator, entry_pb, loggers):
-    """Convert a log entry protobuf to the native object.
-
-    .. note::
-
-        This method does not have the correct signature to be used as
-        the ``item_to_value`` argument to
-        :class:`~google.api_core.page_iterator.Iterator`. It is intended to be
-        patched with a mutable ``loggers`` argument that can be updated
-        on subsequent calls. For an example, see how the method is
-        used above in :meth:`_LoggingAPI.list_entries`.
-
-    :type iterator: :class:`~google.api_core.page_iterator.Iterator`
-    :param iterator: The iterator that is currently in use.
-
-    :type entry_pb: :class:`.log_entry_pb2.LogEntry`
-    :param entry_pb: Log entry protobuf returned from the API.
-
-    :type loggers: dict
-    :param loggers:
-        A mapping of logger fullnames -> loggers.  If the logger
-        that owns the entry is not in ``loggers``, the entry
-        will have a newly-created logger.
-
-    :rtype: :class:`~google.cloud.logging.entries._BaseEntry`
-    :returns: The next log entry in the page.
-    """
-    resource = _parse_log_entry(entry_pb)
-    return entry_from_resource(resource, iterator.client, loggers)
-
-
-def _item_to_sink(iterator, log_sink_pb):
-    """Convert a sink protobuf to the native object.
-
-    :type iterator: :class:`~google.api_core.page_iterator.Iterator`
-    :param iterator: The iterator that is currently in use.
-
-    :type log_sink_pb:
-        :class:`.logging_config_pb2.LogSink`
-    :param log_sink_pb: Sink protobuf returned from the API.
-
-    :rtype: :class:`~google.cloud.logging.sink.Sink`
-    :returns: The next sink in the page.
-    """
-    # NOTE: LogSink message type does not have an ``Any`` field
-    #       so `MessageToDict`` can safely be used.
-    resource = MessageToDict(log_sink_pb)
-    return Sink.from_api_repr(resource, iterator.client)
-
-
-def _item_to_metric(iterator, log_metric_pb):
-    """Convert a metric protobuf to the native object.
-
-    :type iterator: :class:`~google.api_core.page_iterator.Iterator`
-    :param iterator: The iterator that is currently in use.
-
-    :type log_metric_pb:
-        :class:`.logging_metrics_pb2.LogMetric`
-    :param log_metric_pb: Metric protobuf returned from the API.
-
-    :rtype: :class:`~google.cloud.logging.metric.Metric`
-    :returns: The next metric in the page.
-    """
-    # NOTE: LogMetric message type does not have an ``Any`` field
-    #       so `MessageToDict`` can safely be used.
-    resource = MessageToDict(log_metric_pb)
-    return Metric.from_api_repr(resource, iterator.client)
+    return LogEntryPB(entry_pb)
 
 
 def make_logging_api(client):
     """Create an instance of the Logging API adapter.
-
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The client that holds configuration details.
-
-    :rtype: :class:`_LoggingAPI`
-    :returns: A metrics API instance with the proper credentials.
+    
+    Args:
+        client (google.cloud.logging_v2.client.Client): The client
+            that holds configuration details.
+    
+    Returns:
+        _LoggingAPI: A metrics API instance with the proper credentials.
     """
     generated = LoggingServiceV2Client(
-        credentials=client._credentials, client_info=client._client_info
+        credentials=client._credentials, client_info=client._client_info,
+        client_options=client._client_options
     )
     return _LoggingAPI(generated, client)
 
@@ -547,14 +488,17 @@ def make_logging_api(client):
 def make_metrics_api(client):
     """Create an instance of the Metrics API adapter.
 
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The client that holds configuration details.
+    Args:
+        client (google.cloud.logging_v2.client.Client): The client
+            that holds configuration details.
 
-    :rtype: :class:`_MetricsAPI`
-    :returns: A metrics API instance with the proper credentials.
+    Returns:
+        _MetricsAPI: A metrics API instance with the proper credentials.
     """
     generated = MetricsServiceV2Client(
-        credentials=client._credentials, client_info=client._client_info
+        credentials=client._credentials,
+        client_info=client._client_info,
+        client_options=client._client_options
     )
     return _MetricsAPI(generated, client)
 
@@ -562,13 +506,16 @@ def make_metrics_api(client):
 def make_sinks_api(client):
     """Create an instance of the Sinks API adapter.
 
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The client that holds configuration details.
-
-    :rtype: :class:`_SinksAPI`
-    :returns: A metrics API instance with the proper credentials.
+    Args:
+        client (google.cloud.logging_v2.client.Client): The client
+            that holds configuration details.
+    
+    Returns:
+        _SinksAPI: A metrics API instance with the proper credentials.
     """
     generated = ConfigServiceV2Client(
-        credentials=client._credentials, client_info=client._client_info
+        credentials=client._credentials,
+        client_info=client._client_info,
+        client_options=client._client_options
     )
     return _SinksAPI(generated, client)

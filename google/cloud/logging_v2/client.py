@@ -144,6 +144,7 @@ class Client(ClientWithProject):
         self._connection = Connection(self, **kw_args)
 
         self._client_info = client_info
+        self._client_options = client_options
         if _use_grpc is None:
             self._use_grpc = _USE_GRPC
         else:

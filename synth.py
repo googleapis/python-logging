@@ -35,11 +35,20 @@ s.move(
     excludes=[
         "setup.py",
         "README.rst",
+        "google/cloud/logging/__init__.py",  # generated types are hidden from users
+        "google/cloud/logging_v2/__init__.py",  
         "docs/index.rst",
         "docs/multiprocessing.rst",
         "docs/logging_v2",  # Don't include gapic library docs. Users should use the hand-written layer instead
         "scripts/fixup_logging_v2_keywords.py",  # don't include script since it only works for generated layer
     ],
+)
+
+# Fix generated unit tests
+s.replace(
+    "tests/unit/gapic/logging_v2/test_logging_service_v2.py",
+    "MonitoredResource\(\s*type_",
+    "MonitoredResource(type"
 )
 
 # ----------------------------------------------------------------------------

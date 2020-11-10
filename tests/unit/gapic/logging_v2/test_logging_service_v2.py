@@ -729,7 +729,7 @@ def test_write_log_entries_flattened():
         # using the keyword arguments to the method.
         client.write_log_entries(
             log_name="log_name_value",
-            resource=monitored_resource.MonitoredResource(type_="type__value"),
+            resource=monitored_resource.MonitoredResource(type="type__value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
@@ -741,8 +741,7 @@ def test_write_log_entries_flattened():
 
         assert args[0].log_name == "log_name_value"
 
-        assert args[0].resource == monitored_resource.MonitoredResource(
-            type_="type__value"
+        assert args[0].resource == monitored_resource.MonitoredResource(type="type__value"
         )
 
         assert args[0].labels == {"key_value": "value_value"}
@@ -759,7 +758,7 @@ def test_write_log_entries_flattened_error():
         client.write_log_entries(
             logging.WriteLogEntriesRequest(),
             log_name="log_name_value",
-            resource=monitored_resource.MonitoredResource(type_="type__value"),
+            resource=monitored_resource.MonitoredResource(type="type__value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
@@ -785,7 +784,7 @@ async def test_write_log_entries_flattened_async():
         # using the keyword arguments to the method.
         response = await client.write_log_entries(
             log_name="log_name_value",
-            resource=monitored_resource.MonitoredResource(type_="type__value"),
+            resource=monitored_resource.MonitoredResource(type="type__value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
@@ -797,8 +796,7 @@ async def test_write_log_entries_flattened_async():
 
         assert args[0].log_name == "log_name_value"
 
-        assert args[0].resource == monitored_resource.MonitoredResource(
-            type_="type__value"
+        assert args[0].resource == monitored_resource.MonitoredResource(type="type__value"
         )
 
         assert args[0].labels == {"key_value": "value_value"}
@@ -818,7 +816,7 @@ async def test_write_log_entries_flattened_error_async():
         await client.write_log_entries(
             logging.WriteLogEntriesRequest(),
             log_name="log_name_value",
-            resource=monitored_resource.MonitoredResource(type_="type__value"),
+            resource=monitored_resource.MonitoredResource(type="type__value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
