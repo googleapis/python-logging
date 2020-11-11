@@ -40,8 +40,8 @@ def example_sink():
 
     sink = client.sink(
         TEST_SINK_NAME_TMPL.format(_random_id()),
-        TEST_SINK_FILTER,
-        'storage.googleapis.com/{bucket}'.format(bucket=BUCKET))
+        filter_=TEST_SINK_FILTER,
+        destination='storage.googleapis.com/{bucket}'.format(bucket=BUCKET))
 
     sink.create()
 

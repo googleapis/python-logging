@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Python :mod:`logging` handlers for Stackdriver Logging."""
+"""Python :mod:`logging` handlers for Cloud Logging."""
 
 import logging
 
@@ -25,7 +25,7 @@ EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2
 
 
 class CloudLoggingHandler(logging.StreamHandler):
-    """Handler that directly makes Stackdriver logging API calls.
+    """Handler that directly makes Cloud Logging API calls.
 
     This is a Python standard ``logging`` handler using that can be used to
     route Python standard logging messages directly to the Stackdriver
@@ -40,7 +40,7 @@ class CloudLoggingHandler(logging.StreamHandler):
                    handler to use
 
     :type name: str
-    :param name: the name of the custom log in Stackdriver Logging. Defaults
+    :param name: the name of the custom log in Cloud Logging. Defaults
                  to 'python'. The name of the Python logger will be represented
                  in the ``python_logger`` field.
 

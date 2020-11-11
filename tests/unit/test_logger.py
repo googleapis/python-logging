@@ -93,7 +93,7 @@ class TestLogger(unittest.TestCase):
         client1 = _Client(self.PROJECT, conn1)
         client2 = _Client(self.PROJECT, conn2)
         logger = self._make_one(self.LOGGER_NAME, client=client1)
-        batch = logger.batch(client2)
+        batch = logger.batch(client=client2)
         self.assertIsInstance(batch, Batch)
         self.assertIs(batch.logger, logger)
         self.assertIs(batch.client, client2)
@@ -468,7 +468,7 @@ class TestLogger(unittest.TestCase):
         logger.delete()
 
         self.assertEqual(
-            api._logger_delete_called_with, (self.PROJECT, self.LOGGER_NAME)
+            api._logger_delete_called_with, (f"projects/{self.PROJECT}/logs/{self.LOGGER_NAME}")
         )
 
     def test_delete_w_alternate_client(self):
@@ -480,7 +480,7 @@ class TestLogger(unittest.TestCase):
         logger.delete(client=client2)
 
         self.assertEqual(
-            api._logger_delete_called_with, (self.PROJECT, self.LOGGER_NAME)
+            api._logger_delete_called_with, (f"projects/{self.PROJECT}/logs/{self.LOGGER_NAME}")
         )
 
     def test_list_entries_defaults(self):
@@ -514,7 +514,7 @@ class TestLogger(unittest.TestCase):
             {
                 "path": "/entries:list",
                 "method": "POST",
-                "data": {"filter": "removed", "projectIds": [self.PROJECT]},
+                "data": {"filter": "removed", "resourceNames": [f"projects/{self.PROJECT}"]},
             },
         )
         # verify that default filter is 24 hours
@@ -540,7 +540,7 @@ class TestLogger(unittest.TestCase):
         client._connection = _Connection({})
         logger = self._make_one(self.LOGGER_NAME, client=client)
         iterator = logger.list_entries(
-            projects=[PROJECT1, PROJECT2],
+            resource_names=[f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
             filter_=INPUT_FILTER,
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
@@ -565,7 +565,7 @@ class TestLogger(unittest.TestCase):
                     "orderBy": DESCENDING,
                     "pageSize": PAGE_SIZE,
                     "pageToken": TOKEN,
-                    "projectIds": [PROJECT1, PROJECT2],
+                    "resourceNames": [f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
                 },
             },
         )
@@ -600,7 +600,7 @@ class TestLogger(unittest.TestCase):
         client._connection = _Connection({})
         logger = self._make_one(self.LOGGER_NAME, client=client)
         iterator = logger.list_entries(
-            projects=[PROJECT1, PROJECT2],
+            resource_names=[f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
             filter_=INPUT_FILTER,
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
@@ -625,7 +625,7 @@ class TestLogger(unittest.TestCase):
                     "orderBy": DESCENDING,
                     "pageSize": PAGE_SIZE,
                     "pageToken": TOKEN,
-                    "projectIds": [PROJECT1, PROJECT2],
+                    "resourceNames": [f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
                 },
             },
         )
@@ -1183,11 +1183,11 @@ class _DummyLoggingAPI(object):
 
     _write_entries_called_with = None
 
-    def write_entries(self, entries, logger_name=None, resource=None, labels=None):
+    def write_entries(self, entries, *, logger_name=None, resource=None, labels=None):
         self._write_entries_called_with = (entries, logger_name, resource, labels)
 
-    def logger_delete(self, project, logger_name):
-        self._logger_delete_called_with = (project, logger_name)
+    def logger_delete(self, logger_name):
+        self._logger_delete_called_with = (logger_name)
 
 
 class _Client(object):

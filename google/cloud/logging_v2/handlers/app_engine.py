@@ -14,7 +14,7 @@
 
 """Logging handler for App Engine Flexible
 
-Sends logs to the Stackdriver Logging API with the appropriate resource
+Sends logs to the Cloud Logging API with the appropriate resource
 and labels for App Engine logs.
 """
 

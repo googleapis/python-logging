@@ -31,7 +31,7 @@ class ContainerEngineHandler(logging.StreamHandler):
     (GKE) fluentd plugin, so that metadata such as log level are properly set.
 
     :type name: str
-    :param name: (optional) the name of the custom log in Stackdriver Logging.
+    :param name: (optional) the name of the custom log in Cloud Logging.
 
     :type stream: file-like object
     :param stream: (optional) stream to be used by the handler.

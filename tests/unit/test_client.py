@@ -31,6 +31,7 @@ def _make_credentials():
 class TestClient(unittest.TestCase):
 
     PROJECT = "PROJECT"
+    PROJECT_PATH = f"projects/{PROJECT}"
     LOGGER_NAME = "LOGGER_NAME"
     SINK_NAME = "SINK_NAME"
     FILTER = "logName:syslog AND severity>=ERROR"
@@ -113,7 +114,7 @@ class TestClient(unittest.TestCase):
         from google.cloud.logging_v2._http import _LoggingAPI
 
         client = self._make_one(
-            self.PROJECT, credentials=_make_credentials(), _use_grpc=False
+            project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
 
         conn = client._connection = _Connection()
@@ -164,7 +165,7 @@ class TestClient(unittest.TestCase):
         from google.cloud.logging_v2._http import _SinksAPI
 
         client = self._make_one(
-            self.PROJECT, credentials=_make_credentials(), _use_grpc=False
+            project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
 
         conn = client._connection = _Connection()
@@ -202,7 +203,7 @@ class TestClient(unittest.TestCase):
         from google.cloud.logging_v2._http import _MetricsAPI
 
         client = self._make_one(
-            self.PROJECT, credentials=_make_credentials(), _use_grpc=False
+            project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
 
         conn = client._connection = _Connection()
@@ -293,7 +294,7 @@ class TestClient(unittest.TestCase):
             {
                 "path": "/entries:list",
                 "method": "POST",
-                "data": {"filter": "removed", "projectIds": [self.PROJECT]},
+                "data": {"filter": "removed", "resourceNames": [f"projects/{self.PROJECT}"]},
             },
         )
         # verify that default filter is 24 hours
@@ -335,13 +336,13 @@ class TestClient(unittest.TestCase):
             },
         ]
         client = self._make_one(
-            self.PROJECT, credentials=_make_credentials(), _use_grpc=False
+            project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
         returned = {"entries": ENTRIES}
         client._connection = _Connection(returned)
 
         iterator = client.list_entries(
-            projects=[PROJECT1, PROJECT2],
+            resource_names=[f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
             filter_=INPUT_FILTER,
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
@@ -388,7 +389,7 @@ class TestClient(unittest.TestCase):
                     "orderBy": DESCENDING,
                     "pageSize": PAGE_SIZE,
                     "pageToken": TOKEN,
-                    "projectIds": [PROJECT1, PROJECT2],
+                    "resourceNames": [f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
                 },
             },
         )
@@ -431,13 +432,13 @@ class TestClient(unittest.TestCase):
             },
         ]
         client = self._make_one(
-            self.PROJECT, credentials=_make_credentials(), _use_grpc=False
+            project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
         returned = {"entries": ENTRIES}
         client._connection = _Connection(returned)
 
         iterator = client.list_entries(
-            projects=[PROJECT1, PROJECT2],
+            resource_names=[f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
             filter_=INPUT_FILTER,
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
@@ -483,7 +484,7 @@ class TestClient(unittest.TestCase):
                     "orderBy": DESCENDING,
                     "pageSize": PAGE_SIZE,
                     "pageToken": TOKEN,
-                    "projectIds": [PROJECT1, PROJECT2],
+                    "resourceNames": [f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
                 },
             },
         )
@@ -499,20 +500,20 @@ class TestClient(unittest.TestCase):
         self.assertIsNone(sink.filter_)
         self.assertIsNone(sink.destination)
         self.assertIs(sink.client, client)
-        self.assertEqual(sink.project, self.PROJECT)
+        self.assertEqual(sink.parent, self.PROJECT_PATH)
 
     def test_sink_explicit(self):
         from google.cloud.logging_v2.sink import Sink
 
         creds = _make_credentials()
         client = self._make_one(project=self.PROJECT, credentials=creds)
-        sink = client.sink(self.SINK_NAME, self.FILTER, self.DESTINATION_URI)
+        sink = client.sink(self.SINK_NAME, filter_=self.FILTER, destination=self.DESTINATION_URI)
         self.assertIsInstance(sink, Sink)
         self.assertEqual(sink.name, self.SINK_NAME)
         self.assertEqual(sink.filter_, self.FILTER)
         self.assertEqual(sink.destination, self.DESTINATION_URI)
         self.assertIs(sink.client, client)
-        self.assertEqual(sink.project, self.PROJECT)
+        self.assertEqual(sink.parent, self.PROJECT_PATH)
 
     def test_list_sinks_no_paging(self):
         import six
@@ -571,7 +572,7 @@ class TestClient(unittest.TestCase):
         returned = {"sinks": SINKS}
         client._connection = _Connection(returned)
 
-        iterator = client.list_sinks(PAGE_SIZE, TOKEN)
+        iterator = client.list_sinks(page_size=PAGE_SIZE, page_token=TOKEN)
         sinks = list(iterator)
         token = iterator.next_page_token
 
@@ -619,7 +620,7 @@ class TestClient(unittest.TestCase):
 
         client_obj = self._make_one(project=self.PROJECT, credentials=creds)
         metric = client_obj.metric(
-            self.METRIC_NAME, self.FILTER, description=self.DESCRIPTION
+            self.METRIC_NAME, filter_=self.FILTER, description=self.DESCRIPTION
         )
         self.assertIsInstance(metric, Metric)
         self.assertEqual(metric.name, self.METRIC_NAME)
@@ -685,7 +686,7 @@ class TestClient(unittest.TestCase):
         client._connection = _Connection(returned)
 
         # Execute request.
-        iterator = client.list_metrics(page_size, token)
+        iterator = client.list_metrics(page_size=page_size, page_token=token)
         page = six.next(iterator.pages)
         metrics = list(page)
 

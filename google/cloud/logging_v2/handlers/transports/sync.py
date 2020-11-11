@@ -14,7 +14,7 @@
 
 """Transport for Python logging handler.
 
-Logs directly to the the Stackdriver Logging API with a synchronous call.
+Logs directly to the the Cloud Logging API with a synchronous call.
 """
 
 from google.cloud.logging_v2 import _helpers
@@ -31,22 +31,18 @@ class SyncTransport(Transport):
         self.logger = client.logger(name)
 
     def send(
-        self, record, message, resource=None, labels=None, trace=None, span_id=None
+        self, record, message, *, resource=None, labels=None, trace=None, span_id=None
     ):
         """Overrides transport.send().
 
-        :type record: :class:`logging.LogRecord`
-        :param record: Python log record that the handler was called with.
-
-        :type message: str
-        :param message: The message from the ``LogRecord`` after being
-                        formatted by the associated log formatters.
-
-        :type resource: :class:`~google.cloud.logging.resource.Resource`
-        :param resource: (Optional) Monitored resource of the entry.
-
-        :type labels: dict
-        :param labels: (Optional) Mapping of labels for the entry.
+        Args:
+            record (logging.LogRecord):
+                Python log record that the handler was called with.
+            message (str): The message from the ``LogRecord`` after being
+                formatted by the associated log formatters.
+            resource (Optional[google.cloud.logging_v2.resource.Resource]):
+                 Monitored resource of the entry.
+            labels (Optional[dict]): Mapping of labels for the entry.
         """
         info = {"message": message, "python_logger": record.name}
         self.logger.log_struct(

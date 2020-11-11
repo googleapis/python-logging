@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Interact with Stackdriver Logging via JSON-over-HTTP."""
+"""Interact with Cloud Logging via JSON-over-HTTP."""
 
 import functools
 
@@ -26,22 +26,21 @@ from google.cloud.logging_v2.metric import Metric
 
 
 class Connection(_http.JSONConnection):
-    """A connection to Google Stackdriver Logging via the JSON REST API.
-
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The client that owns the current connection.
-
-    :type client_info: :class:`~google.api_core.client_info.ClientInfo`
-    :param client_info: (Optional) instance used to generate user agent.
-
-    :type client_options: :class:`~google.api_core.client_options.ClientOptions`
-    :param client_options (Optional) Client options used to set user options
-        on the client. API Endpoint should be set through client_options.
-    """
 
     DEFAULT_API_ENDPOINT = "https://logging.googleapis.com"
 
-    def __init__(self, client, client_info=None, api_endpoint=DEFAULT_API_ENDPOINT):
+    def __init__(self, client, *, client_info=None, api_endpoint=DEFAULT_API_ENDPOINT):
+        """A connection to Google Cloud Logging via the JSON REST API.
+
+        Args:
+            client (google.cloud.logging_v2.cliet.Client):
+                The client that owns the current connection.
+            client_info (Optional[google.api_core.client_info.ClientInfo]):
+                Instance used to generate user agent.
+            client_options (Optional[google.api_core.client_options.ClientOptions]):
+                Client options used to set user options
+                on the client. API Endpoint should be set through client_options.
+        """
         super(Connection, self).__init__(client, client_info)
         self.API_BASE_URL = api_endpoint
         self._client_info.gapic_version = __version__
@@ -70,40 +69,35 @@ class _LoggingAPI(object):
         self.api_request = client._connection.api_request
 
     def list_entries(
-        self, projects, filter_=None, order_by=None, page_size=None, page_token=None
+        self, resource_names, *, filter_=None, order_by=None, page_size=None, page_token=None
     ):
         """Return a page of log entry resources.
 
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list
+        Args:
+            resource_names (Sequence[str]): Names of one or more parent resources
+                from which to retrieve log entries:
 
-        :type projects: list of strings
-        :param projects: project IDs to include. If not passed,
-                            defaults to the project bound to the client.
+                ::
 
-        :type filter_: str
-        :param filter_:
-            a filter expression. See
-            https://cloud.google.com/logging/docs/view/advanced_filters
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
 
-        :type order_by: str
-        :param order_by: One of :data:`~google.cloud.logging.ASCENDING`
-                         or :data:`~google.cloud.logging.DESCENDING`.
+            filter_ (str): a filter expression. See
+                https://cloud.google.com/logging/docs/view/advanced_filters
+            order_by (str) One of :data:`~google.cloud.logging_v2.ASCENDING`
+                or :data:`~google.cloud.logging_v2.DESCENDING`.
+            page_size (int): maximum number of entries to return, If not passed,
+                defaults to a value set by the API.
+            page_token (str): opaque marker for the next "page" of entries. If not
+                passed, the API will return the first page of
+                entries.
 
-        :type page_size: int
-        :param page_size: maximum number of entries to return, If not passed,
-                          defaults to a value set by the API.
-
-        :type page_token: str
-        :param page_token: opaque marker for the next "page" of entries. If not
-                           passed, the API will return the first page of
-                           entries.
-
-        :rtype: :class:`~google.api_core.page_iterator.Iterator`
-        :returns: Iterator of :class:`~google.cloud.logging.entries._BaseEntry`
-                  accessible to the current API.
+        Returns:
+            Iterator[google.cloud.logging_v2.LogEntry]
         """
-        extra_params = {"projectIds": projects}
+        extra_params = {"resourceNames": resource_names}
 
         if filter_ is not None:
             extra_params["filter"] = filter_
@@ -133,28 +127,35 @@ class _LoggingAPI(object):
         iterator._HTTP_METHOD = "POST"
         return iterator
 
-    def write_entries(self, entries, logger_name=None, resource=None, labels=None):
-        """API call:  log an entry resource via a POST request
-
+    def write_entries(self, entries, *, logger_name=None, resource=None, labels=None, partial_success=False, dry_run=False):
+        """Log an entry resource via a POST request
+    
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
-        :type entries: sequence of mapping
-        :param entries: the log entry resources to log.
-
-        :type logger_name: str
-        :param logger_name: name of default logger to which to log the entries;
-                            individual entries may override.
-
-        :type resource: mapping
-        :param resource: default resource to associate with entries;
-                         individual entries may override.
-
-        :type labels: mapping
-        :param labels: default labels to associate with entries;
-                       individual entries may override.
+        Args:
+            entries (Sequence[Mapping[str, ...]]): sequence of mappings representing
+                the log entry resources to log.
+            logger_name (Optional[str]): name of default logger to which to log the entries;
+                individual entries may override.
+            resource(Optional[Mapping[str, ...]]): default resource to associate with entries;
+                individual entries may override.
+            labels (Optional[Mapping[str, ...]]): default labels to associate with entries;
+                individual entries may override.
+            partial_success (Optional[bool]): Whether valid entries should be written even if
+                some other entries fail due to INVALID_ARGUMENT or
+                PERMISSION_DENIED errors. If any entry is not written, then
+                the response status is the error associated with one of the
+                failed entries and the response includes error details keyed
+                by the entries' zero-based index in the ``entries.write``
+                method.
+            dry_run (Optional[bool]):
+                If true, the request should expect normal response,
+                but the entries won't be persisted nor exported.
+                Useful for checking whether the logging API endpoints are working
+                properly before sending valuable data.
         """
-        data = {"entries": list(entries)}
+        data = {"entries": list(entries), "partialSuccess": partial_success, "dry_run": dry_run}
 
         if logger_name is not None:
             data["logName"] = logger_name
@@ -167,19 +168,24 @@ class _LoggingAPI(object):
 
         self.api_request(method="POST", path="/entries:write", data=data)
 
-    def logger_delete(self, project, logger_name):
-        """API call:  delete all entries in a logger via a DELETE request
+    def logger_delete(self, logger_name):
+        """Delete all entries in a logger.
 
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs/delete
+        Args:
+            logger_name (str):  The resource name of the log to delete:
 
-        :type project: str
-        :param project: ID of project containing the log entries to delete
+                ::
 
-        :type logger_name: str
-        :param logger_name: name of logger containing the log entries to delete
+                    "projects/[PROJECT_ID]/logs/[LOG_ID]"
+                    "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+                    "folders/[FOLDER_ID]/logs/[LOG_ID]"
+
+                ``[LOG_ID]`` must be URL-encoded. For example,
+                ``"projects/my-project-id/logs/syslog"``,
+                ``"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"``.
         """
-        path = "/projects/%s/logs/%s" % (project, logger_name)
+        path = f"/{logger_name}"
         self.api_request(method="DELETE", path=path)
 
 
@@ -188,44 +194,42 @@ class _SinksAPI(object):
 
     See
     https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks
-
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The client used to make API requests.
     """
 
     def __init__(self, client):
         self._client = client
         self.api_request = client._connection.api_request
 
-    def list_sinks(self, project, page_size=None, page_token=None):
-        """List sinks for the project associated with this client.
+    def list_sinks(self, parent, *, page_size=None, page_token=None):
+        """List sinks for the parent resource.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/list
 
-        :type project: str
-        :param project: ID of the project whose sinks are to be listed.
+        Args:
+            parent (str): The parent resource whose sinks are to be listed:
 
-        :type page_size: int
-        :param page_size: maximum number of sinks to return, If not passed,
-                          defaults to a value set by the API.
+                ::
 
-        :type page_token: str
-        :param page_token: opaque marker for the next "page" of sinks. If not
-                           passed, the API will return the first page of
-                           sinks.
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]".
+            page_size (Optional[int]): Maximum number of sinks to return, If not passed,
+                defaults to a value set by the API.
+            page_token (Optional[str]): Opaque marker for the next "page" of sinks. If not
+                passed, the API will return the first page of
+                sinks.
 
-        :rtype: :class:`~google.api_core.page_iterator.Iterator`
-        :returns: Iterator of
-                  :class:`~google.cloud.logging.sink.Sink`
-                  accessible to the current API.
+        Returns:
+            Iterator[google.cloud.logging_v2.Sink]
         """
         extra_params = {}
 
         if page_size is not None:
             extra_params["pageSize"] = page_size
 
-        path = "/projects/%s/sinks" % (project,)
+        path = f"/{parent}/sinks"
         return page_iterator.HTTPIterator(
             client=self._client,
             api_request=self._client._connection.api_request,
@@ -237,110 +241,109 @@ class _SinksAPI(object):
         )
 
     def sink_create(
-        self, project, sink_name, filter_, destination, unique_writer_identity=False
+        self, parent, sink_name, filter_, destination, *, unique_writer_identity=False
     ):
-        """API call:  create a sink resource.
+        """Create a sink resource.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create
 
-        :type project: str
-        :param project: ID of the project in which to create the sink.
+        Args:
+            parent(str): The resource in which to create the sink:
 
-        :type sink_name: str
-        :param sink_name: the name of the sink
+            ::
 
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the sink.
+                "projects/[PROJECT_ID]"
+                "organizations/[ORGANIZATION_ID]"
+                "billingAccounts/[BILLING_ACCOUNT_ID]"
+                "folders/[FOLDER_ID]".
+            sink_name (str): The name of the sink.
+            filter_ (str): The advanced logs filter expression defining the
+                entries exported by the sink.
+            destination (str): Destination URI for the entries exported by
+                the sink.
+            unique_writer_identity (Optional[bool]):  determines the kind of
+                IAM identity returned as writer_identity in the new sink.
 
-        :type destination: str
-        :param destination: destination URI for the entries exported by
-                            the sink.
-
-        :type unique_writer_identity: bool
-        :param unique_writer_identity: (Optional) determines the kind of
-                                       IAM identity returned as
-                                       writer_identity in the new sink.
-
-        :rtype: dict
-        :returns: The returned (created) resource.
+        Returns:
+            dict: The sink resource returned from the API.
         """
-        target = "/projects/%s/sinks" % (project,)
+        target = f"/{parent}/sinks"
         data = {"name": sink_name, "filter": filter_, "destination": destination}
         query_params = {"uniqueWriterIdentity": unique_writer_identity}
         return self.api_request(
             method="POST", path=target, data=data, query_params=query_params
         )
 
-    def sink_get(self, project, sink_name):
-        """API call:  retrieve a sink resource.
+    def sink_get(self, sink_name):
+        """Retrieve a sink resource.
 
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/get
+        Args:
+            sink_name (str): The resource name of the sink:
 
-        :type project: str
-        :param project: ID of the project containing the sink.
+            ::
 
-        :type sink_name: str
-        :param sink_name: the name of the sink
+                "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                "folders/[FOLDER_ID]/sinks/[SINK_ID]"
 
-        :rtype: dict
-        :returns: The JSON sink object returned from the API.
+        Returns:
+            dict: The JSON sink object returned from the API.
         """
-        target = "/projects/%s/sinks/%s" % (project, sink_name)
+        target = f"/{sink_name}"
         return self.api_request(method="GET", path=target)
 
     def sink_update(
-        self, project, sink_name, filter_, destination, unique_writer_identity=False
+        self, sink_name, filter_, destination, *, unique_writer_identity=False
     ):
-        """API call:  update a sink resource.
+        """Update a sink resource.
 
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update
+        Args:
+            sink_name (str): Required. The resource name of the sink:
 
-        :type project: str
-        :param project: ID of the project containing the sink.
+            ::
 
-        :type sink_name: str
-        :param sink_name: the name of the sink
+                "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+            filter_ (str): The advanced logs filter expression defining the
+                entries exported by the sink.
+            destination (str): destination URI for the entries exported by
+                the sink.
+            unique_writer_identity (Optional[bool]): determines the kind of
+                IAM identity returned as writer_identity in the new sink.
 
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the sink.
 
-        :type destination: str
-        :param destination: destination URI for the entries exported by
-                            the sink.
-
-        :type unique_writer_identity: bool
-        :param unique_writer_identity: (Optional) determines the kind of
-                                       IAM identity returned as
-                                       writer_identity in the new sink.
-
-        :rtype: dict
-        :returns: The returned (updated) resource.
+        Returns:
+            dict: The returned (updated) resource.
         """
-        target = "/projects/%s/sinks/%s" % (project, sink_name)
-        data = {"name": sink_name, "filter": filter_, "destination": destination}
+        target = f"/{sink_name}"
+        name = sink_name.split("/")[-1]  # parse name out of full resoure name
+        data = {"name": name, "filter": filter_, "destination": destination}
         query_params = {"uniqueWriterIdentity": unique_writer_identity}
         return self.api_request(
             method="PUT", path=target, query_params=query_params, data=data
         )
 
-    def sink_delete(self, project, sink_name):
-        """API call:  delete a sink resource.
+    def sink_delete(self, sink_name):
+        """Delete a sink resource.
 
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/delete
+        Args:
+            sink_name (str): Required. The full resource name of the sink to delete,
+                including the parent resource and the sink identifier:
 
-        :type project: str
-        :param project: ID of the project containing the sink.
+                ::
 
-        :type sink_name: str
-        :param sink_name: the name of the sink
+                    "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+                    "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+                    "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+
+                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
         """
-        target = "/projects/%s/sinks/%s" % (project, sink_name)
+        target = f"/{sink_name}"
         self.api_request(method="DELETE", path=target)
 
 
@@ -358,35 +361,31 @@ class _MetricsAPI(object):
         self._client = client
         self.api_request = client._connection.api_request
 
-    def list_metrics(self, project, page_size=None, page_token=None):
+    def list_metrics(self, project, *, page_size=None, page_token=None):
         """List metrics for the project associated with this client.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/list
 
-        :type project: str
-        :param project: ID of the project whose metrics are to be listed.
+        Args:
+            page_size (Optional[int]): The maximum number of sinks in each
+                page of results from this request. Non-positive values are ignored. Defaults to a
+                sensible value set by the API.
+            page_token (Optional[str]): If present, return the next batch of sinks, using the
+                value, which must correspond to the ``nextPageToken`` value
+                returned in the previous response.  Deprecated: use the ``pages``
+                property ofthe returned iterator instead of manually passing the
+                token.
 
-        :type page_size: int
-        :param page_size: maximum number of metrics to return, If not passed,
-                          defaults to a value set by the API.
-
-        :type page_token: str
-        :param page_token: opaque marker for the next "page" of metrics. If not
-                           passed, the API will return the first page of
-                           metrics.
-
-        :rtype: :class:`~google.api_core.page_iterator.Iterator`
-        :returns: Iterator of
-                  :class:`~google.cloud.logging.metric.Metric`
-                  accessible to the current API.
+        Returns:
+            Iterator[google.cloud.logging_v2.metric.Metric]
         """
         extra_params = {}
 
         if page_size is not None:
             extra_params["pageSize"] = page_size
 
-        path = "/projects/%s/metrics" % (project,)
+        path = f"/projects/{project}/metrics"
         return page_iterator.HTTPIterator(
             client=self._client,
             api_request=self._client._connection.api_request,
@@ -397,86 +396,64 @@ class _MetricsAPI(object):
             extra_params=extra_params,
         )
 
-    def metric_create(self, project, metric_name, filter_, description=None):
-        """API call:  create a metric resource.
+    def metric_create(self, project, metric_name, filter_, description):
+        """Create a metric resource.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/create
 
-        :type project: str
-        :param project: ID of the project in which to create the metric.
-
-        :type metric_name: str
-        :param metric_name: the name of the metric
-
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the metric.
-
-        :type description: str
-        :param description: description of the metric.
+        Args:
+            project (str): ID of the project in which to create the metric.
+            metric_name (str): The name of the metric
+            filter_ (str): The advanced logs filter expression defining the
+                entries exported by the metric.
+            description (str): description of the metric.
         """
-        target = "/projects/%s/metrics" % (project,)
+        target = f"/projects/{project}/metrics"
         data = {"name": metric_name, "filter": filter_, "description": description}
         self.api_request(method="POST", path=target, data=data)
 
     def metric_get(self, project, metric_name):
-        """API call:  retrieve a metric resource.
+        """Retrieve a metric resource.
 
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/get
+        Args:
+            project (str): ID of the project containing the metric.
+            metric_name (str): The name of the metric
 
-        :type project: str
-        :param project: ID of the project containing the metric.
-
-        :type metric_name: str
-        :param metric_name: the name of the metric
-
-        :rtype: dict
-        :returns: The JSON metric object returned from the API.
+        Returns:
+            dict: The JSON metric object returned from the API.
         """
-        target = "/projects/%s/metrics/%s" % (project, metric_name)
+        target = f"/projects/{project}/metrics/{metric_name}"
         return self.api_request(method="GET", path=target)
 
     def metric_update(self, project, metric_name, filter_, description):
-        """API call:  update a metric resource.
+        """Update a metric resource.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/update
 
-        :type project: str
-        :param project: ID of the project containing the metric.
-
-        :type metric_name: str
-        :param metric_name: the name of the metric
-
-        :type filter_: str
-        :param filter_: the advanced logs filter expression defining the
-                        entries exported by the metric.
-
-        :type description: str
-        :param description: description of the metric.
-
-        :rtype: dict
-        :returns: The returned (updated) resource.
+       Args:
+            project (str): ID of the project containing the metric.
+            metric_name (str): the name of the metric
+            filter_ (str): the advanced logs filter expression defining the
+                entries exported by the metric.
+            description (str): description of the metric.
+        
+        Returns:
+            dict: The returned (updated) resource.
         """
-        target = "/projects/%s/metrics/%s" % (project, metric_name)
+        target = f"/projects/{project}/metrics/{metric_name}"
         data = {"name": metric_name, "filter": filter_, "description": description}
         return self.api_request(method="PUT", path=target, data=data)
 
     def metric_delete(self, project, metric_name):
-        """API call:  delete a metric resource.
+        """Delete a metric resource.
 
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/delete
-
-        :type project: str
-        :param project: ID of the project containing the metric.
-
-        :type metric_name: str
-        :param metric_name: the name of the metric.
+        Args:
+            project (str): ID of the project containing the metric.
+            metric_name (str): The name of the metric
         """
-        target = "/projects/%s/metrics/%s" % (project, metric_name)
+        target = f"/projects/{project}/metrics/{metric_name}"
         self.api_request(method="DELETE", path=target)
 
 
@@ -492,20 +469,17 @@ def _item_to_entry(iterator, resource, loggers):
         on subsequent calls. For an example, see how the method is
         used above in :meth:`_LoggingAPI.list_entries`.
 
-    :type iterator: :class:`~google.api_core.page_iterator.Iterator`
-    :param iterator: The iterator that is currently in use.
+    Args:
+        iterator (google.api_core.page_iterator.Iterator): The iterator that
+            is currently in use.
+        resource (dict): Log entry JSON resource returned from the API.
+        loggers (Mapping[str, google.cloud.logging_v2.logger.Logger]): 
+            A mapping of logger fullnames -> loggers.  If the logger
+            that owns the entry is not in ``loggers``, the entry
+            will have a newly-created logger.
 
-    :type resource: dict
-    :param resource: Log entry JSON resource returned from the API.
-
-    :type loggers: dict
-    :param loggers:
-        A mapping of logger fullnames -> loggers.  If the logger
-        that owns the entry is not in ``loggers``, the entry
-        will have a newly-created logger.
-
-    :rtype: :class:`~google.cloud.logging.entries._BaseEntry`
-    :returns: The next log entry in the page.
+    Returns: 
+        google.cloud.logging_v2.entries._BaseEntry: The next log entry in the page.
     """
     return entry_from_resource(resource, iterator.client, loggers)
 
@@ -513,14 +487,13 @@ def _item_to_entry(iterator, resource, loggers):
 def _item_to_sink(iterator, resource):
     """Convert a sink resource to the native object.
 
-    :type iterator: :class:`~google.api_core.page_iterator.Iterator`
-    :param iterator: The iterator that is currently in use.
+    Args:
+        iterator (google.api_core.page_iterator.Iterator): The iterator that
+            is currently in use.
+        resource (dict): Sink JSON resource returned from the API.
 
-    :type resource: dict
-    :param resource: Sink JSON resource returned from the API.
-
-    :rtype: :class:`~google.cloud.logging.sink.Sink`
-    :returns: The next sink in the page.
+    Returns: 
+        google.cloud.logging_v2.sink.Sink: The next sink in the page.
     """
     return Sink.from_api_repr(resource, iterator.client)
 
@@ -528,13 +501,13 @@ def _item_to_sink(iterator, resource):
 def _item_to_metric(iterator, resource):
     """Convert a metric resource to the native object.
 
-    :type iterator: :class:`~google.api_core.page_iterator.Iterator`
-    :param iterator: The iterator that is currently in use.
+    Args:
+        iterator (google.api_core.page_iterator.Iterator): The iterator that
+            is currently in use.
+        resource (dict): Sink JSON resource returned from the API.
 
-    :type resource: dict
-    :param resource: Metric JSON resource returned from the API.
-
-    :rtype: :class:`~google.cloud.logging.metric.Metric`
-    :returns: The next metric in the page.
+    Returns: 
+        google.cloud.logging_v2.metric.Metric:
+            The next metric in the page.
     """
     return Metric.from_api_repr(resource, iterator.client)

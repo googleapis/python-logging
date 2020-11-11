@@ -14,9 +14,7 @@
 
 import unittest
 
-from google.api_core import grpc_helpers
 import google.auth.credentials
-from google.protobuf import empty_pb2
 import mock
 
 import google.cloud.logging_v2
@@ -26,7 +24,6 @@ from google.cloud.logging_v2.services.config_service_v2 import ConfigServiceV2Cl
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 from google.cloud.logging_v2.services.metrics_service_v2 import MetricsServiceV2Client
 from google.cloud.logging_v2.types import LogSink
-from google.cloud.logging_v2.types import LogMetric
 from google.cloud.logging_v2.types import LogEntry as LogEntryPB
 
 
@@ -64,7 +61,7 @@ class Test_LoggingAPI(object):
                 entries=[log_entry_msg]
             )
             result = client.list_entries(
-                [PROJECT], filter_=FILTER, order_by=logging_v2.DESCENDING
+                [PROJECT_PATH], filter_=FILTER, order_by=logging_v2.DESCENDING
             )
 
         entries = list(result)
@@ -92,7 +89,7 @@ class Test_LoggingAPI(object):
             call.return_value = logging_v2.types.ListLogEntriesResponse(entries=[])
 
             result = client.list_entries(
-                [PROJECT],
+                [PROJECT_PATH],
                 filter_=FILTER,
                 order_by=google.cloud.logging_v2.ASCENDING,
                 page_size=42,
@@ -122,7 +119,7 @@ class Test_LoggingAPI(object):
                 "resource": {"type": "global"},
                 "textPayload": "text",
             }
-            result = client.write_entries([entry])
+            client.write_entries([entry])
 
         # Check the request
         call.assert_called_once()
@@ -139,13 +136,14 @@ class Test_LoggingAPI(object):
         with mock.patch.object(
             type(client._gapic_api.transport.delete_log), "__call__"
         ) as call:
-            client.logger_delete(PROJECT, self.LOG_NAME)
+            client.logger_delete(self.LOG_PATH)
         call.assert_called_once()
         assert call.call_args.args[0].log_name == self.LOG_PATH
 
 
 class Test_SinksAPI(object):
     SINK_NAME = "sink_name"
+    PARENT_PATH = f"projects/{PROJECT}"
     SINK_PATH = f"projects/{PROJECT}/sinks/{SINK_NAME}"
     DESTINATION_URI = "faux.googleapis.com/destination"
     SINK_WRITER_IDENTITY = "serviceAccount:project-123@example.com"
@@ -167,14 +165,14 @@ class Test_SinksAPI(object):
         client = self.make_sinks_api()
 
         sink_msg = LogSink(
-            name=self.SINK_PATH, destination=self.DESTINATION_URI, filter=FILTER
+            name=self.SINK_NAME, destination=self.DESTINATION_URI, filter=FILTER
         )
         with mock.patch.object(
             type(client._gapic_api.transport.list_sinks), "__call__"
         ) as call:
             call.return_value = logging_v2.types.ListSinksResponse(sinks=[sink_msg])
 
-            result = client.list_sinks(PROJECT)
+            result = client.list_sinks(self.PARENT_PATH,)
 
         sinks = list(result)
 
@@ -182,14 +180,14 @@ class Test_SinksAPI(object):
         assert len(sinks) == 1
         sink = sinks[0]
         assert isinstance(sink, google.cloud.logging_v2.sink.Sink)
-        assert sink.name == self.SINK_PATH
+        assert sink.name == self.SINK_NAME
         assert sink.destination == self.DESTINATION_URI
         assert sink.filter_ == FILTER
 
         # Check the request
         call.assert_called_once()
         request = call.call_args.args[0]
-        assert request.parent == PROJECT_PATH
+        assert request.parent == self.PARENT_PATH
 
     def test_list_sinks_with_options(self):
         client = self.make_sinks_api()
@@ -198,13 +196,13 @@ class Test_SinksAPI(object):
             type(client._gapic_api.transport.list_sinks), "__call__"
         ) as call:
             call.return_value = logging_v2.types.ListSinksResponse(sinks=[])
-            result = client.list_sinks(PROJECT, page_size=42, page_token="token")
+            result = client.list_sinks(self.PARENT_PATH, page_size=42, page_token="token")
         list(result)
 
         # Check the request
         call.assert_called_once()
         request = call.call_args.args[0]
-        assert request.parent == f"projects/{PROJECT}"
+        assert request.parent == self.PARENT_PATH
         assert request.page_size == 42
         assert request.page_token == "token"
 
@@ -221,7 +219,7 @@ class Test_SinksAPI(object):
             )
 
             result = client.sink_create(
-                PROJECT,
+                self.PARENT_PATH,
                 self.SINK_NAME,
                 FILTER,
                 self.DESTINATION_URI,
@@ -238,7 +236,7 @@ class Test_SinksAPI(object):
         # Check request
         call.assert_called_once()
         request = call.call_args.args[0]
-        assert request.parent == PROJECT_PATH
+        assert request.parent == self.PARENT_PATH
         assert request.unique_writer_identity is True
         assert request.sink.name == self.SINK_NAME
         assert request.sink.filter == FILTER
@@ -250,14 +248,14 @@ class Test_SinksAPI(object):
             type(client._gapic_api.transport.get_sink), "__call__"
         ) as call:
             call.return_value = logging_v2.types.LogSink(
-                name=self.SINK_PATH, destination=self.DESTINATION_URI, filter=FILTER
+                name=self.SINK_NAME, destination=self.DESTINATION_URI, filter=FILTER
             )
 
-            response = client.sink_get(PROJECT, self.SINK_NAME)
+            response = client.sink_get(self.SINK_PATH)
 
         # Check response
         assert response == {
-            "name": self.SINK_PATH,
+            "name": self.SINK_NAME,
             "filter": FILTER,
             "destination": self.DESTINATION_URI,
         }
@@ -280,8 +278,7 @@ class Test_SinksAPI(object):
             )
 
             result = client.sink_update(
-                PROJECT,
-                self.SINK_NAME,
+                self.SINK_PATH,
                 FILTER,
                 self.DESTINATION_URI,
                 unique_writer_identity=True,
@@ -300,7 +297,7 @@ class Test_SinksAPI(object):
         request = call.call_args.args[0]
         assert request.sink_name == self.SINK_PATH
         assert request.unique_writer_identity is True
-        assert request.sink.name == self.SINK_PATH
+        assert request.sink.name == self.SINK_NAME
         assert request.sink.filter == FILTER
         assert request.sink.destination == self.DESTINATION_URI
 
@@ -309,7 +306,7 @@ class Test_SinksAPI(object):
         with mock.patch.object(
             type(client._gapic_api.transport.get_sink), "__call__"
         ) as call:
-            client.sink_delete(PROJECT, self.SINK_NAME)
+            client.sink_delete(self.SINK_PATH)
 
         call.assert_called_once()
         request = call.call_args.args[0]
@@ -365,9 +362,6 @@ class Test_MetricsAPI(object):
     def test_list_metrics_options(self):
         client = self.make_metrics_api()
 
-        metric = logging_v2.types.LogMetric(
-            name=self.METRIC_PATH, description=self.DESCRIPTION, filter=FILTER
-        )
         with mock.patch.object(
             type(client._gapic_api.transport.list_log_metrics), "__call__"
         ) as call:
@@ -389,9 +383,7 @@ class Test_MetricsAPI(object):
         with mock.patch.object(
             type(client._gapic_api.transport.create_log_metric), "__call__"
         ) as call:
-            result = client.metric_create(
-                PROJECT, self.METRIC_NAME, FILTER, self.DESCRIPTION
-            )
+            client.metric_create(PROJECT, self.METRIC_NAME, FILTER, self.DESCRIPTION)
 
         # Check the request
         call.assert_called_once()
@@ -486,7 +478,11 @@ class Test__parse_log_entry(unittest.TestCase):
             self._call_fut(entry_pb)
 
         entry_pb.HasField.assert_called_once_with("proto_payload")
-        msg_to_dict_mock.assert_called_once_with(entry_pb, preserving_proto_field_name=False, including_default_value_fields=False)
+        msg_to_dict_mock.assert_called_once_with(
+            entry_pb,
+            preserving_proto_field_name=False,
+            including_default_value_fields=False,
+        )
 
     def test_unregistered_type(self):
         from google.protobuf import any_pb2
@@ -607,8 +603,9 @@ def test_make_logging_api(gapic_client):
     assert api._client == client
     assert api._gapic_api == gapic_client.return_value
     gapic_client.assert_called_once_with(
-        credentials=client._credentials, client_info=client._client_info,
-        client_options=client._client_options
+        credentials=client._credentials,
+        client_info=client._client_info,
+        client_options=client._client_options,
     )
 
 
@@ -619,8 +616,9 @@ def test_make_metrics_api(gapic_client):
     assert api._client == client
     assert api._gapic_api == gapic_client.return_value
     gapic_client.assert_called_once_with(
-        credentials=client._credentials, client_info=client._client_info,
-        client_options=client._client_options
+        credentials=client._credentials,
+        client_info=client._client_info,
+        client_options=client._client_options,
     )
 
 
@@ -631,6 +629,7 @@ def test_make_sinks_api(gapic_client):
     assert api._client == client
     assert api._gapic_api == gapic_client.return_value
     gapic_client.assert_called_once_with(
-        credentials=client._credentials, client_info=client._client_info,
-        client_options=client._client_options
+        credentials=client._credentials,
+        client_info=client._client_info,
+        client_options=client._client_options,
     )

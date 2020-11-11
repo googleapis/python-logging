@@ -741,7 +741,8 @@ def test_write_log_entries_flattened():
 
         assert args[0].log_name == "log_name_value"
 
-        assert args[0].resource == monitored_resource.MonitoredResource(type="type__value"
+        assert args[0].resource == monitored_resource.MonitoredResource(
+            type="type__value"
         )
 
         assert args[0].labels == {"key_value": "value_value"}
@@ -796,7 +797,8 @@ async def test_write_log_entries_flattened_async():
 
         assert args[0].log_name == "log_name_value"
 
-        assert args[0].resource == monitored_resource.MonitoredResource(type="type__value"
+        assert args[0].resource == monitored_resource.MonitoredResource(
+            type="type__value"
         )
 
         assert args[0].labels == {"key_value": "value_value"}

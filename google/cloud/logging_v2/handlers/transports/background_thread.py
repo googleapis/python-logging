@@ -14,7 +14,7 @@
 
 """Transport for Python logging handler
 
-Uses a background worker to log to Stackdriver Logging asynchronously.
+Uses a background worker to log to Cloud Logging asynchronously.
 """
 
 from __future__ import print_function
@@ -218,7 +218,7 @@ class _Worker(object):
         if not self._queue.empty():
             print(
                 "Program shutting down, attempting to send %d queued log "
-                "entries to Stackdriver Logging..." % (self._queue.qsize(),),
+                "entries to Cloud Logging..." % (self._queue.qsize(),),
                 file=sys.stderr,
             )
 

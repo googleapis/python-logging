@@ -27,8 +27,8 @@ _thread_locals = threading.local()
 def _get_django_request():
     """Get Django request from thread local.
 
-    :rtype: str
-    :returns: Django request.
+    Returns:
+        str: Django request
     """
     return getattr(_thread_locals, "request", None)
 
@@ -42,13 +42,14 @@ except ImportError:  # pragma: NO COVER
 class RequestMiddleware(MiddlewareMixin):
     """Saves the request in thread local"""
 
-    def __init__(self, get_response=None):
+    def __init__(self, *, get_response=None):
         self.get_response = get_response
 
     def process_request(self, request):
         """Called on each request, before Django decides which view to execute.
 
-        :type request: :class:`~django.http.request.HttpRequest`
-        :param request: Django http request.
+        Args:
+            request(django.http.request.HttpRequest):
+                Django http request.
         """
         _thread_locals.request = request

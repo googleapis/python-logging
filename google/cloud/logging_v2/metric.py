@@ -12,34 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Define Stackdriver Logging API Metrics."""
+"""Define Cloud Logging API Metrics."""
 
 from google.cloud.exceptions import NotFound
 
 
 class Metric(object):
-    """Metrics represent named filters for log entries.
 
-    See
-    https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics
+    def __init__(self, name, *, filter_=None, client=None, description=""):
+        """Metrics represent named filters for log entries.
 
-    :type name: str
-    :param name: the name of the metric
+        See
+        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics
 
-    :type filter_: str
-    :param filter_: the advanced logs filter expression defining the entries
+        Args:
+            name (str): The name of the metric.
+            filter_ (str): the advanced logs filter expression defining the entries
                    tracked by the metric.  If not passed, the instance should
                    already exist, to be refreshed via :meth:`reload`.
+            client (Optional[google.cloud.logging_v2.client.Client]): A client which holds
+                credentials and project configuration for the sink (which requires a project).
+            description (Optional[str]): An optional description of the metric.
 
-    :type client: :class:`google.cloud.logging.client.Client`
-    :param client: A client which holds credentials and project configuration
-                   for the metric (which requires a project).
-
-    :type description: str
-    :param description: an optional description of the metric.
-    """
-
-    def __init__(self, name, filter_=None, client=None, description=""):
+        """
         self.name = name
         self._client = client
         self.filter_ = filter_
@@ -58,76 +53,75 @@ class Metric(object):
     @property
     def full_name(self):
         """Fully-qualified name used in metric APIs"""
-        return "projects/%s/metrics/%s" % (self.project, self.name)
+        return f"projects/{self.project}/metrics/{self.name}"
 
     @property
     def path(self):
         """URL path for the metric's APIs"""
-        return "/%s" % (self.full_name,)
+        return f"/{self.full_name}"
 
     @classmethod
     def from_api_repr(cls, resource, client):
-        """Factory:  construct a metric given its API representation
+        """Construct a metric given its API representation
 
-        :type resource: dict
-        :param resource: metric resource representation returned from the API
+        Args:
+            resource (dict): metric resource representation returned from the API
+            client (google.cloud.logging_v2.client.Client): Client which holds
+                credentials and project configuration for the sink.
 
-        :type client: :class:`google.cloud.logging.client.Client`
-        :param client: Client which holds credentials and project
-                       configuration for the metric.
-
-        :rtype: :class:`google.cloud.logging.metric.Metric`
-        :returns: Metric parsed from ``resource``.
+        Returns:
+            google.cloud.logging_v2.metric.Metric
         """
         metric_name = resource["name"]
         filter_ = resource["filter"]
         description = resource.get("description", "")
-        return cls(metric_name, filter_, client=client, description=description)
+        return cls(metric_name, filter_=filter_, client=client, description=description)
 
     def _require_client(self, client):
-        """Check client or verify over-ride.
+        """Check client or verify over-ride. Also sets ``parent``.
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current metric.
-
-        :rtype: :class:`google.cloud.logging.client.Client`
-        :returns: The client passed in or the currently bound client.
+        Args:
+            client (Union[None, google.cloud.logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
+        
+        Returns:
+            google.cloud.logging_v2.client.Client: The client passed in
+                or the currently bound client.
         """
         if client is None:
             client = self._client
         return client
 
-    def create(self, client=None):
-        """API call:  create the metric via a PUT request
+    def create(self, *, client=None):
+        """Create the metric via a PUT request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/create
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current metric.
+        Args:
+            client (Optional[google.cloud.logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
         """
         client = self._require_client(client)
         client.metrics_api.metric_create(
             self.project, self.name, self.filter_, self.description
         )
 
-    def exists(self, client=None):
-        """API call:  test for the existence of the metric via a GET request
+    def exists(self, *, client=None):
+        """Test for the existence of the metric via a GET request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/get
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current metric.
+        Args:
+            client (Optional[google.cloud.logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
 
-        :rtype: bool
-        :returns: Boolean indicating existence of the metric.
+        Returns:
+            bool: Boolean indicating existence of the metric.
         """
         client = self._require_client(client)
 
@@ -138,48 +132,48 @@ class Metric(object):
         else:
             return True
 
-    def reload(self, client=None):
+    def reload(self,*,  client=None):
         """API call:  sync local metric configuration via a GET request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/get
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current metric.
+        Args:
+            client (Optional[google.cloud.logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
         """
         client = self._require_client(client)
         data = client.metrics_api.metric_get(self.project, self.name)
         self.description = data.get("description", "")
         self.filter_ = data["filter"]
 
-    def update(self, client=None):
+    def update(self, *, client=None):
         """API call:  update metric configuration via a PUT request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/update
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current metric.
+        Args:
+            client (Optional[google.cloud.logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
         """
         client = self._require_client(client)
         client.metrics_api.metric_update(
             self.project, self.name, self.filter_, self.description
         )
 
-    def delete(self, client=None):
+    def delete(self, *, client=None):
         """API call:  delete a metric via a DELETE request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/delete
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current metric.
+        Args:
+            client (Optional[google.cloud.logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
         """
         client = self._require_client(client)
         client.metrics_api.metric_delete(self.project, self.name)
