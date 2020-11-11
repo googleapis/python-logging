@@ -15,7 +15,7 @@
 # limitations under the License.
 
 """This application demonstrates how to perform basic operations on logs and
-log entries with Stackdriver Logging.
+log entries with Cloud Logging.
 
 For more information, see the README.md under /logging and the
 documentation at https://cloud.google.com/logging/docs.

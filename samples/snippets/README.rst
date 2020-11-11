@@ -99,7 +99,7 @@ To run this sample:
     usage: snippets.py [-h] logger_name {list,write,delete} ...
 
     This application demonstrates how to perform basic operations on logs and
-    log entries with Stackdriver Logging.
+    log entries with Cloud Logging.
 
     For more information, see the README.md under /logging and the
     documentation at https://cloud.google.com/logging/docs.
