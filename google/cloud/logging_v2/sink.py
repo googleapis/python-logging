@@ -18,8 +18,9 @@ from google.cloud.exceptions import NotFound
 
 
 class Sink(object):
-
-    def __init__(self, name, *, filter_=None, parent=None, destination=None, client=None):
+    def __init__(
+        self, name, *, filter_=None, parent=None, destination=None, client=None
+    ):
         """Sinks represent filtered exports for log entries.
 
         See
@@ -43,7 +44,7 @@ class Sink(object):
                 be refreshed via :meth:`reload`.
             client (Optional[google.cloud.logging_v2.client.Client]): A client which holds
                 credentials and project configuration for the sink (which requires a project).
-        """   
+        """
         self.name = name
         self.filter_ = filter_
         self.destination = destination
@@ -62,7 +63,7 @@ class Sink(object):
         if self._parent is None:
             self._parent = f"projects/{self.client.project}"
         return self._parent
-        
+
     @property
     def full_name(self):
         """Fully-qualified name used in sink APIs"""
@@ -101,10 +102,10 @@ class Sink(object):
                     "billingAccounts/[BILLING_ACCOUNT_ID]"
                     "folders/[FOLDER_ID]".
                 Defaults to the project stored on the client.
-        
+
         Returns:
             google.cloud.logging_v2.sink.Sink: Sink parsed from ``resource``.
-        
+
         Raises:
             ValueError: if ``client`` is not ``None`` and the
                 project from the resource does not agree with the project
@@ -122,7 +123,7 @@ class Sink(object):
             client (Union[None, google.cloud.logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
-        
+
         Returns:
             google.cloud.logging_v2.client.Client: The client passed in
                 or the currently bound client.
@@ -164,7 +165,7 @@ class Sink(object):
             client (Optional[google.cloud.logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
-        
+
         Returns:
             bool: Boolean indicating existence of the sink.
         """

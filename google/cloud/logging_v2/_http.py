@@ -69,7 +69,13 @@ class _LoggingAPI(object):
         self.api_request = client._connection.api_request
 
     def list_entries(
-        self, resource_names, *, filter_=None, order_by=None, page_size=None, page_token=None
+        self,
+        resource_names,
+        *,
+        filter_=None,
+        order_by=None,
+        page_size=None,
+        page_token=None,
     ):
         """Return a page of log entry resources.
 
@@ -127,9 +133,18 @@ class _LoggingAPI(object):
         iterator._HTTP_METHOD = "POST"
         return iterator
 
-    def write_entries(self, entries, *, logger_name=None, resource=None, labels=None, partial_success=False, dry_run=False):
+    def write_entries(
+        self,
+        entries,
+        *,
+        logger_name=None,
+        resource=None,
+        labels=None,
+        partial_success=False,
+        dry_run=False,
+    ):
         """Log an entry resource via a POST request
-    
+
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
@@ -155,7 +170,11 @@ class _LoggingAPI(object):
                 Useful for checking whether the logging API endpoints are working
                 properly before sending valuable data.
         """
-        data = {"entries": list(entries), "partialSuccess": partial_success, "dry_run": dry_run}
+        data = {
+            "entries": list(entries),
+            "partialSuccess": partial_success,
+            "dry_run": dry_run,
+        }
 
         if logger_name is not None:
             data["logName"] = logger_name
@@ -438,7 +457,7 @@ class _MetricsAPI(object):
             filter_ (str): the advanced logs filter expression defining the
                 entries exported by the metric.
             description (str): description of the metric.
-        
+
         Returns:
             dict: The returned (updated) resource.
         """
@@ -473,12 +492,12 @@ def _item_to_entry(iterator, resource, loggers):
         iterator (google.api_core.page_iterator.Iterator): The iterator that
             is currently in use.
         resource (dict): Log entry JSON resource returned from the API.
-        loggers (Mapping[str, google.cloud.logging_v2.logger.Logger]): 
+        loggers (Mapping[str, google.cloud.logging_v2.logger.Logger]):
             A mapping of logger fullnames -> loggers.  If the logger
             that owns the entry is not in ``loggers``, the entry
             will have a newly-created logger.
 
-    Returns: 
+    Returns:
         google.cloud.logging_v2.entries._BaseEntry: The next log entry in the page.
     """
     return entry_from_resource(resource, iterator.client, loggers)
@@ -492,7 +511,7 @@ def _item_to_sink(iterator, resource):
             is currently in use.
         resource (dict): Sink JSON resource returned from the API.
 
-    Returns: 
+    Returns:
         google.cloud.logging_v2.sink.Sink: The next sink in the page.
     """
     return Sink.from_api_repr(resource, iterator.client)
@@ -506,7 +525,7 @@ def _item_to_metric(iterator, resource):
             is currently in use.
         resource (dict): Sink JSON resource returned from the API.
 
-    Returns: 
+    Returns:
         google.cloud.logging_v2.metric.Metric:
             The next metric in the page.
     """

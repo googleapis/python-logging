@@ -314,7 +314,9 @@ class Test_LoggingAPI(unittest.TestCase):
         client = _Client(conn)
         api = self._make_one(client)
 
-        api.write_entries([ENTRY1, ENTRY2], logger_name=LOG_NAME, resource=RESOURCE, labels=LABELS)
+        api.write_entries(
+            [ENTRY1, ENTRY2], logger_name=LOG_NAME, resource=RESOURCE, labels=LABELS
+        )
 
         self.assertEqual(conn._called_with["method"], "POST")
         path = f"/{self.WRITE_ENTRIES_PATH}"
@@ -419,7 +421,9 @@ class Test_SinksAPI(unittest.TestCase):
         client = _Client(conn)
         api = self._make_one(client)
 
-        iterator = api.list_sinks(self.PROJECT_PATH, page_size=PAGE_SIZE, page_token=TOKEN)
+        iterator = api.list_sinks(
+            self.PROJECT_PATH, page_size=PAGE_SIZE, page_token=TOKEN
+        )
         sinks = list(iterator)
         token = iterator.next_page_token
 
@@ -546,9 +550,7 @@ class Test_SinksAPI(unittest.TestCase):
         api = self._make_one(client)
 
         with self.assertRaises(NotFound):
-            api.sink_update(
-                self.SINK_PATH, self.FILTER, self.DESTINATION_URI
-            )
+            api.sink_update(self.SINK_PATH, self.FILTER, self.DESTINATION_URI)
 
         path = f"/projects/{self.PROJECT}/sinks/{self.SINK_NAME}"
         expected = {

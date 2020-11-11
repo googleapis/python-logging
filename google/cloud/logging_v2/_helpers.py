@@ -68,7 +68,7 @@ def entry_from_resource(resource, client, loggers):
         resource (dict): One entry resource from API response.
         client (google.cloud.logging_v2.client.Client):
             Client that owns the log entry.
-        loggers (dict): 
+        loggers (dict):
             A mapping of logger fullnames -> loggers.  If the logger
             that owns the entry is not in ``loggers``, the entry
             will have a newly-created logger.
@@ -95,12 +95,12 @@ def retrieve_metadata_server(metadata_key):
     See: https://cloud.google.com/compute/docs/storing-retrieving-metadata
 
     Args:
-        metadata_key (str): 
+        metadata_key (str):
             Key of the metadata which will form the url. You can
             also supply query parameters after the metadata key.
             e.g. "tags?alt=json"
 
-    Returns: 
+    Returns:
         str: The value of the metadata key returned by the metadata server.
     """
     url = METADATA_URL + metadata_key
@@ -124,7 +124,7 @@ def _normalize_severity(stdlib_level):
 
     Args:
         stdlib_level (int): 'levelno' from a :class:`logging.LogRecord`
-    
+
     Returns:
         int: Corresponding Stackdriver severity.
     """
@@ -136,7 +136,7 @@ def _add_defaults_to_filter(filter_):
 
     Args:
         filter_ (str): The original filter expression
-    
+
     Returns:
         str: sensible default filter string
     """

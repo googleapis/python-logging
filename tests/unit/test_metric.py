@@ -46,7 +46,10 @@ class TestMetric(unittest.TestCase):
     def test_ctor_explicit(self):
         client = _Client(self.PROJECT)
         metric = self._make_one(
-            self.METRIC_NAME, filter_=self.FILTER, client=client, description=self.DESCRIPTION
+            self.METRIC_NAME,
+            filter_=self.FILTER,
+            client=client,
+            description=self.DESCRIPTION,
         )
         self.assertEqual(metric.name, self.METRIC_NAME)
         self.assertEqual(metric.filter_, self.FILTER)
@@ -102,7 +105,10 @@ class TestMetric(unittest.TestCase):
         client2 = _Client(project=self.PROJECT)
         api = client2.metrics_api = _DummyMetricsAPI()
         metric = self._make_one(
-            self.METRIC_NAME, filter_=self.FILTER, client=client1, description=self.DESCRIPTION
+            self.METRIC_NAME,
+            filter_=self.FILTER,
+            client=client1,
+            description=self.DESCRIPTION,
         )
 
         metric.create(client=client2)
@@ -140,7 +146,10 @@ class TestMetric(unittest.TestCase):
         api = client.metrics_api = _DummyMetricsAPI()
         api._metric_get_response = RESOURCE
         metric = self._make_one(
-            self.METRIC_NAME, filter_=self.FILTER, client=client, description=self.DESCRIPTION
+            self.METRIC_NAME,
+            filter_=self.FILTER,
+            client=client,
+            description=self.DESCRIPTION,
         )
 
         metric.reload()
@@ -185,7 +194,10 @@ class TestMetric(unittest.TestCase):
         client2 = _Client(project=self.PROJECT)
         api = client2.metrics_api = _DummyMetricsAPI()
         metric = self._make_one(
-            self.METRIC_NAME, filter_=self.FILTER, client=client1, description=self.DESCRIPTION
+            self.METRIC_NAME,
+            filter_=self.FILTER,
+            client=client1,
+            description=self.DESCRIPTION,
         )
 
         metric.update(client=client2)

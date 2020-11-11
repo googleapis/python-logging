@@ -196,7 +196,9 @@ class Test_SinksAPI(object):
             type(client._gapic_api.transport.list_sinks), "__call__"
         ) as call:
             call.return_value = logging_v2.types.ListSinksResponse(sinks=[])
-            result = client.list_sinks(self.PARENT_PATH, page_size=42, page_token="token")
+            result = client.list_sinks(
+                self.PARENT_PATH, page_size=42, page_token="token"
+            )
         list(result)
 
         # Check the request

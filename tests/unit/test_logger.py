@@ -187,7 +187,7 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
     def test_log_text_w_unicode_and_default_labels(self):
-        TEXT = u"TEXT"
+        TEXT = "TEXT"
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
             {
@@ -468,7 +468,8 @@ class TestLogger(unittest.TestCase):
         logger.delete()
 
         self.assertEqual(
-            api._logger_delete_called_with, (f"projects/{self.PROJECT}/logs/{self.LOGGER_NAME}")
+            api._logger_delete_called_with,
+            (f"projects/{self.PROJECT}/logs/{self.LOGGER_NAME}"),
         )
 
     def test_delete_w_alternate_client(self):
@@ -480,7 +481,8 @@ class TestLogger(unittest.TestCase):
         logger.delete(client=client2)
 
         self.assertEqual(
-            api._logger_delete_called_with, (f"projects/{self.PROJECT}/logs/{self.LOGGER_NAME}")
+            api._logger_delete_called_with,
+            (f"projects/{self.PROJECT}/logs/{self.LOGGER_NAME}"),
         )
 
     def test_list_entries_defaults(self):
@@ -514,7 +516,10 @@ class TestLogger(unittest.TestCase):
             {
                 "path": "/entries:list",
                 "method": "POST",
-                "data": {"filter": "removed", "resourceNames": [f"projects/{self.PROJECT}"]},
+                "data": {
+                    "filter": "removed",
+                    "resourceNames": [f"projects/{self.PROJECT}"],
+                },
             },
         )
         # verify that default filter is 24 hours
@@ -1187,7 +1192,7 @@ class _DummyLoggingAPI(object):
         self._write_entries_called_with = (entries, logger_name, resource, labels)
 
     def logger_delete(self, logger_name):
-        self._logger_delete_called_with = (logger_name)
+        self._logger_delete_called_with = logger_name
 
 
 class _Client(object):

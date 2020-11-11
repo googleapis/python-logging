@@ -189,14 +189,20 @@ class Client(ClientWithProject):
 
         Args:
             name (str): The name of the logger to be constructed.
-        
-        Returns: 
+
+        Returns:
             google.cloud.logging_v2.logger.Logger: Logger created with the current client.
         """
         return Logger(name, client=self)
 
     def list_entries(
-        self, *, resource_names=None, filter_=None, order_by=None, page_size=None, page_token=None
+        self,
+        *,
+        resource_names=None,
+        filter_=None,
+        order_by=None,
+        page_size=None,
+        page_token=None,
     ):
         """Return a page of log entry resources.
 
@@ -272,6 +278,7 @@ class Client(ClientWithProject):
                     "organizations/[ORGANIZATION_ID]"
                     "billingAccounts/[BILLING_ACCOUNT_ID]"
                     "folders/[FOLDER_ID]".
+
                 If not passed, defaults to the project bound to the API's client.
             page_size (Optional[int]): The maximum number of sinks in each
                 page of results from this request. Non-positive values are ignored. Defaults to a
@@ -287,7 +294,9 @@ class Client(ClientWithProject):
         """
         if parent is None:
             parent = f"projects/{self.project}"
-        return self.sinks_api.list_sinks(parent=parent, page_size=page_size, page_token=page_token)
+        return self.sinks_api.list_sinks(
+            parent=parent, page_size=page_size, page_token=page_token
+        )
 
     def metric(self, name, *, filter_=None, description=""):
         """Creates a metric bound to the current client.
@@ -326,7 +335,9 @@ class Client(ClientWithProject):
         Returns:
             Iterator[google.cloud.logging_v2.metric.Metric]
         """
-        return self.metrics_api.list_metrics(self.project, page_size=page_size, page_token=page_token)
+        return self.metrics_api.list_metrics(
+            self.project, page_size=page_size, page_token=page_token
+        )
 
     def get_default_handler(self, **kw):
         """Return the default logging handler based on the local environment.

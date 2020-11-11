@@ -318,7 +318,9 @@ class TestLogging(unittest.TestCase):
 
     def test_create_metric(self):
         METRIC_NAME = "test-create-metric%s" % (_RESOURCE_ID,)
-        metric = Config.CLIENT.metric(METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION)
+        metric = Config.CLIENT.metric(
+            METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION
+        )
         self.assertFalse(metric.exists())
         retry = RetryErrors(Conflict)
 
@@ -329,7 +331,9 @@ class TestLogging(unittest.TestCase):
 
     def test_list_metrics(self):
         METRIC_NAME = "test-list-metrics%s" % (_RESOURCE_ID,)
-        metric = Config.CLIENT.metric(METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION)
+        metric = Config.CLIENT.metric(
+            METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION
+        )
         self.assertFalse(metric.exists())
         before_metrics = list(Config.CLIENT.list_metrics())
         before_names = set(before.name for before in before_metrics)
@@ -347,7 +351,9 @@ class TestLogging(unittest.TestCase):
     def test_reload_metric(self):
         METRIC_NAME = "test-reload-metric%s" % (_RESOURCE_ID,)
         retry = RetryErrors(Conflict)
-        metric = Config.CLIENT.metric(METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION)
+        metric = Config.CLIENT.metric(
+            METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION
+        )
         self.assertFalse(metric.exists())
         retry(metric.create)()
         self.to_delete.append(metric)
@@ -364,7 +370,9 @@ class TestLogging(unittest.TestCase):
         retry = RetryErrors(Conflict)
         NEW_FILTER = "logName:other"
         NEW_DESCRIPTION = "updated"
-        metric = Config.CLIENT.metric(METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION)
+        metric = Config.CLIENT.metric(
+            METRIC_NAME, filter_=DEFAULT_FILTER, description=DEFAULT_DESCRIPTION
+        )
         self.assertFalse(metric.exists())
         retry(metric.create)()
         self.to_delete.append(metric)
@@ -433,7 +441,9 @@ class TestLogging(unittest.TestCase):
         TOPIC_URI = "pubsub.googleapis.com/%s" % (topic_path,)
 
         retry = RetryErrors((Conflict, ServiceUnavailable), max_tries=10)
-        sink = Config.CLIENT.sink(SINK_NAME, filter_=DEFAULT_FILTER, destination=TOPIC_URI)
+        sink = Config.CLIENT.sink(
+            SINK_NAME, filter_=DEFAULT_FILTER, destination=TOPIC_URI
+        )
         self.assertFalse(sink.exists())
 
         retry(sink.create)()
@@ -516,7 +526,9 @@ class TestLogging(unittest.TestCase):
         bucket_uri = self._init_storage_bucket()
         dataset_uri = self._init_bigquery_dataset()
         UPDATED_FILTER = "logName:syslog"
-        sink = Config.CLIENT.sink(SINK_NAME, filter_=DEFAULT_FILTER, destination=bucket_uri)
+        sink = Config.CLIENT.sink(
+            SINK_NAME, filter_=DEFAULT_FILTER, destination=bucket_uri
+        )
         self.assertFalse(sink.exists())
         retry(sink.create)()
         self.to_delete.append(sink)

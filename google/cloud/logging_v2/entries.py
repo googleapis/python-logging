@@ -50,7 +50,7 @@ def logger_name_from_path(path):
 
     Returns:
         str: Logger name parsed from ``path``.
-    
+
     Raises:
         ValueError: If the ``path`` is ill-formed of if the project
             from ``path`` does not agree with the ``project`` passed in.
@@ -147,12 +147,12 @@ class LogEntry(_LogEntryTuple):
         Args:
             resource (dict): text entry resource representation returned from
                 the API
-            client (google.cloud.logging_v2.client.Client): 
+            client (google.cloud.logging_v2.client.Client):
                 Client which holds credentials and project configuration.
             loggers (Optional[dict]):
                 A mapping of logger fullnames -> loggers.  If not
                 passed, the entry will have a newly-created logger.
-        
+
         Returns:
             google.cloud.logging.entries.LogEntry: Log entry parsed from ``resource``.
         """

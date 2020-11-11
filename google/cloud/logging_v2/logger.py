@@ -43,7 +43,6 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
 
 
 class Logger(object):
-
     def __init__(self, name, client, *, labels=None):
         """Loggers represent named targets for log entries.
 
@@ -91,7 +90,7 @@ class Logger(object):
             client (Union[None, google.cloud.logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
-        
+
         Returns:
             google.cloud.logging_v2.client.Client: The client passed in
                 or the currently bound client.
@@ -254,7 +253,7 @@ class Logger(object):
                 By default, a 24 hour filter is applied.
             order_by (Optional[str]): One of :data:`~google.cloud.logging_v2.ASCENDING`
                 or :data:`~google.cloud.logging_v2.DESCENDING`.
-            page_size (Optional[int]): 
+            page_size (Optional[int]):
                 Optional. The maximum number of entries in each page of results
                 from this request. Non-positive values are ignored. Defaults
                 to a sensible value set by the API.
@@ -264,7 +263,7 @@ class Logger(object):
                 returned in the previous response.  Deprecated: use the ``pages``
                 property of the returned iterator instead of manually passing
                 the token.
-        
+
         Returns:
             Iterator[google.cloud.logging_v2.entries.LogEntry]
         """
@@ -288,7 +287,6 @@ class Logger(object):
 
 
 class Batch(object):
-
     def __init__(self, logger, client, resource=None):
         """Context manager:  collect entries to log via a single API call.
 
@@ -299,7 +297,7 @@ class Batch(object):
                 the logger to which entries will be logged.
             client (google.cloud.logging_V2.client.Cilent):
                 The client to use.
-            resource (Optional[google.cloud.logging_v2.resource.Resource]): 
+            resource (Optional[google.cloud.logging_v2.resource.Resource]):
                 Monitored resource of the batch, defaults
                 to None, which requires that every entry should have a
                 resource specified. Since the methods used to write

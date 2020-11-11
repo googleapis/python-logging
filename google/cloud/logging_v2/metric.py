@@ -18,7 +18,6 @@ from google.cloud.exceptions import NotFound
 
 
 class Metric(object):
-
     def __init__(self, name, *, filter_=None, client=None, description=""):
         """Metrics represent named filters for log entries.
 
@@ -84,7 +83,7 @@ class Metric(object):
             client (Union[None, google.cloud.logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
-        
+
         Returns:
             google.cloud.logging_v2.client.Client: The client passed in
                 or the currently bound client.
@@ -132,7 +131,7 @@ class Metric(object):
         else:
             return True
 
-    def reload(self,*,  client=None):
+    def reload(self, *, client=None):
         """API call:  sync local metric configuration via a GET request
 
         See

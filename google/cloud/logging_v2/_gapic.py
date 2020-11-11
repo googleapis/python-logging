@@ -272,12 +272,7 @@ class _SinksAPI(object):
         )
 
     def sink_update(
-        self,
-        sink_name,
-        filter_,
-        destination,
-        *,
-        unique_writer_identity=False,
+        self, sink_name, filter_, destination, *, unique_writer_identity=False,
     ):
         """Update a sink resource.
 
@@ -304,11 +299,7 @@ class _SinksAPI(object):
                   protobuf to a dictionary).
         """
         name = sink_name.split("/")[-1]  # parse name out of full resoure name
-        sink_pb = LogSink(
-            name=name,
-            filter=filter_,
-            destination=destination,
-        )
+        sink_pb = LogSink(name=name, filter=filter_, destination=destination,)
 
         request = UpdateSinkRequest(
             sink_name=sink_name,
@@ -417,11 +408,7 @@ class _MetricsAPI(object):
         )
 
     def metric_update(
-        self,
-        project,
-        metric_name,
-        filter_,
-        description,
+        self, project, metric_name, filter_, description,
     ):
         """Update a metric resource.
 
@@ -431,17 +418,13 @@ class _MetricsAPI(object):
             filter_ (str): the advanced logs filter expression defining the
                 entries exported by the metric.
             description (str): description of the metric.
-            
+
         Returns:
             The metric object returned from the API (converted from a
                   protobuf to a dictionary).
         """
         path = f"projects/{project}/metrics/{metric_name}"
-        metric_pb = LogMetric(
-            name=path,
-            filter=filter_,
-            description=description,
-        )
+        metric_pb = LogMetric(name=path, filter=filter_, description=description,)
         metric_pb = self._gapic_api.update_log_metric(
             metric_name=path, metric=metric_pb
         )

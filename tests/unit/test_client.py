@@ -294,7 +294,10 @@ class TestClient(unittest.TestCase):
             {
                 "path": "/entries:list",
                 "method": "POST",
-                "data": {"filter": "removed", "resourceNames": [f"projects/{self.PROJECT}"]},
+                "data": {
+                    "filter": "removed",
+                    "resourceNames": [f"projects/{self.PROJECT}"],
+                },
             },
         )
         # verify that default filter is 24 hours
@@ -507,7 +510,9 @@ class TestClient(unittest.TestCase):
 
         creds = _make_credentials()
         client = self._make_one(project=self.PROJECT, credentials=creds)
-        sink = client.sink(self.SINK_NAME, filter_=self.FILTER, destination=self.DESTINATION_URI)
+        sink = client.sink(
+            self.SINK_NAME, filter_=self.FILTER, destination=self.DESTINATION_URI
+        )
         self.assertIsInstance(sink, Sink)
         self.assertEqual(sink.name, self.SINK_NAME)
         self.assertEqual(sink.filter_, self.FILTER)
