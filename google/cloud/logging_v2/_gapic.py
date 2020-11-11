@@ -44,7 +44,13 @@ class _LoggingAPI(object):
         self._client = client
 
     def list_entries(
-        self, resource_names, *, filter_="", order_by="", page_size=0, page_token=None
+        self,
+        resource_names,
+        *,
+        filter_=None,
+        order_by=None,
+        page_size=None,
+        page_token=None,
     ):
         """Return a page of log entry resources.
 
@@ -61,8 +67,8 @@ class _LoggingAPI(object):
 
             filter_ (str): a filter expression. See
                 https://cloud.google.com/logging/docs/view/advanced_filters
-            order_by (str) One of :data:`~google.cloud.logging_v2.ASCENDING`
-                or :data:`~google.cloud.logging_v2.DESCENDING`.
+            order_by (str) One of :data:`~logging_v2.ASCENDING`
+                or :data:`~logging_v2.DESCENDING`.
             page_size (int): maximum number of entries to return, If not passed,
                 defaults to a value set by the API.
             page_token (str): opaque marker for the next "page" of entries. If not
@@ -70,7 +76,7 @@ class _LoggingAPI(object):
                 entries.
 
         Returns:
-            Iterator[google.cloud.logging_v2.LogEntry]
+            Iterator[~logging_v2.LogEntry]
         """
         # full resource names are expected by the API
         resource_names = resource_names
@@ -188,7 +194,7 @@ class _SinksAPI(object):
                 sinks.
 
         Returns:
-            Iterator[google.cloud.logging_v2.Sink]
+            Iterator[~logging_v2.Sink]
         """
         request = ListSinksRequest(
             parent=parent, page_size=page_size, page_token=page_token
@@ -506,7 +512,7 @@ def make_logging_api(client):
     """Create an instance of the Logging API adapter.
 
     Args:
-        client (google.cloud.logging_v2.client.Client): The client
+        client (~logging_v2.client.Client): The client
             that holds configuration details.
 
     Returns:
@@ -524,7 +530,7 @@ def make_metrics_api(client):
     """Create an instance of the Metrics API adapter.
 
     Args:
-        client (google.cloud.logging_v2.client.Client): The client
+        client (~logging_v2.client.Client): The client
             that holds configuration details.
 
     Returns:
@@ -542,7 +548,7 @@ def make_sinks_api(client):
     """Create an instance of the Sinks API adapter.
 
     Args:
-        client (google.cloud.logging_v2.client.Client): The client
+        client (~logging_v2.client.Client): The client
             that holds configuration details.
 
     Returns:

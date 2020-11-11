@@ -51,7 +51,7 @@ class Logger(object):
 
         Args:
             name (str): The name of the logger.
-            client (google.cloud.logging_v2.client.Client):
+            client (~logging_v2.client.Client):
                 A client which holds credentials and project configuration
                 for the logger (which requires a project).
             labels (Optional[dict]): Mapping of default labels for entries written
@@ -87,12 +87,12 @@ class Logger(object):
         """Check client or verify over-ride. Also sets ``parent``.
 
         Args:
-            client (Union[None, google.cloud.logging_v2.client.Client]):
+            client (Union[None, ~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
 
         Returns:
-            google.cloud.logging_v2.client.Client: The client passed in
+            ~logging_v2.client.Client: The client passed in
                 or the currently bound client.
         """
         if client is None:
@@ -103,7 +103,7 @@ class Logger(object):
         """Return a batch to use as a context manager.
 
         Args:
-            client (Union[None, google.cloud.logging_v2.client.Client]):
+            client (Union[None, ~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
 
@@ -137,11 +137,11 @@ class Logger(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
             kw (Optional[dict]): additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, LogEntry, **kw)
 
@@ -153,11 +153,11 @@ class Logger(object):
 
         Args:
             text (str): the log message
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
             kw (Optional[dict]): additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, TextEntry, text, **kw)
 
@@ -169,11 +169,11 @@ class Logger(object):
 
         Args:
             info (dict): the log entry information
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
             kw (Optional[dict]): additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, StructEntry, info, **kw)
 
@@ -186,15 +186,15 @@ class Logger(object):
         Args:
             message (google.protobuf.message.Message):
                 The protobuf message to be logged.
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
             kw (Optional[dict]): additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, ProtobufEntry, message, **kw)
 
-    def delete(self, logger_name=None, client=None):
+    def delete(self, logger_name=None, *, client=None):
         """Delete all entries in a logger via a DELETE request
 
         See
@@ -214,7 +214,7 @@ class Logger(object):
                 ``"projects/my-project-id/logs/syslog"``,
                 ``"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"``.
                 If not passed, defaults to the project bound to the client.
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current logger.
         """
@@ -251,8 +251,8 @@ class Logger(object):
             filter_ (Optional[str]): a filter expression. See
                 https://cloud.google.com/logging/docs/view/advanced_filters
                 By default, a 24 hour filter is applied.
-            order_by (Optional[str]): One of :data:`~google.cloud.logging_v2.ASCENDING`
-                or :data:`~google.cloud.logging_v2.DESCENDING`.
+            order_by (Optional[str]): One of :data:`~logging_v2.ASCENDING`
+                or :data:`~logging_v2.DESCENDING`.
             page_size (Optional[int]):
                 Optional. The maximum number of entries in each page of results
                 from this request. Non-positive values are ignored. Defaults
@@ -265,7 +265,7 @@ class Logger(object):
                 the token.
 
         Returns:
-            Iterator[google.cloud.logging_v2.entries.LogEntry]
+            Iterator[~logging_v2.entries.LogEntry]
         """
 
         if resource_names is None:
@@ -287,17 +287,17 @@ class Logger(object):
 
 
 class Batch(object):
-    def __init__(self, logger, client, resource=None):
+    def __init__(self, logger, client, *, resource=None):
         """Context manager:  collect entries to log via a single API call.
 
         Helper returned by :meth:`Logger.batch`
 
         Args:
-            logger (google.cloud.logging_v2.logger.Logger):
+            logger (logging_v2.logger.Logger):
                 the logger to which entries will be logged.
-            client (google.cloud.logging_V2.client.Cilent):
+            client (~logging_V2.client.Cilent):
                 The client to use.
-            resource (Optional[google.cloud.logging_v2.resource.Resource]):
+            resource (Optional[~logging_v2.resource.Resource]):
                 Monitored resource of the batch, defaults
                 to None, which requires that every entry should have a
                 resource specified. Since the methods used to write
@@ -323,7 +323,7 @@ class Batch(object):
 
         Args:
             kw (Optional[dict]): Additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(LogEntry(**kw))
 
@@ -333,7 +333,7 @@ class Batch(object):
         Args:
             text (str): the text entry
             kw (Optional[dict]): Additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(TextEntry(payload=text, **kw))
 
@@ -343,7 +343,7 @@ class Batch(object):
         Args:
             info (dict): The struct entry,
             kw (Optional[dict]): Additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(StructEntry(payload=info, **kw))
 
@@ -353,15 +353,15 @@ class Batch(object):
         Args:
             message (google.protobuf.Message): The protobuf entry.
             kw (Optional[dict]): Additional keyword arguments for the entry.
-                See :class:`~google.cloud.logging_v2.entries.LogEntry`.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(ProtobufEntry(payload=message, **kw))
 
-    def commit(self, client=None):
+    def commit(self, *, client=None):
         """Send saved log entries as a single API call.
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current batch.
         """

@@ -66,7 +66,7 @@ def entry_from_resource(resource, client, loggers):
 
     Args:
         resource (dict): One entry resource from API response.
-        client (google.cloud.logging_v2.client.Client):
+        client (~logging_v2.client.Client):
             Client that owns the log entry.
         loggers (dict):
             A mapping of logger fullnames -> loggers.  If the logger

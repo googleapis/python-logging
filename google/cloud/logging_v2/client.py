@@ -191,7 +191,7 @@ class Client(ClientWithProject):
             name (str): The name of the logger to be constructed.
 
         Returns:
-            google.cloud.logging_v2.logger.Logger: Logger created with the current client.
+            ~logging_v2.logger.Logger: Logger created with the current client.
         """
         return Logger(name, client=self)
 
@@ -221,8 +221,8 @@ class Client(ClientWithProject):
 
             filter_ (str): a filter expression. See
                 https://cloud.google.com/logging/docs/view/advanced_filters
-            order_by (str) One of :data:`~google.cloud.logging_v2.ASCENDING`
-                or :data:`~google.cloud.logging_v2.DESCENDING`.
+            order_by (str) One of :data:`~logging_v2.ASCENDING`
+                or :data:`~logging_v2.DESCENDING`.
             page_size (int): maximum number of entries to return, If not passed,
                 defaults to a value set by the API.
             page_token (str): opaque marker for the next "page" of entries. If not
@@ -230,7 +230,7 @@ class Client(ClientWithProject):
                 entries.
 
         Returns:
-            Iterable[LogEntry]
+            Iterator[~logging_v2.LogEntry]
         """
         if resource_names is None:
             resource_names = [f"projects/{self.project}"]
@@ -259,7 +259,7 @@ class Client(ClientWithProject):
                 :meth:`Sink.reload`.
 
         Returns:
-            google.cloud.logging_v2.sink.Sink: Sink created with the current client.
+            ~logging_v2.sink.Sink: Sink created with the current client.
         """
         return Sink(name, filter_=filter_, destination=destination, client=self)
 
@@ -290,7 +290,7 @@ class Client(ClientWithProject):
                 token.
 
         Returns:
-            Iterator[google.cloud.logging_v2.sink.Sink]
+            Iterator[~logging_v2.sink.Sink]
         """
         if parent is None:
             parent = f"projects/{self.project}"
@@ -312,7 +312,7 @@ class Client(ClientWithProject):
                 to be refreshed via :meth:`Metric.reload`.
 
         Returns:
-            google.cloud.logging.metric.Metric: Metric created with the current client.
+            ~logging_v2.metric.Metric: Metric created with the current client.
         """
         return Metric(name, filter_=filter_, client=self, description=description)
 
@@ -333,7 +333,7 @@ class Client(ClientWithProject):
                 token.
 
         Returns:
-            Iterator[google.cloud.logging_v2.metric.Metric]
+            Iterator[~logging_v2.metric.Metric]
         """
         return self.metrics_api.list_metrics(
             self.project, page_size=page_size, page_token=page_token
@@ -373,7 +373,7 @@ class Client(ClientWithProject):
         Args:
             log_level (Optional[int]): Python logging log level. Defaults to
                 :const:`logging.INFO`.
-            excluded_loggers (Optional[Tuple[]]): The loggers to not attach the
+            excluded_loggers (Optional[Tuple[str]]): The loggers to not attach the
                 handler to. This will always include the
                 loggers in the path of the logging client
                 itself.

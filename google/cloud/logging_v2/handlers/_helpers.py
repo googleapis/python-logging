@@ -31,8 +31,8 @@ _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
 def format_stackdriver_json(record, message):
     """Helper to format a LogRecord in in Stackdriver fluentd format.
 
-    :rtype: str
-    :returns: JSON str to be written to the log file.
+    Returns:
+        str: JSON str to be written to the log file.
     """
     subsecond, second = math.modf(record.created)
 
@@ -49,8 +49,8 @@ def format_stackdriver_json(record, message):
 def get_trace_id_from_flask():
     """Get trace_id from flask request headers.
 
-    :rtype: str
-    :returns: TraceID in HTTP request headers.
+    Returns:
+        str: TraceID in HTTP request headers.
     """
     if flask is None or not flask.request:
         return None
@@ -68,8 +68,8 @@ def get_trace_id_from_flask():
 def get_trace_id_from_django():
     """Get trace_id from django request headers.
 
-    :rtype: str
-    :returns: TraceID in HTTP request headers.
+    Returns:
+        str: TraceID in HTTP request headers.
     """
     request = _get_django_request()
 
@@ -88,8 +88,8 @@ def get_trace_id_from_django():
 def get_trace_id():
     """Helper to get trace_id from web application request header.
 
-    :rtype: str
-    :returns: TraceID in HTTP request headers.
+    Returns:
+        str: TraceID in HTTP request headers.
     """
     checkers = (
         get_trace_id_from_django,

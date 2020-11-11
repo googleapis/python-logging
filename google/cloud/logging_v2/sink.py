@@ -18,14 +18,15 @@ from google.cloud.exceptions import NotFound
 
 
 class Sink(object):
+    """Sinks represent filtered exports for log entries.
+
+    See https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks
+    """
+
     def __init__(
         self, name, *, filter_=None, parent=None, destination=None, client=None
     ):
-        """Sinks represent filtered exports for log entries.
-
-        See
-        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks
-
+        """
         Args:
             name (str): The name of the sink.
             parent(Optional[str]): The resource in which to create the sink:
@@ -36,13 +37,14 @@ class Sink(object):
                     "organizations/[ORGANIZATION_ID]"
                     "billingAccounts/[BILLING_ACCOUNT_ID]"
                     "folders/[FOLDER_ID]".
+
                 Defaults to the project stored on the client.
             filter_ (Optional[str]): The advanced logs filter expression defining
                 the entries exported by the sink.
             destination (Optional[str]): Destination URI for the entries exported by the sink.
                 If not passed, the instance should already exist, to
                 be refreshed via :meth:`reload`.
-            client (Optional[google.cloud.logging_v2.client.Client]): A client which holds
+            client (Optional[~logging_v2.client.Client]): A client which holds
                 credentials and project configuration for the sink (which requires a project).
         """
         self.name = name
@@ -91,7 +93,7 @@ class Sink(object):
 
         Args:
             resource (dict): sink resource representation returned from the API
-            client (google.cloud.logging_v2.client.Client): Client which holds
+            client (~logging_v2.client.Client): Client which holds
                 credentials and project configuration for the sink.
             parent(Optional[str]): The resource in which to create the sink:
 
@@ -101,10 +103,11 @@ class Sink(object):
                     "organizations/[ORGANIZATION_ID]"
                     "billingAccounts/[BILLING_ACCOUNT_ID]"
                     "folders/[FOLDER_ID]".
+
                 Defaults to the project stored on the client.
 
         Returns:
-            google.cloud.logging_v2.sink.Sink: Sink parsed from ``resource``.
+            ~logging_v2.sink.Sink: Sink parsed from ``resource``.
 
         Raises:
             ValueError: if ``client`` is not ``None`` and the
@@ -120,12 +123,12 @@ class Sink(object):
         """Check client or verify over-ride. Also sets ``parent``.
 
         Args:
-            client (Union[None, google.cloud.logging_v2.client.Client]):
+            client (Union[None, ~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
 
         Returns:
-            google.cloud.logging_v2.client.Client: The client passed in
+            ~logging_v2.client.Client: The client passed in
                 or the currently bound client.
         """
         if client is None:
@@ -139,7 +142,7 @@ class Sink(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
             unique_writer_identity (Optional[bool]): Determines the kind of
@@ -162,7 +165,7 @@ class Sink(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/get
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
 
@@ -185,7 +188,7 @@ class Sink(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/get
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
         """
@@ -200,7 +203,7 @@ class Sink(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
             unique_writer_identity (Optional[bool]): Determines the kind of
@@ -222,7 +225,7 @@ class Sink(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/delete
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
         """

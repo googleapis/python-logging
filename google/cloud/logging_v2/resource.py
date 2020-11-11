@@ -20,12 +20,10 @@ import collections
 class Resource(collections.namedtuple("Resource", "type labels")):
     """A monitored resource identified by specifying values for all labels.
 
-    :type type: str
-    :param type: The resource type name.
-
-    :type labels: dict
-    :param labels: A mapping from label names to values for all labels
-                   enumerated in the associated :class:`ResourceDescriptor`.
+    Attributes:
+        type (str): The resource type name.
+        labels (dict): A mapping from label names to values for all labels
+            enumerated in the associated :class:`ResourceDescriptor`.
     """
 
     __slots__ = ()

@@ -112,7 +112,7 @@ _LOG_ENTRY_PARAM_DOCSTRING = """\
             the entry was emitted.
         operation (Optional[dict]): Additional information about a potentially
             long-running operation associated with the log entry.
-        logger (google.cloud.logging_v2.logger.Logger): the logger used
+        logger (logging_v2.logger.Logger): the logger used
             to write the entry.
 """
 
@@ -147,7 +147,7 @@ class LogEntry(_LogEntryTuple):
         Args:
             resource (dict): text entry resource representation returned from
                 the API
-            client (google.cloud.logging_v2.client.Client):
+            client (~logging_v2.client.Client):
                 Client which holds credentials and project configuration.
             loggers (Optional[dict]):
                 A mapping of logger fullnames -> loggers.  If not

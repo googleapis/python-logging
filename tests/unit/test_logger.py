@@ -486,7 +486,6 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_list_entries_defaults(self):
-        import six
         from google.cloud.logging_v2.client import Client
 
         TOKEN = "TOKEN"
@@ -500,7 +499,7 @@ class TestLogger(unittest.TestCase):
         logger = self._make_one(self.LOGGER_NAME, client=client)
 
         iterator = logger.list_entries()
-        page = six.next(iterator.pages)
+        page = next(iterator.pages)
         entries = list(page)
         token = iterator.next_page_token
 

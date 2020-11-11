@@ -49,8 +49,8 @@ class TestConnection(unittest.TestCase):
         self.assertIs(conn._client, client)
 
     def test_build_api_url_w_custom_endpoint(self):
-        from six.moves.urllib.parse import parse_qsl
-        from six.moves.urllib.parse import urlsplit
+        from urllib.parse import parse_qsl
+        from urllib.parse import urlsplit
 
         custom_endpoint = "https://foo-logging.googleapis.com"
         conn = self._make_one(object(), api_endpoint=custom_endpoint)
@@ -130,7 +130,6 @@ class Test_LoggingAPI(unittest.TestCase):
         return NOW, _datetime_to_rfc3339_w_nanos(NOW)
 
     def test_list_entries_no_paging(self):
-        import six
         from google.cloud.logging_v2.client import Client
         from google.cloud.logging_v2.entries import TextEntry
         from google.cloud.logging_v2.logger import Logger
@@ -159,7 +158,7 @@ class Test_LoggingAPI(unittest.TestCase):
         api = self._make_one(client)
 
         iterator = api.list_entries([self.PROJECT_PATH])
-        page = six.next(iterator.pages)
+        page = next(iterator.pages)
         entries = list(page)
         token = iterator.next_page_token
 
@@ -363,7 +362,6 @@ class Test_SinksAPI(unittest.TestCase):
         self.assertEqual(api.api_request, connection.api_request)
 
     def test_list_sinks_no_paging(self):
-        import six
         from google.cloud.logging_v2.sink import Sink
 
         TOKEN = "TOKEN"
@@ -382,7 +380,7 @@ class Test_SinksAPI(unittest.TestCase):
         api = self._make_one(client)
 
         iterator = api.list_sinks(self.PROJECT_PATH)
-        page = six.next(iterator.pages)
+        page = next(iterator.pages)
         sinks = list(page)
         token = iterator.next_page_token
 
@@ -635,7 +633,6 @@ class Test_MetricsAPI(unittest.TestCase):
         return self._get_target_class()(*args, **kw)
 
     def test_list_metrics_no_paging(self):
-        import six
         from google.cloud.logging_v2.metric import Metric
 
         TOKEN = "TOKEN"
@@ -648,7 +645,7 @@ class Test_MetricsAPI(unittest.TestCase):
         api = self._make_one(client)
 
         iterator = api.list_metrics(self.PROJECT)
-        page = six.next(iterator.pages)
+        page = next(iterator.pages)
         metrics = list(page)
         token = iterator.next_page_token
 

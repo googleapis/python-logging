@@ -92,8 +92,8 @@ class _LoggingAPI(object):
 
             filter_ (str): a filter expression. See
                 https://cloud.google.com/logging/docs/view/advanced_filters
-            order_by (str) One of :data:`~google.cloud.logging_v2.ASCENDING`
-                or :data:`~google.cloud.logging_v2.DESCENDING`.
+            order_by (str) One of :data:`~logging_v2.ASCENDING`
+                or :data:`~logging_v2.DESCENDING`.
             page_size (int): maximum number of entries to return, If not passed,
                 defaults to a value set by the API.
             page_token (str): opaque marker for the next "page" of entries. If not
@@ -101,7 +101,7 @@ class _LoggingAPI(object):
                 entries.
 
         Returns:
-            Iterator[google.cloud.logging_v2.LogEntry]
+            Iterator[~logging_v2.LogEntry]
         """
         extra_params = {"resourceNames": resource_names}
 
@@ -241,7 +241,7 @@ class _SinksAPI(object):
                 sinks.
 
         Returns:
-            Iterator[google.cloud.logging_v2.Sink]
+            Iterator[~logging_v2.Sink]
         """
         extra_params = {}
 
@@ -367,14 +367,7 @@ class _SinksAPI(object):
 
 
 class _MetricsAPI(object):
-    """Helper mapping sink-related APIs.
-
-    See
-    https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics
-
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The client used to make API requests.
-    """
+    """Helper mapping sink-related APIs."""
 
     def __init__(self, client):
         self._client = client
@@ -492,13 +485,13 @@ def _item_to_entry(iterator, resource, loggers):
         iterator (google.api_core.page_iterator.Iterator): The iterator that
             is currently in use.
         resource (dict): Log entry JSON resource returned from the API.
-        loggers (Mapping[str, google.cloud.logging_v2.logger.Logger]):
+        loggers (Mapping[str, logging_v2.logger.Logger]):
             A mapping of logger fullnames -> loggers.  If the logger
             that owns the entry is not in ``loggers``, the entry
             will have a newly-created logger.
 
     Returns:
-        google.cloud.logging_v2.entries._BaseEntry: The next log entry in the page.
+        ~logging_v2.entries._BaseEntry: The next log entry in the page.
     """
     return entry_from_resource(resource, iterator.client, loggers)
 
@@ -512,7 +505,7 @@ def _item_to_sink(iterator, resource):
         resource (dict): Sink JSON resource returned from the API.
 
     Returns:
-        google.cloud.logging_v2.sink.Sink: The next sink in the page.
+        ~logging_v2.sink.Sink: The next sink in the page.
     """
     return Sink.from_api_repr(resource, iterator.client)
 
@@ -526,7 +519,7 @@ def _item_to_metric(iterator, resource):
         resource (dict): Sink JSON resource returned from the API.
 
     Returns:
-        google.cloud.logging_v2.metric.Metric:
+        ~logging_v2.metric.Metric:
             The next metric in the page.
     """
     return Metric.from_api_repr(resource, iterator.client)

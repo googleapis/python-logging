@@ -29,26 +29,26 @@ class ContainerEngineHandler(logging.StreamHandler):
 
     This handler is written to format messages for the Google Container Engine
     (GKE) fluentd plugin, so that metadata such as log level are properly set.
-
-    :type name: str
-    :param name: (optional) the name of the custom log in Cloud Logging.
-
-    :type stream: file-like object
-    :param stream: (optional) stream to be used by the handler.
     """
 
-    def __init__(self, name=None, stream=None):
+    def __init__(self, *, name=None, stream=None):
+        """
+        Args:
+            name (Optional[str]): The name of the custom log in Cloud Logging.
+            stream (Optional[IO]): Stream to be used by the handler.
+
+        """
         super(ContainerEngineHandler, self).__init__(stream=stream)
         self.name = name
 
     def format(self, record):
         """Format the message into JSON expected by fluentd.
 
-        :type record: :class:`~logging.LogRecord`
-        :param record: the log record
+        Args:
+            record (logging.LogRecord): The log record.
 
-        :rtype: str
-        :returns: A JSON string formatted for GKE fluentd.
+        Returns:
+            str: A JSON string formatted for GKE fluentd.
         """
         message = super(ContainerEngineHandler, self).format(record)
         return format_stackdriver_json(record, message)

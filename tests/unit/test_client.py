@@ -249,7 +249,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(logger.project, self.PROJECT)
 
     def test_list_entries_defaults(self):
-        import six
         from google.cloud.logging_v2.entries import TextEntry
 
         IID = "IID"
@@ -271,7 +270,7 @@ class TestClient(unittest.TestCase):
         client._connection = _Connection(returned)
 
         iterator = client.list_entries()
-        page = six.next(iterator.pages)
+        page = next(iterator.pages)
         entries = list(page)
         token = iterator.next_page_token
 
@@ -521,7 +520,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(sink.parent, self.PROJECT_PATH)
 
     def test_list_sinks_no_paging(self):
-        import six
         from google.cloud.logging_v2.sink import Sink
 
         PROJECT = "PROJECT"
@@ -538,7 +536,7 @@ class TestClient(unittest.TestCase):
         client._connection = _Connection(returned)
 
         iterator = client.list_sinks()
-        page = six.next(iterator.pages)
+        page = next(iterator.pages)
         sinks = list(page)
         token = iterator.next_page_token
 
@@ -671,7 +669,6 @@ class TestClient(unittest.TestCase):
         )
 
     def test_list_metrics_with_paging(self):
-        import six
         from google.cloud.logging_v2.metric import Metric
 
         token = "TOKEN"
@@ -692,7 +689,7 @@ class TestClient(unittest.TestCase):
 
         # Execute request.
         iterator = client.list_metrics(page_size=page_size, page_token=token)
-        page = six.next(iterator.pages)
+        page = next(iterator.pages)
         metrics = list(page)
 
         # First check the token.

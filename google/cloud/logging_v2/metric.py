@@ -18,18 +18,20 @@ from google.cloud.exceptions import NotFound
 
 
 class Metric(object):
-    def __init__(self, name, *, filter_=None, client=None, description=""):
-        """Metrics represent named filters for log entries.
+    """Metrics represent named filters for log entries.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics
+    """
 
+    def __init__(self, name, *, filter_=None, client=None, description=""):
+        """
         Args:
             name (str): The name of the metric.
             filter_ (str): the advanced logs filter expression defining the entries
                    tracked by the metric.  If not passed, the instance should
                    already exist, to be refreshed via :meth:`reload`.
-            client (Optional[google.cloud.logging_v2.client.Client]): A client which holds
+            client (Optional[~logging_v2.client.Client]): A client which holds
                 credentials and project configuration for the sink (which requires a project).
             description (Optional[str]): An optional description of the metric.
 
@@ -65,7 +67,7 @@ class Metric(object):
 
         Args:
             resource (dict): metric resource representation returned from the API
-            client (google.cloud.logging_v2.client.Client): Client which holds
+            client (~logging_v2.client.Client): Client which holds
                 credentials and project configuration for the sink.
 
         Returns:
@@ -80,7 +82,7 @@ class Metric(object):
         """Check client or verify over-ride. Also sets ``parent``.
 
         Args:
-            client (Union[None, google.cloud.logging_v2.client.Client]):
+            client (Union[None, ~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
 
@@ -99,7 +101,7 @@ class Metric(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/create
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
         """
@@ -115,7 +117,7 @@ class Metric(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/get
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
 
@@ -138,7 +140,7 @@ class Metric(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/get
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
         """
@@ -154,7 +156,7 @@ class Metric(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/update
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
         """
@@ -170,7 +172,7 @@ class Metric(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/delete
 
         Args:
-            client (Optional[google.cloud.logging_v2.client.Client]):
+            client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
         """
