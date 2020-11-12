@@ -38,7 +38,6 @@ s.move(
         "google/cloud/logging/__init__.py",  # generated types are hidden from users
         "google/cloud/logging_v2/__init__.py",  
         "docs/index.rst",
-        "docs/multiprocessing.rst",
         "docs/logging_v2",  # Don't include gapic library docs. Users should use the hand-written layer instead
         "scripts/fixup_logging_v2_keywords.py",  # don't include script since it only works for generated layer
     ],
@@ -67,7 +66,7 @@ templated_files = common.py_library(
     unit_test_external_dependencies=["flask", "webob", "django"],
     samples=True,
 )
-s.move(templated_files, excludes=[".coveragerc"])
+s.move(templated_files, excludes=[".coveragerc", "docs/multiprocessing.rst"])
 
 # --------------------------------------------------------------------------
 # Samples templates

@@ -13,7 +13,7 @@ The 2.0.0 release requires Python 3.6+.
 
 ## Primary Changes
 
-This section lists the most relevant breaking changes in `google.cloud.logging`.
+This section lists the most relevant changes in `google.cloud.logging`.
 See 'Changes in GAPIC Layer' if you were directly using `google.cloud.logging_v2.proto` or `google.cloud.logging_v2.gapic`.
 
 
@@ -22,88 +22,123 @@ See 'Changes in GAPIC Layer' if you were directly using `google.cloud.logging_v2
 Optional arguments are keyword-only arguments and *must* be passed by name.
 See [PEP 3102](https://www.python.org/dev/peps/pep-3102/).
 
-```Before
+```diff
 from google.cloud import logging
 
+filter_ = "severity>=CRITICAL"
+destination = "storage.googleapis.com/{bucket}".format(bucket=destination_bucket)
 logging_client = logging.Client()
-logging_client.sink("my-sink")
-
+-sink = logging_client.sink(sink_name, filter_, destination)
++sink = logging_client.sink(sink_name, filter_=filter_, destination=destination)
 ```
 
 ### Support for non-project resources
 
-Where appropriate, sinks, entries, and metrics can be associated with non-project resources like folders and organizations.
+Where appropriate, the library supports additional resource names. https://google.aip.dev/122
 
-Methods generally default to the project bound to the client.
+**Valid Resource Names**:
 
-This resulted in breaking changes to some methods which now expect full resource paths instead of just the name, to 
-disambiguate the location of a resource.
+* `"projects/[PROJECT_ID]"`
+* `"organizations/[ORGANIZATION_ID]"`
+* `"billingAccounts/[BILLING_ACCOUNT_ID]"`
+* `"folders/[FOLDER_ID]"`
 
 
 #### `google.cloud.logging_v2.client.Client`
 
-`list_entries` accepts `resource_names`.
+
+> **WARNING**: Breaking change
+
+`list_entries` accepts an optional `resource_names` parameter. `projects` has been removed.
 
 
-**After**:
+```diff
+from google.cloud import logging_v2
+
+client = logging_v2.Client()
+-client.list_entries(projects="myProject"])
++client.list_entries(resource_names=["projects/myProject", "folders/myFolder"])
+client.list_entries()  # defaults to project bound to client
+```
+
+`list_sinks` accepts an optional `parent` parameter.
+
 ```py
 from google.cloud import logging_v2
 
 client = logging_v2.Client()
-client.list_entries(resource_names=["folders/myFolder", "projects/myProject"])
-client.list_entries() # defaults to project bound to client
-```
-
-`list_sinks` accept a `parent` parameter which is expected to be a single resource path.
-
-
-
-**After**:
-```py
-from google.cloud import logging_v2
-
-client = loggign_v2.Client()
-client.list_sinks(parent="folder/myFolder")
-client.list_sinks()  # defaults to project bound to client
+client.list_sinks()  # lists sinks in current project
+client.list_sinks(parent="folders/myFolder")  # specify a different parent resource
 ```
 
 #### `google.cloud.logging_v2.logger.Logger`
 
-`list_entries` accepts `resource_names`.
+> **WARNING**: Breaking change
 
-**After**:
-```py
+`list_entries` accepts an optional `resource_names` parameter. `projects` has been removed.
+
+```diff
 from google.cloud import logging_v2
 
 client = logging_v2.Client()
 logger = logging_v2.Logger("myLog", client)
-logger.list_entries(resource_names=["folders/myFolder", "projects/myProject"])
-logger.list_entries() # defaults to project bound to client
+- logger.list_entries(projects="myProject"])
++ logger.list_entries(resource_names=["projects/myProject", "folders/myFolder"])
+logger.list_entries()  # defaults to project bound to client
 ```
 
-
-
-#### `google.cloud.loggign_v2.sinks.Sink`
-
+#### `google.cloud.logging_v2.sinks.Sink`
 
 > **WARNING**: Breaking change
-* Sinks no longer have a `project` property. The attribute is replaced by `parent` (e.g. `projects/my-project`)
+* Sinks no longer have a `project` property. The attribute is replaced by `parent`.
+
+```diff
+from google.cloud import logging
+
+client = logging_v2.Client(project="myProject")
+sink = logging.Sink("mySink", client=client)
+-project = sink.project  # myProject
++parent = sink.parent  # projects/myProject
+```
 
 
 ### `google.cloud.logging` is an alias for `google.cloud.logging_v2`
 
-`google.cloud.logging` serves as a default alias for `google.cloud.logging_v2`.
+> **WARNING**: Breaking change
 
 All library code has been moved to `google.cloud.logging_v2`.
+`google.cloud.logging` serves as a default alias for `google.cloud.logging_v2`.
+
 
 
 
 ## Changes in GAPIC layer
 
 This section describes changes in the GAPIC layer (produced by the generator) that previously lived in  `google.cloud.logging_v2.proto` / `google.cloud.logging_v2.gapic`.
-Most users are unlikely to have been using this layer directly.
 
-## Method Calls
+**NOTE**: Most users are unlikely to have been using this layer directly.
+
+### Import path
+
+> **WARNING**: Breaking change
+
+The generated client is no longer exposed at `logging_v2`.
+**Before**
+```py
+from google.cloud import logging_v2
+logging_client = logging_v2.LoggingServiceV2Client()
+```
+
+**After**
+
+```py
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
+from google.cloud.logging_v2.types import LogSink
+
+logging_client = LoggingServiceV2Client()
+sink = LogSink()
+```
+### Method Calls
 
 > **WARNING**: Breaking change
 
@@ -115,52 +150,43 @@ Methods expect request objects. We provide a script that will convert most commo
 python3 -m pip install google-cloud-logging libcst
 ```
 
-* The script `fixup_automl_{version}_keywords.py` is shipped with the library. It expects
+* The script `fixup_logging_v2_keywords.py` is shipped with the library. It expects
 an input directory (with the code to convert) and an empty destination directory.
 
 ```sh
-$ fixup_automl_v1_keywords.py --input-directory .samples/ --output-directory samples/
+$ fixup_logging_v2_keywords.py --input-directory .samples/ --output-directory samples/
 ```
 
 **Before:**
 ```py
-from google.cloud import automl
+from google.cloud import logging_v2
 
-project_id = "YOUR_PROJECT_ID"
-model_id = "YOUR_MODEL_ID"
-
-client = automl.AutoMlClient()
-# Get the full path of the model.
-model_full_id = client.model_path(project_id, "us-central1", model_id)
-response = client.deploy_model(model_full_id)
+client = logging_v2.LoggingServiceV2Client()
+client.list_log_entries(["projects/myProject"], filter_ = "severity>=CRITICAL")
 ```
 
 
 **After:**
 ```py
-from google.cloud import automl
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
-project_id = "YOUR_PROJECT_ID"
-model_id = "YOUR_MODEL_ID"
-
-client = automl.AutoMlClient()
-# Get the full path of the model.
-model_full_id = client.model_path(project_id, "us-central1", model_id)
-response = client.deploy_model(name=model_full_id)
+client = LoggingServiceV2Client()
+client.list_log_entries({"resource_names": ["projects/myProject"], "filter": "severity>=CRITICAL"})
 ```
 
-### More Details
+#### More Details
 
 In `google-cloud-logging<2.0.0`, parameters required by the API were positional parameters and optional parameters were keyword parameters.
 
 **Before:**
 ```py
-    def batch_predict(
+    def list_log_entries(
         self,
-        name,
-        input_config,
-        output_config,
-        params=None,
+        resource_names,
+        project_ids=None,
+        filter_=None,
+        order_by=None,
+        page_size=None,
         retry=google.api_core.gapic_v1.method.DEFAULT,
         timeout=google.api_core.gapic_v1.method.DEFAULT,
         metadata=None,
@@ -174,18 +200,17 @@ Some methods have additional keyword only parameters. The available parameters d
 
 **After:**
 ```py
-def batch_predict(
+    def list_log_entries(
         self,
-        request: prediction_service.BatchPredictRequest = None,
+        request: logging.ListLogEntriesRequest = None,
         *,
-        name: str = None,
-        input_config: io.BatchPredictInputConfig = None,
-        output_config: io.BatchPredictOutputConfig = None,
-        params: Sequence[prediction_service.BatchPredictRequest.ParamsEntry] = None,
+        resource_names: Sequence[str] = None,
+        filter: str = None,
+        order_by: str = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
-    ) -> operation.Operation:
+    ) -> pagers.ListLogEntriesPager:
 ```
 
 > **NOTE:** The `request` parameter and flattened keyword parameters for the API are mutually exclusive.
@@ -195,167 +220,115 @@ def batch_predict(
 Both of these calls are valid:
 
 ```py
-response = client.batch_predict(
+response = client.list_log_entries(
     request={
-        "name": name,
-        "input_config": input_config,
-        "output_config": output_config,
-        "params": params,
+        "resource_names": resource_names,
+        "filter": filter_,
+        "order_by": order_by,
     }
 )
 ```
 
 ```py
-response = client.batch_predict(
-    name=name,
-    input_config=input_config,
-    output_config=output_config,
-    params=params,
+response = client.list_log_entries(
+    resource_names=resource_names,
+    filter=filter_,
+    order_by=order_by,
 )
 ```
 
-This call is invalid because it mixes `request` with a keyword argument `params`. Executing this code
-will result in an error.
+This call is invalid because it mixes `request` with a keyword argument `order_by`. Executing this code will result in an error.
 
 ```py
-response = client.batch_predict(
+response = client.list_log_entries(
     request={
-        "name": name,
-        "input_config": input_config,
-        "output_config": output_config,
-    },
-    params=params,
+        "resource_names": resource_names,
+        "filter": filter_,
+    }
+    order_by=order_by
 )
 ```
 
+### `filter` parameter
 
-The method `list_datasets` takes an argument `filter` instead of `filter_`.
+Methods that took parameter `filter_` now expect `filter`.
 
 **Before**
 ```py
-from google.cloud import automl
+from google.cloud import logging_v2
 
-project_id = "PROJECT_ID"
-
-client = automl.AutoMlClient()
-project_location = client.location_path(project_id, "us-central1")
-
-# List all the datasets available in the region.
-response = client.list_datasets(project_location, filter_="")
+client = logging_v2.LoggingServiceV2Client()
+client.list_log_entries(["projects/myProject"], filter_="severity>=CRITICAL")
 ```
 
-**After**
+
+**Before**
 ```py
-from google.cloud import automl
+from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
-project_id = "PROJECT_ID"
-client = automl.AutoMlClient()
-# A resource that represents Google Cloud Platform location.
-project_location = f"projects/{project_id}/locations/us-central1"
-
-# List all the datasets available in the region.
-response = client.list_datasets(parent=project_location, filter="")
+client = LoggingServiceV2Client()
+client.list_log_entries(resource_names=["projects/myProject"], filter="severity>=CRITICAL")
 ```
 
-### Changes to v1beta1 Tables Client
-
-Optional arguments are now keyword-only arguments and *must* be passed by name.
-See [PEP 3102](https://www.python.org/dev/peps/pep-3102/).
-
-***Before**
-```py
-    def predict(
-        self,
-        inputs,
-        model=None,
-        model_name=None,
-        model_display_name=None,
-        feature_importance=False,
-        project=None,
-        region=None,
-        **kwargs
-    ):
-```
-
-**After**
-```py
-    def predict(
-        self,
-        inputs,
-        *,
-        model=None,
-        model_name=None,
-        model_display_name=None,
-        feature_importance=False,
-        project=None,
-        region=None,
-        **kwargs,
-    ):
-```
-
-**kwargs passed to methods must be either (1) kwargs on the underlying method (`retry`, `timeout`, or `metadata`) or (2) attributes of the request object.
-
-The following call is valid because `filter` is an attribute of `automl_v1beta1.ListDatasetsRequest`.
-
-```py
-from google.cloud import automl_v1beta1 as automl
-
-client = automl.TablesClient(project=project_id, region=compute_region)
-
-# List all the datasets available in the region by applying filter.
-response = client.list_datasets(filter=filter)
-```
-
-
-
-## Enums and types
+### Enums
 
 
 > **WARNING**: Breaking change
 
-The submodule `enums` and `types` have been removed.
+The submodule `enums` has been removed. Enums can be accessed under `types`.
 
 **Before:**
 ```py
+from google.cloud import logging_v2
 
-from google.cloud import automl
-
-gcs_source = automl.types.GcsSource(input_uris=["gs://YOUR_BUCKET_ID/path/to/your/input/csv_or_jsonl"])
-deployment_state = automl.enums.Model.DeploymentState.DEPLOYED
+severity = logging_v2.enums.LogSeverity.DEFAULT
 ```
 
 
 **After:**
 ```py
-from google.cloud import automl
+from google.cloud import logging_v2
 
-gcs_source = automl.GcsSource(input_uris=["gs://YOUR_BUCKET_ID/path/to/your/input/csv_or_jsonl"])
-deployment_state = automl.Model.DeploymentState.DEPLOYED
+severity = logging_v2.types.LogSeverity.DEFAULT
 ```
 
 
-## Resource Path Helper Methods
+### Resource Path Helper Methods
 
 The following resource name helpers have been removed. Please construct the strings manually.
 
 ```py
-from google.cloud import automl
+billing_account = "my-billing-account"
+folder = "my-folder"
+organization = "my-organization"
+log = "my-log"
 
-project = "my-project"
-location = "us-central1"
-dataset = "my-dataset"
-model = "my-model"
-annotation_spec = "test-annotation"
-model_evaluation = "test-evaluation"
+exclusion = "exclusion"
+sink = "my-sink"
 
-# AutoMlClient
-annotation_spec_path = f"projects/{project}/locations/{location}/datasets/{dataset}/annotationSpecs/{annotation_spec}"
-location_path = f"projects/{project}/locations/{location}"
-model_evaluation_path = f"projects/{project}/locations/{location}/models/{model}/modelEvaluations/{model_evaluation}",
+# LoggingServiceV2Client
+billing_log_path = f"billingAccounts/{billing_account}/logs/{log}"
+folder_log_path = f"folders/{folder}/logs/{log}"
+organization_log_path = f"organizations/{organization}/logs/{log}"
 
-# PredictionServiceClient
-model_path = f"projects/{project}/locations/{location}/models/{model}"
-# alternatively you can use `model_path` from AutoMlClient
-model_path = automl.AutoMlClient.model_path(project_id, location, model_id)
-
+# ConfigServiceV2Client
+billing_exclusion_path = f"billingAccounts/{billing_account}/exclusions/{exclusion}"
+billing_sink_path = f"billingAccounts/{billing_account}/sinks/{sink}"
+exclusion_path = f"projects/{project}/exclusions/{exclusion}"
+folder_exclusion_path = f"folders/{folder}/exclusions/{exclusion}"
+folder_sink_path = f"folders/{folder}/sinks/{sink}"
+organization_exclusion_path = f"organizations/{organization}/exclusions/{exclusion}"
+organization_sink_path = f"organizations/{organization}/sinks/{sink}"
 ```
+
+The following resource name helpers have been renamed.
+
+**All Clients**
+* `billing_path` -> `common_billing_account_path`
+* `folder_path` -> `common_folder_path`
+* `organization_path` -> `common_organization_path`
+* `project_path` -> `common_project_path`
+
+**`ConfigServiceV2Client`**
+* `sink_path` -> `log_sink_path`
+* `exclusion_path` -> `log_exclusion_path`
