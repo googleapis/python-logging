@@ -116,13 +116,14 @@ All library code has been moved to `google.cloud.logging_v2`.
 
 This section describes changes in the GAPIC layer (produced by the generator) that previously lived in  `google.cloud.logging_v2.proto` / `google.cloud.logging_v2.gapic`.
 
-**NOTE**: Most users are unlikely to have been using this layer directly.
+> **NOTE**: Most users are unlikely to have been using this layer directly.
 
 ### Import path
 
 > **WARNING**: Breaking change
 
 The generated client is no longer exposed at `logging_v2`.
+
 **Before**
 ```py
 from google.cloud import logging_v2
@@ -281,7 +282,7 @@ The submodule `enums` has been removed. Enums can be accessed under `types`.
 ```py
 from google.cloud import logging_v2
 
-severity = logging_v2.enums.LogSeverity.DEFAULT
+severity = logging_v2.enums.LifecycleState.ACTIVE
 ```
 
 
@@ -289,7 +290,7 @@ severity = logging_v2.enums.LogSeverity.DEFAULT
 ```py
 from google.cloud import logging_v2
 
-severity = logging_v2.types.LogSeverity.DEFAULT
+severity = logging_v2.types.LifecycleState.ACTIVE
 ```
 
 

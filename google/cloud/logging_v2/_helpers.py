@@ -28,7 +28,7 @@ from google.cloud.logging_v2.entries import StructEntry
 from google.cloud.logging_v2.entries import TextEntry
 
 try:
-    from google.cloud.logging_v2.gapic.enums import LogSeverity
+    from google.cloud.logging_v2.types import LogSeverity
 except ImportError:  # pragma: NO COVER
 
     class LogSeverity(object):
