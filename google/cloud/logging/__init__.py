@@ -1,4 +1,6 @@
-# Copyright 2016 Google LLC
+# -*- coding: utf-8 -*-
+
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +18,7 @@
 from google.cloud.logging_v2 import __version__
 from google.cloud.logging_v2 import ASCENDING
 from google.cloud.logging_v2 import DESCENDING
+
 from google.cloud.logging_v2.client import Client
 from google.cloud.logging_v2.entries import logger_name_from_path
 from google.cloud.logging_v2.entries import LogEntry

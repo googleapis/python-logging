@@ -20,12 +20,10 @@ import collections
 class Resource(collections.namedtuple("Resource", "type labels")):
     """A monitored resource identified by specifying values for all labels.
 
-    :type type: str
-    :param type: The resource type name.
-
-    :type labels: dict
-    :param labels: A mapping from label names to values for all labels
-                   enumerated in the associated :class:`ResourceDescriptor`.
+    Attributes:
+        type (str): The resource type name.
+        labels (dict): A mapping from label names to values for all labels
+            enumerated in the associated :class:`ResourceDescriptor`.
     """
 
     __slots__ = ()
@@ -34,20 +32,20 @@ class Resource(collections.namedtuple("Resource", "type labels")):
     def _from_dict(cls, info):
         """Construct a resource object from the parsed JSON representation.
 
-        :type info: dict
-        :param info:
-            A ``dict`` parsed from the JSON wire-format representation.
+        Args:
+            info (dict): A ``dict`` parsed from the JSON wire-format representation.
 
-        :rtype: :class:`Resource`
-        :returns: A resource object.
+        Returns:
+            Resource: A resource object.
         """
         return cls(type=info["type"], labels=info.get("labels", {}))
 
     def _to_dict(self):
         """Build a dictionary ready to be serialized to the JSON format.
 
-        :rtype: dict
-        :returns: A dict representation of the object that can be written to
-                  the API.
+        Returns:
+            dict:
+                A dict representation of the object that can be written to
+                the API.
         """
         return {"type": self.type, "labels": self.labels}

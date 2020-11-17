@@ -14,7 +14,7 @@
 
 """Transport for Python logging handler
 
-Uses a background worker to log to Stackdriver Logging asynchronously.
+Uses a background worker to log to Cloud Logging asynchronously.
 """
 
 from __future__ import print_function
@@ -39,26 +39,22 @@ _WORKER_TERMINATOR = object()
 _LOGGER = logging.getLogger(__name__)
 
 
-def _get_many(queue_, max_items=None, max_latency=0):
+def _get_many(queue_, *, max_items=None, max_latency=0):
     """Get multiple items from a Queue.
 
     Gets at least one (blocking) and at most ``max_items`` items
     (non-blocking) from a given Queue. Does not mark the items as done.
 
-    :type queue_: :class:`~queue.Queue`
-    :param queue_: The Queue to get items from.
+    Args:
+        queue_ (queue.Queue): The Queue to get items from.
+        max_items (Optional[int]): The maximum number of items to get.
+            If ``None``, then all available items in the queue are returned.
+        max_latency (Optional[float]): The maximum number of seconds to wait
+            for more than one item from a queue. This number includes
+            the time required to retrieve the first item.
 
-    :type max_items: int
-    :param max_items: The maximum number of items to get. If ``None``, then all
-        available items in the queue are returned.
-
-    :type max_latency: float
-    :param max_latency: The maximum number of seconds to wait for more than one
-        item from a queue. This number includes the time required to retrieve
-        the first item.
-
-    :rtype: list
-    :returns: items retrieved from the queue.
+    Returns:
+        list: items retrieved from the queue
     """
     start = time.time()
     # Always return at least one item.
@@ -74,34 +70,30 @@ def _get_many(queue_, max_items=None, max_latency=0):
 
 
 class _Worker(object):
-    """A background thread that writes batches of log entries.
-
-    :type cloud_logger: :class:`~google.cloud.logging.logger.Logger`
-    :param cloud_logger: The logger to send entries to.
-
-    :type grace_period: float
-    :param grace_period: The amount of time to wait for pending logs to
-        be submitted when the process is shutting down.
-
-    :type max_batch_size: int
-    :param max_batch_size: The maximum number of items to send at a time
-        in the background thread.
-
-    :type max_latency: float
-    :param max_latency: The amount of time to wait for new logs before
-        sending a new batch. It is strongly recommended to keep this smaller
-        than the grace_period. This means this is effectively the longest
-        amount of time the background thread will hold onto log entries
-        before sending them to the server.
-    """
+    """A background thread that writes batches of log entries."""
 
     def __init__(
         self,
         cloud_logger,
+        *,
         grace_period=_DEFAULT_GRACE_PERIOD,
         max_batch_size=_DEFAULT_MAX_BATCH_SIZE,
         max_latency=_DEFAULT_MAX_LATENCY,
     ):
+        """
+        Args:
+            cloud_logger (logging_v2.logger.Logger):
+                The logger to send entries to.
+            grace_period (Optional[float]): The amount of time to wait for pending logs to
+                be submitted when the process is shutting down.
+            max_batch (Optional[int]): The maximum number of items to send at a time
+                in the background thread.
+            max_latency (Optional[float]): The amount of time to wait for new logs before
+                sending a new batch. It is strongly recommended to keep this smaller
+                than the grace_period. This means this is effectively the longest
+                amount of time the background thread will hold onto log entries
+                before sending them to the server.
+        """
         self._cloud_logger = cloud_logger
         self._grace_period = grace_period
         self._max_batch_size = max_batch_size
@@ -172,7 +164,7 @@ class _Worker(object):
             self._thread.start()
             atexit.register(self._main_thread_terminated)
 
-    def stop(self, grace_period=None):
+    def stop(self, *, grace_period=None):
         """Signals the background thread to stop.
 
         This does not terminate the background thread. It simply queues the
@@ -181,13 +173,13 @@ class _Worker(object):
         work. The ``grace_period`` parameter will give the background
         thread some time to finish processing before this function returns.
 
-        :type grace_period: float
-        :param grace_period: If specified, this method will block up to this
-            many seconds to allow the background thread to finish work before
-            returning.
+        Args:
+            grace_period (Optional[float]): If specified, this method will
+                block up to this many seconds to allow the background thread
+                to finish work before returning.
 
-        :rtype: bool
-        :returns: True if the thread terminated. False if the thread is still
+        Returns:
+            bool: True if the thread terminated. False if the thread is still
             running.
         """
         if not self.is_alive:
@@ -218,11 +210,11 @@ class _Worker(object):
         if not self._queue.empty():
             print(
                 "Program shutting down, attempting to send %d queued log "
-                "entries to Stackdriver Logging..." % (self._queue.qsize(),),
+                "entries to Cloud Logging..." % (self._queue.qsize(),),
                 file=sys.stderr,
             )
 
-        if self.stop(self._grace_period):
+        if self.stop(grace_period=self._grace_period):
             print("Sent all pending logs.", file=sys.stderr)
         else:
             print(
@@ -231,29 +223,20 @@ class _Worker(object):
             )
 
     def enqueue(
-        self, record, message, resource=None, labels=None, trace=None, span_id=None
+        self, record, message, *, resource=None, labels=None, trace=None, span_id=None
     ):
         """Queues a log entry to be written by the background thread.
 
-        :type record: :class:`logging.LogRecord`
-        :param record: Python log record that the handler was called with.
-
-        :type message: str
-        :param message: The message from the ``LogRecord`` after being
+        Args:
+            record (logging.LogRecord): Python log record that the handler was called with.
+            message (str): The message from the ``LogRecord`` after being
                         formatted by the associated log formatters.
-
-        :type resource: :class:`~google.cloud.logging.resource.Resource`
-        :param resource: (Optional) Monitored resource of the entry
-
-        :type labels: dict
-        :param labels: (Optional) Mapping of labels for the entry.
-
-        :type trace: str
-        :param trace: (optional) traceid to apply to the logging entry.
-
-        :type span_id: str
-        :param span_id: (optional) span_id within the trace for the log entry.
-                        Specify the trace parameter if span_id is set.
+            resource (Optional[google.cloud.logging_v2.resource.Resource]):
+                Monitored resource of the entry
+            labels (Optional[dict]): Mapping of labels for the entry.
+            trace (Optional[str]): TraceID to apply to the logging entry.
+            span_id (Optional[str]): Span_id within the trace for the log entry.
+                Specify the trace parameter if span_id is set.
         """
         queue_entry = {
             "info": {"message": message, "python_logger": record.name},
@@ -272,38 +255,32 @@ class _Worker(object):
 
 
 class BackgroundThreadTransport(Transport):
-    """Asynchronous transport that uses a background thread.
-
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The Logging client.
-
-    :type name: str
-    :param name: the name of the logger.
-
-    :type grace_period: float
-    :param grace_period: The amount of time to wait for pending logs to
-        be submitted when the process is shutting down.
-
-    :type batch_size: int
-    :param batch_size: The maximum number of items to send at a time in the
-        background thread.
-
-    :type max_latency: float
-    :param max_latency: The amount of time to wait for new logs before
-        sending a new batch. It is strongly recommended to keep this smaller
-        than the grace_period. This means this is effectively the longest
-        amount of time the background thread will hold onto log entries
-        before sending them to the server.
-    """
+    """Asynchronous transport that uses a background thread."""
 
     def __init__(
         self,
         client,
         name,
+        *,
         grace_period=_DEFAULT_GRACE_PERIOD,
         batch_size=_DEFAULT_MAX_BATCH_SIZE,
         max_latency=_DEFAULT_MAX_LATENCY,
     ):
+        """
+        Args:
+            client (~logging_v2.client.Client):
+                The Logging client.
+            name (str): The name of the lgoger.
+            grace_period (Optional[float]): The amount of time to wait for pending logs to
+                be submitted when the process is shutting down.
+            batch_size (Optional[int]): The maximum number of items to send at a time in the
+                background thread.
+            max_latency (Optional[float]): The amount of time to wait for new logs before
+                sending a new batch. It is strongly recommended to keep this smaller
+                than the grace_period. This means this is effectively the longest
+                amount of time the background thread will hold onto log entries
+                before sending them to the server.
+        """
         self.client = client
         logger = self.client.logger(name)
         self.worker = _Worker(
@@ -319,25 +296,16 @@ class BackgroundThreadTransport(Transport):
     ):
         """Overrides Transport.send().
 
-        :type record: :class:`logging.LogRecord`
-        :param record: Python log record that the handler was called with.
-
-        :type message: str
-        :param message: The message from the ``LogRecord`` after being
-                        formatted by the associated log formatters.
-
-        :type resource: :class:`~google.cloud.logging.resource.Resource`
-        :param resource: (Optional) Monitored resource of the entry.
-
-        :type labels: dict
-        :param labels: (Optional) Mapping of labels for the entry.
-
-        :type trace: str
-        :param trace: (optional) traceid to apply to the logging entry.
-
-        :type span_id: str
-        :param span_id: (optional) span_id within the trace for the log entry.
-                        Specify the trace parameter if span_id is set.
+        Args:
+            record (logging.LogRecord): Python log record that the handler was called with.
+            message (str): The message from the ``LogRecord`` after being
+                formatted by the associated log formatters.
+            resource (Optional[google.cloud.logging_v2.resource.Resource]):
+                Monitored resource of the entry.
+            labels (Optional[dict]): Mapping of labels for the entry.
+            trace (Optional[str]): TraceID to apply to the logging entry.
+            span_id (Optional[str]): span_id within the trace for the log entry.
+                Specify the trace parameter if span_id is set.
         """
         self.worker.enqueue(
             record,

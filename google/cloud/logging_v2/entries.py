@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Log entries within the Google Stackdriver Logging API."""
+"""Log entries within the Google Cloud Logging API."""
 
 import collections
 import json
@@ -45,14 +45,15 @@ _LOGGER_TEMPLATE = re.compile(
 def logger_name_from_path(path):
     """Validate a logger URI path and get the logger name.
 
-    :type path: str
-    :param path: URI path for a logger API request.
+    Args:
+        path (str): URI path for a logger API request
 
-    :rtype: str
-    :returns: Logger name parsed from ``path``.
-    :raises: :class:`ValueError` if the ``path`` is ill-formed or if
-             the project from the ``path`` does not agree with the
-             ``project`` passed in.
+    Returns:
+        str: Logger name parsed from ``path``.
+
+    Raises:
+        ValueError: If the ``path`` is ill-formed of if the project
+            from ``path`` does not agree with the ``project`` passed in.
     """
     return _name_from_project_path(path, None, _LOGGER_TEMPLATE)
 
@@ -91,50 +92,28 @@ _LogEntryTuple.__new__.__defaults__ = tuple(default for _, default in _LOG_ENTRY
 
 _LOG_ENTRY_PARAM_DOCSTRING = """\
 
-    :type log_name: str
-    :param log_name: the name of the logger used to post the entry.
-
-    :type labels: dict
-    :param labels: (optional) mapping of labels for the entry
-
-    :type insert_id: text
-    :param insert_id: (optional) the ID used to identify an entry uniquely.
-
-    :type severity: str
-    :param severity: (optional) severity of event being logged.
-
-    :type http_request: dict
-    :param http_request: (optional) info about HTTP request associated with
-                            the entry.
-
-    :type timestamp: :class:`datetime.datetime`
-    :param timestamp: (optional) timestamp for the entry
-
-    :type resource: :class:`~google.cloud.logging.resource.Resource`
-    :param resource: (Optional) Monitored resource of the entry
-
-    :type trace: str
-    :param trace: (optional) traceid to apply to the entry.
-
-    :type span_id: str
-    :param span_id: (optional) span_id within the trace for the log entry.
-                    Specify the trace parameter if span_id is set.
-
-    :type trace_sampled: bool
-    :param trace_sampled: (optional) the sampling decision of the trace
-                          associated with the log entry.
-
-    :type source_location: dict
-    :param source_location: (optional) location in source code from which
-                            the entry was emitted.
-
-    :type operation: dict
-    :param operation: (optional) additional information about a potentially
-                      long-running operation associated with the log entry.
-
-    :type logger: :class:`google.cloud.logging.logger.Logger`
-    :param logger: the logger used to write the entry.
-
+    Args:
+        log_name (str): The name of the logger used to post the entry.
+        labels (Optional[dict]): Mapping of labels for the entry
+        insert_id (Optional[str]): The ID used to identify an entry
+            uniquely.
+        severity (Optional[str]): The severity of the event being logged.
+        http_request (Optional[dict]): Info about HTTP request associated
+            with the entry.
+        timestamp (Optional[datetime.datetime]): Timestamp for the entry.
+        resource (Optional[google.cloud.logging_v2.resource.Resource]):
+            Monitored resource of the entry.
+        trace (Optional[str]): Trace ID to apply to the entry.
+        span_id (Optional[str]): Span ID within the trace for the log
+            entry. Specify the trace parameter if ``span_id`` is set.
+        trace_sampled (Optional[bool]): The sampling decision of the trace
+            associated with the log entry.
+        source_location (Optional[dict]): Location in source code from which
+            the entry was emitted.
+        operation (Optional[dict]): Additional information about a potentially
+            long-running operation associated with the log entry.
+        logger (logging_v2.logger.Logger): the logger used
+            to write the entry.
 """
 
 _LOG_ENTRY_SEE_ALSO_DOCSTRING = """\
@@ -162,24 +141,20 @@ class LogEntry(_LogEntryTuple):
         return None
 
     @classmethod
-    def from_api_repr(cls, resource, client, loggers=None):
-        """Factory:  construct an entry given its API representation
+    def from_api_repr(cls, resource, client, *, loggers=None):
+        """Construct an entry given its API representation
 
-        :type resource: dict
-        :param resource: text entry resource representation returned from
-                         the API
+        Args:
+            resource (dict): text entry resource representation returned from
+                the API
+            client (~logging_v2.client.Client):
+                Client which holds credentials and project configuration.
+            loggers (Optional[dict]):
+                A mapping of logger fullnames -> loggers.  If not
+                passed, the entry will have a newly-created logger.
 
-        :type client: :class:`google.cloud.logging.client.Client`
-        :param client: Client which holds credentials and project
-                       configuration.
-
-        :type loggers: dict
-        :param loggers:
-            (Optional) A mapping of logger fullnames -> loggers.  If not
-            passed, the entry will have a newly-created logger.
-
-        :rtype: :class:`google.cloud.logging.entries.LogEntry`
-        :returns: Log entry parsed from ``resource``.
+        Returns:
+            google.cloud.logging.entries.LogEntry: Log entry parsed from ``resource``.
         """
         if loggers is None:
             loggers = {}
@@ -272,8 +247,7 @@ class TextEntry(LogEntry):
         + _LOG_ENTRY_PARAM_DOCSTRING
         + """
 
-    :type payload: str | unicode
-    :param payload: payload for the log entry.
+        payload (str): payload for the log entry.
     """
         + _LOG_ENTRY_SEE_ALSO_DOCSTRING
     )
@@ -299,8 +273,7 @@ class StructEntry(LogEntry):
         + _LOG_ENTRY_PARAM_DOCSTRING
         + """
 
-    :type payload: dict
-    :param payload: payload for the log entry.
+        payload (dict): payload for the log entry.
     """
         + _LOG_ENTRY_SEE_ALSO_DOCSTRING
     )
@@ -326,8 +299,7 @@ class ProtobufEntry(LogEntry):
         + _LOG_ENTRY_PARAM_DOCSTRING
         + """
 
-    :type payload: protobuf message
-    :param payload: payload for the log entry.
+        payload (google.protobuf.Message): payload for the log entry.
     """
         + _LOG_ENTRY_SEE_ALSO_DOCSTRING
     )
@@ -358,8 +330,8 @@ class ProtobufEntry(LogEntry):
 
         Mutates the passed-in ``message`` in place.
 
-        :type message: Protobuf message
-        :param message: the message to be logged
+        Args:
+            message (google.protobuf.Message): the message to be logged
         """
         # NOTE: This assumes that ``payload`` is already a deserialized
         #       ``Any`` field and ``message`` has come from an imported

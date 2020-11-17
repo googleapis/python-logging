@@ -23,22 +23,17 @@ class Transport(object):
     """
 
     def send(
-        self, record, message, resource=None, labels=None, trace=None, span_id=None
+        self, record, message, *, resource=None, labels=None, trace=None, span_id=None
     ):
         """Transport send to be implemented by subclasses.
 
-        :type record: :class:`logging.LogRecord`
-        :param record: Python log record that the handler was called with.
-
-        :type message: str
-        :param message: The message from the ``LogRecord`` after being
-                        formatted by the associated log formatters.
-
-        :type resource: :class:`~google.cloud.logging.resource.Resource`
-        :param resource: (Optional) Monitored resource of the entry.
-
-        :type labels: dict
-        :param labels: (Optional) Mapping of labels for the entry.
+        Args:
+            record (logging.LogRecord): Python log record that the handler was called with.
+            message (str): The message from the ``LogRecord`` after being
+                formatted by the associated log formatters.
+            resource (Optional[google.cloud.logging_v2.resource.Resource]):
+                 Monitored resource of the entry.
+            labels (Optional[dict]): Mapping of labels for the entry.
         """
         raise NotImplementedError
 

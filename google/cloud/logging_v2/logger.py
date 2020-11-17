@@ -43,24 +43,22 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
 
 
 class Logger(object):
-    """Loggers represent named targets for log entries.
+    def __init__(self, name, client, *, labels=None):
+        """Loggers represent named targets for log entries.
 
-    See
-    https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs
+        See
+        https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs
 
-    :type name: str
-    :param name: the name of the logger
+        Args:
+            name (str): The name of the logger.
+            client (~logging_v2.client.Client):
+                A client which holds credentials and project configuration
+                for the logger (which requires a project).
+            labels (Optional[dict]): Mapping of default labels for entries written
+                via this logger.
 
-    :type client: :class:`google.cloud.logging.client.Client`
-    :param client: A client which holds credentials and project configuration
-                   for the logger (which requires a project).
 
-    :type labels: dict
-    :param labels: (optional) mapping of default labels for entries written
-                   via this logger.
-    """
-
-    def __init__(self, name, client, labels=None):
+        """
         self.name = name
         self._client = client
         self.labels = labels
@@ -78,38 +76,39 @@ class Logger(object):
     @property
     def full_name(self):
         """Fully-qualified name used in logging APIs"""
-        return "projects/%s/logs/%s" % (self.project, self.name)
+        return f"projects/{self.project}/logs/{self.name}"
 
     @property
     def path(self):
         """URI path for use in logging APIs"""
-        return "/%s" % (self.full_name,)
+        return f"/{self.full_name}"
 
     def _require_client(self, client):
-        """Check client or verify over-ride.
+        """Check client or verify over-ride. Also sets ``parent``.
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current logger.
+        Args:
+            client (Union[None, ~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
 
-        :rtype: :class:`google.cloud.logging.client.Client`
-        :returns: The client passed in or the currently bound client.
+        Returns:
+            ~logging_v2.client.Client: The client passed in
+                or the currently bound client.
         """
         if client is None:
             client = self._client
         return client
 
-    def batch(self, client=None):
+    def batch(self, *, client=None):
         """Return a batch to use as a context manager.
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current topic.
+        Args:
+            client (Union[None, ~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
 
-        :rtype: :class:`Batch`
-        :returns: A batch to use as a context manager.
+        Returns:
+            Batch: A batch to use as a context manager.
         """
         client = self._require_client(client)
         return Batch(self, client)
@@ -131,100 +130,103 @@ class Logger(object):
         api_repr = entry.to_api_repr()
         client.logging_api.write_entries([api_repr])
 
-    def log_empty(self, client=None, **kw):
-        """API call:  log an empty message via a POST request
+    def log_empty(self, *, client=None, **kw):
+        """Log an empty message via a POST request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current logger.
-
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            client (Optional[~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
+            kw (Optional[dict]): additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, LogEntry, **kw)
 
-    def log_text(self, text, client=None, **kw):
-        """API call:  log a text message via a POST request
+    def log_text(self, text, *, client=None, **kw):
+        """Log a text message via a POST request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
-        :type text: str
-        :param text: the log message.
-
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current logger.
-
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            text (str): the log message
+            client (Optional[~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
+            kw (Optional[dict]): additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, TextEntry, text, **kw)
 
-    def log_struct(self, info, client=None, **kw):
-        """API call:  log a structured message via a POST request
+    def log_struct(self, info, *, client=None, **kw):
+        """Log a structured message via a POST request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
-        :type info: dict
-        :param info: the log entry information
-
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current logger.
-
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            info (dict): the log entry information
+            client (Optional[~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
+            kw (Optional[dict]): additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, StructEntry, info, **kw)
 
-    def log_proto(self, message, client=None, **kw):
-        """API call:  log a protobuf message via a POST request
+    def log_proto(self, message, *, client=None, **kw):
+        """Log a protobuf message via a POST request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list
 
-        :type message: :class:`~google.protobuf.message.Message`
-        :param message: The protobuf message to be logged.
-
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current logger.
-
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            message (google.protobuf.message.Message):
+                The protobuf message to be logged.
+            client (Optional[~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
+            kw (Optional[dict]): additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, ProtobufEntry, message, **kw)
 
-    def delete(self, client=None):
-        """API call:  delete all entries in a logger via a DELETE request
+    def delete(self, logger_name=None, *, client=None):
+        """Delete all entries in a logger via a DELETE request
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs/delete
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current logger.
+        Args:
+            logger_name (Optional[str]):  The resource name of the log to delete:
+
+                ::
+
+                    "projects/[PROJECT_ID]/logs/[LOG_ID]"
+                    "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+                    "folders/[FOLDER_ID]/logs/[LOG_ID]"
+
+                ``[LOG_ID]`` must be URL-encoded. For example,
+                ``"projects/my-project-id/logs/syslog"``,
+                ``"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"``.
+                If not passed, defaults to the project bound to the client.
+            client (Optional[~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current logger.
         """
         client = self._require_client(client)
-        client.logging_api.logger_delete(self.project, self.name)
+        if logger_name is None:
+            logger_name = self.full_name
+        client.logging_api.logger_delete(logger_name)
 
     def list_entries(
         self,
-        projects=None,
+        *,
+        resource_names=None,
         filter_=None,
         order_by=None,
         page_size=None,
@@ -235,46 +237,48 @@ class Logger(object):
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list
 
-        :type projects: list of strings
-        :param projects: project IDs to include. If not passed,
-                            defaults to the project bound to the client.
+        Args:
+            resource_names (Optional[Sequence[str]]): Names of one or more parent resources
+                from which to retrieve log entries:
 
-        :type filter_: str
-        :param filter_:
-            a filter expression. See
-            https://cloud.google.com/logging/docs/view/advanced_filters
-            By default, a 24 hour filter is applied.
+                ::
 
-        :type order_by: str
-        :param order_by: One of :data:`~google.cloud.logging.ASCENDING`
-                         or :data:`~google.cloud.logging.DESCENDING`.
+                    "projects/[PROJECT_ID]"
+                    "organizations/[ORGANIZATION_ID]"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]"
+                    "folders/[FOLDER_ID]"
+                If not passed, defaults to the project bound to the client.
+            filter_ (Optional[str]): a filter expression. See
+                https://cloud.google.com/logging/docs/view/advanced_filters
+                By default, a 24 hour filter is applied.
+            order_by (Optional[str]): One of :data:`~logging_v2.ASCENDING`
+                or :data:`~logging_v2.DESCENDING`.
+            page_size (Optional[int]):
+                Optional. The maximum number of entries in each page of results
+                from this request. Non-positive values are ignored. Defaults
+                to a sensible value set by the API.
+            page_token (Optional[str]):
+                Optional. If present, return the next batch of entries, using
+                the value, which must correspond to the ``nextPageToken`` value
+                returned in the previous response.  Deprecated: use the ``pages``
+                property of the returned iterator instead of manually passing
+                the token.
 
-        :type page_size: int
-        :param page_size:
-            Optional. The maximum number of entries in each page of results
-            from this request. Non-positive values are ignored. Defaults
-            to a sensible value set by the API.
-
-        :type page_token: str
-        :param page_token:
-            Optional. If present, return the next batch of entries, using
-            the value, which must correspond to the ``nextPageToken`` value
-            returned in the previous response.  Deprecated: use the ``pages``
-            property of the returned iterator instead of manually passing
-            the token.
-
-        :rtype: :class:`~google.api_core.page_iterator.Iterator`
-        :returns: Iterator of log entries accessible to the current logger.
-                  See :class:`~google.cloud.logging.entries.LogEntry`.
+        Returns:
+            Iterator[~logging_v2.entries.LogEntry]
         """
-        log_filter = "logName=%s" % (self.full_name,)
+
+        if resource_names is None:
+            resource_names = [f"projects/{self.project}"]
+
+        log_filter = f"logName={self.full_name}"
         if filter_ is not None:
-            filter_ = "%s AND %s" % (filter_, log_filter)
+            filter_ = f"{filter_} AND {log_filter}"
         else:
             filter_ = log_filter
         filter_ = _add_defaults_to_filter(filter_)
         return self.client.list_entries(
-            projects=projects,
+            resource_names=resource_names,
             filter_=filter_,
             order_by=order_by,
             page_size=page_size,
@@ -283,27 +287,25 @@ class Logger(object):
 
 
 class Batch(object):
-    """Context manager:  collect entries to log via a single API call.
+    def __init__(self, logger, client, *, resource=None):
+        """Context manager:  collect entries to log via a single API call.
 
-    Helper returned by :meth:`Logger.batch`
+        Helper returned by :meth:`Logger.batch`
 
-    :type logger: :class:`google.cloud.logging.logger.Logger`
-    :param logger: the logger to which entries will be logged.
-
-    :type client: :class:`google.cloud.logging.client.Client`
-    :param client: The client to use.
-
-    :type resource: :class:`~google.cloud.logging.resource.Resource`
-    :param resource: (Optional) Monitored resource of the batch, defaults
-                     to None, which requires that every entry should have a
-                     resource specified. Since the methods used to write
-                     entries default the entry's resource to the global
-                     resource type, this parameter is only required
-                     if explicitly set to None. If no entries' resource are
-                     set to None, this parameter will be ignored on the server.
-    """
-
-    def __init__(self, logger, client, resource=None):
+        Args:
+            logger (logging_v2.logger.Logger):
+                the logger to which entries will be logged.
+            client (~logging_V2.client.Cilent):
+                The client to use.
+            resource (Optional[~logging_v2.resource.Resource]):
+                Monitored resource of the batch, defaults
+                to None, which requires that every entry should have a
+                resource specified. Since the methods used to write
+                entries default the entry's resource to the global
+                resource type, this parameter is only required
+                if explicitly set to None. If no entries' resource are
+                set to None, this parameter will be ignored on the server.
+        """
         self.logger = logger
         self.entries = []
         self.client = client
@@ -319,55 +321,49 @@ class Batch(object):
     def log_empty(self, **kw):
         """Add a entry without payload to be logged during :meth:`commit`.
 
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            kw (Optional[dict]): Additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(LogEntry(**kw))
 
     def log_text(self, text, **kw):
         """Add a text entry to be logged during :meth:`commit`.
 
-        :type text: str
-        :param text: the text entry
-
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            text (str): the text entry
+            kw (Optional[dict]): Additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(TextEntry(payload=text, **kw))
 
     def log_struct(self, info, **kw):
         """Add a struct entry to be logged during :meth:`commit`.
 
-        :type info: dict
-        :param info: the struct entry
-
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            info (dict): The struct entry,
+            kw (Optional[dict]): Additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(StructEntry(payload=info, **kw))
 
     def log_proto(self, message, **kw):
         """Add a protobuf entry to be logged during :meth:`commit`.
 
-        :type message: protobuf message
-        :param message: the protobuf entry
-
-        :type kw: dict
-        :param kw: (optional) additional keyword arguments for the entry.
-                   See :class:`~google.cloud.logging.entries.LogEntry`.
+        Args:
+            message (google.protobuf.Message): The protobuf entry.
+            kw (Optional[dict]): Additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(ProtobufEntry(payload=message, **kw))
 
-    def commit(self, client=None):
+    def commit(self, *, client=None):
         """Send saved log entries as a single API call.
 
-        :type client: :class:`~google.cloud.logging.client.Client` or
-                      ``NoneType``
-        :param client: the client to use.  If not passed, falls back to the
-                       ``client`` stored on the current batch.
+        Args:
+            client (Optional[~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current batch.
         """
         if client is None:
             client = self.client

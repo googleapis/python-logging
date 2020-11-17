@@ -28,7 +28,7 @@ from google.cloud.logging_v2.entries import StructEntry
 from google.cloud.logging_v2.entries import TextEntry
 
 try:
-    from google.cloud.logging_v2.gapic.enums import LogSeverity
+    from google.cloud.logging_v2.types import LogSeverity
 except ImportError:  # pragma: NO COVER
 
     class LogSeverity(object):
@@ -64,31 +64,29 @@ METADATA_HEADERS = {"Metadata-Flavor": "Google"}
 def entry_from_resource(resource, client, loggers):
     """Detect correct entry type from resource and instantiate.
 
-    :type resource: dict
-    :param resource: One entry resource from API response.
+    Args:
+        resource (dict): One entry resource from API response.
+        client (~logging_v2.client.Client):
+            Client that owns the log entry.
+        loggers (dict):
+            A mapping of logger fullnames -> loggers.  If the logger
+            that owns the entry is not in ``loggers``, the entry
+            will have a newly-created logger.
 
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: Client that owns the log entry.
-
-    :type loggers: dict
-    :param loggers:
-        A mapping of logger fullnames -> loggers.  If the logger
-        that owns the entry is not in ``loggers``, the entry
-        will have a newly-created logger.
-
-    :rtype: :class:`~google.cloud.logging.entries._BaseEntry`
-    :returns: The entry instance, constructed via the resource
+    Returns:
+        google.cloud.logging_v2.entries._BaseEntry:
+            The entry instance, constructed via the resource
     """
     if "textPayload" in resource:
-        return TextEntry.from_api_repr(resource, client, loggers)
+        return TextEntry.from_api_repr(resource, client, loggers=loggers)
 
     if "jsonPayload" in resource:
-        return StructEntry.from_api_repr(resource, client, loggers)
+        return StructEntry.from_api_repr(resource, client, loggers=loggers)
 
     if "protoPayload" in resource:
-        return ProtobufEntry.from_api_repr(resource, client, loggers)
+        return ProtobufEntry.from_api_repr(resource, client, loggers=loggers)
 
-    return LogEntry.from_api_repr(resource, client, loggers)
+    return LogEntry.from_api_repr(resource, client, loggers=loggers)
 
 
 def retrieve_metadata_server(metadata_key):
@@ -96,13 +94,14 @@ def retrieve_metadata_server(metadata_key):
 
     See: https://cloud.google.com/compute/docs/storing-retrieving-metadata
 
-    :type metadata_key: str
-    :param metadata_key: Key of the metadata which will form the url. You can
-                         also supply query parameters after the metadata key.
-                         e.g. "tags?alt=json"
+    Args:
+        metadata_key (str):
+            Key of the metadata which will form the url. You can
+            also supply query parameters after the metadata key.
+            e.g. "tags?alt=json"
 
-    :rtype: str
-    :returns: The value of the metadata key returned by the metadata server.
+    Returns:
+        str: The value of the metadata key returned by the metadata server.
     """
     url = METADATA_URL + metadata_key
 
@@ -123,11 +122,11 @@ def retrieve_metadata_server(metadata_key):
 def _normalize_severity(stdlib_level):
     """Normalize a Python stdlib severity to LogSeverity enum.
 
-    :type stdlib_level: int
-    :param stdlib_level: 'levelno' from a :class:`logging.LogRecord`
+    Args:
+        stdlib_level (int): 'levelno' from a :class:`logging.LogRecord`
 
-    :rtype: int
-    :returns: Corresponding Stackdriver severity.
+    Returns:
+        int: Corresponding Stackdriver severity.
     """
     return _NORMALIZED_SEVERITIES.get(stdlib_level, stdlib_level)
 
@@ -135,18 +134,18 @@ def _normalize_severity(stdlib_level):
 def _add_defaults_to_filter(filter_):
     """Modify the input filter expression to add sensible defaults.
 
-    :type filter_: str
-    :param filter_: The original filter expression
+    Args:
+        filter_ (str): The original filter expression
 
-    :rtype: str
-    :returns: sensible default filter string
+    Returns:
+        str: sensible default filter string
     """
 
     # By default, requests should only return logs in the last 24 hours
     yesterday = datetime.now(timezone.utc) - timedelta(days=1)
-    time_filter = 'timestamp>="%s"' % yesterday.strftime(_TIME_FORMAT)
+    time_filter = f'timestamp>="{yesterday.strftime(_TIME_FORMAT)}"'
     if filter_ is None:
         filter_ = time_filter
     elif "timestamp" not in filter_.lower():
-        filter_ = "%s AND %s" % (filter_, time_filter)
+        filter_ = f"{filter_} AND {time_filter}"
     return filter_

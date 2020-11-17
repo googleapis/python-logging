@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Python :mod:`logging` handlers for Stackdriver Logging."""
+"""Python :mod:`logging` handlers for Cloud Logging."""
 
 import logging
 
@@ -25,7 +25,7 @@ EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2
 
 
 class CloudLoggingHandler(logging.StreamHandler):
-    """Handler that directly makes Stackdriver logging API calls.
+    """Handler that directly makes Cloud Logging API calls.
 
     This is a Python standard ``logging`` handler using that can be used to
     route Python standard logging messages directly to the Stackdriver
@@ -34,32 +34,6 @@ class CloudLoggingHandler(logging.StreamHandler):
     This handler is used when not in GAE or GKE environment.
 
     This handler supports both an asynchronous and synchronous transport.
-
-    :type client: :class:`google.cloud.logging.client.Client`
-    :param client: the authenticated Google Cloud Logging client for this
-                   handler to use
-
-    :type name: str
-    :param name: the name of the custom log in Stackdriver Logging. Defaults
-                 to 'python'. The name of the Python logger will be represented
-                 in the ``python_logger`` field.
-
-    :type transport: :class:`type`
-    :param transport: Class for creating new transport objects. It should
-                      extend from the base :class:`.Transport` type and
-                      implement :meth`.Transport.send`. Defaults to
-                      :class:`.BackgroundThreadTransport`. The other
-                      option is :class:`.SyncTransport`.
-
-    :type resource: :class:`~google.cloud.logging.resource.Resource`
-    :param resource: (Optional) Monitored resource of the entry, defaults
-                     to the global resource type.
-
-    :type labels: dict
-    :param labels: (Optional) Mapping of labels for the entry.
-
-    :type stream: file-like object
-    :param stream: (optional) stream to be used by the handler.
 
     Example:
 
@@ -82,12 +56,33 @@ class CloudLoggingHandler(logging.StreamHandler):
     def __init__(
         self,
         client,
+        *,
         name=DEFAULT_LOGGER_NAME,
         transport=BackgroundThreadTransport,
         resource=_GLOBAL_RESOURCE,
         labels=None,
         stream=None,
     ):
+        """
+        Args:
+            client (~logging_v2.client.Client):
+                The authenticated Google Cloud Logging client for this
+                handler to use.
+            name (str): the name of the custom log in Cloud Logging.
+                Defaults to 'python'. The name of the Python logger will be represented
+                in the ``python_logger`` field.
+            transport (~logging_v2.transports.Transport):
+                Class for creating new transport objects. It should
+                extend from the base :class:`.Transport` type and
+                implement :meth`.Transport.send`. Defaults to
+                :class:`.BackgroundThreadTransport`. The other
+                option is :class:`.SyncTransport`.
+            resource (~logging_v2.resource.Resource):
+                Resource for this Handler. Defaults to ``GLOBAL_RESOURCE``.
+            labels (Optional[dict]): Monitored resource of the entry, defaults
+                to the global resource type.
+            stream (Optional[IO]): Stream to be used by the handler.
+        """
         super(CloudLoggingHandler, self).__init__(stream)
         self.name = name
         self.client = client
@@ -102,32 +97,20 @@ class CloudLoggingHandler(logging.StreamHandler):
 
         See https://docs.python.org/2/library/logging.html#handler-objects
 
-        :type record: :class:`logging.LogRecord`
-        :param record: The record to be logged.
+        Args:
+            record (logging.LogRecord): The record to be logged.
         """
         message = super(CloudLoggingHandler, self).format(record)
         self.transport.send(record, message, resource=self.resource, labels=self.labels)
 
 
 def setup_logging(
-    handler, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, log_level=logging.INFO
+    handler, *, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, log_level=logging.INFO
 ):
     """Attach a logging handler to the Python root logger
 
     Excludes loggers that this library itself uses to avoid
     infinite recursion.
-
-    :type handler: :class:`logging.handler`
-    :param handler: the handler to attach to the global handler
-
-    :type excluded_loggers: tuple
-    :param excluded_loggers: (Optional) The loggers to not attach the handler
-                             to. This will always include the loggers in the
-                             path of the logging client itself.
-
-    :type log_level: int
-    :param log_level: (Optional) Python logging log level. Defaults to
-                      :const:`logging.INFO`.
 
     Example:
 
@@ -144,6 +127,13 @@ def setup_logging(
 
         logging.error('bad news')  # API call
 
+    Args:
+        handler (logging.handler): the handler to attach to the global handler
+        excluded_loggers (Optional[Tuple[str]]): The loggers to not attach the handler
+            to. This will always include the loggers in the
+            path of the logging client itself.
+        log_level (Optional[int]): Python logging log level. Defaults to
+            :const:`logging.INFO`.
     """
     all_excluded_loggers = set(excluded_loggers + EXCLUDED_LOGGER_DEFAULTS)
     logger = logging.getLogger()

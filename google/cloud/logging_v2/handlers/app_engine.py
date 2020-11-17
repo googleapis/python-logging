@@ -14,7 +14,7 @@
 
 """Logging handler for App Engine Flexible
 
-Sends logs to the Stackdriver Logging API with the appropriate resource
+Sends logs to the Cloud Logging API with the appropriate resource
 and labels for App Engine logs.
 """
 
@@ -36,28 +36,28 @@ _TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
 
 class AppEngineHandler(logging.StreamHandler):
-    """A logging handler that sends App Engine-formatted logs to Stackdriver.
-
-    :type client: :class:`~google.cloud.logging.client.Client`
-    :param client: The authenticated Google Cloud Logging client for this
-                   handler to use.
-
-    :type transport: :class:`type`
-    :param transport: The transport class. It should be a subclass
-                      of :class:`.Transport`. If unspecified,
-                      :class:`.BackgroundThreadTransport` will be used.
-
-    :type stream: file-like object
-    :param stream: (optional) stream to be used by the handler.
-    """
+    """A logging handler that sends App Engine-formatted logs to Stackdriver."""
 
     def __init__(
         self,
         client,
+        *,
         name=_DEFAULT_GAE_LOGGER_NAME,
         transport=BackgroundThreadTransport,
         stream=None,
     ):
+        """
+        Args:
+            client (~logging_v2.client.Client): The authenticated
+                Google Cloud Logging client for this handler to use.
+            name (Optional[str]): Name for the logger.
+            transport (Optional[~logging_v2.transports.Transport]):
+                The transport class. It should be a subclass
+                of :class:`.Transport`. If unspecified,
+                :class:`.BackgroundThreadTransport` will be used.
+            stream (Optional[IO]): Stream to be used by the handler.
+
+        """
         super(AppEngineHandler, self).__init__(stream)
         self.name = name
         self.client = client
@@ -72,8 +72,8 @@ class AppEngineHandler(logging.StreamHandler):
     def get_gae_resource(self):
         """Return the GAE resource using the environment variables.
 
-        :rtype: :class:`~google.cloud.logging.resource.Resource`
-        :returns: Monitored resource for GAE.
+        Returns:
+            google.cloud.logging_v2.resource.Resource: Monitored resource for GAE.
         """
         gae_resource = Resource(
             type="gae_app",
@@ -91,8 +91,8 @@ class AppEngineHandler(logging.StreamHandler):
         If the trace ID can be detected, it will be included as a label.
         Currently, no other labels are included.
 
-        :rtype: dict
-        :returns: Labels for GAE app.
+        Returns:
+            dict: Labels for GAE app.
         """
         gae_labels = {}
 
@@ -109,8 +109,8 @@ class AppEngineHandler(logging.StreamHandler):
 
         See https://docs.python.org/2/library/logging.html#handler-objects
 
-        :type record: :class:`logging.LogRecord`
-        :param record: The record to be logged.
+        Args:
+            record (logging.LogRecord): The record to be logged.
         """
         message = super(AppEngineHandler, self).format(record)
         gae_labels = self.get_gae_labels()

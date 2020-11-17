@@ -63,10 +63,15 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             python_logger_name, logging.INFO, None, None, message, None, None
         )
 
-        transport.send(record, message, _GLOBAL_RESOURCE)
+        transport.send(record, message, resource=_GLOBAL_RESOURCE)
 
         transport.worker.enqueue.assert_called_once_with(
-            record, message, _GLOBAL_RESOURCE, None, trace=None, span_id=None
+            record,
+            message,
+            resource=_GLOBAL_RESOURCE,
+            labels=None,
+            trace=None,
+            span_id=None,
         )
 
     def test_trace_send(self):
@@ -85,10 +90,15 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             python_logger_name, logging.INFO, None, None, message, None, None
         )
 
-        transport.send(record, message, _GLOBAL_RESOURCE, trace=trace)
+        transport.send(record, message, resource=_GLOBAL_RESOURCE, trace=trace)
 
         transport.worker.enqueue.assert_called_once_with(
-            record, message, _GLOBAL_RESOURCE, None, trace=trace, span_id=None
+            record,
+            message,
+            resource=_GLOBAL_RESOURCE,
+            labels=None,
+            trace=trace,
+            span_id=None,
         )
 
     def test_span_send(self):
@@ -107,10 +117,15 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             python_logger_name, logging.INFO, None, None, message, None, None
         )
 
-        transport.send(record, message, _GLOBAL_RESOURCE, span_id=span_id)
+        transport.send(record, message, resource=_GLOBAL_RESOURCE, span_id=span_id)
 
         transport.worker.enqueue.assert_called_once_with(
-            record, message, _GLOBAL_RESOURCE, None, trace=None, span_id=span_id
+            record,
+            message,
+            resource=_GLOBAL_RESOURCE,
+            labels=None,
+            trace=None,
+            span_id=span_id,
         )
 
     def test_flush(self):
@@ -210,7 +225,7 @@ class Test_Worker(unittest.TestCase):
         self._start_with_thread_patch(worker)
         thread = worker._thread
 
-        worker.stop(grace_period)
+        worker.stop(grace_period=grace_period)
 
         self.assertEqual(worker._queue.qsize(), 1)
         self.assertEqual(worker._queue.get(), background_thread._WORKER_TERMINATOR)
