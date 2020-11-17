@@ -56,7 +56,6 @@ def create_sink(sink_name, destination_bucket, filter_):
 
     sink = logging_client.sink(sink_name, filter_=filter_, destination=destination)
 
-
     if sink.exists():
         print("Sink {} already exists.".format(sink.name))
         return
