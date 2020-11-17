@@ -122,7 +122,9 @@ This section describes changes in the GAPIC layer (produced by the generator) th
 
 > **WARNING**: Breaking change
 
-The generated client is no longer exposed at `logging_v2`.
+The generated client is no longer exposed at `google.cloud.logging_v2`. This is because we expect most users to use the handwritten surface exposed at `google.cloud.logging_v2`. See the [Cloud Logging How-to Guides](https://cloud.google.com/logging/docs/how-to).
+
+If you would like to continue using the generated surface, adjust your imports:
 
 **Before**
 ```py
@@ -143,7 +145,7 @@ sink = LogSink()
 
 > **WARNING**: Breaking change
 
-Methods expect request objects. We provide a script that will convert most common use cases.
+Methods expect request objects. We provide a script that will convert most common use cases. This script will *only* convert code written for the generated clients previously exposed at `google.cloud.logging_v2` like `LoggingServiceV2Client`.
 
 * Install the library and `libcst`. `libcst` is required to run the fixup script.
 
@@ -263,7 +265,7 @@ client.list_log_entries(["projects/myProject"], filter_="severity>=CRITICAL")
 ```
 
 
-**Before**
+**After**
 ```py
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 
