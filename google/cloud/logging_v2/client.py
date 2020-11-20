@@ -361,7 +361,12 @@ class Client(ClientWithProject):
             return CloudLoggingHandler(self, **kw)
 
     def setup_logging(
-        self, *, log_level=logging.INFO, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, **kw
+        self,
+        *,
+        log_level=logging.INFO,
+        excluded_loggers=EXCLUDED_LOGGER_DEFAULTS,
+        stream_handler=True,
+        **kw,
     ):
         """Attach default Cloud Logging handler to the root logger.
 
@@ -377,8 +382,16 @@ class Client(ClientWithProject):
                 handler to. This will always include the
                 loggers in the path of the logging client
                 itself.
+            stream_handler (Optional[bool]): If True, a :const:`logging.StreamHandler`
+                is added in addition to the default Cloud Logging handler.
+                Defaults to :const:`True`.
         Returns:
             dict: keyword args passed to handler constructor
         """
         handler = self.get_default_handler(**kw)
-        setup_logging(handler, log_level=log_level, excluded_loggers=excluded_loggers)
+        setup_logging(
+            handler,
+            log_level=log_level,
+            excluded_loggers=excluded_loggers,
+            stream_handler=stream_handler,
+        )
