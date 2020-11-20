@@ -47,6 +47,7 @@ class Logger(object):
 
     See https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs
     """
+
     def __init__(self, name, client, *, labels=None):
         """
         Args:
