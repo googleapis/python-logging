@@ -82,4 +82,30 @@ EOF
   rm $TMP_FILE
 }
 
-deploy_gke
+deploy_functions() {
+  local SCRIPT="${1:-test_plain_logs.py}"
+  local RUNTIME="${2:-python37}"
+  # set up deployment directory
+  mkdir $SCRIPT_DIR/deployment
+  mkdir $SCRIPT_DIR/deployment/python-logging
+  # copy over local copy of library
+  rsync -av $REPO_ROOT $SCRIPT_DIR/deployment/python-logging \
+    --exclude tests --exclude .nox --exclude samples \
+    --exclude docs --exclude __pycache__
+  # copy test scripts
+  cp $SCRIPT_DIR/$SCRIPT $SCRIPT_DIR/deployment/main.py
+  echo  "-e ./python-logging" | cat $SCRIPT_DIR/requirements.txt - > $SCRIPT_DIR/deployment/requirements.txt
+  # deploy function
+  pushd $SCRIPT_DIR/deployment
+    gcloud functions deploy $(_clean_name $SCRIPT) \
+      --entry-point main \
+      --trigger-http \
+      --runtime $RUNTIME \
+      --allow-unauthenticated
+  popd
+  rm -rf $SCRIPT_DIR/deployment
+}
+
+#deploy_cloudrun
+#deploy_gke
+deploy_functions
