@@ -365,8 +365,8 @@ class Client(ClientWithProject):
         *,
         log_level=logging.INFO,
         excluded_loggers=EXCLUDED_LOGGER_DEFAULTS,
-        stream_handler=True
-        **kw,
+        stream_handler=True,
+        **kw
     ):
         """Attach default Cloud Logging handler to the root logger.
 
