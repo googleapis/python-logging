@@ -3,3 +3,7 @@ __pycache__
 docs
 *.md
 *.egg*
+tests/environments/test-code/deploy.sh
+tests/environments/test-code/Dockerfile
+*.swp
+*.swo
