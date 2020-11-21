@@ -133,7 +133,7 @@ EOF
   popd
 }
 
-deploy_ae_flex() {
+deploy_ae_flex_python() {
   local SCRIPT="${1:-test_flask.py}"
   # set up deployment directory
   # copy over local copy of library
@@ -164,8 +164,35 @@ EOF
   popd
 }
 
+deploy_ae_flex_container() {
+  local SCRIPT="${1:-test_flask.py}"
+  build_container
+
+  cat <<EOF > $TMP_DIR/app.yaml
+  runtime: custom
+  env: flex
+  env_variables:
+    SCRIPT: "$SCRIPT"
+  manual_scaling:
+    instances: 1
+  resources:
+    cpu: 1
+    memory_gb: 0.5
+    disk_size_gb: 10
+EOF
+
+  # deploy
+  # deploy
+  pushd $TMP_DIR
+    gcloud app deploy --image-url $GCR_PATH -q
+    gcloud app browse
+  popd
+}
+
+
 #deploy_cloudrun
 #deploy_gke
 #deploy_functions
 #deploy_ae_standard
-deploy_ae_flex
+#deploy_ae_flex_python
+deploy_ae_flex_container
