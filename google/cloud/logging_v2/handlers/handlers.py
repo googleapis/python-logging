@@ -109,7 +109,7 @@ def setup_logging(
     *,
     excluded_loggers=EXCLUDED_LOGGER_DEFAULTS,
     log_level=logging.INFO,
-    stream_handler=True,
+    stream_handler=True
 ):
     """Attach a logging handler to the Python root logger
 
