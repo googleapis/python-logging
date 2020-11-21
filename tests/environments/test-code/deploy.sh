@@ -133,7 +133,39 @@ EOF
   popd
 }
 
+deploy_ae_flex() {
+  local SCRIPT="${1:-test_flask.py}"
+  # set up deployment directory
+  # copy over local copy of library
+  rsync -av $REPO_ROOT $TMP_DIR/python-logging \
+    --exclude tests --exclude .nox --exclude samples \
+    --exclude docs --exclude __pycache__
+  # copy test scripts
+  cp $SCRIPT_DIR/$SCRIPT $TMP_DIR
+  cp $SCRIPT_DIR/requirements.txt $TMP_DIR
+  # build app.yaml
+  cat <<EOF > $TMP_DIR/app.yaml
+    runtime: python
+    env: flex
+    entrypoint: python $SCRIPT
+    runtime_config:
+      python_version: 3
+    manual_scaling:
+      instances: 1
+    resources:
+      cpu: 1
+      memory_gb: 0.5
+      disk_size_gb: 10
+EOF
+  # deploy
+  pushd $TMP_DIR
+    gcloud app deploy -q
+    gcloud app browse
+  popd
+}
+
 #deploy_cloudrun
 #deploy_gke
 #deploy_functions
-deploy_ae_standard
+#deploy_ae_standard
+deploy_ae_flex
