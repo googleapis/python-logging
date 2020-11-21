@@ -12,13 +12,13 @@ SCRIPT_DIR=$(realpath $(dirname "$0"))
 REPO_ROOT=$SCRIPT_DIR/../../..
 cd $REPO_ROOT
 
-function build_container() {
+build_container() {
   docker build -t $GCR_PATH --file $SCRIPT_DIR/Dockerfile $REPO_ROOT
   docker push $GCR_PATH
 }
 
-function deploy_cloudrun() {
-  SCRIPT="test_flask.py"
+deploy_cloudrun() {
+  local SCRIPT="${1:-test_flask.py}"
   build_container
   gcloud config set run/platform managed
   gcloud config set run/region us-west1
@@ -26,7 +26,7 @@ function deploy_cloudrun() {
     --allow-unauthenticated \
     --image $GCR_PATH \
     --update-env-vars SCRIPT=$SCRIPT \
-    $(echo $SCRIPT | tr -d "./_")
+    $(echo $SCRIPT | tr -dc '[:alnum:]-')
 }
 
 deploy_cloudrun
