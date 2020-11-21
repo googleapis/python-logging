@@ -393,5 +393,5 @@ class Client(ClientWithProject):
             handler,
             log_level=log_level,
             excluded_loggers=excluded_loggers,
-            stream_handler=stream_handler,
+            stream_handler=stream_handler
         )
