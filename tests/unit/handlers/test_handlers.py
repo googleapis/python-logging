@@ -90,13 +90,15 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
 
 class TestSetupLogging(unittest.TestCase):
-    def _call_fut(self, handler, excludes=None):
+    def _call_fut(self, handler, excludes=None, stream_handler=True):
         from google.cloud.logging_v2.handlers.handlers import setup_logging
 
         if excludes:
-            return setup_logging(handler, excluded_loggers=excludes)
+            return setup_logging(
+                handler, excluded_loggers=excludes, stream_handler=stream_handler
+            )
         else:
-            return setup_logging(handler)
+            return setup_logging(handler, stream_handler=stream_handler)
 
     def test_setup_logging(self):
         handler = _Handler(logging.INFO)
@@ -104,6 +106,18 @@ class TestSetupLogging(unittest.TestCase):
 
         root_handlers = logging.getLogger().handlers
         self.assertIn(handler, root_handlers)
+
+    def test_setup_logging_no_stream_handler(self):
+        # Remove all handlers to be able to check
+        # the list after call setup_logging
+        logging.getLogger().handlers = []
+
+        handler = _Handler(logging.INFO)
+        self._call_fut(handler, stream_handler=False)
+
+        root_handlers = logging.getLogger().handlers
+        self.assertEqual(len(root_handlers), 1)
+        self.assertEqual(handler, root_handlers[0])
 
     def test_setup_logging_excludes(self):
         INCLUDED_LOGGER_NAME = "includeme"
