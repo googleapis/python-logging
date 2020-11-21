@@ -111,6 +111,29 @@ deploy_functions() {
   popd
 }
 
+deploy_ae_standard() {
+  local SCRIPT="${1:-test_flask.py}"
+  local RUNTIME="${2:-python37}"
+  # set up deployment directory
+  # copy over local copy of library
+  rsync -av $REPO_ROOT $TMP_DIR/python-logging \
+    --exclude tests --exclude .nox --exclude samples \
+    --exclude docs --exclude __pycache__
+  # copy test scripts
+  cp $SCRIPT_DIR/$SCRIPT $TMP_DIR/main.py
+  echo  "-e ./python-logging" | cat $SCRIPT_DIR/requirements.txt - > $TMP_DIR/requirements.txt
+  # build app.yaml
+  cat <<EOF > $TMP_DIR/app.yaml
+    runtime: $RUNTIME
+EOF
+  # deploy
+  pushd $TMP_DIR
+    gcloud app deploy -q
+    gcloud app browse
+  popd
+}
+
 #deploy_cloudrun
 #deploy_gke
 #deploy_functions
+deploy_ae_standard
