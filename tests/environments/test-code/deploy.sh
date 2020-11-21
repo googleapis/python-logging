@@ -182,11 +182,19 @@ deploy_ae_flex_container() {
 EOF
 
   # deploy
-  # deploy
   pushd $TMP_DIR
     gcloud app deploy --image-url $GCR_PATH -q
     gcloud app browse
   popd
+}
+
+deploy_gce() {
+  local SCRIPT="${1:-test_flask.py}"
+  build_container
+  gcloud beta compute instances create-with-container \
+    $(_clean_name $SCRIPT) \
+    --container-image $GCR_PATH \
+    --container-env SCRIPT=$SCRIPT
 }
 
 
@@ -195,4 +203,5 @@ EOF
 #deploy_functions
 #deploy_ae_standard
 #deploy_ae_flex_python
-deploy_ae_flex_container
+#deploy_ae_flex_container
+deploy_gce
