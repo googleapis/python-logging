@@ -4,15 +4,25 @@ set -o pipefail # any step in pipe caused failure
 set -u # undefined variables cause exit
 set -x # verbose logs
 
-# define variables
-GCR_PATH=gcr.io/sanche-testing-project/logging:latest
-GKE_CLUSTER=logging-test
-ZONE=us-central1-b
+# clean-up function
+finish() {
+  rm -rf $TMP_DIR
+}
+trap finish EXIT
 
 # ensure the working dir is the repo root
 SCRIPT_DIR=$(realpath $(dirname "$0"))
 REPO_ROOT=$SCRIPT_DIR/../../..
 cd $REPO_ROOT
+
+# define variables
+GCR_PATH=gcr.io/sanche-testing-project/logging:latest
+GKE_CLUSTER=logging-test
+ZONE=us-central1-b
+TMP_DIR=$SCRIPT_DIR/deploy-$(uuidgen)
+mkdir $TMP_DIR
+
+
 
 _clean_name(){
   echo $(echo "${1%%.*}" | tr ._ - | tr -dc '[:alnum:]-')
@@ -50,8 +60,7 @@ deploy_gke() {
 
   attach_or_create_gke_cluster
   build_container
-  local TMP_FILE=$SCRIPT_DIR/gke.yaml
-  cat <<EOF > $TMP_FILE
+  cat <<EOF > $TMP_DIR/gke.yaml
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -75,37 +84,33 @@ EOF
   # clean cluster
   set +e
   kubectl delete deployments --all
-  kubectl delete -f $TMP_FILE
+  kubectl delete -f $TMP_DIR
   set -e
   # deploy test container
-  kubectl apply -f $TMP_FILE
-  rm $TMP_FILE
+  kubectl apply -f $TMP_DIR
 }
 
 deploy_functions() {
   local SCRIPT="${1:-test_plain_logs.py}"
   local RUNTIME="${2:-python37}"
   # set up deployment directory
-  mkdir $SCRIPT_DIR/deployment
-  mkdir $SCRIPT_DIR/deployment/python-logging
   # copy over local copy of library
-  rsync -av $REPO_ROOT $SCRIPT_DIR/deployment/python-logging \
+  rsync -av $REPO_ROOT $TMP_DIR/python-logging \
     --exclude tests --exclude .nox --exclude samples \
     --exclude docs --exclude __pycache__
   # copy test scripts
-  cp $SCRIPT_DIR/$SCRIPT $SCRIPT_DIR/deployment/main.py
-  echo  "-e ./python-logging" | cat $SCRIPT_DIR/requirements.txt - > $SCRIPT_DIR/deployment/requirements.txt
+  cp $SCRIPT_DIR/$SCRIPT $TMP_DIR/main.py
+  echo  "-e ./python-logging" | cat $SCRIPT_DIR/requirements.txt - > $TMP_DIR/requirements.txt
   # deploy function
-  pushd $SCRIPT_DIR/deployment
+  pushd $TMP_DIR
     gcloud functions deploy $(_clean_name $SCRIPT) \
       --entry-point main \
       --trigger-http \
       --runtime $RUNTIME \
       --allow-unauthenticated
   popd
-  rm -rf $SCRIPT_DIR/deployment
 }
 
 #deploy_cloudrun
 #deploy_gke
-deploy_functions
+#deploy_functions
