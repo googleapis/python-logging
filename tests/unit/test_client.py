@@ -799,6 +799,7 @@ class TestClient(unittest.TestCase):
         expected_kwargs = {
             "excluded_loggers": ("google.cloud", "google.auth", "google_auth_httplib2"),
             "log_level": 20,
+            "stream_handler": True,
         }
         self.assertEqual(kwargs, expected_kwargs)
 
@@ -836,6 +837,7 @@ class TestClient(unittest.TestCase):
         expected_kwargs = {
             "excluded_loggers": ("google.cloud", "google.auth", "google_auth_httplib2"),
             "log_level": 20,
+            "stream_handler": True,
         }
         self.assertEqual(kwargs, expected_kwargs)
 

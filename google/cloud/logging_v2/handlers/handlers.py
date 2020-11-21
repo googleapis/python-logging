@@ -105,7 +105,11 @@ class CloudLoggingHandler(logging.StreamHandler):
 
 
 def setup_logging(
-    handler, *, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, log_level=logging.INFO
+    handler,
+    *,
+    excluded_loggers=EXCLUDED_LOGGER_DEFAULTS,
+    log_level=logging.INFO,
+    stream_handler=True
 ):
     """Attach a logging handler to the Python root logger
 
@@ -134,12 +138,15 @@ def setup_logging(
             path of the logging client itself.
         log_level (Optional[int]): Python logging log level. Defaults to
             :const:`logging.INFO`.
+        stream_handler (Optional[bool]): If True, a :const:`logging.StreamHandler`
+            is added in addition to the handler. Defaults to :const:`True`.
     """
     all_excluded_loggers = set(excluded_loggers + EXCLUDED_LOGGER_DEFAULTS)
     logger = logging.getLogger()
     logger.setLevel(log_level)
     logger.addHandler(handler)
-    logger.addHandler(logging.StreamHandler())
+    if stream_handler:
+        logger.addHandler(logging.StreamHandler())
     for logger_name in all_excluded_loggers:
         logger = logging.getLogger(logger_name)
         logger.propagate = False
