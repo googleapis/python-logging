@@ -6,11 +6,17 @@ set -x # verbose logs
 
 # define variables
 GCR_PATH=gcr.io/sanche-testing-project/logging:latest
+GKE_CLUSTER=logging-test
+ZONE=us-central1-b
 
 # ensure the working dir is the repo root
 SCRIPT_DIR=$(realpath $(dirname "$0"))
 REPO_ROOT=$SCRIPT_DIR/../../..
 cd $REPO_ROOT
+
+_clean_name(){
+  echo $(echo "${1%%.*}" | tr ._ - | tr -dc '[:alnum:]-')
+}
 
 build_container() {
   docker build -t $GCR_PATH --file $SCRIPT_DIR/Dockerfile $REPO_ROOT
@@ -26,7 +32,54 @@ deploy_cloudrun() {
     --allow-unauthenticated \
     --image $GCR_PATH \
     --update-env-vars SCRIPT=$SCRIPT \
-    $(echo $SCRIPT | tr -dc '[:alnum:]-')
+    $(_clean_name $SCRIPT)
 }
 
-deploy_cloudrun
+attach_or_create_gke_cluster(){
+  set +e
+  gcloud container clusters get-credentials $GKE_CLUSTER
+  if [[ $? -ne 0 ]]; then
+    echo "cluster not found. creating..."
+    gcloud container clusters create $GKE_CLUSTER --zone $ZONE
+  fi
+  set -e
+}
+
+deploy_gke() {
+  local SCRIPT="${1:-test_flask.py}"
+
+  attach_or_create_gke_cluster
+  build_container
+  local TMP_FILE=$SCRIPT_DIR/gke.yaml
+  cat <<EOF > $TMP_FILE
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: $(_clean_name $SCRIPT)
+    spec:
+      selector:
+        matchLabels:
+          app: $(_clean_name $SCRIPT)
+      template:
+        metadata:
+          labels:
+            app: $(_clean_name $SCRIPT)
+        spec:
+          containers:
+          - name: $(_clean_name $SCRIPT)
+            image:  $GCR_PATH
+            env:
+            - name: SCRIPT
+              value: $SCRIPT
+EOF
+  # clean cluster
+  set +e
+  kubectl delete deployments --all
+  kubectl delete -f $TMP_FILE
+  set -e
+  # deploy test container
+  kubectl apply -f $TMP_FILE
+  rm $TMP_FILE
+}
+
+deploy_gke
