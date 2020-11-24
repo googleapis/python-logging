@@ -2,7 +2,6 @@
 set -e # exit on any failure
 set -o pipefail # any step in pipe caused failure
 set -u # undefined variables cause exit
-set -x # verbose logs
 
 # clean-up function
 finish() {
@@ -32,6 +31,10 @@ build_container() {
   docker build -t $GCR_PATH --file $SCRIPT_DIR/Dockerfile $REPO_ROOT
   docker push $GCR_PATH
 }
+
+######################################
+# deployment functions
+######################################
 
 deploy_cloudrun() {
   local SCRIPT="${1:-test_flask.py}"
@@ -197,11 +200,67 @@ deploy_gce() {
     --container-env SCRIPT=$SCRIPT
 }
 
+######################################
+# user input functions
+######################################
 
-#deploy_cloudrun
-#deploy_gke
-#deploy_functions
-#deploy_ae_standard
-#deploy_ae_flex_python
-#deploy_ae_flex_container
-deploy_gce
+deploy_selected() {
+  case $(echo $GCP_ENV | tr -d -) in
+    cloudrun | run | cr)
+      deploy_cloudrun
+      ;;
+    kubernetes | gke | kubernetesengine)
+      deploy_gke
+      ;;
+    functions | function | gcf | cloudfunctions)
+      deploy_functions
+      ;;
+    compute | computeengine | gce)
+      deploy_gce
+      ;;
+    appengine | gae | appenginestandard | gaestandard)
+      deploy_ae_standard
+      ;;
+    gaeflex | appengineflex | gaeflexpython | appengineflexpython)
+      deploy_ae_flex_python
+      ;;
+    gaeflexcontainer | appengineflexcontainer)
+      deploy_ae_flex_container
+      ;;
+    *)
+      echo "environment not recognized"
+      exit 1
+  esac
+}
+
+# parse inputs
+PARAMS=""
+while (( "$#" )); do
+  case "$1" in
+    -e|--env|--environment)
+      if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        GCP_ENV=$2
+        shift 2
+      else
+        echo "Error: Argument for $1 is missing" >&2
+        exit 1
+      fi
+      ;;
+    -v|--verbose)
+      set -x # verbose logs
+      shift
+      ;;
+    -*|--*=) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+# set positional arguments in their proper place
+eval set -- "$PARAMS"
+
+deploy_selected
