@@ -218,12 +218,12 @@ EOF
 }
 
 deploy_gce() {
-  local SCRIPT="${1:-test_flask.py}"
+  local SCRIPT="${1:-router.py}"
   build_container
   gcloud beta compute instances create-with-container \
     $(_clean_name $SCRIPT) \
     --container-image $GCR_PATH \
-    --container-env SCRIPT=$SCRIPT
+    --container-env SCRIPT=$SCRIPT,ENABLE_SUBSCRIBER="true"
 }
 
 ######################################
