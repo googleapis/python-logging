@@ -32,12 +32,31 @@ build_container() {
   docker push $GCR_PATH
 }
 
+add_service_accounts() {
+  set +e
+  # clour run
+  PROJECT_NUMBER=$(gcloud projects list --filter=sanche-testing-project --format="value(PROJECT_NUMBER)")
+  gcloud projects add-iam-policy-binding sanche-testing-project \
+    --member=serviceAccount:service-$PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com \
+     --role=roles/iam.serviceAccountTokenCreator
+  gcloud iam service-accounts create pubsub-invoker \
+     --display-name "Pub/Sub Invoker"
+  gcloud run services add-iam-policy-binding  $(_clean_name $SCRIPT) \
+     --member=serviceAccount:pubsub-invoker@sanche-testing-project.iam.gserviceaccount.com \
+     --role=roles/run.invoker
+  RUN_URL=$(gcloud run services list --filter=router --format="value(URL)")
+  gcloud pubsub subscriptions create cloudrun-subscriber --topic logging-test \
+    --push-endpoint=$RUN_URL \
+    --push-auth-service-account=pubsub-invoker@sanche-testing-project.iam.gserviceaccount.com
+  set -e
+}
+
 ######################################
 # deployment functions
 ######################################
 
 deploy_cloudrun() {
-  local SCRIPT="${1:-test_flask.py}"
+  local SCRIPT="${1:-router.py}"
   build_container
   gcloud config set run/platform managed
   gcloud config set run/region us-west1
@@ -45,7 +64,10 @@ deploy_cloudrun() {
     --allow-unauthenticated \
     --image $GCR_PATH \
     --update-env-vars SCRIPT=$SCRIPT \
+    --update-env-vars ENABLE_FLASK=true \
     $(_clean_name $SCRIPT)
+  # create pubsub subscription
+  add_service_accounts
 }
 
 attach_or_create_gke_cluster(){
@@ -85,6 +107,8 @@ deploy_gke() {
             env:
             - name: SCRIPT
               value: $SCRIPT
+            - name: ENABLE_SUBSCRIBER
+              value: "true"
 EOF
   # clean cluster
   set +e
