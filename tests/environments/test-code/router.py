@@ -3,6 +3,9 @@ from google.cloud import pubsub_v1
 import uuid
 import logger_tests
 from inspect import getmembers, isfunction
+import google.cloud.logging
+import google.auth
+import logging
 
 
 _test_functions = {name:func for (name,func) in getmembers(logger_tests) 
@@ -18,12 +21,14 @@ def callback(message):
         print(f'function {msg_str} not found')
 
 if __name__ == "__main__":
+    # set up logging
+    client = google.cloud.logging.Client()
+    client.setup_logging()
+
     # set up pubsub listener
     topic_id = 'logging-test'
-    project_id=os.getenv('GOOGLE_CLOUD_PROJECT')
+    _, project_id = google.auth.default()
     subscription_id = f"logging-{uuid.uuid4().hex}"
-
-
     subscriber = pubsub_v1.SubscriberClient()
     topic_name = f'projects/{project_id}/topics/{topic_id}'
     subscription_name = f'projects/{project_id}/subscriptions/{subscription_id}'

@@ -53,13 +53,15 @@ attach_or_create_gke_cluster(){
   gcloud container clusters get-credentials $GKE_CLUSTER
   if [[ $? -ne 0 ]]; then
     echo "cluster not found. creating..."
-    gcloud container clusters create $GKE_CLUSTER --zone $ZONE
+    gcloud container clusters create $GKE_CLUSTER \
+      --zone $ZONE \
+      --scopes "https://www.googleapis.com/auth/pubsub"
   fi
   set -e
 }
 
 deploy_gke() {
-  local SCRIPT="${1:-test_flask.py}"
+  local SCRIPT="${1:-router.py}"
 
   attach_or_create_gke_cluster
   build_container
