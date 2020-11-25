@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
+from datetime import datetime, timedelta, timezone
 import logging
 import unittest
 import os
 import subprocess
 from shlex import split
 import sys
+import signal
 
 from google.api_core.exceptions import BadGateway
 from google.api_core.exceptions import Conflict
@@ -34,68 +35,81 @@ from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import Client
 from google.cloud.logging_v2.resource import Resource
 
-from test_utils.retry import RetryErrors
-from test_utils.retry import RetryResult
-from test_utils.system import unique_resource_id
+
+def _run_command(command):
+    os.chdir(os.path.abspath(sys.path[0]))
+    os.setpgrp()
+    complete = False
+    try:
+        result = subprocess.run(split(command), capture_output=True)
+        complete=True
+        return result.returncode, result.stdout.decode('utf-8')
+    except Exception as e:
+        print(e)
+    finally:
+        # kill background process if script is terminated
+        if not complete:
+            os.killpg(0, signal.SIGTERM)
+
+def deploy():
+    """Deploy test code to GCE"""
+    if self.verify():
+        # if instance already exists, recreate it
+        # self.destroy()
+        return True
+    create_command = "./test-code/compute.sh deploy"
+    statuscode, _ = _run_command(create_command)
+    return statuscode == 0
+
+
+def verify():
+    """Verify test code is running on GCE"""
+    verify_command = "./test-code/compute.sh verify"
+    statuscode, _ = _run_command(verify_command)
+    return statuscode == 0
+
+def destroy():
+    destroy_command = "./test-code/compute.sh destroy"
+    _run_command(destroy_command)
+
+def _get_resource_filter():
+    filter_command = "./test-code/compute.sh filter-string"
+    _, output = _run_command(filter_command)
+    return output.replace("\n", "")
 
 
 class TestGCE(unittest.TestCase):
 
-    def _run_command(self, command):
-        os.chdir(os.path.abspath(sys.path[0]))
-        os.setpgrp()
-        complete = False
-        try:
-            # run deploy.sh in a background shell
-            process = subprocess.Popen(split(command))
-            process.communicate()
-            complete = True
-            return process.returncode
-        finally:
-            # kill background process if script is terminated
-            if not complete:
-                os.killpg(0, signal.SIGTERM)
+    _client = Client()
 
-
-    def deploy(self):
-        """Deploy test code to GCE"""
-        if self.verify():
-            # if instance already exists, recreate it
-            # self.destroy()
-            return True
-        create_command = "./test-code/compute.sh deploy"
-        statuscode = self._run_command(create_command)
-        return statuscode == 0
-
-
-    def verify(self):
-        """Verify test code is running on GCE"""
-        verify_command = "./test-code/compute.sh verify"
-        statuscode = self._run_command(verify_command)
-        return statuscode == 0
-
-    def destroy(self):
-        destroy_command = "./test-code/compute.sh destroy"
-        self._run_command(destroy_command)
-
-    def get_logs(self):
-        pass
+    def _get_logs(self, timestamp=None):
+        time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
+        if not timestamp:
+            timestamp = datetime.now(timezone.utc) - timedelta(minutes=10)
+        filter_str = _get_resource_filter()
+        filter_str += ' AND timestamp > "%s"' % timestamp.strftime(time_format)
+        iterator = self._client.list_entries(filter_=filter_str)
+        entries = list(iterator)
+        return entries
 
     def setUp(self):
         # deploy test code to GCE
-        status = self.deploy()
+        status = deploy()
         self.assertTrue(status)
         # verify code is running
-        status = self.verify()
+        status = verify()
         self.assertTrue(status)
 
     def tearDown(self):
         #self.destroy()
         pass
 
-
     def test_test(self):
         self.assertTrue(True)
+        get_logs()
 
 if __name__ == "__main__":
+    cls = TestGCE()
+    entries = cls._get_logs()
+    print([e.payload['message'] for e in entries])
     sys.exit(1)

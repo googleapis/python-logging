@@ -27,7 +27,6 @@ logs() {
 ACTION=$1
 if [[ "$(type -t $ACTION)" == "function" ]]; then
   shift
-  echo $ACTION $@
   $ACTION $@
 else
   echo $ACTION not valid command
