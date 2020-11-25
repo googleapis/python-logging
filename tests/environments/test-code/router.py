@@ -14,6 +14,20 @@ app = Flask(__name__)
 _test_functions = {name:func for (name,func) in getmembers(logger_tests) 
                              if isfunction(func)}
 
+# used in Cloud Functions
+def pubsub_gcf(event, context):
+    client = google.cloud.logging.Client()
+    client.setup_logging()
+
+    if 'data' not in event:
+        logging.error(f'invalid pubsub message')
+    msg_str = base64.b64decode(event['data']).decode('utf-8')
+    found_func = _test_functions.get(msg_str, None)
+    if found_func:
+        found_func()
+    else:
+        logging.error(f'function {msg_str} not found')
+
 # grabs pubsub message out of request
 # used in Cloud Run
 @app.route('/', methods=['POST'])
@@ -38,7 +52,7 @@ def pubsub_callback(message):
     if found_func:
         found_func()
     else:
-        print(f'function {msg_str} not found')
+        logging.error(f'function {msg_str} not found')
 
 
 if __name__ == "__main__":
