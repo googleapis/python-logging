@@ -15,6 +15,15 @@ build_container() {
   docker push $GCR_PATH
 }
 
+logs() {
+  local OFFSET="${1:-10}"
+  echo "resource filter: \"$(filter-string)\""
+  echo "printing from last $OFFSET mins..."
+  TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ"  --date "-$OFFSET min")
+  gcloud logging read "$(filter-string) AND timestamp > \"$TIMESTAMP\""
+}
+
+
 ACTION=$1
 if [[ "$(type -t $ACTION)" == "function" ]]; then
   shift
