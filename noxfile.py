@@ -139,6 +139,49 @@ def system(session):
         session.run("py.test", "--quiet", system_test_folder_path, *session.posargs)
 
 
+@nox.session(python=SYSTEM_TEST_PYTHON_VERSIONS)
+def environment(session):
+    """Run the e2e environment test suite."""
+    system_test_path = os.path.join("tests", "environments.py")
+    system_test_folder_path = os.path.join("tests", "environments")
+
+    # Check the value of `RUN_SYSTEM_TESTS` env var. It defaults to true.
+    if os.environ.get("RUN_SYSTEM_TESTS", "true") == "false":
+        session.skip("RUN_SYSTEM_TESTS is set to false, skipping")
+    # Sanity check: Only run tests if the environment variable is set.
+    if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", ""):
+        session.skip("Credentials must be set via environment variable")
+
+    system_test_exists = os.path.exists(system_test_path)
+    system_test_folder_exists = os.path.exists(system_test_folder_path)
+    # Sanity check: only run tests if found.
+    if not system_test_exists and not system_test_folder_exists:
+        session.skip("System tests were not found")
+
+    # Use pre-release gRPC for system tests.
+    session.install("--pre", "grpcio")
+
+    # Install all test dependencies, then install this package into the
+    # virtualenv's dist-packages.
+    session.install(
+        "mock",
+        "pytest",
+        "google-cloud-testutils",
+        "google-cloud-bigquery",
+        "google-cloud-pubsub",
+        "google-cloud-storage",
+        "google-cloud-testutils",
+    )
+    session.install("-e", ".")
+
+    # Run py.test against the system tests.
+    if system_test_exists:
+        session.run("py.test", "--quiet", system_test_path, *session.posargs)
+    if system_test_folder_exists:
+        session.run("py.test", "--quiet", system_test_folder_path, *session.posargs)
+
+
+
 @nox.session(python=DEFAULT_PYTHON_VERSION)
 def cover(session):
     """Run the final coverage report.
