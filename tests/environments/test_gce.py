@@ -31,7 +31,7 @@ import google.cloud.logging
 from google.cloud._helpers import UTC
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
-from google.cloud.logging_v2 import client
+from google.cloud.logging_v2 import Client
 from google.cloud.logging_v2.resource import Resource
 
 from test_utils.retry import RetryErrors
@@ -63,28 +63,31 @@ class TestGCE(unittest.TestCase):
             # if instance already exists, recreate it
             # self.destroy()
             return True
-        create_command = "./test-code/deploy.sh --environment gce"
+        create_command = "./test-code/compute.sh deploy"
         statuscode = self._run_command(create_command)
         return statuscode == 0
 
 
     def verify(self):
         """Verify test code is running on GCE"""
-        verify_command = "./test-code/verify.sh --environment gce"
+        verify_command = "./test-code/compute.sh verify"
         statuscode = self._run_command(verify_command)
         return statuscode == 0
 
     def destroy(self):
-        destroy_command = "./test-code/destroy.sh --environment gce"
+        destroy_command = "./test-code/compute.sh destroy"
         self._run_command(destroy_command)
+
+    def get_logs(self):
+        pass
 
     def setUp(self):
         # deploy test code to GCE
-        success = self.deploy()
-        self.assertTrue(success)
+        status = self.deploy()
+        self.assertTrue(status)
         # verify code is running
-        success = self.verify()
-        self.assertTrue(success)
+        status = self.verify()
+        self.assertTrue(status)
 
     def tearDown(self):
         #self.destroy()
@@ -93,3 +96,6 @@ class TestGCE(unittest.TestCase):
 
     def test_test(self):
         self.assertTrue(True)
+
+if __name__ == "__main__":
+    sys.exit(1)
