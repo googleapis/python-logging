@@ -162,17 +162,16 @@ EOF
   # deploy
   pushd $TMP_DIR
     gcloud app deploy -q
-    gcloud app browse
   popd
   GAE_HOST=https://$(gcloud app describe --format="value(defaultHostname)")
-  gcloud pubsub subscriptions create gae-standard \
+  gcloud pubsub subscriptions create appengine \
     --topic logging-test \
     --push-endpoint $GAE_HOST \
-    --ack-deadline 10
+    --ack-deadline 10 2> /dev/null | cat
 }
 
 deploy_ae_flex_python() {
-  local SCRIPT="${1:-test_flask.py}"
+  local SCRIPT="${1:-router.py}"
   # set up deployment directory
   # copy over local copy of library
   rsync -av $REPO_ROOT $TMP_DIR/python-logging \
@@ -180,6 +179,7 @@ deploy_ae_flex_python() {
     --exclude docs --exclude __pycache__
   # copy test scripts
   cp $SCRIPT_DIR/$SCRIPT $TMP_DIR
+  cp $SCRIPT_DIR/logger_tests.py $TMP_DIR/
   cp $SCRIPT_DIR/requirements.txt $TMP_DIR
   # build app.yaml
   cat <<EOF > $TMP_DIR/app.yaml
@@ -194,16 +194,22 @@ deploy_ae_flex_python() {
       cpu: 1
       memory_gb: 0.5
       disk_size_gb: 10
+    env_variables:
+      ENABLE_FLASK: "true"
 EOF
   # deploy
   pushd $TMP_DIR
     gcloud app deploy -q
-    gcloud app browse
   popd
+  GAE_HOST=https://$(gcloud app describe --format="value(defaultHostname)")
+  gcloud pubsub subscriptions create appengine \
+    --topic logging-test \
+    --push-endpoint $GAE_HOST \
+    --ack-deadline 10 2> /dev/null | cat
 }
 
 deploy_ae_flex_container() {
-  local SCRIPT="${1:-test_flask.py}"
+  local SCRIPT="${1:-router.py}"
   build_container
 
   cat <<EOF > $TMP_DIR/app.yaml
@@ -211,6 +217,7 @@ deploy_ae_flex_container() {
   env: flex
   env_variables:
     SCRIPT: "$SCRIPT"
+    ENABLE_FLASK: "true"
   manual_scaling:
     instances: 1
   resources:
@@ -222,8 +229,12 @@ EOF
   # deploy
   pushd $TMP_DIR
     gcloud app deploy --image-url $GCR_PATH -q
-    gcloud app browse
   popd
+  GAE_HOST=https://$(gcloud app describe --format="value(defaultHostname)")
+  gcloud pubsub subscriptions create appengine \
+    --topic logging-test \
+    --push-endpoint $GAE_HOST \
+    --ack-deadline 10 2> /dev/null | cat
 }
 
 deploy_gce() {

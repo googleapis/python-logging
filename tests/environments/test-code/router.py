@@ -3,11 +3,20 @@ from google.cloud import pubsub_v1
 import uuid
 import logger_tests
 from inspect import getmembers, isfunction
-import google.cloud.logging
 import google.auth
 import logging
 from flask import Flask, request
 import base64
+try:
+    import google.cloud.logging
+except ImportError:
+    # import at runtime for GAE environments
+    import pip
+    import importlib
+    import site
+    pip.main(['install', '-e', './python-logging'])
+    importlib.reload(site)
+    import google.cloud.logging
 
 app = Flask(__name__)
 
