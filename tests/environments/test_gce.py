@@ -41,35 +41,53 @@ from test_utils.system import unique_resource_id
 
 class TestGCE(unittest.TestCase):
 
-    def deploy(self):
-        """Deploy test code to GCE"""
+    def _run_command(self, command):
         os.chdir(os.path.abspath(sys.path[0]))
-        create_command = "./test-code/deploy.sh --environment gce"
         os.setpgrp()
         complete = False
         try:
             # run deploy.sh in a background shell
-            process = subprocess.Popen(split(create_command), bufsize=0, shell=True)
+            process = subprocess.Popen(split(command))
             process.communicate()
             complete = True
+            return process.returncode
         finally:
             # kill background process if script is terminated
             if not complete:
                 os.killpg(0, signal.SIGTERM)
 
+
+    def deploy(self):
+        """Deploy test code to GCE"""
+        if self.verify():
+            # if instance already exists, recreate it
+            # self.destroy()
+            return True
+        create_command = "./test-code/deploy.sh --environment gce"
+        statuscode = self._run_command(create_command)
+        return statuscode == 0
+
+
     def verify(self):
         """Verify test code is running on GCE"""
-        os.chdir(os.path.abspath(sys.path[0]))
-        create_command = "./test-code/verify.sh --environment gce"
-        process = subprocess.Popen(split(create_command))
-        process.communicate()
-        self.assertEqual(process.returncode, 0)
+        verify_command = "./test-code/verify.sh --environment gce"
+        statuscode = self._run_command(verify_command)
+        return statuscode == 0
+
+    def destroy(self):
+        destroy_command = "./test-code/destroy.sh --environment gce"
+        self._run_command(destroy_command)
 
     def setUp(self):
-        self.deploy()
-        self.verify()
+        # deploy test code to GCE
+        success = self.deploy()
+        self.assertTrue(success)
+        # verify code is running
+        success = self.verify()
+        self.assertTrue(success)
 
     def tearDown(self):
+        #self.destroy()
         pass
 
 
