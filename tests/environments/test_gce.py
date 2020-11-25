@@ -15,6 +15,10 @@
 import datetime
 import logging
 import unittest
+import os
+import subprocess
+from shlex import split
+import sys
 
 from google.api_core.exceptions import BadGateway
 from google.api_core.exceptions import Conflict
@@ -35,11 +39,35 @@ from test_utils.retry import RetryResult
 from test_utils.system import unique_resource_id
 
 
-class TestGKE(unittest.TestCase):
+class TestGCE(unittest.TestCase):
 
+    def deploy(self):
+        """Deploy test code to GCE"""
+        os.chdir(os.path.abspath(sys.path[0]))
+        create_command = "./test-code/deploy.sh --environment gce"
+        os.setpgrp()
+        complete = False
+        try:
+            # run deploy.sh in a background shell
+            process = subprocess.Popen(split(create_command), bufsize=0, shell=True)
+            process.communicate()
+            complete = True
+        finally:
+            # kill background process if script is terminated
+            if not complete:
+                os.killpg(0, signal.SIGTERM)
+
+    def verify(self):
+        """Verify test code is running on GCE"""
+        os.chdir(os.path.abspath(sys.path[0]))
+        create_command = "./test-code/verify.sh --environment gce"
+        process = subprocess.Popen(split(create_command))
+        process.communicate()
+        self.assertEqual(process.returncode, 0)
 
     def setUp(self):
-        pass
+        self.deploy()
+        self.verify()
 
     def tearDown(self):
         pass
