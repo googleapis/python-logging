@@ -53,10 +53,13 @@ def _run_command(command):
 
 def deploy():
     """Deploy test code to GCE"""
-    if self.verify():
-        # if instance already exists, recreate it
-        # self.destroy()
-        return True
+    if verify():
+        if os.getenv("NO_CLEAN"):
+            # allow a way for us to skip expensive recreation on each run
+            return True
+        else:
+            # if instance already exists, destroy and recreate it
+            destroy()
     create_command = "./test-code/compute.sh deploy"
     statuscode, _ = _run_command(create_command)
     return statuscode == 0
@@ -101,12 +104,14 @@ class TestGCE(unittest.TestCase):
         self.assertTrue(status)
 
     def tearDown(self):
-        #self.destroy()
-        pass
+        # by default, destroy environment on each run
+        # allow skipping deletion for development
+        if not os.getenv("NO_CLEAN"):
+            destroy()
 
     def test_test(self):
         self.assertTrue(True)
-        get_logs()
+        self._get_logs()
 
 if __name__ == "__main__":
     cls = TestGCE()
