@@ -85,7 +85,7 @@ def trigger(function_name):
     trigger_command = f"./test-code/compute.sh trigger {function_name}"
     _run_command(trigger_command)
     # give the command time to be received
-    sleep(10)
+    sleep(30)
 
 class TestGCE(unittest.TestCase):
 
@@ -115,15 +115,21 @@ class TestGCE(unittest.TestCase):
         if not os.getenv("NO_CLEAN"):
             destroy()
 
-    def test_test(self):
+    def test_receive_log(self):
         timestamp = datetime.now(timezone.utc)
         trigger('test_1')
         logs = self._get_logs(timestamp)
         self.assertTrue(logs)
+        messages = [e.payload.get('message', '').replace("\n", "")
+                        for e in logs if isinstance(e.payload, dict)]
+        self.assertTrue('test_1' in messages)
 
 
 if __name__ == "__main__":
     cls = TestGCE()
     entries = cls._get_logs()
-    print([e.payload['message'] for e in entries])
+    messages = [e.payload.get('message', '').replace("\n", "") for e in entries if isinstance(e.payload, dict)]
+    print(messages)
+    print('test_1' in messages)
+    # trigger('test_1')
     sys.exit(1)
