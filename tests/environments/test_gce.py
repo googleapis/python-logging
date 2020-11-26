@@ -35,6 +35,7 @@ from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import Client
 from google.cloud.logging_v2.resource import Resource
 
+from time import sleep
 
 def _run_command(command):
     os.chdir(os.path.abspath(sys.path[0]))
@@ -80,6 +81,11 @@ def _get_resource_filter():
     _, output = _run_command(filter_command)
     return output.replace("\n", "")
 
+def trigger(function_name):
+    trigger_command = f"./test-code/compute.sh trigger {function_name}"
+    _run_command(trigger_command)
+    # give the command time to be received
+    sleep(10)
 
 class TestGCE(unittest.TestCase):
 
@@ -110,8 +116,11 @@ class TestGCE(unittest.TestCase):
             destroy()
 
     def test_test(self):
-        self.assertTrue(True)
-        self._get_logs()
+        timestamp = datetime.now(timezone.utc)
+        trigger('test_1')
+        logs = self._get_logs(timestamp)
+        self.assertTrue(logs)
+
 
 if __name__ == "__main__":
     cls = TestGCE()

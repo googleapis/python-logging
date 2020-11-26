@@ -9,6 +9,7 @@ SCRIPT_DIR=$(realpath $(dirname "$0"))
 REPO_ROOT=$SCRIPT_DIR/../../..
 cd $REPO_ROOT
 GCR_PATH=gcr.io/sanche-testing-project/logging:latest
+PUBSUB_TOPIC=logging-test
 
 build_container() {
   docker build -t $GCR_PATH --file $SCRIPT_DIR/Dockerfile $REPO_ROOT
@@ -23,6 +24,14 @@ logs() {
   gcloud logging read "$(filter-string) AND timestamp > \"$TIMESTAMP\""
 }
 
+trigger() {
+  local FUNCTION="${1-empty}"
+  if [[ $FUNCTION == "empty" ]]; then
+    echo "function not set"
+    exit 1
+  fi
+  gcloud pubsub topics publish "$PUBSUB_TOPIC" --message="$FUNCTION"
+}
 
 ACTION=$1
 if [[ "$(type -t $ACTION)" == "function" ]]; then
