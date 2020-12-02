@@ -38,101 +38,23 @@ from google.cloud.logging_v2 import entries
 from google.cloud.logging_v2._helpers import LogSeverity
 
 from time import sleep
-
-def _run_command(command):
-    os.chdir(os.path.abspath(sys.path[0]))
-    os.setpgrp()
-    complete = False
-    try:
-        result = subprocess.run(split(command), capture_output=True)
-        complete=True
-        return result.returncode, result.stdout.decode('utf-8')
-    except Exception as e:
-        print(e)
-    finally:
-        # kill background process if script is terminated
-        if not complete:
-            os.killpg(0, signal.SIGTERM)
-
-def deploy():
-    """Deploy test code to GCE"""
-    if verify():
-        if os.getenv("NO_CLEAN"):
-            # allow a way for us to skip expensive recreation on each run
-            return True
-        else:
-            # if instance already exists, destroy and recreate it
-            destroy()
-    create_command = "./test-code/compute.sh deploy"
-    statuscode, _ = _run_command(create_command)
-    return statuscode == 0
+try:
+    # import path when run from pytest
+    from .common import Common
+except ImportError:
+    # import path when run directly
+    from common import Common
 
 
-def verify():
-    """Verify test code is running on GCE"""
-    verify_command = "./test-code/compute.sh verify"
-    statuscode, _ = _run_command(verify_command)
-    return statuscode == 0
+class TestGCE(Common, unittest.TestCase):
 
-def destroy():
-    destroy_command = "./test-code/compute.sh destroy"
-    _run_command(destroy_command)
+    def environment_name(self):
+        return "compute"
 
-def _get_resource_filter():
-    filter_command = "./test-code/compute.sh filter-string"
-    _, output = _run_command(filter_command)
-    return output.replace("\n", "")
+    def test_test(self):
+        self.assertTrue(True)
 
-def trigger(function_name):
-    trigger_command = f"./test-code/compute.sh trigger {function_name}"
-    _run_command(trigger_command)
-    # give the command time to be received
-    sleep(30)
 
-class TestGCE(unittest.TestCase):
-
-    _client = Client()
-
-    def _get_logs(self, timestamp=None):
-        time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
-        if not timestamp:
-            timestamp = datetime.now(timezone.utc) - timedelta(minutes=10)
-        filter_str = _get_resource_filter()
-        filter_str += ' AND timestamp > "%s"' % timestamp.strftime(time_format)
-        iterator = self._client.list_entries(filter_=filter_str)
-        entries = list(iterator)
-        return entries
-
-    def setUp(self):
-        # deploy test code to GCE
-        status = deploy()
-        self.assertTrue(status)
-        # verify code is running
-        status = verify()
-        self.assertTrue(status)
-
-    def tearDown(self):
-        # by default, destroy environment on each run
-        # allow skipping deletion for development
-        if not os.getenv("NO_CLEAN"):
-            destroy()
-
-    def test_receive_log(self):
-        timestamp = datetime.now(timezone.utc)
-        trigger('test_1')
-        log_list = self._get_logs(timestamp)
-        self.assertTrue(log_list)
-        self.assertEqual(len(log_list), 1)
-        log = log_list[0]
-        self.assertTrue(isinstance(log, entries.StructEntry))
-        self.assertEqual(log.payload['message'], 'test_1')
-        self.assertEqual(log.severity, LogSeverity.WARNING)
-
-if __name__ == "__main__":
-    cls = TestGCE()
-    entries = cls._get_logs()
-    messages = [e.payload.get('message', '').replace("\n", "") for e in entries if isinstance(e.payload, dict)]
-    print(messages)
-    print('test_1' in messages)
-    # trigger('test_1')
-    sys.exit(1)
+if __name__ == '__main__':
+    obj = TestGCE()
+    unittest.main()
