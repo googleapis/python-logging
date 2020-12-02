@@ -15,7 +15,7 @@ class Command(Enum):
     GetFilter = "filter-string"
     Trigger = "trigger"
 
-class ScriptInterface:
+class ScriptRunner:
 
     def __init__(self, environment):
         run_dir = os.path.dirname(os.path.realpath(__file__))

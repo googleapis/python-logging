@@ -13,7 +13,7 @@ from datetime import timezone
 import os
 import sys
 
-from script_utils import ScriptInterface
+from script_utils import ScriptRunner
 from script_utils import Command
 
 from inspect import getmembers, isfunction
@@ -53,7 +53,7 @@ class CloudCommonTests:
     def setUpClass(cls):
         if not cls.environment:
             raise NotImplementedError('environment not set by subclass')
-        cls._script = ScriptInterface(cls.environment)
+        cls._script = ScriptRunner(cls.environment)
         # check if already setup
         status, _ = cls._script.run_command(Command.Verify)
         if status == 0:
