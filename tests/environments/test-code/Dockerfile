@@ -18,8 +18,5 @@ ENV PATH="/app:${PATH}"
 COPY . /app/python-logging
 RUN pip install -e /app/python-logging
 
-# placeholder entrypoint
-ENV SCRIPT=test_plain_logs.py
-
 # Start script
-CMD python $SCRIPT
+CMD python router.py
