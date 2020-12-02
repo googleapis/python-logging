@@ -22,12 +22,12 @@ class Common(object):
     _client = Client()
 
     def _run_command(self, command, args=None):
-        os.chdir(os.path.abspath(sys.path[0]))
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        os.chdir(script_dir)
         os.setpgrp()
         complete = False
         try:
             full_command = [f'./test-code/{self.environment_name()}.sh'] + split(command)
-            print(full_command)
             if args:
                 full_command += split(args)
             result = subprocess.run(full_command, capture_output=True)
@@ -36,9 +36,9 @@ class Common(object):
         except Exception as e:
             print(e)
         finally:
-            # kill background process if script is terminated
             if not complete:
-                os.killpg(0, signal.SIGTERM)
+                # kill background process if script is terminated
+                # os.killpg(0, signal.SIGTERM)
                 return 1, None
 
     def _get_logs(self, timestamp=None):
