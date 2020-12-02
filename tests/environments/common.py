@@ -15,7 +15,14 @@ import sys
 from shlex import split
 import subprocess
 import signal
+from enum import Enum
 
+class Command(Enum):
+    Deploy = "deploy"
+    Destroy = "destroy"
+    Verify = "verify"
+    GetFilter = "filter-string"
+    Trigger = "trigger"
 
 class ScriptInterface:
 
@@ -27,10 +34,12 @@ class ScriptInterface:
             raise RuntimeError(f'environment {environment} does not exist')
 
     def _run_command(self, command, args=None):
+        if not command or not isinstance(command, Command):
+            raise RuntimeError(f'unknown command: {command}')
         os.setpgrp()
         complete = False
         try:
-            full_command = [self.script_path] + split(command)
+            full_command = [self.script_path] + split(command.value)
             print(full_command)
             if args:
                 full_command += split(args)
@@ -46,7 +55,7 @@ class ScriptInterface:
                 return 1, None
 
     def trigger(self, function):
-        self._run_command('trigger', function)
+        self._run_command(Command.Trigger, function)
         # give the command time to be received
         sleep(30)
 
@@ -61,7 +70,7 @@ class TestCommon:
         time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
         if not timestamp:
             timestamp = datetime.now(timezone.utc) - timedelta(minutes=10)
-        _, filter_str = self._script._run_command('filter-string')
+        _, filter_str = self._script._run_command(Command.GetFilter)
         filter_str += ' AND timestamp > "%s"' % timestamp.strftime(time_format)
         iterator = self._client.list_entries(filter_=filter_str)
         entries = list(iterator)
@@ -73,20 +82,20 @@ class TestCommon:
             raise NotImplementedError('environment not set by subclass')
         cls._script = ScriptInterface(cls.environment)
         # check if already setup
-        status, _ = cls._script._run_command('verify')
+        status, _ = cls._script._run_command(Command.Verify)
         if status == 0:
             if os.getenv("NO_CLEAN"):
                 # ready to go
                 return
             else:
                 # reset environment
-                status, _ = cls._script._run_command('destroy')
+                status, _ = cls._script._run_command(Command.Destroy)
                 self.assertEqual(status)
         # deploy test code to GCE
-        status, _ = cls._script._run_command('deploy')
+        status, _ = cls._script._run_command(Command.Destroy)
         self.assertTrue(status)
         # verify code is running
-        status, _ = cls._script._run_command('verify')
+        status, _ = cls._script._run_command(Command.Verify)
         self.assertEqual(status, 0)
 
     @classmethod
@@ -94,7 +103,7 @@ class TestCommon:
         # by default, destroy environment on each run
         # allow skipping deletion for development
         if not os.getenv("NO_CLEAN"):
-            cls._script._run_command('destroy')
+            cls._script._run_command(Command.Destroy)
 
     def test_receive_log(self):
         timestamp = datetime.now(timezone.utc)
