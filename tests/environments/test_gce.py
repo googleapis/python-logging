@@ -34,6 +34,8 @@ from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import Client
 from google.cloud.logging_v2.resource import Resource
+from google.cloud.logging_v2 import entries
+from google.cloud.logging_v2._helpers import LogSeverity
 
 from time import sleep
 
@@ -118,12 +120,13 @@ class TestGCE(unittest.TestCase):
     def test_receive_log(self):
         timestamp = datetime.now(timezone.utc)
         trigger('test_1')
-        logs = self._get_logs(timestamp)
-        self.assertTrue(logs)
-        messages = [e.payload.get('message', '').replace("\n", "")
-                        for e in logs if isinstance(e.payload, dict)]
-        self.assertTrue('test_1' in messages)
-
+        log_list = self._get_logs(timestamp)
+        self.assertTrue(log_list)
+        self.assertEqual(len(log_list), 1)
+        log = log_list[0]
+        self.assertTrue(isinstance(log, entries.StructEntry))
+        self.assertEqual(log.payload['message'], 'test_1')
+        self.assertEqual(log.severity, LogSeverity.WARNING)
 
 if __name__ == "__main__":
     cls = TestGCE()
