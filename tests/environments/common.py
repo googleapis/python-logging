@@ -57,6 +57,16 @@ class TestCommon(object):
         sleep(30)
 
     def setUp(self):
+        # check if already setup
+        status, _ = self._run_command('verify')
+        if status == 0:
+            if os.getenv("NO_CLEAN"):
+                # ready to go
+                return
+            else:
+                # reset environment
+                status, _ = self._run_command('destroy')
+                self.assertEqual(status)
         # deploy test code to GCE
         status, _ = self._run_command('deploy')
         self.assertTrue(status)
