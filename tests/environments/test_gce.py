@@ -12,32 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from datetime import datetime, timedelta, timezone
 import logging
 import unittest
-import os
-import subprocess
-from shlex import split
-import sys
-import signal
 
-from google.api_core.exceptions import BadGateway
-from google.api_core.exceptions import Conflict
-from google.api_core.exceptions import NotFound
-from google.api_core.exceptions import TooManyRequests
-from google.api_core.exceptions import ResourceExhausted
-from google.api_core.exceptions import RetryError
-from google.api_core.exceptions import ServiceUnavailable
 import google.cloud.logging
-from google.cloud._helpers import UTC
-from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
-from google.cloud.logging_v2.handlers.transports import SyncTransport
-from google.cloud.logging_v2 import Client
-from google.cloud.logging_v2.resource import Resource
-from google.cloud.logging_v2 import entries
-from google.cloud.logging_v2._helpers import LogSeverity
 
-from time import sleep
 from test_gcp_common import CloudCommonTests
 
 
