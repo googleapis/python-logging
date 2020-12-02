@@ -16,6 +16,13 @@ import sys
 from script_utils import ScriptInterface
 from script_utils import Command
 
+from inspect import getmembers, isfunction
+
+from test_code import logger_tests
+
+_test_functions = [name for (name,func) in getmembers(logger_tests)
+                        if isfunction(func)]
+
 class CloudCommonTests:
     _client = Client()
     # environment name must be set by subclass
@@ -32,6 +39,8 @@ class CloudCommonTests:
         return entries
 
     def _trigger(self, function, return_logs=True):
+        if function not in _test_functions:
+            raise RuntimeError('function f{function} not found')
         timestamp = datetime.now(timezone.utc)
         self._script.run_command(Command.Trigger, function)
         # give the command time to be received

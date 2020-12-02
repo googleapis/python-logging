@@ -19,7 +19,7 @@ class ScriptInterface:
 
     def __init__(self, environment):
         run_dir = os.path.dirname(os.path.realpath(__file__))
-        self.script_path = os.path.join(run_dir, f'test-code/{environment}.sh')
+        self.script_path = os.path.join(run_dir, f'test_code/{environment}.sh')
         print(self.script_path)
         if not os.path.exists(self.script_path):
             raise RuntimeError(f'environment {environment} does not exist')

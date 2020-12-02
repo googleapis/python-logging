@@ -6,11 +6,11 @@ FROM python:3.7-slim
 ENV PYTHONUNBUFFERED=0
 
 # Install test code dependencies.
-COPY tests/environments/test-code/requirements.txt /app/requirements.txt
+COPY tests/environments/test_code/requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
 # Add test scripts.
-COPY tests/environments/test-code/*.py /app/
+COPY tests/environments/test_code/*.py /app/
 
 # install logging from local directory.
 WORKDIR /app
