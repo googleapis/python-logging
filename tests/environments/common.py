@@ -55,7 +55,7 @@ class ScriptInterface:
                 return 1, None
 
 
-class TestCommon:
+class TestGCPCommon:
     _client = Client()
     # environment name must be set by subclass
     environment = None
@@ -93,13 +93,12 @@ class TestCommon:
             else:
                 # reset environment
                 status, _ = cls._script.run_command(Command.Destroy)
-                self.assertEqual(status)
+                assert status == 0
         # deploy test code to GCE
-        status, _ = cls._script.run_command(Command.Destroy)
-        self.assertTrue(status)
+        status, _ = cls._script.run_command(Command.Deploy)
         # verify code is running
         status, _ = cls._script.run_command(Command.Verify)
-        self.assertEqual(status, 0)
+        assert status == 0
 
     @classmethod
     def tearDown_class(cls):

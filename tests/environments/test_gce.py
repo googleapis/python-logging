@@ -40,13 +40,13 @@ from google.cloud.logging_v2._helpers import LogSeverity
 from time import sleep
 try:
     # import path when run from pytest
-    from .common import TestCommon
+    from .common import TestGCPCommon
 except ImportError:
     # import path when run directly
-    from common import TestCommon
+    from common import TestGCPCommon
 
 
-class TestGCE(TestCommon, unittest.TestCase):
+class TestGCE(TestGCPCommon, unittest.TestCase):
 
     environment = 'compute'
 
