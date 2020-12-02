@@ -35,13 +35,6 @@ filter-string() {
   echo "resource.type=\"gce_instance\" AND resource.labels.instance_id=\"$INSTANCE_ID\""
 }
 
-logs() {
-  local OFFSET="${1:-10}"
-  echo "resource filter: \"$(filter-string)\""
-  echo "printing from last $OFFSET mins..."
-  TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ"  --date "-$OFFSET min")
-  gcloud logging read "$(filter-string) AND timestamp > \"$TIMESTAMP\""
-}
 
 SCRIPT_DIR=$(realpath $(dirname "$0"))
 source $SCRIPT_DIR/common.sh
