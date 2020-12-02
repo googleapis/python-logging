@@ -16,7 +16,7 @@ import sys
 from script_utils import ScriptInterface
 from script_utils import Command
 
-class TestGCPCommon(object):
+class CloudCommonTests:
     _client = Client()
     # environment name must be set by subclass
     environment = None
