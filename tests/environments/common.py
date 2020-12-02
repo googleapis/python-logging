@@ -18,7 +18,7 @@ import signal
 
 
 
-class Common(object):
+class TestCommon(object):
     _client = Client()
 
     def _run_command(self, command, args=None):
