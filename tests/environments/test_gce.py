@@ -41,12 +41,16 @@ from time import sleep
 try:
     # import path when run from pytest
     from .common import TestCommon
+    from .common import ScriptInterface
 except ImportError:
     # import path when run directly
     from common import TestCommon
+    from common import ScriptInterface
 
 
 class TestGCE(TestCommon, unittest.TestCase):
+
+    _script = ScriptInterface('compute')
 
     def environment_name(self):
         return "compute"

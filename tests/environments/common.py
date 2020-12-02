@@ -17,9 +17,10 @@ import subprocess
 import signal
 
 
+class ScriptInterface:
 
-class TestCommon(object):
-    _client = Client()
+    def __init__(self, environment):
+        self.environment = environment
 
     def _run_command(self, command, args=None):
         script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -27,7 +28,8 @@ class TestCommon(object):
         os.setpgrp()
         complete = False
         try:
-            full_command = [f'./test-code/{self.environment_name()}.sh'] + split(command)
+            full_command = [f'./test-code/{self.environment}.sh'] + split(command)
+            print(full_command)
             if args:
                 full_command += split(args)
             result = subprocess.run(full_command, capture_output=True)
@@ -41,48 +43,55 @@ class TestCommon(object):
                 # os.killpg(0, signal.SIGTERM)
                 return 1, None
 
-    def _get_logs(self, timestamp=None):
-        time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
-        if not timestamp:
-            timestamp = datetime.now(timezone.utc) - timedelta(minutes=10)
-        _, filter_str = self._run_command('filter-string')
-        filter_str += ' AND timestamp > "%s"' % timestamp.strftime(time_format)
-        iterator = self._client.list_entries(filter_=filter_str)
-        entries = list(iterator)
-        return entries
-
     def trigger(self, function):
         self._run_command('trigger', function)
         # give the command time to be received
         sleep(30)
 
-    def setUp(self):
+
+
+class TestCommon:
+    _client = Client()
+
+    def _get_logs(self, timestamp=None):
+        time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
+        if not timestamp:
+            timestamp = datetime.now(timezone.utc) - timedelta(minutes=10)
+        _, filter_str = self._script._run_command('filter-string')
+        filter_str += ' AND timestamp > "%s"' % timestamp.strftime(time_format)
+        iterator = self._client.list_entries(filter_=filter_str)
+        entries = list(iterator)
+        return entries
+
+    @classmethod
+    def setUpClass(cls):
         # check if already setup
-        status, _ = self._run_command('verify')
+        status, _ = cls._script._run_command('verify')
         if status == 0:
             if os.getenv("NO_CLEAN"):
                 # ready to go
                 return
             else:
                 # reset environment
-                status, _ = self._run_command('destroy')
+                status, _ = cls._script._run_command('destroy')
                 self.assertEqual(status)
         # deploy test code to GCE
-        status, _ = self._run_command('deploy')
+        status, _ = cls._script._run_command('deploy')
         self.assertTrue(status)
         # verify code is running
-        status, _ = self._run_command('verify')
+        status, _ = cls._script._run_command('verify')
         self.assertEqual(status, 0)
 
-    def tearDown(self):
+    @classmethod
+    def tearDown_class(cls):
         # by default, destroy environment on each run
         # allow skipping deletion for development
         if not os.getenv("NO_CLEAN"):
-            self._run_command('destroy')
+            cls._script._run_command('destroy')
 
     def test_receive_log(self):
         timestamp = datetime.now(timezone.utc)
-        self.trigger('test_1')
+        self._script.trigger('test_1')
         log_list = self._get_logs(timestamp)
         self.assertTrue(log_list)
         self.assertEqual(len(log_list), 1)
