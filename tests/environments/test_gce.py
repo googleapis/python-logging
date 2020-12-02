@@ -38,12 +38,7 @@ from google.cloud.logging_v2 import entries
 from google.cloud.logging_v2._helpers import LogSeverity
 
 from time import sleep
-try:
-    # import path when run from pytest
-    from .test_gcp_common import CloudCommonTests
-except ImportError:
-    # import path when run directly
-    from test_gcp_common import CloudCommonTests
+from test_gcp_common import CloudCommonTests
 
 
 class TestGCE(CloudCommonTests, unittest.TestCase):
