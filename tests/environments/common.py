@@ -20,15 +20,17 @@ import signal
 class ScriptInterface:
 
     def __init__(self, environment):
-        self.environment = environment
+        run_dir = os.path.dirname(os.path.realpath(__file__))
+        self.script_path = os.path.join(run_dir, f'test-code/{environment}.sh')
+        print(self.script_path)
+        if not os.path.exists(self.script_path):
+            raise RuntimeError(f'environment {environment} does not exist')
 
     def _run_command(self, command, args=None):
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        os.chdir(script_dir)
         os.setpgrp()
         complete = False
         try:
-            full_command = [f'./test-code/{self.environment}.sh'] + split(command)
+            full_command = [self.script_path] + split(command)
             print(full_command)
             if args:
                 full_command += split(args)

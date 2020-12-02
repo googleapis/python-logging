@@ -52,9 +52,6 @@ class TestGCE(TestCommon, unittest.TestCase):
 
     _script = ScriptInterface('compute')
 
-    def environment_name(self):
-        return "compute"
-
     def test_test(self):
         self.assertTrue(True)
 
