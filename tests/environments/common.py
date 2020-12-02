@@ -54,6 +54,8 @@ class ScriptInterface:
 
 class TestCommon:
     _client = Client()
+    # environment name must be set by subclass
+    environment = None
 
     def _get_logs(self, timestamp=None):
         time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
@@ -67,6 +69,9 @@ class TestCommon:
 
     @classmethod
     def setUpClass(cls):
+        if not cls.environment:
+            raise NotImplementedError('environment not set by subclass')
+        cls._script = ScriptInterface(cls.environment)
         # check if already setup
         status, _ = cls._script._run_command('verify')
         if status == 0:
