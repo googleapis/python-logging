@@ -19,9 +19,10 @@ class ScriptRunner:
 
     def __init__(self, environment):
         run_dir = os.path.dirname(os.path.realpath(__file__))
-        self.script_path = os.path.join(run_dir, f'test_code/{environment}.sh')
-        print(self.script_path)
-        if not os.path.exists(self.script_path):
+        self.script_path = os.path.join(run_dir, 'envctl')
+        self.environment = environment
+        env_path = os.path.join(run_dir, f'env_scripts/{environment}.sh')
+        if not os.path.exists(env_path):
             raise RuntimeError(f'environment {environment} does not exist')
 
     def run_command(self, command, args=None):
@@ -30,7 +31,7 @@ class ScriptRunner:
         os.setpgrp()
         complete = False
         try:
-            full_command = [self.script_path] + split(command.value)
+            full_command = [self.script_path, self.environment] + split(command.value)
             print(full_command)
             if args:
                 full_command += split(args)

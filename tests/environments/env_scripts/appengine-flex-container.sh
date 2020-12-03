@@ -46,9 +46,4 @@ filter-string() {
   echo "pass"
 }
 
-logs() {
-  echo "pass"
-}
 
-SCRIPT_DIR=$(realpath $(dirname "$0"))
-source $SCRIPT_DIR/common.sh

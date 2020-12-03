@@ -6,13 +6,13 @@ set -u # undefined variables cause exit
 
 # ensure the working dir is the repo root
 SCRIPT_DIR=$(realpath $(dirname "$0"))
-REPO_ROOT=$SCRIPT_DIR/../../..
+REPO_ROOT=$SCRIPT_DIR/../..
 cd $REPO_ROOT
 GCR_PATH=gcr.io/sanche-testing-project/logging:latest
 PUBSUB_TOPIC=logging-test
 
 build_container() {
-  docker build -t $GCR_PATH --file $SCRIPT_DIR/Dockerfile $REPO_ROOT
+  docker build -t $GCR_PATH --file $SCRIPT_DIR/test_code/Dockerfile $REPO_ROOT
   docker push $GCR_PATH
 }
 
@@ -33,11 +33,19 @@ trigger() {
   gcloud pubsub topics publish "$PUBSUB_TOPIC" --message="$FUNCTION"
 }
 
-ACTION=$1
+ENVIRONMENT=${1:-none}
+if [[ -f "$SCRIPT_DIR/env_scripts/$ENVIRONMENT.sh" ]]; then
+  source "$SCRIPT_DIR/env_scripts/$ENVIRONMENT.sh"
+else
+  echo not a valid environment: $ENVIRONMENT
+fi
+shift
+ACTION=${1:-none}
+set -u
 if [[ "$(type -t $ACTION)" == "function" ]]; then
   shift
   $ACTION $@
 else
-  echo $ACTION not valid command
+  echo not valid command: $ACTION
   exit 1
 fi

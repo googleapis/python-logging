@@ -3,8 +3,6 @@ set -e # exit on any failure
 set -o pipefail # any step in pipe caused failure
 set -u # undefined variables cause exit
 
-
-
 destroy() {
   echo "pass"
 }
@@ -55,9 +53,4 @@ filter-string() {
   echo "pass"
 }
 
-logs() {
-  echo "pass"
-}
 
-SCRIPT_DIR=$(realpath $(dirname "$0"))
-source $SCRIPT_DIR/common.sh
