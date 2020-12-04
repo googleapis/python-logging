@@ -54,6 +54,16 @@ class TestRequestMiddleware(DjangoBase):
         django_request = request._get_django_request()
         self.assertEqual(django_request, mock_request)
 
+    def test_can_instantiate_middleware_without_kwargs(self):
+        handler = mock.Mock()
+        middleware = self._make_one(handler)
+        self.assertEqual(middleware.get_response, handler)
+
+    def test_can_instantiate_middleware_with_kwargs(self):
+        handler = mock.Mock()
+        middleware = self._make_one(get_response=handler)
+        self.assertEqual(middleware.get_response, handler)
+
 
 class Test__get_django_request(DjangoBase):
     @staticmethod
