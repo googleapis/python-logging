@@ -149,6 +149,7 @@ def lint(session):
     ]
     session.run("flake8", *args)
 
+
 #
 # Black
 #
