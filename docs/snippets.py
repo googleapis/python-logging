@@ -361,7 +361,7 @@ def logging_handler(client):
     # [END create_default_handler]
 
     # [START create_cloud_handler]
-    from google.cloud.logging.handlers import CloudLoggingHandler
+    from google.cloud.logging_v2.handlers import CloudLoggingHandler
 
     handler = CloudLoggingHandler(client)
     cloud_logger = logging.getLogger("cloudLogger")

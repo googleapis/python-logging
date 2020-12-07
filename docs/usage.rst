@@ -297,7 +297,7 @@ Cloud Logging Handler
 If you prefer not to use
 :meth:`~google.cloud.logging.client.Client.get_default_handler`, you can
 directly create a
-:class:`~google.cloud.logging.handlers.handlers.CloudLoggingHandler` instance
+:class:`~google.cloud.logging_v2.handlers.CloudLoggingHandler` instance
 which will write directly to the API.
 
 .. literalinclude:: snippets.py
@@ -324,7 +324,7 @@ of the Python logger will be included in the structured log entry under the
 Cloud Logging Handler transports
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :class:`~google.cloud.logging.handlers.handlers.CloudLoggingHandler`
+The :class:`~google.cloud.logging_v2.handlers.CloudLoggingHandler`
 logging handler can use different transports. The default is
 :class:`~google.cloud.logging.handlers.BackgroundThreadTransport`.
 
@@ -341,7 +341,7 @@ logging handler can use different transports. The default is
 fluentd logging handlers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Besides :class:`~google.cloud.logging.handlers.handlers.CloudLoggingHandler`,
+Besides :class:`~google.cloud.logging_v2.handlers.CloudLoggingHandler`,
 which writes directly to the API, two other handlers are provided.
 :class:`~google.cloud.logging.handlers.app_engine.AppEngineHandler`, which is
 recommended when running on the Google App Engine Flexible vanilla runtimes
