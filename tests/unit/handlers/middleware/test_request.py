@@ -41,6 +41,9 @@ class TestRequestMiddleware(DjangoBase):
         return request.RequestMiddleware
 
     def _make_one(self, *args, **kw):
+        if not args and "get_response" not in kw:
+            kw["get_response"] = None
+
         return self._get_target_class()(*args, **kw)
 
     def test_process_request(self):
