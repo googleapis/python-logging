@@ -26,7 +26,7 @@ class TestLoggingShim(unittest.TestCase):
         for name in logging.__all__:
             found = getattr(logging, name)
             expected = getattr(logging_v2, name)
-            if name == 'handlers':
+            if name == "handlers":
                 # handler has separate shim
                 self.assertTrue(found)
                 self.assertIs(type(found), type(expected))
