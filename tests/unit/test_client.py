@@ -719,7 +719,7 @@ class TestClient(unittest.TestCase):
         import os
         from google.cloud._testing import _Monkey
         from google.cloud.logging_v2.client import _APPENGINE_FLEXIBLE_ENV_VM
-        from google.cloud.logging import AppEngineHandler
+        from google.cloud.logging.handlers import AppEngineHandler
 
         credentials = _make_credentials()
         client = self._make_one(
@@ -785,7 +785,7 @@ class TestClient(unittest.TestCase):
             project=self.PROJECT, credentials=credentials, _use_grpc=False
         )
 
-        with mock.patch("google.cloud.logging.Client.setup_logging") as mocked:
+        with mock.patch("google.cloud.logging_v2.client.setup_logging") as mocked:
             client.setup_logging()
 
         self.assertEqual(len(mocked.mock_calls), 1)
@@ -817,7 +817,7 @@ class TestClient(unittest.TestCase):
             project=self.PROJECT, credentials=credentials, _use_grpc=False
         )
 
-        with mock.patch("google.cloud.logging.Client.setup_logging") as mocked:
+        with mock.patch("google.cloud.logging_v2.client.setup_logging") as mocked:
             client.setup_logging(
                 name=name, resource=resource, labels=labels, stream=stream
             )

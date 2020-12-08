@@ -37,7 +37,7 @@ class TestSyncHandler(unittest.TestCase):
 
     def test_send(self):
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
-        from google.cloud.logging._helpers import LogSeverity
+        from google.cloud.logging_v2._helpers import LogSeverity
 
         client = _Client(self.PROJECT)
 
