@@ -26,7 +26,13 @@ class TestLoggingShim(unittest.TestCase):
         for name in logging.__all__:
             found = getattr(logging, name)
             expected = getattr(logging_v2, name)
-            self.assertIs(found, expected)
+            if name == 'handlers':
+                # handler has separate shim
+                self.assertTrue(found)
+                self.assertIs(type(found), type(expected))
+            else:
+                # other attributes should be identical
+                self.assertIs(found, expected)
 
     def test_handler_shim_matches_logging_v2(self):
         from google.cloud.logging import handlers
