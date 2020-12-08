@@ -785,7 +785,7 @@ class TestClient(unittest.TestCase):
             project=self.PROJECT, credentials=credentials, _use_grpc=False
         )
 
-        with mock.patch("google.cloud.logging.client.setup_logging") as mocked:
+        with mock.patch("google.cloud.logging.Client.setup_logging") as mocked:
             client.setup_logging()
 
         self.assertEqual(len(mocked.mock_calls), 1)
@@ -817,7 +817,7 @@ class TestClient(unittest.TestCase):
             project=self.PROJECT, credentials=credentials, _use_grpc=False
         )
 
-        with mock.patch("google.cloud.logging.client.setup_logging") as mocked:
+        with mock.patch("google.cloud.logging.Client.setup_logging") as mocked:
             client.setup_logging(
                 name=name, resource=resource, labels=labels, stream=stream
             )
