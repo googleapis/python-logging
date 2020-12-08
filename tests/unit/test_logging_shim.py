@@ -30,7 +30,7 @@ class TestLoggingShim(unittest.TestCase):
 
     def test_handler_shim_matches_logging_v2(self):
         from google.cloud.logging import handlers
-        from google.cloud.logging_v2 import handlers as handler_2
+        from google.cloud.logging_v2 import handlers as handlers_2
 
         self.assertEqual(handlers.__all__, handlers_2.__all__)
 
