@@ -43,7 +43,7 @@ class TestClient(unittest.TestCase):
 
     @staticmethod
     def _get_target_class():
-        from google.cloud.logging.client import Client
+        from google.cloud.logging import Client
 
         return Client
 
