@@ -22,7 +22,7 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
     def _call_fut():
         from google.cloud.logging_v2.handlers import _helpers
 
-        return _helpers.get_trace_id_from_flask()
+        return _helpers.get_request_data_from_flask()
 
     @staticmethod
     def create_app():
@@ -39,7 +39,7 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
     def test_no_context_header(self):
         app = self.create_app()
         with app.test_request_context(path="/", headers={}):
-            trace_id = self._call_fut()
+            trace_id, http_data = self._call_fut()
 
         self.assertIsNone(trace_id)
 
@@ -54,7 +54,7 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
         )
 
         with context:
-            trace_id = self._call_fut()
+            trace_id, http_data = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
 
@@ -64,7 +64,7 @@ class Test_get_trace_id_from_django(unittest.TestCase):
     def _call_fut():
         from google.cloud.logging_v2.handlers import _helpers
 
-        return _helpers.get_trace_id_from_django()
+        return _helpers.get_request_data_from_django()
 
     def setUp(self):
         from django.conf import settings
@@ -89,7 +89,7 @@ class Test_get_trace_id_from_django(unittest.TestCase):
 
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
-        trace_id = self._call_fut()
+        trace_id, http_request = self._call_fut()
         self.assertIsNone(trace_id)
 
     def test_valid_context_header(self):
@@ -106,7 +106,7 @@ class Test_get_trace_id_from_django(unittest.TestCase):
 
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
-        trace_id = self._call_fut()
+        trace_id, http_request = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
 
@@ -116,51 +116,60 @@ class Test_get_trace_id(unittest.TestCase):
     def _call_fut():
         from google.cloud.logging_v2.handlers import _helpers
 
-        return _helpers.get_trace_id()
+        return _helpers.get_request_data()
 
     def _helper(self, django_return, flask_return):
         django_patch = mock.patch(
-            "google.cloud.logging_v2.handlers._helpers.get_trace_id_from_django",
+            "google.cloud.logging_v2.handlers._helpers.get_request_data_from_django",
             return_value=django_return,
         )
         flask_patch = mock.patch(
-            "google.cloud.logging_v2.handlers._helpers.get_trace_id_from_flask",
+            "google.cloud.logging_v2.handlers._helpers.get_request_data_from_flask",
             return_value=flask_return,
         )
 
         with django_patch as django_mock:
             with flask_patch as flask_mock:
-                trace_id = self._call_fut()
+                result = self._call_fut()
 
-        return django_mock, flask_mock, trace_id
+        return django_mock, flask_mock, result
 
     def test_from_django(self):
-        django_mock, flask_mock, trace_id = self._helper("test-django-trace-id", None)
-        self.assertEqual(trace_id, django_mock.return_value)
+        django_expected = ('django-id', {'request_url':'https://www.djangoproject.com/'})
+        flask_expected = (None, None)
+        django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
+        self.assertEqual(output, django_expected)
 
         django_mock.assert_called_once_with()
         flask_mock.assert_not_called()
 
     def test_from_flask(self):
-        django_mock, flask_mock, trace_id = self._helper(None, "test-flask-trace-id")
-        self.assertEqual(trace_id, flask_mock.return_value)
+        django_expected = (None, None)
+        flask_expected = ('flask-id', {'request_url':'https://flask.palletsprojects.com/en/1.1.x/'})
+
+        django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
+        self.assertEqual(output, flask_expected)
 
         django_mock.assert_called_once_with()
         flask_mock.assert_called_once_with()
 
     def test_from_django_and_flask(self):
-        django_mock, flask_mock, trace_id = self._helper(
-            "test-django-trace-id", "test-flask-trace-id"
-        )
+        django_expected = ('django-id', {'request_url':'https://www.djangoproject.com/'})
+        flask_expected = ('flask-id', {'request_url':'https://flask.palletsprojects.com/en/1.1.x/'})
+
+        django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
+
         # Django wins.
-        self.assertEqual(trace_id, django_mock.return_value)
+        self.assertEqual(output, django_expected)
 
         django_mock.assert_called_once_with()
         flask_mock.assert_not_called()
 
     def test_missing(self):
-        django_mock, flask_mock, trace_id = self._helper(None, None)
-        self.assertIsNone(trace_id)
+        flask_expected = (None, None)
+        django_expected = (None, None)
+        django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
+        self.assertEqual(output, (None, None))
 
         django_mock.assert_called_once_with()
         flask_mock.assert_called_once_with()
