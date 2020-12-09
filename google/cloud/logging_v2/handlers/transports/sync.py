@@ -31,7 +31,8 @@ class SyncTransport(Transport):
         self.logger = client.logger(name)
 
     def send(
-        self, record, message, *, resource=None, labels=None, trace=None, span_id=None
+        self, record, message, *, resource=None, labels=None, trace=None,
+        span_id=None, http_request=None,
     ):
         """Overrides transport.send().
 
@@ -43,6 +44,8 @@ class SyncTransport(Transport):
             resource (Optional[~logging_v2.resource.Resource]):
                  Monitored resource of the entry.
             labels (Optional[dict]): Mapping of labels for the entry.
+            http_request (Optional[dict]): Info about HTTP request associated
+                 with the entry.
         """
         info = {"message": message, "python_logger": record.name}
         self.logger.log_struct(
@@ -52,4 +55,5 @@ class SyncTransport(Transport):
             labels=labels,
             trace=trace,
             span_id=span_id,
+            http_request=http_request,
         )

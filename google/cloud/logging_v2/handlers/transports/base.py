@@ -23,7 +23,8 @@ class Transport(object):
     """
 
     def send(
-        self, record, message, *, resource=None, labels=None, trace=None, span_id=None
+        self, record, message, *, resource=None, labels=None, trace=None,
+        span_id=None, http_request=None
     ):
         """Transport send to be implemented by subclasses.
 

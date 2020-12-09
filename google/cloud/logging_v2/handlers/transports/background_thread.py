@@ -223,7 +223,8 @@ class _Worker(object):
             )
 
     def enqueue(
-        self, record, message, *, resource=None, labels=None, trace=None, span_id=None
+        self, record, message, *, resource=None, labels=None, trace=None,
+        span_id=None, http_request=None
     ):
         """Queues a log entry to be written by the background thread.
 
@@ -237,6 +238,8 @@ class _Worker(object):
             trace (Optional[str]): TraceID to apply to the logging entry.
             span_id (Optional[str]): Span_id within the trace for the log entry.
                 Specify the trace parameter if span_id is set.
+            http_request (Optional[dict]): Info about HTTP request associated
+                 with the entry.
         """
         queue_entry = {
             "info": {"message": message, "python_logger": record.name},
@@ -246,6 +249,7 @@ class _Worker(object):
             "trace": trace,
             "span_id": span_id,
             "timestamp": datetime.datetime.utcfromtimestamp(record.created),
+            "http_request": http_request
         }
         self._queue.put_nowait(queue_entry)
 
@@ -292,7 +296,8 @@ class BackgroundThreadTransport(Transport):
         self.worker.start()
 
     def send(
-        self, record, message, resource=None, labels=None, trace=None, span_id=None
+        self, record, message, resource=None, labels=None, trace=None,
+        span_id=None, , http_request=None
     ):
         """Overrides Transport.send().
 
@@ -306,6 +311,8 @@ class BackgroundThreadTransport(Transport):
             trace (Optional[str]): TraceID to apply to the logging entry.
             span_id (Optional[str]): span_id within the trace for the log entry.
                 Specify the trace parameter if span_id is set.
+            http_request (Optional[dict]): Info about HTTP request associated
+                 with the entry.
         """
         self.worker.enqueue(
             record,
@@ -314,6 +321,7 @@ class BackgroundThreadTransport(Transport):
             labels=labels,
             trace=trace,
             span_id=span_id,
+            http_request=http_request,
         )
 
     def flush(self):
