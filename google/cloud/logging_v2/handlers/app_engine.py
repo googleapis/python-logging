@@ -22,6 +22,7 @@ import logging
 import os
 
 from google.cloud.logging_v2.handlers._helpers import get_trace_id
+from google.cloud.logging_v2.handlers._helpers import get_http_request_data
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.resource import Resource
 
@@ -119,6 +120,8 @@ class AppEngineHandler(logging.StreamHandler):
             if _TRACE_ID_LABEL in gae_labels
             else None
         )
+        http_request = get_http_request_data()
         self.transport.send(
-            record, message, resource=self.resource, labels=gae_labels, trace=trace_id
+            record, message, resource=self.resource, labels=gae_labels,
+            trace=trace_id, http_request=http_request,
         )

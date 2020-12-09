@@ -297,7 +297,7 @@ class BackgroundThreadTransport(Transport):
 
     def send(
         self, record, message, resource=None, labels=None, trace=None,
-        span_id=None, , http_request=None
+        span_id=None, http_request=None
     ):
         """Overrides Transport.send().
 

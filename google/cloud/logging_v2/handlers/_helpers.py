@@ -64,6 +64,24 @@ def get_trace_id_from_flask():
 
     return trace_id
 
+def get_http_request_from_flask():
+    """Get trace_id from flask request headers.
+
+    Returns:
+        str: TraceID in HTTP request headers.
+    """
+    if flask is None or not flask.request:
+        return None
+
+    obj = {'request_method':flask.request.method,
+            'request_url': flask.request.host_url,
+            'request_size': flask.request.content_length,
+            'user_agent': flask.request.user_agent.string,
+            'remote_ip': flask.request.remote_addr,
+            'referer': flask.request.referrer,
+            }
+
+    return obj
 
 def get_trace_id_from_django():
     """Get trace_id from django request headers.
@@ -100,5 +118,23 @@ def get_trace_id():
         trace_id = checker()
         if trace_id is not None:
             return trace_id
+
+    return None
+
+
+def get_http_request_data():
+    """Helper to get trace_id from web application request header.
+
+    Returns:
+        str: TraceID in HTTP request headers.
+    """
+    checkers = (
+        get_http_request_from_flask,
+    )
+
+    for checker in checkers:
+        obj = checker()
+        if obj  is not None:
+            return obj
 
     return None
