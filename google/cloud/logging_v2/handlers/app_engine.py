@@ -21,8 +21,7 @@ and labels for App Engine logs.
 import logging
 import os
 
-from google.cloud.logging_v2.handlers._helpers import get_trace_id
-from google.cloud.logging_v2.handlers._helpers import get_http_request_data
+from google.cloud.logging_v2.handlers._helpers import get_request_data
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.resource import Resource
 
@@ -97,7 +96,7 @@ class AppEngineHandler(logging.StreamHandler):
         """
         gae_labels = {}
 
-        trace_id = get_trace_id()
+        trace_id, _ = get_request_data()
         if trace_id is not None:
             gae_labels[_TRACE_ID_LABEL] = trace_id
 
@@ -115,12 +114,9 @@ class AppEngineHandler(logging.StreamHandler):
         """
         message = super(AppEngineHandler, self).format(record)
         gae_labels = self.get_gae_labels()
-        trace_id = (
-            "projects/%s/traces/%s" % (self.project_id, gae_labels[_TRACE_ID_LABEL])
-            if _TRACE_ID_LABEL in gae_labels
-            else None
-        )
-        http_request = get_http_request_data()
+        trace_id, http_request = get_request_data()
+        if trace_id is not None:
+            trace_id = f"projects/{self.project_id}/{trace_id}"
         self.transport.send(
             record, message, resource=self.resource, labels=gae_labels,
             trace=trace_id, http_request=http_request,

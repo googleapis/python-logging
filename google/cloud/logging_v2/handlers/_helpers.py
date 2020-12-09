@@ -25,6 +25,10 @@ except ImportError:  # pragma: NO COVER
 from google.cloud.logging_v2.handlers.middleware.request import _get_django_request
 
 _DJANGO_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
+_DJANGO_LENGTH_HEADER = "CONTENT_LENGTH"
+_DJANGO_USERAGENT_HEADER = "HTTP_USER_AGENT"
+_DJANGO_REMOTE_ADDR_HEADER = "REMOTE_ADDR"
+_DJANGO_REFERER_HEADER = "HTTP_REFERER"
 _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
 
 
@@ -46,44 +50,34 @@ def format_stackdriver_json(record, message):
     return json.dumps(payload)
 
 
-def get_trace_id_from_flask():
+def get_request_data_from_flask():
     """Get trace_id from flask request headers.
 
     Returns:
         str: TraceID in HTTP request headers.
     """
     if flask is None or not flask.request:
-        return None
+        return None, None
 
+    # build http_request
+    http_request = {
+        'request_method': flask.request.method,
+        'request_url': flask.request.host_url,
+        'request_size': flask.request.content_length,
+        'user_agent': flask.request.user_agent.string,
+        'remote_ip': flask.request.remote_addr,
+        'referer': flask.request.referrer,
+    }
+
+    # find trace id
+    trace_id = None
     header = flask.request.headers.get(_FLASK_TRACE_HEADER)
+    if header:
+        trace_id = header.split("/", 1)[0]
 
-    if header is None:
-        return None
+    return trace_id, http_request
 
-    trace_id = header.split("/", 1)[0]
-
-    return trace_id
-
-def get_http_request_from_flask():
-    """Get trace_id from flask request headers.
-
-    Returns:
-        str: TraceID in HTTP request headers.
-    """
-    if flask is None or not flask.request:
-        return None
-
-    obj = {'request_method':flask.request.method,
-            'request_url': flask.request.host_url,
-            'request_size': flask.request.content_length,
-            'user_agent': flask.request.user_agent.string,
-            'remote_ip': flask.request.remote_addr,
-            'referer': flask.request.referrer,
-            }
-
-    return obj
-
-def get_trace_id_from_django():
+def get_request_data_from_django():
     """Get trace_id from django request headers.
 
     Returns:
@@ -92,49 +86,42 @@ def get_trace_id_from_django():
     request = _get_django_request()
 
     if request is None:
-        return None
+        return None, None
 
+    # build http_request
+    http_request = {
+        'request_method': request.method,
+        'request_url': request.get_full_path(),
+        'request_size': request.META.get(_DJANGO_LENGTH_HEADER),
+        'user_agent': request.META.get(_DJANGO_USERAGENT_HEADER),
+        'remote_ip': request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
+        'referer': request.META.get(_DJANGO_REFERER_HEADER),
+    }
+
+    # find trace id
+    trace_id = None
     header = request.META.get(_DJANGO_TRACE_HEADER)
-    if header is None:
-        return None
+    if header:
+        trace_id = header.split("/", 1)[0]
 
-    trace_id = header.split("/", 1)[0]
-
-    return trace_id
+    return trace_id, http_request
 
 
-def get_trace_id():
+
+def get_request_data():
     """Helper to get trace_id from web application request header.
 
     Returns:
         str: TraceID in HTTP request headers.
     """
     checkers = (
-        get_trace_id_from_django,
-        get_trace_id_from_flask,
+        get_request_data_from_django,
+        get_request_data_from_flask,
     )
 
     for checker in checkers:
-        trace_id = checker()
+        trace_id, http_request = checker()
         if trace_id is not None:
-            return trace_id
-
-    return None
-
-
-def get_http_request_data():
-    """Helper to get trace_id from web application request header.
-
-    Returns:
-        str: TraceID in HTTP request headers.
-    """
-    checkers = (
-        get_http_request_from_flask,
-    )
-
-    for checker in checkers:
-        obj = checker()
-        if obj  is not None:
-            return obj
+            return trace_id, http_request
 
     return None
