@@ -16,6 +16,10 @@ import unittest
 
 import mock
 
+_FLASK_TRACE_ID = 'flask-id'
+_FLASK_HTTP_REQUEST = {'request_url': "https://flask.palletsprojects.com/en/1.1.x/"}
+_DJANGO_TRACE_ID = 'django-id'
+_DJANGO_HTTP_REQUEST = {'request_url': "https://www.djangoproject.com/"}
 
 class Test_get_trace_id_from_flask(unittest.TestCase):
     @staticmethod
@@ -39,13 +43,13 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
     def test_no_context_header(self):
         app = self.create_app()
         with app.test_request_context(path="/", headers={}):
-            trace_id, http_data = self._call_fut()
+            http_request, trace_id = self._call_fut()
 
         self.assertIsNone(trace_id)
 
     def test_valid_context_header(self):
         flask_trace_header = "X_CLOUD_TRACE_CONTEXT"
-        expected_trace_id = "testtraceidflask"
+        expected_trace_id = _FLASK_TRACE_ID
         flask_trace_id = expected_trace_id + "/testspanid"
 
         app = self.create_app()
@@ -54,7 +58,7 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
         )
 
         with context:
-            trace_id, http_data = self._call_fut()
+            http_data, trace_id = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
 
@@ -89,7 +93,7 @@ class Test_get_trace_id_from_django(unittest.TestCase):
 
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
-        trace_id, http_request = self._call_fut()
+        http_request, trace_id = self._call_fut()
         self.assertIsNone(trace_id)
 
     def test_valid_context_header(self):
@@ -106,7 +110,7 @@ class Test_get_trace_id_from_django(unittest.TestCase):
 
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
-        trace_id, http_request = self._call_fut()
+        http_request, trace_id = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
 
@@ -135,7 +139,7 @@ class Test_get_trace_id(unittest.TestCase):
         return django_mock, flask_mock, result
 
     def test_from_django(self):
-        django_expected = ('django-id', {'request_url':'https://www.djangoproject.com/'})
+        django_expected = (_DJANGO_HTTP_REQUEST, _DJANGO_TRACE_ID)
         flask_expected = (None, None)
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
         self.assertEqual(output, django_expected)
@@ -145,7 +149,7 @@ class Test_get_trace_id(unittest.TestCase):
 
     def test_from_flask(self):
         django_expected = (None, None)
-        flask_expected = ('flask-id', {'request_url':'https://flask.palletsprojects.com/en/1.1.x/'})
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID)
 
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
         self.assertEqual(output, flask_expected)
@@ -154,8 +158,8 @@ class Test_get_trace_id(unittest.TestCase):
         flask_mock.assert_called_once_with()
 
     def test_from_django_and_flask(self):
-        django_expected = ('django-id', {'request_url':'https://www.djangoproject.com/'})
-        flask_expected = ('flask-id', {'request_url':'https://flask.palletsprojects.com/en/1.1.x/'})
+        django_expected = (_DJANGO_HTTP_REQUEST, _DJANGO_TRACE_ID)
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID)
 
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
 

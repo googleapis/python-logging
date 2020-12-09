@@ -96,7 +96,7 @@ class AppEngineHandler(logging.StreamHandler):
         """
         gae_labels = {}
 
-        trace_id, _ = get_request_data()
+        _, trace_id = get_request_data()
         if trace_id is not None:
             gae_labels[_TRACE_ID_LABEL] = trace_id
 
@@ -114,7 +114,7 @@ class AppEngineHandler(logging.StreamHandler):
         """
         message = super(AppEngineHandler, self).format(record)
         gae_labels = self.get_gae_labels()
-        trace_id, http_request = get_request_data()
+        http_request, trace_id = get_request_data()
         if trace_id is not None:
             trace_id = f"projects/{self.project_id}/{trace_id}"
         self.transport.send(

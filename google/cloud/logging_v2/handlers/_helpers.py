@@ -76,7 +76,7 @@ def get_request_data_from_flask():
     if header:
         trace_id = header.split("/", 1)[0]
 
-    return trace_id, http_request
+    return http_request, trace_id
 
 def get_request_data_from_django():
     """Get trace_id and http_request data from django request headers.
@@ -106,7 +106,7 @@ def get_request_data_from_django():
     if header:
         trace_id = header.split("/", 1)[0]
 
-    return trace_id, http_request
+    return http_request, trace_id
 
 
 
@@ -124,8 +124,8 @@ def get_request_data():
     )
 
     for checker in checkers:
-        trace_id, http_request = checker()
+        http_request, trace_id = checker()
         if http_request is not None:
-            return trace_id, http_request
+            return http_request, trace_id
 
     return None, None
