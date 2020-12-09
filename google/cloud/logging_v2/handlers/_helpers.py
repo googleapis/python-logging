@@ -63,8 +63,8 @@ def get_request_data_from_flask():
     # build http_request
     http_request = {
         'request_method': flask.request.method,
-        'request_url': flask.request.host_url,
-        'request_size': flask.request.content_length,
+        'request_url': flask.request.url,
+        'request_size': str(flask.request.content_length),
         'user_agent': flask.request.user_agent.string,
         'remote_ip': flask.request.remote_addr,
         'referer': flask.request.referrer,

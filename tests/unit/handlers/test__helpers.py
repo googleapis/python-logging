@@ -23,7 +23,7 @@ _DJANGO_HTTP_REQUEST = {'request_url': "https://www.djangoproject.com/"}
 _HTTP_REQUEST_FIELDS = ['request_method', 'request_url', 'request_size', 
                         'user_agent', 'remote_ip', 'referer']
 
-class Test_get_trace_id_from_flask(unittest.TestCase):
+class Test_get_request_data_from_flask(unittest.TestCase):
     @staticmethod
     def _call_fut():
         from google.cloud.logging_v2.handlers import _helpers
@@ -48,6 +48,10 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
             http_request, trace_id = self._call_fut()
 
         self.assertIsNone(trace_id)
+        self.assertEqual(http_request['request_method'], "GET")
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
+        for field in _HTTP_REQUEST_FIELDS:
+            self.assertTrue(field in http_request)
 
     def test_valid_context_header(self):
         flask_trace_header = "X_CLOUD_TRACE_CONTEXT"
@@ -60,10 +64,39 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
         )
 
         with context:
-            http_data, trace_id = self._call_fut()
+            http_request, trace_id = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
+        self.assertEqual(http_request['request_method'], "GET")
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
+        for field in _HTTP_REQUEST_FIELDS:
+            self.assertTrue(field in http_request)
 
+    def test_http_data(self):
+        expected_path = 'http://testserver/123'
+        expected_agent = 'Mozilla/5.0'
+        expected_referrer = "self"
+        expected_ip = "10.1.2.3"
+        body_content = 'test'
+        headers = {'User-Agent': expected_agent,
+                   'Referer': expected_referrer,
+                   'HTTP_X_FORWARDED_FOR': '0.0.0.0'}
+
+        app = self.create_app()
+        with app.test_client() as c:
+            c.put(path=expected_path,
+                  data=body_content,
+                  environ_base={'REMOTE_ADDR': expected_ip},
+                  headers=headers)
+            http_request, trace_id = self._call_fut()
+
+        self.assertEqual(http_request['request_method'], "PUT")
+        self.assertEqual(http_request['request_url'], expected_path)
+        self.assertEqual(http_request['user_agent'], expected_agent)
+        self.assertEqual(http_request['referer'], expected_referrer)
+        self.assertEqual(http_request['remote_ip'], expected_ip)
+        self.assertEqual(http_request['request_size'], str(len(body_content)))
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
 class Test_get_request_data_from_django(unittest.TestCase):
     @staticmethod
