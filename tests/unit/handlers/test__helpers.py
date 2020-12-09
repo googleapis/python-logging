@@ -20,6 +20,8 @@ _FLASK_TRACE_ID = 'flask-id'
 _FLASK_HTTP_REQUEST = {'request_url': "https://flask.palletsprojects.com/en/1.1.x/"}
 _DJANGO_TRACE_ID = 'django-id'
 _DJANGO_HTTP_REQUEST = {'request_url': "https://www.djangoproject.com/"}
+_HTTP_REQUEST_FIELDS = ['request_method', 'request_url', 'request_size', 
+                        'user_agent', 'remote_ip', 'referer']
 
 class Test_get_trace_id_from_flask(unittest.TestCase):
     @staticmethod
@@ -63,7 +65,7 @@ class Test_get_trace_id_from_flask(unittest.TestCase):
         self.assertEqual(trace_id, expected_trace_id)
 
 
-class Test_get_trace_id_from_django(unittest.TestCase):
+class Test_get_request_data_from_django(unittest.TestCase):
     @staticmethod
     def _call_fut():
         from google.cloud.logging_v2.handlers import _helpers
@@ -94,6 +96,11 @@ class Test_get_trace_id_from_django(unittest.TestCase):
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
         http_request, trace_id = self._call_fut()
+        self.assertEqual(http_request['request_method'], "GET")
+        self.assertEqual(http_request['request_url'], "/")
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
+        for field in _HTTP_REQUEST_FIELDS:
+            self.assertTrue(field in http_request)
         self.assertIsNone(trace_id)
 
     def test_valid_context_header(self):
@@ -113,9 +120,14 @@ class Test_get_trace_id_from_django(unittest.TestCase):
         http_request, trace_id = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
+        self.assertEqual(http_request['request_method'], "GET")
+        self.assertEqual(http_request['request_url'], "/")
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
+        for field in _HTTP_REQUEST_FIELDS:
+            self.assertTrue(field in http_request)
 
 
-class Test_get_trace_id(unittest.TestCase):
+class Test_get_request_data(unittest.TestCase):
     @staticmethod
     def _call_fut():
         from google.cloud.logging_v2.handlers import _helpers
@@ -169,7 +181,30 @@ class Test_get_trace_id(unittest.TestCase):
         django_mock.assert_called_once_with()
         flask_mock.assert_not_called()
 
-    def test_missing(self):
+    def test_missing_http_request(self):
+        flask_expected = (None, _FLASK_TRACE_ID)
+        django_expected = (None, _DJANGO_TRACE_ID)
+        django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
+
+        # function only returns trace if http_request data is present
+        self.assertEqual(output, (None, None))
+
+        django_mock.assert_called_once_with()
+        flask_mock.assert_called_once_with()
+
+    def test_missing_trace_id(self):
+        flask_expected = (_FLASK_HTTP_REQUEST, None)
+        django_expected = (None, _DJANGO_TRACE_ID)
+        django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
+
+        # trace_id is optional
+        self.assertEqual(output, flask_expected)
+
+        django_mock.assert_called_once_with()
+        flask_mock.assert_called_once_with()
+
+
+    def test_missing_both(self):
         flask_expected = (None, None)
         django_expected = (None, None)
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
