@@ -93,7 +93,7 @@ def get_request_data_from_django():
     # build http_request
     http_request = {
         'request_method': request.method,
-        'request_url': request.get_full_path(),
+        'request_url': request.build_absolute_uri(),
         'request_size': request.META.get(_DJANGO_LENGTH_HEADER),
         'user_agent': request.META.get(_DJANGO_USERAGENT_HEADER),
         'remote_ip': request.META.get(_DJANGO_REMOTE_ADDR_HEADER),

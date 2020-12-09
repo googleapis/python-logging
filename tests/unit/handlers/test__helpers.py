@@ -97,7 +97,6 @@ class Test_get_request_data_from_django(unittest.TestCase):
         middleware.process_request(django_request)
         http_request, trace_id = self._call_fut()
         self.assertEqual(http_request['request_method'], "GET")
-        self.assertEqual(http_request['request_url'], "/")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
         for field in _HTTP_REQUEST_FIELDS:
             self.assertTrue(field in http_request)
@@ -121,11 +120,33 @@ class Test_get_request_data_from_django(unittest.TestCase):
 
         self.assertEqual(trace_id, expected_trace_id)
         self.assertEqual(http_request['request_method'], "GET")
-        self.assertEqual(http_request['request_url'], "/")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
         for field in _HTTP_REQUEST_FIELDS:
             self.assertTrue(field in http_request)
 
+    def test_http_data(self):
+        from django.test import RequestFactory
+        from google.cloud.logging_v2.handlers.middleware import request
+        expected_path = 'http://testserver/123'
+        expected_agent = 'Mozilla/5.0'
+        expected_referrer = "self"
+        body_content = 'test'
+        django_request = RequestFactory().put(
+            expected_path,
+            data=body_content,
+            HTTP_USER_AGENT=expected_agent,
+            HTTP_REFERER=expected_referrer)
+
+        middleware = request.RequestMiddleware(None)
+        middleware.process_request(django_request)
+        http_request, trace_id = self._call_fut()
+        self.assertEqual(http_request['request_method'], "PUT")
+        self.assertEqual(http_request['request_url'], expected_path)
+        self.assertEqual(http_request['user_agent'], expected_agent)
+        self.assertEqual(http_request['referer'], expected_referrer)
+        self.assertEqual(http_request['remote_ip'], '127.0.0.1')
+        self.assertEqual(http_request['request_size'], str(len(body_content)))
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
 class Test_get_request_data(unittest.TestCase):
     @staticmethod
