@@ -51,10 +51,11 @@ def format_stackdriver_json(record, message):
 
 
 def get_request_data_from_flask():
-    """Get trace_id from flask request headers.
+    """Get trace_id and http_request data from flask request headers.
 
     Returns:
         str: TraceID in HTTP request headers.
+        dict: data about the associated http request.
     """
     if flask is None or not flask.request:
         return None, None
@@ -78,10 +79,11 @@ def get_request_data_from_flask():
     return trace_id, http_request
 
 def get_request_data_from_django():
-    """Get trace_id from django request headers.
+    """Get trace_id and http_request data from django request headers.
 
     Returns:
         str: TraceID in HTTP request headers.
+        dict: data about the associated http request.
     """
     request = _get_django_request()
 
@@ -109,10 +111,12 @@ def get_request_data_from_django():
 
 
 def get_request_data():
-    """Helper to get trace_id from web application request header.
+    """Helper to get trace_id and http_request data from supported web
+    frameworks.
 
     Returns:
         str: TraceID in HTTP request headers.
+        dict: data about the associated http request.
     """
     checkers = (
         get_request_data_from_django,
@@ -121,7 +125,7 @@ def get_request_data():
 
     for checker in checkers:
         trace_id, http_request = checker()
-        if trace_id is not None:
+        if http_request is not None:
             return trace_id, http_request
 
-    return None
+    return None, None
