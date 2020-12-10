@@ -94,7 +94,7 @@ class TestAppEngineHandler(unittest.TestCase):
             "google.cloud.logging_v2.handlers.app_engine.get_request_data",
             return_value=({"request_url": "test"}, "trace-test"),
         )
-        with get_request_patch as mock_get_request:
+        with get_request_patch:
 
             client = mock.Mock(project=self.PROJECT, spec=["project"])
             handler = self._make_one(client, transport=_Transport)
