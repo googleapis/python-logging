@@ -223,8 +223,15 @@ class _Worker(object):
             )
 
     def enqueue(
-        self, record, message, *, resource=None, labels=None, trace=None,
-        span_id=None, http_request=None
+        self,
+        record,
+        message,
+        *,
+        resource=None,
+        labels=None,
+        trace=None,
+        span_id=None,
+        http_request=None,
     ):
         """Queues a log entry to be written by the background thread.
 
@@ -249,7 +256,7 @@ class _Worker(object):
             "trace": trace,
             "span_id": span_id,
             "timestamp": datetime.datetime.utcfromtimestamp(record.created),
-            "http_request": http_request
+            "http_request": http_request,
         }
         self._queue.put_nowait(queue_entry)
 
@@ -296,8 +303,14 @@ class BackgroundThreadTransport(Transport):
         self.worker.start()
 
     def send(
-        self, record, message, resource=None, labels=None, trace=None,
-        span_id=None, http_request=None
+        self,
+        record,
+        message,
+        resource=None,
+        labels=None,
+        trace=None,
+        span_id=None,
+        http_request=None,
     ):
         """Overrides Transport.send().
 

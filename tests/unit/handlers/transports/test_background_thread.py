@@ -70,7 +70,7 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             labels=None,
             trace=None,
             span_id=None,
-            http_request=None
+            http_request=None,
         )
 
     def test_trace_send(self):
@@ -98,7 +98,7 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             labels=None,
             trace=trace,
             span_id=None,
-            http_request=None
+            http_request=None,
         )
 
     def test_span_send(self):
@@ -126,7 +126,7 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             labels=None,
             trace=None,
             span_id=span_id,
-            http_request=None
+            http_request=None,
         )
 
     def test_flush(self):

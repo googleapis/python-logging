@@ -31,8 +31,15 @@ class SyncTransport(Transport):
         self.logger = client.logger(name)
 
     def send(
-        self, record, message, *, resource=None, labels=None, trace=None,
-        span_id=None, http_request=None,
+        self,
+        record,
+        message,
+        *,
+        resource=None,
+        labels=None,
+        trace=None,
+        span_id=None,
+        http_request=None,
     ):
         """Overrides transport.send().
 

@@ -118,6 +118,10 @@ class AppEngineHandler(logging.StreamHandler):
         if trace_id is not None:
             trace_id = f"projects/{self.project_id}/{trace_id}"
         self.transport.send(
-            record, message, resource=self.resource, labels=gae_labels,
-            trace=trace_id, http_request=http_request,
+            record,
+            message,
+            resource=self.resource,
+            labels=gae_labels,
+            trace=trace_id,
+            http_request=http_request,
         )

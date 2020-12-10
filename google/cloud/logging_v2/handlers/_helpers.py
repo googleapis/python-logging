@@ -62,12 +62,12 @@ def get_request_data_from_flask():
 
     # build http_request
     http_request = {
-        'request_method': flask.request.method,
-        'request_url': flask.request.url,
-        'request_size': str(flask.request.content_length),
-        'user_agent': flask.request.user_agent.string,
-        'remote_ip': flask.request.remote_addr,
-        'referer': flask.request.referrer,
+        "request_method": flask.request.method,
+        "request_url": flask.request.url,
+        "request_size": str(flask.request.content_length),
+        "user_agent": flask.request.user_agent.string,
+        "remote_ip": flask.request.remote_addr,
+        "referer": flask.request.referrer,
     }
 
     # find trace id
@@ -77,6 +77,7 @@ def get_request_data_from_flask():
         trace_id = header.split("/", 1)[0]
 
     return http_request, trace_id
+
 
 def get_request_data_from_django():
     """Get trace_id and http_request data from django request headers.
@@ -92,12 +93,12 @@ def get_request_data_from_django():
 
     # build http_request
     http_request = {
-        'request_method': request.method,
-        'request_url': request.build_absolute_uri(),
-        'request_size': request.META.get(_DJANGO_LENGTH_HEADER),
-        'user_agent': request.META.get(_DJANGO_USERAGENT_HEADER),
-        'remote_ip': request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
-        'referer': request.META.get(_DJANGO_REFERER_HEADER),
+        "request_method": request.method,
+        "request_url": request.build_absolute_uri(),
+        "request_size": request.META.get(_DJANGO_LENGTH_HEADER),
+        "user_agent": request.META.get(_DJANGO_USERAGENT_HEADER),
+        "remote_ip": request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
+        "referer": request.META.get(_DJANGO_REFERER_HEADER),
     }
 
     # find trace id
@@ -107,7 +108,6 @@ def get_request_data_from_django():
         trace_id = header.split("/", 1)[0]
 
     return http_request, trace_id
-
 
 
 def get_request_data():

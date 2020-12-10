@@ -87,12 +87,12 @@ class TestAppEngineHandler(unittest.TestCase):
         self.assertIs(handler.stream, stream)
 
     def test_emit(self):
-        expected_http_request = {'request_url':'test'}
-        trace_id = 'trace-test'
-        expected_trace_id = f'projects/{self.PROJECT}/{trace_id}'
+        expected_http_request = {"request_url": "test"}
+        trace_id = "trace-test"
+        expected_trace_id = f"projects/{self.PROJECT}/{trace_id}"
         get_request_patch = mock.patch(
             "google.cloud.logging_v2.handlers.app_engine.get_request_data",
-            return_value=({'request_url':'test'}, 'trace-test'),
+            return_value=({"request_url": "test"}, "trace-test"),
         )
         with get_request_patch as mock_get_request:
 
@@ -102,7 +102,9 @@ class TestAppEngineHandler(unittest.TestCase):
             gae_labels = handler.get_gae_labels()
             logname = "app"
             message = "hello world"
-            record = logging.LogRecord(logname, logging, None, None, message, None, None)
+            record = logging.LogRecord(
+                logname, logging, None, None, message, None, None
+            )
             handler.project_id = self.PROJECT
             handler.emit(record)
 
@@ -110,7 +112,14 @@ class TestAppEngineHandler(unittest.TestCase):
             self.assertEqual(handler.transport.name, logname)
             self.assertEqual(
                 handler.transport.send_called_with,
-                (record, message, gae_resource, gae_labels, expected_trace_id, expected_http_request)
+                (
+                    record,
+                    message,
+                    gae_resource,
+                    gae_labels,
+                    expected_trace_id,
+                    expected_http_request,
+                ),
             )
 
     def _get_gae_labels_helper(self, trace_id):
