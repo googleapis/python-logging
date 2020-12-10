@@ -115,11 +115,13 @@ class AppEngineHandler(logging.StreamHandler):
         message = super(AppEngineHandler, self).format(record)
         inferred_http, inferred_trace_id = get_request_data()
         # allow user overrides
-        trace_id = record.__dict__.get('trace', inferred_trace_id)
-        span_id = record.__dict__.get('span_id', None)
-        http_request = record.__dict__.get('http_request', inferred_http)
-        resource = record.__dict__.get('resource', self.resource)
-        user_labels = record.__dict__.get('labels', {})
+        trace_id = getattr(record, 'trace', inferred_trace_id)
+        if trace_id is not None and 'projects/' not in trace_id:
+            trace_id = f"projects/{self.project_id}/{trace_id}"
+        span_id = getattr(record, 'span_id', None)
+        http_request = getattr(record, 'http_request', inferred_http)
+        resource = getattr(record, 'resource', self.resource)
+        user_labels = getattr(record, 'labels', {})
         # merge labels
         gae_labels = self.get_gae_labels()
         gae_labels.update(user_labels)
@@ -129,7 +131,7 @@ class AppEngineHandler(logging.StreamHandler):
             message,
             resource=resource,
             labels=gae_labels,
-            trace= f"projects/{self.project_id}/{trace_id}",
-          #  span_id=span_id,
+            trace=trace_id,
+            span_id=span_id,
             http_request=http_request,
         )

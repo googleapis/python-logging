@@ -85,7 +85,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, message, _GLOBAL_RESOURCE, None),
+            (record, message, _GLOBAL_RESOURCE, None, None, None, None),
         )
 
 
@@ -148,5 +148,5 @@ class _Transport(object):
         self.client = client
         self.name = name
 
-    def send(self, record, message, resource, labels=None):
-        self.send_called_with = (record, message, resource, labels)
+    def send(self, record, message, resource, labels=None, trace=None, span_id=None, http_request=None):
+        self.send_called_with = (record, message, resource, labels, trace, span_id, http_request)
