@@ -103,8 +103,6 @@ class CloudLoggingHandler(logging.StreamHandler):
         """
         message = super(CloudLoggingHandler, self).format(record)
         trace_id = getattr(record, 'trace', None)
-        if trace_id is not None and 'projects/' not in trace_id:
-            trace_id = f"projects/{self.project_id}/{trace_id}"
         span_id = getattr(record, 'span_id', None)
         http_request = getattr(record, 'http_request', None)
         resource = getattr(record, 'resource', self.resource)
@@ -119,7 +117,7 @@ class CloudLoggingHandler(logging.StreamHandler):
             record,
             message,
             resource=resource,
-            labels=total_labels,
+            labels=(total_labels if total_labels else None),
             trace=trace_id,
             span_id=span_id,
             http_request=http_request,

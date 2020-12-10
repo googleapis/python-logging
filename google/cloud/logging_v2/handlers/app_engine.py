@@ -114,10 +114,10 @@ class AppEngineHandler(logging.StreamHandler):
         """
         message = super(AppEngineHandler, self).format(record)
         inferred_http, inferred_trace_id = get_request_data()
+        if inferred_trace_id is not None:
+            inferred_trace_id = f"projects/{inferred_trace_id}/{trace_id}"
         # allow user overrides
         trace_id = getattr(record, 'trace', inferred_trace_id)
-        if trace_id is not None and 'projects/' not in trace_id:
-            trace_id = f"projects/{self.project_id}/{trace_id}"
         span_id = getattr(record, 'span_id', None)
         http_request = getattr(record, 'http_request', inferred_http)
         resource = getattr(record, 'resource', self.resource)
