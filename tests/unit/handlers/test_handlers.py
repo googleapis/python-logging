@@ -88,6 +88,44 @@ class TestCloudLoggingHandler(unittest.TestCase):
             (record, message, _GLOBAL_RESOURCE, None, None, None, None),
         )
 
+    def test_emit_manual_field_override(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.resource import Resource
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE
+        )
+        logname = "loggername"
+        message = "hello world"
+        record = logging.LogRecord(logname, logging, None, None, message, None, None)
+        # set attributes manually
+        manual_trace_id = '123'
+        expected_trace = f"projects/{self.PROJECT}/{manual_trace_id}"
+        setattr(record, 'trace', manual_trace_id)
+        expected_span = '456'
+        setattr(record, 'span_id', expected_span)
+        expected_http = {'reuqest_url':'manual'}
+        setattr(record, 'http_request', expected_http)
+        expected_resource = gae_resource = Resource(type="test", labels={})
+        setattr(record, 'resource', expected_resource)
+        expected_labels = {'test-label':'manual'}
+        setattr(record, 'labels', expected_labels)
+        handler.emit(record)
+
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                message,
+                expected_resource,
+                expected_labels,
+                expected_trace,
+                expected_span,
+                expected_http,
+            ),
+        )
+
 
 class TestSetupLogging(unittest.TestCase):
     def _call_fut(self, handler, excludes=None):
