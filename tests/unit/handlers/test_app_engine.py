@@ -89,7 +89,7 @@ class TestAppEngineHandler(unittest.TestCase):
     def test_emit(self):
         expected_http_request = {"request_url": "test"}
         trace_id = "trace-test"
-        expected_trace_id = f"projects/{self.PROJECT}/{trace_id}"
+        expected_trace_id = f"projects/{self.PROJECT}/traces/{trace_id}"
         get_request_patch = mock.patch(
             "google.cloud.logging_v2.handlers.app_engine.get_request_data",
             return_value=({"request_url": "test"}, "trace-test"),
