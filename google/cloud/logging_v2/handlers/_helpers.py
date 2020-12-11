@@ -23,9 +23,9 @@ except ImportError:  # pragma: NO COVER
     flask = None
 
 from google.cloud.logging_v2.handlers.middleware.request import _get_django_request
+from google.logging.type.http_request_pb2 import HttpRequest
 
 _DJANGO_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
-_DJANGO_LENGTH_HEADER = "CONTENT_LENGTH"
 _DJANGO_USERAGENT_HEADER = "HTTP_USER_AGENT"
 _DJANGO_REMOTE_ADDR_HEADER = "REMOTE_ADDR"
 _DJANGO_REFERER_HEADER = "HTTP_REFERER"
@@ -56,22 +56,19 @@ def get_request_data_from_flask():
 
     Returns:
         str: TraceID in HTTP request headers.
-        dict: data about the associated http request.
+        HttpRequest: data about the associated http request.
     """
-    if flask is None or not flask.request:
-        return None, None
 
     # build http_request
-    length = flask.request.content_length
-    http_request = {
-        "request_method": flask.request.method,
-        "request_url": flask.request.url,
-        "request_size": str(length) if length else None,
-        "user_agent": flask.request.user_agent.string,
-        "remote_ip": flask.request.remote_addr,
-        "referer": flask.request.referrer,
-        "protocol": flask.request.environ.get(_PROTOCOL_HEADER),
-    }
+    http_request = HttpRequest(
+        request_method=flask.request.method,
+        request_url=flask.request.url,
+        request_size=flask.request.content_length,
+        user_agent=flask.request.user_agent.string,
+        remote_ip=flask.request.remote_addr,
+        referer=flask.request.referrer,
+        protocol=flask.request.environ.get(_PROTOCOL_HEADER),
+    )
 
     # find trace id
     trace_id = None
@@ -87,23 +84,22 @@ def get_request_data_from_django():
 
     Returns:
         str: TraceID in HTTP request headers.
-        dict: data about the associated http request.
+        HttpRequest: data about the associated http request.
     """
     request = _get_django_request()
 
     if request is None:
         return None, None
-
     # build http_request
-    http_request = {
-        "request_method": request.method,
-        "request_url": request.build_absolute_uri(),
-        "request_size": request.META.get(_DJANGO_LENGTH_HEADER),
-        "user_agent": request.META.get(_DJANGO_USERAGENT_HEADER),
-        "remote_ip": request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
-        "referer": request.META.get(_DJANGO_REFERER_HEADER),
-        "protocol": request.META.get(_PROTOCOL_HEADER),
-    }
+    http_request = HttpRequest(
+        request_method=request.method,
+        request_url=request.build_absolute_uri(),
+        request_size=len(request.body),
+        user_agent=request.META.get(_DJANGO_USERAGENT_HEADER),
+        remote_ip=request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
+        referer=request.META.get(_DJANGO_REFERER_HEADER),
+        protocol=request.META.get(_PROTOCOL_HEADER),
+    )
 
     # find trace id
     trace_id = None
@@ -120,7 +116,7 @@ def get_request_data():
 
     Returns:
         str: TraceID in HTTP request headers.
-        dict: data about the associated http request.
+        HttpRequest: data about the associated http request.
     """
     checkers = (
         get_request_data_from_django,
