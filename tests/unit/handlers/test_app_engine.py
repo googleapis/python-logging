@@ -89,13 +89,13 @@ class TestAppEngineHandler(unittest.TestCase):
     def test_emit(self):
         expected_http_request = {"request_url": "test"}
         trace_id = "trace-test"
-        expected_trace_id = f"projects/{self.PROJECT}/{trace_id}"
+        expected_trace_id = f"projects/{self.PROJECT}/traces/{trace_id}"
         get_request_patch = mock.patch(
             "google.cloud.logging_v2.handlers.app_engine.get_request_data",
             return_value=(expected_http_request, trace_id),
         )
-        with get_request_patch as mock_get_request:
-
+        with get_request_patch:
+            # library integrations mocked to return test data
             client = mock.Mock(project=self.PROJECT, spec=["project"])
             handler = self._make_one(client, transport=_Transport)
             gae_resource = handler.get_gae_resource()
