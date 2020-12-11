@@ -115,7 +115,7 @@ def get_request_data_from_django():
 
 def get_request_data():
     """Helper to get trace_id and http_request data from supported web
-    frameworks.
+    frameworks (currently supported: Flask and Django).
 
     Returns:
         str: TraceID in HTTP request headers.
