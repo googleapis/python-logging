@@ -78,7 +78,7 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         self.assertEqual(http_request["request_method"], "GET")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
-    def test_http_request_auto_populated(self):
+    def test_http_request_populated(self):
         expected_path = "http://testserver/123"
         expected_agent = "Mozilla/5.0"
         expected_referrer = "self"
@@ -108,6 +108,18 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         self.assertEqual(http_request["protocol"], "HTTP/1.1")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
+    def test_http_request_sparse(self):
+        expected_path = "http://testserver/123"
+        app = self.create_app()
+        with app.test_client() as c:
+            c.put(path=expected_path)
+            http_request, trace_id = self._call_fut()
+        self.assertEqual(http_request["request_method"], "PUT")
+        self.assertEqual(http_request["request_url"], expected_path)
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
+        self.assertIsNone(http_request["referer"])
+        self.assertIsNone(http_request["request_size"])
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
 class Test_get_request_data_from_django(unittest.TestCase):
     @staticmethod
@@ -166,7 +178,7 @@ class Test_get_request_data_from_django(unittest.TestCase):
         for field in _HTTP_REQUEST_FIELDS:
             self.assertTrue(field in http_request)
 
-    def test_http_request_auto_populated(self):
+    def test_http_request_populated(self):
         from django.test import RequestFactory
         from google.cloud.logging_v2.handlers.middleware import request
 
@@ -192,6 +204,24 @@ class Test_get_request_data_from_django(unittest.TestCase):
         self.assertEqual(http_request["request_size"], str(len(body_content)))
         self.assertEqual(http_request["protocol"], "HTTP/1.1")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
+
+    def test_http_request_sparse(self):
+        from django.test import RequestFactory
+        from google.cloud.logging_v2.handlers.middleware import request
+
+        expected_path = "http://testserver/123"
+        django_request = RequestFactory().put(expected_path)
+        middleware = request.RequestMiddleware(None)
+        middleware.process_request(django_request)
+        http_request, trace_id = self._call_fut()
+        self.assertEqual(http_request["request_method"], "PUT")
+        self.assertEqual(http_request["request_url"], expected_path)
+        self.assertIsNone(http_request["referer"])
+        self.assertEqual(http_request["remote_ip"], "127.0.0.1")
+        self.assertIsNone(http_request["request_size"])
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
+        self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
+
 
 
 class Test_get_request_data(unittest.TestCase):
