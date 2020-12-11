@@ -78,7 +78,7 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         self.assertEqual(http_request["request_method"], "GET")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
-    def test_http_data(self):
+    def test_http_request_auto_populated(self):
         expected_path = "http://testserver/123"
         expected_agent = "Mozilla/5.0"
         expected_referrer = "self"
@@ -166,7 +166,7 @@ class Test_get_request_data_from_django(unittest.TestCase):
         for field in _HTTP_REQUEST_FIELDS:
             self.assertTrue(field in http_request)
 
-    def test_http_data(self):
+    def test_http_request_auto_populated(self):
         from django.test import RequestFactory
         from google.cloud.logging_v2.handlers.middleware import request
 
