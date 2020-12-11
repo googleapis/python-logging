@@ -27,6 +27,7 @@ _HTTP_REQUEST_FIELDS = [
     "user_agent",
     "remote_ip",
     "referer",
+    "protocol",
 ]
 
 
@@ -107,6 +108,7 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         self.assertEqual(http_request["referer"], expected_referrer)
         self.assertEqual(http_request["remote_ip"], expected_ip)
         self.assertEqual(http_request["request_size"], str(len(body_content)))
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
 
@@ -193,6 +195,7 @@ class Test_get_request_data_from_django(unittest.TestCase):
         self.assertEqual(http_request["referer"], expected_referrer)
         self.assertEqual(http_request["remote_ip"], "127.0.0.1")
         self.assertEqual(http_request["request_size"], str(len(body_content)))
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
 

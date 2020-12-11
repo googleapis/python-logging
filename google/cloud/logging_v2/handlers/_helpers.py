@@ -69,7 +69,7 @@ def get_request_data_from_flask():
         "user_agent": flask.request.user_agent.string,
         "remote_ip": flask.request.remote_addr,
         "referer": flask.request.referrer,
-        "protocol": request.environ.get(_PROTOCOL_HEADER)
+        "protocol": flask.request.environ.get(_PROTOCOL_HEADER)
     }
 
     # find trace id
