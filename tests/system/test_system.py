@@ -309,8 +309,7 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
 
-    @pytest.mark.run_these_please
-    def test_cloud_logging_handler_with_extras(self):
+    def test_handlers_w_extras(self):
         LOG_MESSAGE = "Testing with injected extras."
 
         for cls in [CloudLoggingHandler, AppEngineHandler]:
