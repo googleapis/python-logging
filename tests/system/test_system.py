@@ -316,9 +316,7 @@ class TestLogging(unittest.TestCase):
             LOGGER_NAME = f"{cls.__name__}-handler_extras"
             handler_name = self._logger_name(LOGGER_NAME)
 
-            handler = cls(
-                Config.CLIENT, name=handler_name, transport=SyncTransport
-            )
+            handler = cls(Config.CLIENT, name=handler_name, transport=SyncTransport)
 
             # only create the logger to delete, hidden otherwise
             logger = Config.CLIENT.logger(handler.name)
@@ -327,21 +325,21 @@ class TestLogging(unittest.TestCase):
             cloud_logger = logging.getLogger(LOGGER_NAME)
             cloud_logger.addHandler(handler)
             extra = {
-                'trace': '123',
-                'span_id': '456',
-                'http_request':  {'requestUrl':'manual'},
-                'resource':  Resource(type="cloudiot_device", labels={}),
-                'labels': {'test-label':'manual'}
+                "trace": "123",
+                "span_id": "456",
+                "http_request": {"requestUrl": "manual"},
+                "resource": Resource(type="cloudiot_device", labels={}),
+                "labels": {"test-label": "manual"},
             }
             cloud_logger.warn(LOG_MESSAGE, extra=extra)
 
             entries = _list_entries(logger)
             self.assertEqual(len(entries), 1)
-            self.assertEqual(entries[0].trace, extra['trace'])
-            self.assertEqual(entries[0].span_id, extra['span_id'])
-            self.assertEqual(entries[0].http_request, extra['http_request'])
-            self.assertEqual(entries[0].labels, extra['labels'])
-            self.assertEqual(entries[0].resource.type, extra['resource'].type)
+            self.assertEqual(entries[0].trace, extra["trace"])
+            self.assertEqual(entries[0].span_id, extra["span_id"])
+            self.assertEqual(entries[0].http_request, extra["http_request"])
+            self.assertEqual(entries[0].labels, extra["labels"])
+            self.assertEqual(entries[0].resource.type, extra["resource"].type)
 
     def test_log_root_handler(self):
         LOG_MESSAGE = "It was the best of times."

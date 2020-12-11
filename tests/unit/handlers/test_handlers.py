@@ -100,16 +100,16 @@ class TestCloudLoggingHandler(unittest.TestCase):
         message = "hello world"
         record = logging.LogRecord(logname, logging, None, None, message, None, None)
         # set attributes manually
-        expected_trace = '123'
-        setattr(record, 'trace', expected_trace)
-        expected_span = '456'
-        setattr(record, 'span_id', expected_span)
-        expected_http = {'reuqest_url':'manual'}
-        setattr(record, 'http_request', expected_http)
+        expected_trace = "123"
+        setattr(record, "trace", expected_trace)
+        expected_span = "456"
+        setattr(record, "span_id", expected_span)
+        expected_http = {"reuqest_url": "manual"}
+        setattr(record, "http_request", expected_http)
         expected_resource = gae_resource = Resource(type="test", labels={})
-        setattr(record, 'resource', expected_resource)
-        expected_labels = {'test-label':'manual'}
-        setattr(record, 'labels', expected_labels)
+        setattr(record, "resource", expected_resource)
+        expected_labels = {"test-label": "manual"}
+        setattr(record, "labels", expected_labels)
         handler.emit(record)
 
         self.assertEqual(
@@ -185,5 +185,22 @@ class _Transport(object):
         self.client = client
         self.name = name
 
-    def send(self, record, message, resource, labels=None, trace=None, span_id=None, http_request=None):
-        self.send_called_with = (record, message, resource, labels, trace, span_id, http_request)
+    def send(
+        self,
+        record,
+        message,
+        resource,
+        labels=None,
+        trace=None,
+        span_id=None,
+        http_request=None,
+    ):
+        self.send_called_with = (
+            record,
+            message,
+            resource,
+            labels,
+            trace,
+            span_id,
+            http_request,
+        )

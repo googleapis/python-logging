@@ -144,18 +144,18 @@ class TestAppEngineHandler(unittest.TestCase):
             )
             handler.project_id = self.PROJECT
             # set attributes manually
-            expected_trace = '123'
-            setattr(record, 'trace', expected_trace)
-            expected_span = '456'
-            setattr(record, 'span_id', expected_span)
-            expected_http = {'reuqest_url':'manual'}
-            setattr(record, 'http_request', expected_http)
+            expected_trace = "123"
+            setattr(record, "trace", expected_trace)
+            expected_span = "456"
+            setattr(record, "span_id", expected_span)
+            expected_http = {"reuqest_url": "manual"}
+            setattr(record, "http_request", expected_http)
             expected_resource = gae_resource = Resource(type="test", labels={})
-            setattr(record, 'resource', expected_resource)
-            additional_labels = {'test-label':'manual'}
+            setattr(record, "resource", expected_resource)
+            additional_labels = {"test-label": "manual"}
             expected_labels = dict(gae_labels)
             expected_labels.update(additional_labels)
-            setattr(record, 'labels', additional_labels)
+            setattr(record, "labels", additional_labels)
             handler.emit(record)
             self.assertIs(handler.transport.client, client)
             self.assertEqual(handler.transport.name, logname)
@@ -200,10 +200,19 @@ class TestAppEngineHandler(unittest.TestCase):
         gae_labels = self._get_gae_labels_helper(None)
         self.assertEqual(gae_labels, {})
 
+
 class _Transport(object):
     def __init__(self, client, name):
         self.client = client
         self.name = name
 
     def send(self, record, message, resource, labels, trace, span_id, http_request):
-        self.send_called_with = (record, message, resource, labels, trace, span_id, http_request)
+        self.send_called_with = (
+            record,
+            message,
+            resource,
+            labels,
+            trace,
+            span_id,
+            http_request,
+        )

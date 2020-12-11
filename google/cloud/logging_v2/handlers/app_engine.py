@@ -117,11 +117,11 @@ class AppEngineHandler(logging.StreamHandler):
         if inferred_trace is not None:
             inferred_trace = f"projects/{self.project_id}/traces/{inferred_trace}"
         # allow user overrides
-        trace = getattr(record, 'trace', inferred_trace)
-        span_id = getattr(record, 'span_id', None)
-        http_request = getattr(record, 'http_request', inferred_http)
-        resource = getattr(record, 'resource', self.resource)
-        user_labels = getattr(record, 'labels', {})
+        trace = getattr(record, "trace", inferred_trace)
+        span_id = getattr(record, "span_id", None)
+        http_request = getattr(record, "http_request", inferred_http)
+        resource = getattr(record, "resource", self.resource)
+        user_labels = getattr(record, "labels", {})
         # merge labels
         gae_labels = self.get_gae_labels()
         gae_labels.update(user_labels)
