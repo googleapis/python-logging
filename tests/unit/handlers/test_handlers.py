@@ -100,9 +100,8 @@ class TestCloudLoggingHandler(unittest.TestCase):
         message = "hello world"
         record = logging.LogRecord(logname, logging, None, None, message, None, None)
         # set attributes manually
-        manual_trace_id = '123'
-        expected_trace = f"projects/{self.PROJECT}/{manual_trace_id}"
-        setattr(record, 'trace', manual_trace_id)
+        expected_trace = '123'
+        setattr(record, 'trace', expected_trace)
         expected_span = '456'
         setattr(record, 'span_id', expected_span)
         expected_http = {'reuqest_url':'manual'}
