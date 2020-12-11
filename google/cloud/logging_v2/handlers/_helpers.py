@@ -30,6 +30,7 @@ _DJANGO_USERAGENT_HEADER = "HTTP_USER_AGENT"
 _DJANGO_REMOTE_ADDR_HEADER = "REMOTE_ADDR"
 _DJANGO_REFERER_HEADER = "HTTP_REFERER"
 _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
+_PROTOCOL_HEADER = "SERVER_PROTOCOL"
 
 
 def format_stackdriver_json(record, message):
@@ -68,6 +69,7 @@ def get_request_data_from_flask():
         "user_agent": flask.request.user_agent.string,
         "remote_ip": flask.request.remote_addr,
         "referer": flask.request.referrer,
+        "protocol": request.environ.get(_PROTOCOL_HEADER)
     }
 
     # find trace id
@@ -99,6 +101,7 @@ def get_request_data_from_django():
         "user_agent": request.META.get(_DJANGO_USERAGENT_HEADER),
         "remote_ip": request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
         "referer": request.META.get(_DJANGO_REFERER_HEADER),
+        "protocol": request.META.get(_PROTOCOL_HEADER),
     }
 
     # find trace id
