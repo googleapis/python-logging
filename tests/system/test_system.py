@@ -27,7 +27,8 @@ from google.api_core.exceptions import RetryError
 from google.api_core.exceptions import ServiceUnavailable
 import google.cloud.logging
 from google.cloud._helpers import UTC
-from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
+from google.cloud.logging_v2.handlers import AppEngineHandler
+from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
@@ -312,34 +313,36 @@ class TestLogging(unittest.TestCase):
     def test_cloud_logging_handler_with_extras(self):
         LOG_MESSAGE = "Testing with injected extras."
 
-        handler_name = self._logger_name("handler_extras")
-        handler = CloudLoggingHandler(
-            Config.CLIENT, name=handler_name, transport=SyncTransport
-        )
+        for cls in [CloudLoggingHandler, AppEngineHandler]:
+            LOGGER_NAME = f"{cls.__name__}-handler_extras"
+            handler_name = self._logger_name(LOGGER_NAME)
 
-        # only create the logger to delete, hidden otherwise
-        logger = Config.CLIENT.logger(handler.name)
-        self.to_delete.append(logger)
+            handler = cls(
+                Config.CLIENT, name=handler_name, transport=SyncTransport
+            )
 
-        LOGGER_NAME = "extras"
-        cloud_logger = logging.getLogger(LOGGER_NAME)
-        cloud_logger.addHandler(handler)
-        extra = {
-            'trace': '123',
-            'span_id': '456',
-            'http_request':  {'requestUrl':'manual'},
-            'resource':  Resource(type="cloudiot_device", labels={}),
-            'labels': {'test-label':'manual'}
-        }
-        cloud_logger.warn(LOG_MESSAGE, extra=extra)
+            # only create the logger to delete, hidden otherwise
+            logger = Config.CLIENT.logger(handler.name)
+            self.to_delete.append(logger)
 
-        entries = _list_entries(logger)
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].trace, extra['trace'])
-        self.assertEqual(entries[0].span_id, extra['span_id'])
-        self.assertEqual(entries[0].http_request, extra['http_request'])
-        self.assertEqual(entries[0].labels, extra['labels'])
-        self.assertEqual(entries[0].resource.type, extra['resource'].type)
+            cloud_logger = logging.getLogger(LOGGER_NAME)
+            cloud_logger.addHandler(handler)
+            extra = {
+                'trace': '123',
+                'span_id': '456',
+                'http_request':  {'requestUrl':'manual'},
+                'resource':  Resource(type="cloudiot_device", labels={}),
+                'labels': {'test-label':'manual'}
+            }
+            cloud_logger.warn(LOG_MESSAGE, extra=extra)
+
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].trace, extra['trace'])
+            self.assertEqual(entries[0].span_id, extra['span_id'])
+            self.assertEqual(entries[0].http_request, extra['http_request'])
+            self.assertEqual(entries[0].labels, extra['labels'])
+            self.assertEqual(entries[0].resource.type, extra['resource'].type)
 
     def test_log_root_handler(self):
         LOG_MESSAGE = "It was the best of times."
