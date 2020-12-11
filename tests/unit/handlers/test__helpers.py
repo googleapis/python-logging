@@ -77,8 +77,6 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         self.assertEqual(trace_id, expected_trace_id)
         self.assertEqual(http_request["request_method"], "GET")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
-        for field in _HTTP_REQUEST_FIELDS:
-            self.assertTrue(field in http_request)
 
     def test_http_data(self):
         expected_path = "http://testserver/123"
@@ -89,7 +87,6 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         headers = {
             "User-Agent": expected_agent,
             "Referer": expected_referrer,
-            "HTTP_X_FORWARDED_FOR": "0.0.0.0",
         }
 
         app = self.create_app()
@@ -145,8 +142,6 @@ class Test_get_request_data_from_django(unittest.TestCase):
         http_request, trace_id = self._call_fut()
         self.assertEqual(http_request["request_method"], "GET")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
-        for field in _HTTP_REQUEST_FIELDS:
-            self.assertTrue(field in http_request)
         self.assertIsNone(trace_id)
 
     def test_valid_context_header(self):
