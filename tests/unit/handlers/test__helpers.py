@@ -121,6 +121,7 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         self.assertIsNone(http_request["request_size"])
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
 
+
 class Test_get_request_data_from_django(unittest.TestCase):
     @staticmethod
     def _call_fut():
@@ -221,7 +222,6 @@ class Test_get_request_data_from_django(unittest.TestCase):
         self.assertIsNone(http_request["request_size"])
         self.assertEqual(http_request["protocol"], "HTTP/1.1")
         self.assertEqual(set(http_request.keys()), set(_HTTP_REQUEST_FIELDS))
-
 
 
 class Test_get_request_data(unittest.TestCase):
