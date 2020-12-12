@@ -283,3 +283,7 @@ class Test_get_request_data(unittest.TestCase):
 
         django_mock.assert_called_once_with()
         flask_mock.assert_called_once_with()
+
+    def test_wo_libraries(self):
+        output = self._call_fut()
+        self.assertEqual(output, (None, None))
