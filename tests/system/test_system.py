@@ -324,10 +324,11 @@ class TestLogging(unittest.TestCase):
 
             cloud_logger = logging.getLogger(LOGGER_NAME)
             cloud_logger.addHandler(handler)
+            expected_request = {"requestUrl": "localhost"}
             extra = {
                 "trace": "123",
                 "span_id": "456",
-                "http_request": {"requestUrl": "manual"},
+                "http_request": expected_request,
                 "resource": Resource(type="cloudiot_device", labels={}),
                 "labels": {"test-label": "manual"},
             }
@@ -337,7 +338,7 @@ class TestLogging(unittest.TestCase):
             self.assertEqual(len(entries), 1)
             self.assertEqual(entries[0].trace, extra["trace"])
             self.assertEqual(entries[0].span_id, extra["span_id"])
-            self.assertEqual(entries[0].http_request, extra["http_request"])
+            self.assertEqual(entries[0].http_request, expected_request)
             self.assertEqual(entries[0].labels, extra["labels"])
             self.assertEqual(entries[0].resource.type, extra["resource"].type)
 

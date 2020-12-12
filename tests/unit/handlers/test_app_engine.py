@@ -132,10 +132,10 @@ class TestAppEngineHandler(unittest.TestCase):
             "google.cloud.logging_v2.handlers.app_engine.get_request_data",
             return_value=(inferred_http_request, inferred_trace_id),
         )
-        with get_request_patch as mock_get_request:
+        with get_request_patch:
+            # library integrations mocked to return test data
             client = mock.Mock(project=self.PROJECT, spec=["project"])
             handler = self._make_one(client, transport=_Transport)
-            gae_resource = handler.get_gae_resource()
             gae_labels = handler.get_gae_labels()
             logname = "app"
             message = "hello world"
@@ -150,7 +150,7 @@ class TestAppEngineHandler(unittest.TestCase):
             setattr(record, "span_id", expected_span)
             expected_http = {"reuqest_url": "manual"}
             setattr(record, "http_request", expected_http)
-            expected_resource = gae_resource = Resource(type="test", labels={})
+            expected_resource = Resource(type="test", labels={})
             setattr(record, "resource", expected_resource)
             additional_labels = {"test-label": "manual"}
             expected_labels = dict(gae_labels)

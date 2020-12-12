@@ -106,7 +106,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         setattr(record, "span_id", expected_span)
         expected_http = {"reuqest_url": "manual"}
         setattr(record, "http_request", expected_http)
-        expected_resource = gae_resource = Resource(type="test", labels={})
+        expected_resource = Resource(type="test", labels={})
         setattr(record, "resource", expected_resource)
         expected_labels = {"test-label": "manual"}
         setattr(record, "labels", expected_labels)
