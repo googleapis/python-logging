@@ -58,7 +58,7 @@ def get_request_data_from_flask():
         str: TraceID in HTTP request headers.
         HttpRequest: data about the associated http request.
     """
-    if flask is None or flask.request is None:
+    if flask is None or not flask.request:
         return None, None
 
     # build http_request
