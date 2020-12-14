@@ -34,12 +34,7 @@ class SyncTransport(Transport):
         self,
         record,
         message,
-        *,
-        resource=None,
-        labels=None,
-        trace=None,
-        span_id=None,
-        http_request=None,
+        **kwargs,
     ):
         """Overrides transport.send().
 
@@ -48,19 +43,11 @@ class SyncTransport(Transport):
                 Python log record that the handler was called with.
             message (str): The message from the ``LogRecord`` after being
                 formatted by the associated log formatters.
-            resource (Optional[~logging_v2.resource.Resource]):
-                 Monitored resource of the entry.
-            labels (Optional[dict]): Mapping of labels for the entry.
-            http_request (Optional[dict]): Info about HTTP request associated
-                 with the entry.
+            **kwargs: Additional optional arguments for the logger
         """
         info = {"message": message, "python_logger": record.name}
         self.logger.log_struct(
             info,
             severity=_helpers._normalize_severity(record.levelno),
-            resource=resource,
-            labels=labels,
-            trace=trace,
-            span_id=span_id,
-            http_request=http_request,
+            **kwargs,
         )

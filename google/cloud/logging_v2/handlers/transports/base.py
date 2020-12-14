@@ -26,12 +26,7 @@ class Transport(object):
         self,
         record,
         message,
-        *,
-        resource=None,
-        labels=None,
-        trace=None,
-        span_id=None,
-        http_request=None
+        **kwargs,
     ):
         """Transport send to be implemented by subclasses.
 
@@ -39,9 +34,7 @@ class Transport(object):
             record (logging.LogRecord): Python log record that the handler was called with.
             message (str): The message from the ``LogRecord`` after being
                 formatted by the associated log formatters.
-            resource (Optional[google.cloud.logging_v2.resource.Resource]):
-                 Monitored resource of the entry.
-            labels (Optional[dict]): Mapping of labels for the entry.
+            **kwargs: Additional optional arguments for the logger
         """
         raise NotImplementedError
 

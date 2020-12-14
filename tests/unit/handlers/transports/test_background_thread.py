@@ -67,10 +67,6 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             record,
             message,
             resource=_GLOBAL_RESOURCE,
-            labels=None,
-            trace=None,
-            span_id=None,
-            http_request=None,
         )
 
     def test_trace_send(self):
@@ -95,10 +91,7 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             record,
             message,
             resource=_GLOBAL_RESOURCE,
-            labels=None,
             trace=trace,
-            span_id=None,
-            http_request=None,
         )
 
     def test_span_send(self):
@@ -123,10 +116,7 @@ class TestBackgroundThreadHandler(unittest.TestCase):
             record,
             message,
             resource=_GLOBAL_RESOURCE,
-            labels=None,
-            trace=None,
             span_id=span_id,
-            http_request=None,
         )
 
     def test_flush(self):
@@ -300,12 +290,12 @@ class Test_Worker(unittest.TestCase):
         expected_info = {"message": message, "python_logger": "testing"}
         self.assertEqual(entry["info"], expected_info)
         self.assertEqual(entry["severity"], LogSeverity.INFO)
-        self.assertIsNone(entry["resource"])
-        self.assertIsNone(entry["labels"])
-        self.assertIsNone(entry["trace"])
-        self.assertIsNone(entry["span_id"])
-        self.assertIsNone(entry["http_request"])
         self.assertIsInstance(entry["timestamp"], datetime.datetime)
+        self.assertNotIn("resource", entry.keys())
+        self.assertNotIn("labels", entry.keys())
+        self.assertNotIn("trace", entry.keys())
+        self.assertNotIn("span_id", entry.keys())
+        self.assertNotIn("http_request", entry.keys())
 
     def test_enqueue_explicit(self):
         import datetime
