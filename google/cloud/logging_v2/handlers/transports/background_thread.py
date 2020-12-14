@@ -222,12 +222,7 @@ class _Worker(object):
                 file=sys.stderr,
             )
 
-    def enqueue(
-        self,
-        record,
-        message,
-        **kwargs,
-    ):
+    def enqueue(self, record, message, **kwargs):
         """Queues a log entry to be written by the background thread.
 
         Args:
@@ -286,12 +281,7 @@ class BackgroundThreadTransport(Transport):
         )
         self.worker.start()
 
-    def send(
-        self,
-        record,
-        message,
-        **kwargs,
-    ):
+    def send(self, record, message, **kwargs):
         """Overrides Transport.send().
 
         Args:
@@ -300,11 +290,7 @@ class BackgroundThreadTransport(Transport):
                 formatted by the associated log formatters.
             **kwargs: Additional optional arguments for the logger
         """
-        self.worker.enqueue(
-            record,
-            message,
-            **kwargs,
-        )
+        self.worker.enqueue(record, message, **kwargs)
 
     def flush(self):
         """Submit any pending log records."""

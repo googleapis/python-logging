@@ -30,12 +30,7 @@ class SyncTransport(Transport):
     def __init__(self, client, name):
         self.logger = client.logger(name)
 
-    def send(
-        self,
-        record,
-        message,
-        **kwargs,
-    ):
+    def send(self, record, message, **kwargs):
         """Overrides transport.send().
 
         Args:
@@ -47,7 +42,5 @@ class SyncTransport(Transport):
         """
         info = {"message": message, "python_logger": record.name}
         self.logger.log_struct(
-            info,
-            severity=_helpers._normalize_severity(record.levelno),
-            **kwargs,
+            info, severity=_helpers._normalize_severity(record.levelno), **kwargs,
         )
