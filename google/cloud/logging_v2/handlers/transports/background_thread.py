@@ -229,7 +229,7 @@ class _Worker(object):
             record (logging.LogRecord): Python log record that the handler was called with.
             message (str): The message from the ``LogRecord`` after being
                         formatted by the associated log formatters.
-            **kwargs: Additional optional arguments for the logger
+            kwargs: Additional optional arguments for the logger
         """
         queue_entry = {
             "info": {"message": message, "python_logger": record.name},
@@ -288,7 +288,7 @@ class BackgroundThreadTransport(Transport):
             record (logging.LogRecord): Python log record that the handler was called with.
             message (str): The message from the ``LogRecord`` after being
                 formatted by the associated log formatters.
-            **kwargs: Additional optional arguments for the logger
+            kwargs: Additional optional arguments for the logger
         """
         self.worker.enqueue(record, message, **kwargs)
 

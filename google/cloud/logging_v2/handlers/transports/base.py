@@ -29,7 +29,7 @@ class Transport(object):
             record (logging.LogRecord): Python log record that the handler was called with.
             message (str): The message from the ``LogRecord`` after being
                 formatted by the associated log formatters.
-            **kwargs: Additional optional arguments for the logger
+            kwargs: Additional optional arguments for the logger
         """
         raise NotImplementedError
 

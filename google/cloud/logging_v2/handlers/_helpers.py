@@ -52,11 +52,12 @@ def format_stackdriver_json(record, message):
 
 
 def get_request_data_from_flask():
-    """Get trace_id and http_request data from flask request headers.
+    """Get http_request and trace data from flask request headers.
 
     Returns:
-        str: TraceID in HTTP request headers.
-        HttpRequest: data about the associated http request.
+        Tuple[Optional[google.logging.type.http_request_pb2.HttpRequest], Optional[str]]:
+            Data related to the current http request and the trace_id for the
+            request. Both fields will be None if a flask request isn't found.
     """
     if flask is None or not flask.request:
         return None, None
@@ -82,11 +83,12 @@ def get_request_data_from_flask():
 
 
 def get_request_data_from_django():
-    """Get trace_id and http_request data from django request headers.
+    """Get http_request and trace data from django request headers.
 
     Returns:
-        str: TraceID in HTTP request headers.
-        HttpRequest: data about the associated http request.
+        Tuple[Optional[google.logging.type.http_request_pb2.HttpRequest], Optional[str]]:
+            Data related to the current http request and the trace_id for the
+            request. Both fields will be None if a django request isn't found.
     """
     request = _get_django_request()
 
@@ -113,12 +115,13 @@ def get_request_data_from_django():
 
 
 def get_request_data():
-    """Helper to get trace_id and http_request data from supported web
+    """Helper to get http_request and trace data from supported web
     frameworks (currently supported: Flask and Django).
 
     Returns:
-        str: TraceID in HTTP request headers.
-        HttpRequest: data about the associated http request.
+        Tuple[Optional[google.logging.type.http_request_pb2.HttpRequest], Optional[str]]:
+            Data related to the current http request and the trace_id for the
+            request. Both fields will be None if a supported web request isn't found.
     """
     checkers = (
         get_request_data_from_django,
