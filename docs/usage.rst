@@ -59,13 +59,6 @@ will be instances of one of the following classes:
 - :class:`~google.cloud.logging.entries.StructEntry`
 - :class:`~google.cloud.logging.entries.ProtobufEntry`
 
-Fetch entries across multiple projects.
-
-.. literalinclude:: snippets.py
-    :start-after: [START client_list_entries_multi_project]
-    :end-before: [END client_list_entries_multi_project]
-    :dedent: 4
-
 Filter entries retrieved using the `Advanced Logs Filters`_ syntax
 
 .. _Advanced Logs Filters: https://cloud.google.com/logging/docs/view/advanced_filters
@@ -82,13 +75,6 @@ Sort entries in descending timestamp order.
 .. literalinclude:: snippets.py
     :start-after: [START client_list_entries_order_by]
     :end-before: [END client_list_entries_order_by]
-    :dedent: 4
-
-Retrieve entries in batches of 10, iterating until done.
-
-.. literalinclude:: snippets.py
-    :start-after: [START client_list_entries_paged]
-    :end-before: [END client_list_entries_paged]
     :dedent: 4
 
 Retrieve entries for a single logger, sorting in descending timestamp order:

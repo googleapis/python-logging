@@ -25,7 +25,7 @@ need to be deleted during teardown.
 
 import time
 
-from google.cloud.logging.client import Client
+from google.cloud.logging import Client
 
 
 def snippet(func):
@@ -42,25 +42,6 @@ def do_something_with(item):  # pylint: disable=unused-argument
     pass
 
 
-# pylint: disable=reimported,unused-variable,unused-argument
-@snippet
-def instantiate_client(_unused_client, _unused_to_delete):
-    """Instantiate client."""
-
-    # [START client_create_default]
-    from google.cloud import logging
-
-    client = logging.Client()
-    # [END client_create_default]
-
-    credentials = object()
-    # [START client_create_explicit]
-    from google.cloud import logging
-
-    client = logging.Client(project="my-project", credentials=credentials)
-    # [END client_create_explicit]
-
-
 # pylint: enable=reimported,unused-variable,unused-argument
 
 
@@ -72,12 +53,14 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
     for entry in client.list_entries():  # API call(s)
         do_something_with(entry)
     # [END client_list_entries_default]
+        break
 
     # [START client_list_entries_filter]
     FILTER = "logName:log_name AND textPayload:simple"
     for entry in client.list_entries(filter_=FILTER):  # API call(s)
         do_something_with(entry)
     # [END client_list_entries_filter]
+        break
 
     # [START client_list_entries_order_by]
     from google.cloud.logging import DESCENDING
@@ -85,33 +68,7 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
     for entry in client.list_entries(order_by=DESCENDING):  # API call(s)
         do_something_with(entry)
     # [END client_list_entries_order_by]
-
-    # [START client_list_entries_paged]
-    iterator = client.list_entries()
-    pages = iterator.pages
-
-    page1 = next(pages)  # API call
-    for entry in page1:
-        do_something_with(entry)
-
-    page2 = next(pages)  # API call
-    for entry in page2:
-        do_something_with(entry)
-    # [END client_list_entries_paged]
-
-
-# @snippet  Commented because we need real project IDs to test
-def client_list_entries_multi_project(
-    client, to_delete
-):  # pylint: disable=unused-argument
-    """List entries via client across multiple projects."""
-
-    # [START client_list_entries_multi_project]
-    resource_names = ["projects/one-project", "projects/another-project"]
-    for entry in client.list_entries(resource_names=resource_names):  # API call(s)
-        do_something_with(entry)
-    # [END client_list_entries_multi_project]
-
+        break
 
 @snippet
 def logger_usage(client, to_delete):
