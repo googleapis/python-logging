@@ -17,15 +17,6 @@ import usage_guide
 
 from google.cloud.logging import Client
 
-def test_client_list_entries():
-    client = Client()
-
-    to_delete = []
-    usage_guide.client_list_entries(client, to_delete)
-
-    for item in to_delete:
-        usage_guide._backoff_not_found(item.delete)
-
 def test_logger_usage():
     client = Client()
 
@@ -71,20 +62,22 @@ def test_sink_pubsub():
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)
 
-def test_logging_handler(client):
+def test_logging_handler():
     client = Client()
 
     to_delete = []
-    usage_guide.logging_handler(client, to_delete)
+    usage_guide.logging_handler(client)
 
-    for item in to_delete:
-        usage_guide._backoff_not_found(item.delete)
+def test_setup_logging():
+    client = Client()
 
-def test_setup_logging(client):
+    usage_guide.setup_logging(client)
+
+def test_client_list_entries():
     client = Client()
 
     to_delete = []
-    usage_guide.setup_logging(client, to_delete)
+    usage_guide.client_list_entries(client, to_delete)
 
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)

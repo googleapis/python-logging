@@ -24,6 +24,7 @@ need to be deleted during teardown.
 """
 
 import time
+import os
 
 from google.cloud.logging import Client
 
@@ -91,7 +92,7 @@ def logger_usage(client, to_delete):
     # [END logger_log_struct]
 
     # [START logger_log_resource_text]
-    from google.cloud.logging.resource import Resource
+    from google.cloud.logging import Resource
 
     res = Resource(
         type="generic_node",
@@ -211,17 +212,15 @@ def _sink_bigquery_setup(client):
 
     DATASET_NAME = "sink_bigquery_%d" % (_millis(),)
     client = bigquery.Client()
-    dataset = client.dataset(DATASET_NAME)
-    dataset.create()
-    dataset.reload()
+    dataset = client.create_dataset(DATASET_NAME)
 
     # [START sink_dataset_permissions]
-    from google.cloud.bigquery.dataset import AccessGrant
+    from google.cloud.bigquery.dataset import AccessEntry
 
-    grants = dataset.access_grants
-    grants.append(AccessGrant("WRITER", "groupByEmail", "cloud-logs@google.com"))
-    dataset.access_grants = grants
-    dataset.update()  # API call
+    entry_list = dataset.access_entries
+    entry_list.append(AccessEntry("WRITER", "groupByEmail", "cloud-logs@google.com"))
+    dataset.access_entries = entry_list
+    client.update_dataset(dataset, ["access_entries"])  # API call
     # [END sink_dataset_permissions]
 
     return dataset
@@ -231,7 +230,6 @@ def _sink_bigquery_setup(client):
 def sink_bigquery(client, to_delete):
     """Sink log entries to bigquery."""
     dataset = _sink_bigquery_setup(client)
-    to_delete.append(dataset)
     SINK_NAME = "robots-bigquery-%d" % (_millis(),)
     FILTER = "textPayload:robot"
 
@@ -248,15 +246,22 @@ def sink_bigquery(client, to_delete):
 def _sink_pubsub_setup(client):
     from google.cloud import pubsub
 
-    TOPIC_NAME = "sink-pubsub-%d" % (_millis(),)
-    client = pubsub.Client()
-    topic = client.topic(TOPIC_NAME)
-    topic.create()
+    client = pubsub.PublisherClient()
+
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    topic_id = "sink-pubsub-%d" % (_millis(),)
+
 
     # [START sink_topic_permissions]
-    policy = topic.get_iam_policy()  # API call
-    policy.owners.add(policy.group("cloud-logs@google.com"))
-    topic.set_iam_policy(policy)  # API call
+    topic_path = client.topic_path(project_id, topic_id)
+    topic = client.create_topic(request={"name": topic_path})
+
+    policy = client.get_iam_policy(request={"resource": topic_path})  # API call
+    policy.bindings.add(role="roles/owner", members=["group:cloud-logs@google.com"])
+
+    client.set_iam_policy(
+        request={"resource": topic_path, "policy": policy}
+    ) # API call
     # [END sink_topic_permissions]
 
     return topic
@@ -266,19 +271,18 @@ def _sink_pubsub_setup(client):
 def sink_pubsub(client, to_delete):
     """Sink log entries to pubsub."""
     topic = _sink_pubsub_setup(client)
-    to_delete.append(topic)
     SINK_NAME = "robots-pubsub-%d" % (_millis(),)
     FILTER = "logName:apache-access AND textPayload:robot"
     UPDATED_FILTER = "textPayload:robot"
 
     # [START sink_pubsub_create]
-    DESTINATION = "pubsub.googleapis.com/%s" % (topic.full_name,)
+    DESTINATION = "pubsub.googleapis.com/%s" % (topic.name,)
     sink = client.sink(SINK_NAME, filter_=FILTER, destination=DESTINATION)
     assert not sink.exists()  # API call
     sink.create()  # API call
     assert sink.exists()  # API call
     # [END sink_pubsub_create]
-    to_delete.insert(0, sink)  # delete sink before topic
+    created_sink = sink
 
     # [START client_list_sinks]
     for sink in client.list_sinks():  # API call(s)
@@ -299,11 +303,10 @@ def sink_pubsub(client, to_delete):
     existing_sink.reload()
     assert existing_sink.filter_ == UPDATED_FILTER
 
+    sink = created_sink
     # [START sink_delete]
     sink.delete()
     # [END sink_delete]
-    to_delete.pop(0)
-
 
 @snippet
 def logging_handler(client):
