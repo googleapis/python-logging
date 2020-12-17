@@ -13,9 +13,10 @@
 # limitations under the License.
 
 
+from google.cloud.logging import Client
+
 import usage_guide
 
-from google.cloud.logging import Client
 
 def test_logger_usage():
     client = Client()
@@ -26,6 +27,7 @@ def test_logger_usage():
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)
 
+
 def test_metric_crud():
     client = Client()
 
@@ -34,6 +36,7 @@ def test_metric_crud():
 
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)
+
 
 def test_sink_storage():
     client = Client()
@@ -44,6 +47,7 @@ def test_sink_storage():
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)
 
+
 def test_sink_bigquery():
     client = Client()
 
@@ -52,6 +56,7 @@ def test_sink_bigquery():
 
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)
+
 
 def test_sink_pubsub():
     client = Client()
@@ -62,16 +67,18 @@ def test_sink_pubsub():
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)
 
+
 def test_logging_handler():
     client = Client()
 
-    to_delete = []
     usage_guide.logging_handler(client)
+
 
 def test_setup_logging():
     client = Client()
 
     usage_guide.setup_logging(client)
+
 
 def test_client_list_entries():
     client = Client()

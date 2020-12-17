@@ -23,8 +23,8 @@ a ``to_delete`` list;  the function adds to the list any objects created which
 need to be deleted during teardown.
 """
 
-import time
 import os
+import time
 
 from google.cloud.logging import Client
 
@@ -53,14 +53,14 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
     # [START client_list_entries_default]
     for entry in client.list_entries():  # API call(s)
         do_something_with(entry)
-    # [END client_list_entries_default]
+        # [END client_list_entries_default]
         break
 
     # [START client_list_entries_filter]
     filter_str = "logName:log_name AND textPayload:simple"
     for entry in client.list_entries(filter_=filter_str):  # API call(s)
         do_something_with(entry)
-    # [END client_list_entries_filter]
+        # [END client_list_entries_filter]
         break
 
     # [START client_list_entries_order_by]
@@ -68,8 +68,9 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
 
     for entry in client.list_entries(order_by=DESCENDING):  # API call(s)
         do_something_with(entry)
-    # [END client_list_entries_order_by]
+        # [END client_list_entries_order_by]
         break
+
 
 @snippet
 def logger_usage(client, to_delete):
@@ -248,9 +249,8 @@ def _sink_pubsub_setup(client):
 
     client = pubsub.PublisherClient()
 
-    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     topic_id = "sink-pubsub-%d" % (_millis(),)
-
 
     # [START sink_topic_permissions]
     topic_path = client.topic_path(project_id, topic_id)
@@ -261,7 +261,7 @@ def _sink_pubsub_setup(client):
 
     client.set_iam_policy(
         request={"resource": topic_path, "policy": policy}
-    ) # API call
+    )  # API call
     # [END sink_topic_permissions]
 
     return topic
@@ -307,6 +307,7 @@ def sink_pubsub(client, to_delete):
     # [START sink_delete]
     sink.delete()
     # [END sink_delete]
+
 
 @snippet
 def logging_handler(client):
