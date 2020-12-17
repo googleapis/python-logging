@@ -147,6 +147,10 @@ class LoggingServiceV2GrpcTransport(LoggingServiceV2Transport):
                 ssl_credentials=ssl_credentials,
                 scopes=scopes or self.AUTH_SCOPES,
                 quota_project_id=quota_project_id,
+                options=[
+                    ("grpc.max_send_message_length", -1),
+                    ("grpc.max_receive_message_length", -1),
+                ],
             )
             self._ssl_channel_credentials = ssl_credentials
         else:
@@ -165,6 +169,10 @@ class LoggingServiceV2GrpcTransport(LoggingServiceV2Transport):
                 ssl_credentials=ssl_channel_credentials,
                 scopes=scopes or self.AUTH_SCOPES,
                 quota_project_id=quota_project_id,
+                options=[
+                    ("grpc.max_send_message_length", -1),
+                    ("grpc.max_receive_message_length", -1),
+                ],
             )
 
         self._stubs = {}  # type: Dict[str, Callable]
@@ -191,7 +199,7 @@ class LoggingServiceV2GrpcTransport(LoggingServiceV2Transport):
     ) -> grpc.Channel:
         """Create and return a gRPC channel object.
         Args:
-            address (Optionsl[str]): The host for the channel to use.
+            address (Optional[str]): The host for the channel to use.
             credentials (Optional[~.Credentials]): The
                 authorization credentials to attach to requests. These
                 credentials identify this application to the service. If
@@ -379,6 +387,34 @@ class LoggingServiceV2GrpcTransport(LoggingServiceV2Transport):
                 response_deserializer=logging.ListLogsResponse.deserialize,
             )
         return self._stubs["list_logs"]
+
+    @property
+    def tail_log_entries(
+        self,
+    ) -> Callable[[logging.TailLogEntriesRequest], logging.TailLogEntriesResponse]:
+        r"""Return a callable for the tail log entries method over gRPC.
+
+        Streaming read of log entries as they are ingested.
+        Until the stream is terminated, it will continue reading
+        logs.
+
+        Returns:
+            Callable[[~.TailLogEntriesRequest],
+                    ~.TailLogEntriesResponse]:
+                A function that, when called, will call the underlying RPC
+                on the server.
+        """
+        # Generate a "stub function" on-the-fly which will actually make
+        # the request.
+        # gRPC handles serialization and deserialization, so we just need
+        # to pass in the functions for each.
+        if "tail_log_entries" not in self._stubs:
+            self._stubs["tail_log_entries"] = self.grpc_channel.stream_stream(
+                "/google.logging.v2.LoggingServiceV2/TailLogEntries",
+                request_serializer=logging.TailLogEntriesRequest.serialize,
+                response_deserializer=logging.TailLogEntriesResponse.deserialize,
+            )
+        return self._stubs["tail_log_entries"]
 
 
 __all__ = ("LoggingServiceV2GrpcTransport",)

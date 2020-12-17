@@ -172,6 +172,7 @@ class TestAppEngineHandler(unittest.TestCase):
                 ),
             )
 
+
     def _get_gae_labels_helper(self, trace_id):
         get_request_patch = mock.patch(
             "google.cloud.logging_v2.handlers.app_engine.get_request_data",
