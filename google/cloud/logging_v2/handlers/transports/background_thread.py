@@ -235,7 +235,6 @@ class _Worker(object):
             "info": {"message": message, "python_logger": record.name},
             "severity": _helpers._normalize_severity(record.levelno),
             "timestamp": datetime.datetime.utcfromtimestamp(record.created),
-            "http_request": http_request,
         }
         queue_entry.update(kwargs)
         self._queue.put_nowait(queue_entry)

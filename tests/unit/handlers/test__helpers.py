@@ -105,35 +105,6 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         self.assertEqual(http_request.protocol, "HTTP/1.1")
 
 
-        app = self.create_app()
-        with app.test_client() as c:
-            c.put(
-                path=expected_path,
-                data=body_content,
-                environ_base={"REMOTE_ADDR": expected_ip},
-                headers=headers,
-            )
-            http_request, trace_id = self._call_fut()
-
-        self.assertEqual(http_request.request_method, "PUT")
-        self.assertEqual(http_request.request_url, expected_path)
-        self.assertEqual(http_request.user_agent, expected_agent)
-        self.assertEqual(http_request.referer, expected_referrer)
-        self.assertEqual(http_request.remote_ip, expected_ip)
-        self.assertEqual(http_request.request_size, len(body_content))
-        self.assertEqual(http_request.protocol, "HTTP/1.1")
-
-    def test_http_request_sparse(self):
-        expected_path = "http://testserver/123"
-        app = self.create_app()
-        with app.test_client() as c:
-            c.put(path=expected_path)
-            http_request, trace_id = self._call_fut()
-        self.assertEqual(http_request.request_method, "PUT")
-        self.assertEqual(http_request.request_url, expected_path)
-        self.assertEqual(http_request.protocol, "HTTP/1.1")
-
-
 class Test_get_request_data_from_django(unittest.TestCase):
     @staticmethod
     def _call_fut():
