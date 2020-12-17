@@ -57,8 +57,8 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
         break
 
     # [START client_list_entries_filter]
-    FILTER = "logName:log_name AND textPayload:simple"
-    for entry in client.list_entries(filter_=FILTER):  # API call(s)
+    filter_str = "logName:log_name AND textPayload:simple"
+    for entry in client.list_entries(filter_=filter_str):  # API call(s)
         do_something_with(entry)
     # [END client_list_entries_filter]
         break
@@ -74,10 +74,10 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
 @snippet
 def logger_usage(client, to_delete):
     """Logger usage."""
-    LOG_NAME = "logger_usage_%d" % (_millis())
+    log_name = "logger_usage_%d" % (_millis())
 
     # [START logger_create]
-    logger = client.logger(LOG_NAME)
+    logger = client.logger(log_name)
     # [END logger_create]
     to_delete.append(logger)
 
@@ -126,11 +126,11 @@ def logger_usage(client, to_delete):
 @snippet
 def metric_crud(client, to_delete):
     """Metric CRUD."""
-    METRIC_NAME = "robots-%d" % (_millis(),)
-    DESCRIPTION = "Robots all up in your server"
-    FILTER = "logName:apache-access AND textPayload:robot"
-    UPDATED_FILTER = "textPayload:robot"
-    UPDATED_DESCRIPTION = "Danger, Will Robinson!"
+    metric_name = "robots-%d" % (_millis(),)
+    description = "Robots all up in your server"
+    filter = "logName:apache-access AND textPayload:robot"
+    updated_filter = "textPayload:robot"
+    updated_description = "Danger, Will Robinson!"
 
     # [START client_list_metrics]
     for metric in client.list_metrics():  # API call(s)
@@ -138,7 +138,7 @@ def metric_crud(client, to_delete):
     # [END client_list_metrics]
 
     # [START metric_create]
-    metric = client.metric(METRIC_NAME, filter_=FILTER, description=DESCRIPTION)
+    metric = client.metric(metric_name, filter_=filter, description=description)
     assert not metric.exists()  # API call
     metric.create()  # API call
     assert metric.exists()  # API call
@@ -146,20 +146,20 @@ def metric_crud(client, to_delete):
     to_delete.append(metric)
 
     # [START metric_reload]
-    existing_metric = client.metric(METRIC_NAME)
+    existing_metric = client.metric(metric_name)
     existing_metric.reload()  # API call
     # [END metric_reload]
-    assert existing_metric.filter_ == FILTER
-    assert existing_metric.description == DESCRIPTION
+    assert existing_metric.filter_ == filter
+    assert existing_metric.description == description
 
     # [START metric_update]
-    existing_metric.filter_ = UPDATED_FILTER
-    existing_metric.description = UPDATED_DESCRIPTION
+    existing_metric.filter_ = updated_filter
+    existing_metric.description = updated_description
     existing_metric.update()  # API call
     # [END metric_update]
     existing_metric.reload()
-    assert existing_metric.filter_ == UPDATED_FILTER
-    assert existing_metric.description == UPDATED_DESCRIPTION
+    assert existing_metric.filter_ == updated_filter
+    assert existing_metric.description == updated_description
 
     def _metric_delete():
         # [START metric_delete]
@@ -173,9 +173,9 @@ def metric_crud(client, to_delete):
 def _sink_storage_setup(client):
     from google.cloud import storage
 
-    BUCKET_NAME = "sink-storage-%d" % (_millis(),)
+    bucket_name = "sink-storage-%d" % (_millis(),)
     client = storage.Client()
-    bucket = client.bucket(BUCKET_NAME)
+    bucket = client.bucket(bucket_name)
     bucket.create()
 
     # [START sink_bucket_permissions]
@@ -194,12 +194,12 @@ def sink_storage(client, to_delete):
     """Sink log entries to storage."""
     bucket = _sink_storage_setup(client)
     to_delete.append(bucket)
-    SINK_NAME = "robots-storage-%d" % (_millis(),)
-    FILTER = "textPayload:robot"
+    sink_name = "robots-storage-%d" % (_millis(),)
+    filter = "textPayload:robot"
 
     # [START sink_storage_create]
-    DESTINATION = "storage.googleapis.com/%s" % (bucket.name,)
-    sink = client.sink(SINK_NAME, filter_=FILTER, destination=DESTINATION)
+    destination = "storage.googleapis.com/%s" % (bucket.name,)
+    sink = client.sink(sink_name, filter_=filter, destination=destination)
     assert not sink.exists()  # API call
     sink.create()  # API call
     assert sink.exists()  # API call
@@ -210,9 +210,9 @@ def sink_storage(client, to_delete):
 def _sink_bigquery_setup(client):
     from google.cloud import bigquery
 
-    DATASET_NAME = "sink_bigquery_%d" % (_millis(),)
+    dataset_name = "sink_bigquery_%d" % (_millis(),)
     client = bigquery.Client()
-    dataset = client.create_dataset(DATASET_NAME)
+    dataset = client.create_dataset(dataset_name)
 
     # [START sink_dataset_permissions]
     from google.cloud.bigquery.dataset import AccessEntry
@@ -230,12 +230,12 @@ def _sink_bigquery_setup(client):
 def sink_bigquery(client, to_delete):
     """Sink log entries to bigquery."""
     dataset = _sink_bigquery_setup(client)
-    SINK_NAME = "robots-bigquery-%d" % (_millis(),)
-    FILTER = "textPayload:robot"
+    sink_name = "robots-bigquery-%d" % (_millis(),)
+    filter_str = "textPayload:robot"
 
     # [START sink_bigquery_create]
-    DESTINATION = "bigquery.googleapis.com%s" % (dataset.path,)
-    sink = client.sink(SINK_NAME, filter_=FILTER, destination=DESTINATION)
+    destination = "bigquery.googleapis.com%s" % (dataset.path,)
+    sink = client.sink(sink_name, filter_=filter_str, destination=destination)
     assert not sink.exists()  # API call
     sink.create()  # API call
     assert sink.exists()  # API call
@@ -271,13 +271,13 @@ def _sink_pubsub_setup(client):
 def sink_pubsub(client, to_delete):
     """Sink log entries to pubsub."""
     topic = _sink_pubsub_setup(client)
-    SINK_NAME = "robots-pubsub-%d" % (_millis(),)
-    FILTER = "logName:apache-access AND textPayload:robot"
-    UPDATED_FILTER = "textPayload:robot"
+    sink_name = "robots-pubsub-%d" % (_millis(),)
+    filter_str = "logName:apache-access AND textPayload:robot"
+    updated_filter = "textPayload:robot"
 
     # [START sink_pubsub_create]
-    DESTINATION = "pubsub.googleapis.com/%s" % (topic.name,)
-    sink = client.sink(SINK_NAME, filter_=FILTER, destination=DESTINATION)
+    destination = "pubsub.googleapis.com/%s" % (topic.name,)
+    sink = client.sink(sink_name, filter_=filter_str, destination=destination)
     assert not sink.exists()  # API call
     sink.create()  # API call
     assert sink.exists()  # API call
@@ -290,18 +290,18 @@ def sink_pubsub(client, to_delete):
     # [END client_list_sinks]
 
     # [START sink_reload]
-    existing_sink = client.sink(SINK_NAME)
+    existing_sink = client.sink(sink_name)
     existing_sink.reload()
     # [END sink_reload]
-    assert existing_sink.filter_ == FILTER
-    assert existing_sink.destination == DESTINATION
+    assert existing_sink.filter_ == filter_str
+    assert existing_sink.destination == destination
 
     # [START sink_update]
-    existing_sink.filter_ = UPDATED_FILTER
+    existing_sink.filter_ = updated_filter
     existing_sink.update()
     # [END sink_update]
     existing_sink.reload()
-    assert existing_sink.filter_ == UPDATED_FILTER
+    assert existing_sink.filter_ == updated_filter
 
     sink = created_sink
     # [START sink_delete]
