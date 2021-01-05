@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-logging.git",
-        "sha": "f81e7a694d24f3ba2ad4380bbf500b8bc463e314"
+        "sha": "c89dea4899a2fd7175c2849f158fb921fc017a15"
       }
     },
     {
@@ -130,6 +130,7 @@
     "google/cloud/logging_v2/types/logging.py",
     "google/cloud/logging_v2/types/logging_config.py",
     "google/cloud/logging_v2/types/logging_metrics.py",
+    "logging-v2-py.tar.gz",
     "mypy.ini",
     "noxfile.py",
     "renovate.json",
