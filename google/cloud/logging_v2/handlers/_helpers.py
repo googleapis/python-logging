@@ -63,11 +63,11 @@ def get_request_data_from_flask():
 
     # build http_request
     http_request = {
-        "request_method": flask.request.method,
-        "request_url": flask.request.url,
-        "request_size": flask.request.content_length,
-        "user_agent": flask.request.user_agent.string,
-        "remote_ip": flask.request.remote_addr,
+        "requestMethod": flask.request.method,
+        "requestUrl": flask.request.url,
+        "requestSize": flask.request.content_length,
+        "userAgent": flask.request.user_agent.string,
+        "remoteIp": flask.request.remote_addr,
         "referer": flask.request.referrer,
         "protocol": flask.request.environ.get(_PROTOCOL_HEADER),
     }
@@ -95,11 +95,11 @@ def get_request_data_from_django():
         return None, None
     # build http_request
     http_request = {
-        "request_method": request.method,
-        "request_url": request.build_absolute_uri(),
-        "request_size": len(request.body),
-        "user_agent": request.META.get(_DJANGO_USERAGENT_HEADER),
-        "remote_ip": request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
+        "requestMethod": request.method,
+        "requestUrl": request.build_absolute_uri(),
+        "requestSize": len(request.body),
+        "userAgent": request.META.get(_DJANGO_USERAGENT_HEADER),
+        "remoteIp": request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
         "referer": request.META.get(_DJANGO_REFERER_HEADER),
         "protocol": request.META.get(_PROTOCOL_HEADER),
     }
