@@ -66,7 +66,7 @@ def get_request_data_from_flask():
         "request_method": flask.request.method,
         "request_url": flask.request.url,
         "request_size": flask.request.content_length,
-        "user_agent":flask.request.user_agent.string,
+        "user_agent": flask.request.user_agent.string,
         "remote_ip": flask.request.remote_addr,
         "referer": flask.request.referrer,
         "protocol": flask.request.environ.get(_PROTOCOL_HEADER),
