@@ -47,7 +47,7 @@ class Test_get_request_data_from_flask(unittest.TestCase):
             http_request, trace_id = self._call_fut()
 
         self.assertIsNone(trace_id)
-        self.assertEqual(http_request.request_method, "GET")
+        self.assertEqual(http_request["request_method"], "GET")
 
     def test_valid_context_header(self):
         flask_trace_header = "X_CLOUD_TRACE_CONTEXT"
@@ -63,7 +63,7 @@ class Test_get_request_data_from_flask(unittest.TestCase):
             http_request, trace_id = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
-        self.assertEqual(http_request.request_method, "GET")
+        self.assertEqual(http_request["request_method"], "GET")
 
     def test_http_request_populated(self):
         expected_path = "http://testserver/123"
@@ -86,13 +86,13 @@ class Test_get_request_data_from_flask(unittest.TestCase):
             )
             http_request, trace_id = self._call_fut()
 
-        self.assertEqual(http_request.request_method, "PUT")
-        self.assertEqual(http_request.request_url, expected_path)
-        self.assertEqual(http_request.user_agent, expected_agent)
-        self.assertEqual(http_request.referer, expected_referrer)
-        self.assertEqual(http_request.remote_ip, expected_ip)
-        self.assertEqual(http_request.request_size, len(body_content))
-        self.assertEqual(http_request.protocol, "HTTP/1.1")
+        self.assertEqual(http_request["request_method"], "PUT")
+        self.assertEqual(http_request["request_url"], expected_path)
+        self.assertEqual(http_request["user_agent"], expected_agent)
+        self.assertEqual(http_request["referer"], expected_referrer)
+        self.assertEqual(http_request["remote_ip"], expected_ip)
+        self.assertEqual(http_request["request_size"], len(body_content))
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
 
     def test_http_request_sparse(self):
         expected_path = "http://testserver/123"
@@ -100,9 +100,9 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         with app.test_client() as c:
             c.put(path=expected_path)
             http_request, trace_id = self._call_fut()
-        self.assertEqual(http_request.request_method, "PUT")
-        self.assertEqual(http_request.request_url, expected_path)
-        self.assertEqual(http_request.protocol, "HTTP/1.1")
+        self.assertEqual(http_request["request_method"], "PUT")
+        self.assertEqual(http_request["request_url"], expected_path)
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
 
 
 class Test_get_request_data_from_django(unittest.TestCase):
@@ -136,7 +136,7 @@ class Test_get_request_data_from_django(unittest.TestCase):
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
         http_request, trace_id = self._call_fut()
-        self.assertEqual(http_request.request_method, "GET")
+        self.assertEqual(http_request["request_method"], "GET")
         self.assertIsNone(trace_id)
 
     def test_valid_context_header(self):
@@ -156,7 +156,7 @@ class Test_get_request_data_from_django(unittest.TestCase):
         http_request, trace_id = self._call_fut()
 
         self.assertEqual(trace_id, expected_trace_id)
-        self.assertEqual(http_request.request_method, "GET")
+        self.assertEqual(http_request["request_method"], "GET")
 
     def test_http_request_populated(self):
         from django.test import RequestFactory
@@ -176,13 +176,13 @@ class Test_get_request_data_from_django(unittest.TestCase):
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
         http_request, trace_id = self._call_fut()
-        self.assertEqual(http_request.request_method, "PUT")
-        self.assertEqual(http_request.request_url, expected_path)
-        self.assertEqual(http_request.user_agent, expected_agent)
-        self.assertEqual(http_request.referer, expected_referrer)
-        self.assertEqual(http_request.remote_ip, "127.0.0.1")
-        self.assertEqual(http_request.request_size, len(body_content))
-        self.assertEqual(http_request.protocol, "HTTP/1.1")
+        self.assertEqual(http_request["request_method"], "PUT")
+        self.assertEqual(http_request["request_url"], expected_path)
+        self.assertEqual(http_request["user_agent"], expected_agent)
+        self.assertEqual(http_request["referer"], expected_referrer)
+        self.assertEqual(http_request["remote_ip"], "127.0.0.1")
+        self.assertEqual(http_request["request_size"], len(body_content))
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
 
     def test_http_request_sparse(self):
         from django.test import RequestFactory
@@ -193,10 +193,10 @@ class Test_get_request_data_from_django(unittest.TestCase):
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
         http_request, trace_id = self._call_fut()
-        self.assertEqual(http_request.request_method, "PUT")
-        self.assertEqual(http_request.request_url, expected_path)
-        self.assertEqual(http_request.remote_ip, "127.0.0.1")
-        self.assertEqual(http_request.protocol, "HTTP/1.1")
+        self.assertEqual(http_request["request_method"], "PUT")
+        self.assertEqual(http_request["request_url"], expected_path)
+        self.assertEqual(http_request["remote_ip"], "127.0.0.1")
+        self.assertEqual(http_request["protocol"], "HTTP/1.1")
 
 
 class Test_get_request_data(unittest.TestCase):
