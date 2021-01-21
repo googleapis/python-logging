@@ -43,5 +43,13 @@ python3.6 -m pip uninstall --yes --quiet nox-automation
 python3.6 -m pip install --upgrade --quiet nox
 python3.6 -m nox --version
 
+# create a unique id for this run
+UUID=$(python  -c 'import uuid; print(uuid.uuid1())')
+export ENVCTL_ID=ci-$UUID
+echo $ENVCTL_ID
+
 # Run the specified environment test
 python3.6 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
+
+# destroy resources
+/workspace/python-logging/tests/environment/envctl/envctl python $ENVIRONMENT destroy
