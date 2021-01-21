@@ -20,7 +20,7 @@ if [[ -z "${ENVIRONMENT:-}" ]]; then
   exit 1
 fi
 
-cd github/python-logging/tests/environment
+cd python-logging/tests/environment
 
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
