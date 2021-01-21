@@ -52,8 +52,13 @@ export ENVCTL_ID=ci-$UUID
 echo $ENVCTL_ID
 
 # Run the specified environment test
+set +e
 python3.6 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
+TEST_STATUS_CODE=$?
 
 # destroy resources
 echo "cleaning up..."
 /workspace/python-logging/tests/environment/envctl/envctl python $ENVIRONMENT destroy
+
+# exit with proper status code
+exit $TEST_STATUS_CODE
