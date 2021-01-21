@@ -30,9 +30,11 @@ env | grep KOKORO
 
 # Setup service account credentials.
 export GOOGLE_APPLICATION_CREDENTIALS=${KOKORO_GFILE_DIR}/service-account.json
+gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
 
 # Setup project id.
 export PROJECT_ID=$(cat "${KOKORO_GFILE_DIR}/project-id.json")
+gcloud config set project $PROJECT_ID
 
 # Remove old nox
 python3.6 -m pip uninstall --yes --quiet nox-automation
