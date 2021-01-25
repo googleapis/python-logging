@@ -68,10 +68,10 @@ def _list_entries(logger):
     :rtype: list
     :returns: List of all entries consumed.
     """
-    inner = RetryResult(_has_entries, max_tries=9, delay=1, backoff=2)(_consume_entries)
+    inner = RetryResult(_has_entries, max_tries=6, delay=1, backoff=2)(_consume_entries)
     outer = RetryErrors(
-        (ServiceUnavailable, ResourceExhausted, InternalServerError), max_tries=9
-    )(inner)
+        (ServiceUnavailable, ResourceExhausted, InternalServerError),
+        max_tries=6, delay=1, backoff=2)(inner)
     return outer(logger)
 
 
