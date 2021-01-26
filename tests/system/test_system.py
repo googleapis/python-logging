@@ -18,7 +18,6 @@ from datetime import timezone
 import logging
 import os
 import pytest
-import time
 import unittest
 
 from google.api_core.exceptions import BadGateway
@@ -44,10 +43,22 @@ from test_utils.system import unique_resource_id
 _RESOURCE_ID = unique_resource_id("-")
 DEFAULT_FILTER = "logName:syslog AND severity>=INFO"
 DEFAULT_DESCRIPTION = "System testing"
+_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
 retry_429 = RetryErrors(TooManyRequests)
 
+def _consume_entries(logger):
+    """Consume all recent log entries from logger iterator.
+    :type logger: :class:`~google.cloud.logging.logger.Logger`
+    :param logger: A Logger containing entries.
+    :rtype: list
+    :returns: List of all entries consumed.
+    """
+    ten_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
+    time_filter = f'timestamp>="{ten_mins_ago.strftime(_TIME_FORMAT)}"'
+    return list(logger.list_entries(filter_=time_filter))
 
-def _list_entries(logger, max_tries=5):
+
+def _list_entries(logger):
     """Retry-ing list entries in a logger.
 
     Retry until there are actual results and retry on any
@@ -59,26 +70,14 @@ def _list_entries(logger, max_tries=5):
     :rtype: list
     :returns: List of all entries consumed.
     """
-    delay = 1
-    try_num = 0
-    latest_error = None
-    ten_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
-    time_filter = f'timestamp>="{ten_mins_ago.strftime(_TIME_FORMAT)}"'
-    while try_num < max_tries:
-        try:
-            entries = list(logger.list_entries(filter_=time_filter))
-            if not entries:
-                raise RuntimeError('no results found')
-            else:
-                return entries
-        except:
-            time.sleep(delay)
-            try_num += 1
-            delay *= 2
-            if try_num >= max_tries:
-                # finished retries. Raise error again
-                raise
-    return None
+    inner = RetryResult(
+        _has_entries, delay=1, backoff=2, max_tries=6
+    )(_consume_entries)
+    outer = RetryErrors(
+        (ServiceUnavailable, ResourceExhausted, InternalServerError),
+        delay=1, backoff=2, max_tries=6
+    )(inner)
+    return outer(logger)
 
 
 def _has_entries(result):
