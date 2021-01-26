@@ -46,6 +46,9 @@ DEFAULT_DESCRIPTION = "System testing"
 _TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
 retry_429 = RetryErrors(TooManyRequests)
 
+_ten_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
+_time_filter = f'timestamp>="{_ten_mins_ago.strftime(_TIME_FORMAT)}"'
+
 def _consume_entries(logger):
     """Consume all recent log entries from logger iterator.
     :type logger: :class:`~google.cloud.logging.logger.Logger`
@@ -53,9 +56,7 @@ def _consume_entries(logger):
     :rtype: list
     :returns: List of all entries consumed.
     """
-    ten_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
-    time_filter = f'timestamp>="{ten_mins_ago.strftime(_TIME_FORMAT)}"'
-    return list(logger.list_entries(filter_=time_filter))
+    return list(logger.list_entries(filter_=_time_filter))
 
 
 def _list_entries(logger):
@@ -152,7 +153,7 @@ class TestLogging(unittest.TestCase):
             pool.FindMessageTypeByName(type_name)
 
         type_url = "type.googleapis.com/" + type_name
-        filter_ = self.TYPE_FILTER.format(type_url)
+        filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
         entry_iter = iter(Config.CLIENT.list_entries(page_size=1, filter_=filter_))
 
         retry = RetryErrors(TooManyRequests)
