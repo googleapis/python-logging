@@ -16,6 +16,7 @@ import datetime
 import logging
 import os
 import pytest
+import time
 import unittest
 
 from google.api_core.exceptions import BadGateway
@@ -44,19 +45,7 @@ DEFAULT_DESCRIPTION = "System testing"
 retry_429 = RetryErrors(TooManyRequests)
 
 
-def _consume_entries(logger):
-    """Consume all log entries from logger iterator.
-
-    :type logger: :class:`~google.cloud.logging.logger.Logger`
-    :param logger: A Logger containing entries.
-
-    :rtype: list
-    :returns: List of all entries consumed.
-    """
-    return list(logger.list_entries())
-
-
-def _list_entries(logger):
+def _list_entries(logger, max_tries=5):
     """Retry-ing list entries in a logger.
 
     Retry until there are actual results and retry on any
@@ -68,11 +57,26 @@ def _list_entries(logger):
     :rtype: list
     :returns: List of all entries consumed.
     """
-    inner = RetryResult(_has_entries, max_tries=6, delay=1, backoff=2)(_consume_entries)
-    outer = RetryErrors(
-        (ServiceUnavailable, ResourceExhausted, InternalServerError),
-        max_tries=6, delay=1, backoff=2)(inner)
-    return outer(logger)
+    delay = 1
+    try_num = 0
+    latest_error = None
+    while try_num < max_tries:
+        try:
+            entries = list(logger.list_entries())
+            if not entries:
+                raise RuntimeError('no results found')
+            else:
+                return entries
+        except (ServiceUnavailable, ResourceExhausted, InternalServerError,
+                RuntimeError) as e:
+            print(f'Error: {e}')
+            time.sleep(delay)
+            try_num += 1
+            delay *= 2
+            if try_num >= max_tries:
+                # finished retries. Raise error again
+                raise e
+    return None
 
 
 def _has_entries(result):
