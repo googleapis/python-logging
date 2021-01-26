@@ -60,8 +60,8 @@ def _list_entries(logger, max_tries=5):
     delay = 1
     try_num = 0
     latest_error = None
-    10_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
-    time_filter = f'timestamp>="{10_mins_ago.strftime(_TIME_FORMAT)}"'
+    ten_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
+    time_filter = f'timestamp>="{ten_mins_ago.strftime(_TIME_FORMAT)}"'
     while try_num < max_tries:
         try:
             entries = list(logger.list_entries(filter_=time_filter))
