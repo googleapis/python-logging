@@ -49,6 +49,7 @@ retry_429 = RetryErrors(TooManyRequests)
 _ten_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
 _time_filter = f'timestamp>="{_ten_mins_ago.strftime(_TIME_FORMAT)}"'
 
+
 def _consume_entries(logger):
     """Consume all recent log entries from logger iterator.
     :type logger: :class:`~google.cloud.logging.logger.Logger`
@@ -71,12 +72,12 @@ def _list_entries(logger):
     :rtype: list
     :returns: List of all entries consumed.
     """
-    inner = RetryResult(
-        _has_entries, delay=1, backoff=2, max_tries=6
-    )(_consume_entries)
+    inner = RetryResult(_has_entries, delay=1, backoff=2, max_tries=6)(_consume_entries)
     outer = RetryErrors(
         (ServiceUnavailable, ResourceExhausted, InternalServerError),
-        delay=1, backoff=2, max_tries=6
+        delay=1,
+        backoff=2,
+        max_tries=6,
     )(inner)
     return outer(logger)
 
