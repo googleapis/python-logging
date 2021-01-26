@@ -67,15 +67,13 @@ def _list_entries(logger, max_tries=5):
                 raise RuntimeError('no results found')
             else:
                 return entries
-        except (ServiceUnavailable, ResourceExhausted, InternalServerError,
-                RuntimeError) as e:
-            print(f'Error: {e}')
+        except:
             time.sleep(delay)
             try_num += 1
             delay *= 2
             if try_num >= max_tries:
                 # finished retries. Raise error again
-                raise e
+                raise
     return None
 
 
