@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 import logging
 import os
 import pytest
@@ -176,11 +178,9 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
 
     def test_log_text_with_timestamp(self):
-        import datetime
-
         text_payload = "System test: test_log_text_with_timestamp"
         logger = Config.CLIENT.logger(self._logger_name("log_text_ts"))
-        now = datetime.datetime.utcnow()
+        now = datetime.utcnow()
 
         self.to_delete.append(logger)
 
@@ -189,13 +189,13 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, text_payload)
         self.assertEqual(entries[0].timestamp, now.replace(tzinfo=UTC))
-        self.assertIsInstance(entries[0].received_timestamp, datetime.datetime)
+        self.assertIsInstance(entries[0].received_timestamp, datetime)
 
     def test_log_text_with_resource(self):
         text_payload = "System test: test_log_text_with_timestamp"
 
         logger = Config.CLIENT.logger(self._logger_name("log_text_res"))
-        now = datetime.datetime.utcnow()
+        now = datetime.utcnow()
         resource = Resource(
             type="gae_app",
             labels={"module_id": "default", "version_id": "test", "zone": ""},
