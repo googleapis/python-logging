@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [2.1.2](https://www.github.com/googleapis/python-logging/compare/v2.1.1...v2.1.2) (2021-01-27)
+
+
+### Bug Fixes
+
+* django content length extraction bug ([#160](https://www.github.com/googleapis/python-logging/issues/160)) ([93eeaef](https://www.github.com/googleapis/python-logging/commit/93eeaef1cce286aa8aa830d2369212b912d184b6))
+
 ### [2.1.1](https://www.github.com/googleapis/python-logging/compare/v2.1.0...v2.1.1) (2021-01-14)
 
 
