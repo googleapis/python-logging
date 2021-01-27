@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 import logging
 import os
 import pytest
@@ -20,6 +22,7 @@ import unittest
 
 from google.api_core.exceptions import BadGateway
 from google.api_core.exceptions import Conflict
+from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import NotFound
 from google.api_core.exceptions import TooManyRequests
 from google.api_core.exceptions import ResourceExhausted
@@ -27,7 +30,8 @@ from google.api_core.exceptions import RetryError
 from google.api_core.exceptions import ServiceUnavailable
 import google.cloud.logging
 from google.cloud._helpers import UTC
-from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
+from google.cloud.logging_v2.handlers import AppEngineHandler
+from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
@@ -39,19 +43,21 @@ from test_utils.system import unique_resource_id
 _RESOURCE_ID = unique_resource_id("-")
 DEFAULT_FILTER = "logName:syslog AND severity>=INFO"
 DEFAULT_DESCRIPTION = "System testing"
+_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
 retry_429 = RetryErrors(TooManyRequests)
+
+_ten_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
+_time_filter = f'timestamp>="{_ten_mins_ago.strftime(_TIME_FORMAT)}"'
 
 
 def _consume_entries(logger):
-    """Consume all log entries from logger iterator.
-
+    """Consume all recent log entries from logger iterator.
     :type logger: :class:`~google.cloud.logging.logger.Logger`
     :param logger: A Logger containing entries.
-
     :rtype: list
     :returns: List of all entries consumed.
     """
-    return list(logger.list_entries())
+    return list(logger.list_entries(filter_=_time_filter))
 
 
 def _list_entries(logger):
@@ -66,8 +72,13 @@ def _list_entries(logger):
     :rtype: list
     :returns: List of all entries consumed.
     """
-    inner = RetryResult(_has_entries, max_tries=9)(_consume_entries)
-    outer = RetryErrors((ServiceUnavailable, ResourceExhausted), max_tries=9)(inner)
+    inner = RetryResult(_has_entries, delay=1, backoff=2, max_tries=6)(_consume_entries)
+    outer = RetryErrors(
+        (ServiceUnavailable, ResourceExhausted, InternalServerError),
+        delay=1,
+        backoff=2,
+        max_tries=6,
+    )(inner)
     return outer(logger)
 
 
@@ -143,7 +154,7 @@ class TestLogging(unittest.TestCase):
             pool.FindMessageTypeByName(type_name)
 
         type_url = "type.googleapis.com/" + type_name
-        filter_ = self.TYPE_FILTER.format(type_url)
+        filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
         entry_iter = iter(Config.CLIENT.list_entries(page_size=1, filter_=filter_))
 
         retry = RetryErrors(TooManyRequests)
@@ -168,11 +179,9 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
 
     def test_log_text_with_timestamp(self):
-        import datetime
-
         text_payload = "System test: test_log_text_with_timestamp"
         logger = Config.CLIENT.logger(self._logger_name("log_text_ts"))
-        now = datetime.datetime.utcnow()
+        now = datetime.utcnow()
 
         self.to_delete.append(logger)
 
@@ -181,13 +190,13 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, text_payload)
         self.assertEqual(entries[0].timestamp, now.replace(tzinfo=UTC))
-        self.assertIsInstance(entries[0].received_timestamp, datetime.datetime)
+        self.assertIsInstance(entries[0].received_timestamp, datetime)
 
     def test_log_text_with_resource(self):
         text_payload = "System test: test_log_text_with_timestamp"
 
         logger = Config.CLIENT.logger(self._logger_name("log_text_res"))
-        now = datetime.datetime.utcnow()
+        now = datetime.utcnow()
         resource = Resource(
             type="gae_app",
             labels={"module_id": "default", "version_id": "test", "zone": ""},
@@ -307,6 +316,39 @@ class TestLogging(unittest.TestCase):
         expected_payload = {"message": LOG_MESSAGE, "python_logger": LOGGER_NAME}
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
+
+    def test_handlers_w_extras(self):
+        LOG_MESSAGE = "Testing with injected extras."
+
+        for cls in [CloudLoggingHandler, AppEngineHandler]:
+            LOGGER_NAME = f"{cls.__name__}-handler_extras"
+            handler_name = self._logger_name(LOGGER_NAME)
+
+            handler = cls(Config.CLIENT, name=handler_name, transport=SyncTransport)
+
+            # only create the logger to delete, hidden otherwise
+            logger = Config.CLIENT.logger(handler.name)
+            self.to_delete.append(logger)
+
+            cloud_logger = logging.getLogger(LOGGER_NAME)
+            cloud_logger.addHandler(handler)
+            expected_request = {"requestUrl": "localhost"}
+            extra = {
+                "trace": "123",
+                "span_id": "456",
+                "http_request": expected_request,
+                "resource": Resource(type="cloudiot_device", labels={}),
+                "labels": {"test-label": "manual"},
+            }
+            cloud_logger.warn(LOG_MESSAGE, extra=extra)
+
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].trace, extra["trace"])
+            self.assertEqual(entries[0].span_id, extra["span_id"])
+            self.assertEqual(entries[0].http_request, expected_request)
+            self.assertEqual(entries[0].labels, extra["labels"])
+            self.assertEqual(entries[0].resource.type, extra["resource"].type)
 
     def test_log_root_handler(self):
         LOG_MESSAGE = "It was the best of times."

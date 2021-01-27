@@ -23,8 +23,8 @@ except ImportError:  # pragma: NO COVER
     flask = None
 
 from google.cloud.logging_v2.handlers.middleware.request import _get_django_request
-from google.logging.type.http_request_pb2 import HttpRequest
 
+_DJANGO_CONTENT_LENGTH = "CONTENT_LENGTH"
 _DJANGO_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
 _DJANGO_USERAGENT_HEADER = "HTTP_USER_AGENT"
 _DJANGO_REMOTE_ADDR_HEADER = "REMOTE_ADDR"
@@ -55,7 +55,7 @@ def get_request_data_from_flask():
     """Get http_request and trace data from flask request headers.
 
     Returns:
-        Tuple[Optional[google.logging.type.http_request_pb2.HttpRequest], Optional[str]]:
+        Tuple[Optional[dict], Optional[str]]:
             Data related to the current http request and the trace_id for the
             request. Both fields will be None if a flask request isn't found.
     """
@@ -63,15 +63,15 @@ def get_request_data_from_flask():
         return None, None
 
     # build http_request
-    http_request = HttpRequest(
-        request_method=flask.request.method,
-        request_url=flask.request.url,
-        request_size=flask.request.content_length,
-        user_agent=flask.request.user_agent.string,
-        remote_ip=flask.request.remote_addr,
-        referer=flask.request.referrer,
-        protocol=flask.request.environ.get(_PROTOCOL_HEADER),
-    )
+    http_request = {
+        "requestMethod": flask.request.method,
+        "requestUrl": flask.request.url,
+        "requestSize": flask.request.content_length,
+        "userAgent": flask.request.user_agent.string,
+        "remoteIp": flask.request.remote_addr,
+        "referer": flask.request.referrer,
+        "protocol": flask.request.environ.get(_PROTOCOL_HEADER),
+    }
 
     # find trace id
     trace_id = None
@@ -86,7 +86,7 @@ def get_request_data_from_django():
     """Get http_request and trace data from django request headers.
 
     Returns:
-        Tuple[Optional[google.logging.type.http_request_pb2.HttpRequest], Optional[str]]:
+        Tuple[Optional[dict], Optional[str]]:
             Data related to the current http request and the trace_id for the
             request. Both fields will be None if a django request isn't found.
     """
@@ -94,16 +94,23 @@ def get_request_data_from_django():
 
     if request is None:
         return None, None
+
+    # convert content_length to int if it exists
+    content_length = None
+    try:
+        content_length = int(request.META.get(_DJANGO_CONTENT_LENGTH))
+    except (ValueError, TypeError):
+        content_length = None
     # build http_request
-    http_request = HttpRequest(
-        request_method=request.method,
-        request_url=request.build_absolute_uri(),
-        request_size=len(request.body),
-        user_agent=request.META.get(_DJANGO_USERAGENT_HEADER),
-        remote_ip=request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
-        referer=request.META.get(_DJANGO_REFERER_HEADER),
-        protocol=request.META.get(_PROTOCOL_HEADER),
-    )
+    http_request = {
+        "requestMethod": request.method,
+        "requestUrl": request.build_absolute_uri(),
+        "requestSize": content_length,
+        "userAgent": request.META.get(_DJANGO_USERAGENT_HEADER),
+        "remoteIp": request.META.get(_DJANGO_REMOTE_ADDR_HEADER),
+        "referer": request.META.get(_DJANGO_REFERER_HEADER),
+        "protocol": request.META.get(_PROTOCOL_HEADER),
+    }
 
     # find trace id
     trace_id = None
@@ -119,7 +126,7 @@ def get_request_data():
     frameworks (currently supported: Flask and Django).
 
     Returns:
-        Tuple[Optional[google.logging.type.http_request_pb2.HttpRequest], Optional[str]]:
+        Tuple[Optional[dict], Optional[str]]:
             Data related to the current http request and the trace_id for the
             request. Both fields will be None if a supported web request isn't found.
     """
