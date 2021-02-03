@@ -14,9 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START logging_stdlogging]
-
 def use_logging_handler():
+    # [START logging_stdlogging]
     # [START logging_handler_setup]
     # Imports the Cloud Logging client library
     import google.cloud.logging
@@ -45,8 +44,7 @@ def use_logging_handler():
 
     print("Logged: {}".format(text))
 
-
+    # [END logging_stdlogging]
 if __name__ == "__main__":
     use_logging_handler()
 
-# [END logging_stdlogging]
