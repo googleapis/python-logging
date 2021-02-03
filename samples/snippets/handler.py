@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START logging_stdlogging]
 
 def use_logging_handler():
     # [START logging_handler_setup]
@@ -47,3 +48,5 @@ def use_logging_handler():
 
 if __name__ == "__main__":
     use_logging_handler()
+
+# [START logging_stdlogging]
