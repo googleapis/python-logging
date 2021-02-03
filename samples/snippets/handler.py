@@ -49,4 +49,4 @@ def use_logging_handler():
 if __name__ == "__main__":
     use_logging_handler()
 
-# [START logging_stdlogging]
+# [END logging_stdlogging]
