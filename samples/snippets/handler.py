@@ -43,8 +43,7 @@ def use_logging_handler():
     # [END logging_handler_usage]
 
     print("Logged: {}".format(text))
-
     # [END logging_stdlogging]
+
 if __name__ == "__main__":
     use_logging_handler()
-
