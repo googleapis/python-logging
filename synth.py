@@ -80,6 +80,13 @@ s.replace(
     'pass_down_envvars+=(\n    "ENVIRONMENT"'
 )
 
+# don't lint environment tests
+s.replace(
+    ".flake8",
+    "exclude =",
+    'exclude =\n  # Exclude environment test code.\n  tests/environment/**\n'
+)
+
 # --------------------------------------------------------------------------
 # Samples templates
 # --------------------------------------------------------------------------
