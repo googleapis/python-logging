@@ -4,6 +4,44 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+## [2.2.0](https://www.github.com/googleapis/python-logging/compare/v2.1.1...v2.2.0) (2021-01-27)
+
+
+### Features
+
+* add 'from_service_account_info' factory to clients ([a9ff2b7](https://www.github.com/googleapis/python-logging/commit/a9ff2b7984a54542963fc8d52864365ef1562f57))
+
+
+### Bug Fixes
+
+* django content length extraction bug ([#160](https://www.github.com/googleapis/python-logging/issues/160)) ([93eeaef](https://www.github.com/googleapis/python-logging/commit/93eeaef1cce286aa8aa830d2369212b912d184b6))
+* fix sphinx identifiers ([a9ff2b7](https://www.github.com/googleapis/python-logging/commit/a9ff2b7984a54542963fc8d52864365ef1562f57))
+
+### [2.1.1](https://www.github.com/googleapis/python-logging/compare/v2.1.0...v2.1.1) (2021-01-14)
+
+
+### Bug Fixes
+
+* use dict for http request ([#156](https://www.github.com/googleapis/python-logging/issues/156)) ([dc26668](https://www.github.com/googleapis/python-logging/commit/dc266688b1e465112de0e3fe2e8d98003f6e7033))
+
+## [2.1.0](https://www.github.com/googleapis/python-logging/compare/v2.0.2...v2.1.0) (2021-01-12)
+
+
+### Features
+
+* allow modifying LogEntry data using extra argument ([#129](https://www.github.com/googleapis/python-logging/issues/129)) ([92b287f](https://www.github.com/googleapis/python-logging/commit/92b287f424418fde137cc81f370dcab07f84023b))
+* support http_request field ([#120](https://www.github.com/googleapis/python-logging/issues/120)) ([ba94afb](https://www.github.com/googleapis/python-logging/commit/ba94afb7d0a5371f2d2de4232de56df34e8a1f99))
+
+
+### Bug Fixes
+
+* add InternalServerError to list of expected errors ([#151](https://www.github.com/googleapis/python-logging/issues/151)) ([9bf49f5](https://www.github.com/googleapis/python-logging/commit/9bf49f51df5321e8b9c39018dff7d767347256d6))
+
+
+### Documentation
+
+* fix usage guide ([#140](https://www.github.com/googleapis/python-logging/issues/140)) ([1ca3981](https://www.github.com/googleapis/python-logging/commit/1ca398103fdfefb5576d6ef2ba20cfa4bd4ab252))
+
 ### [2.0.2](https://www.github.com/googleapis/python-logging/compare/v2.0.1...v2.0.2) (2020-12-14)
 
 

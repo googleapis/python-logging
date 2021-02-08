@@ -23,6 +23,7 @@ pass_down_envvars+=(
     "STAGING_BUCKET"
     "V2_STAGING_BUCKET"
     "ENVIRONMENT"
+    "NOX_SESSION"
 )
 
 # Prevent unintentional override on the default image.
