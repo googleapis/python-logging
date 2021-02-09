@@ -20,10 +20,14 @@ if [[ -z "${ENVIRONMENT:-}" ]]; then
   exit 1
 fi
 
+if [[ -z "${PROJECT_ROOT:-}"  ]]; then
+    PROJECT_ROOT="github/python-logging"
+fi
+
 # make sure submodule is up to date
 git submodule update --init --recursive
 
-cd python-logging/tests/environment
+cd "${PROJECT_ROOT}/tests/environment"
 
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
