@@ -20,6 +20,9 @@ if [[ -z "${ENVIRONMENT:-}" ]]; then
   exit 1
 fi
 
+# make sure submodule is up to date
+git submodule update --init --recursive
+
 cd python-logging/tests/environment
 
 # Disable buffering, so that the logs stream through.
