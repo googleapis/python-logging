@@ -59,8 +59,9 @@ python3.6 -m nox --version
 # Install kubectl
 if [[ "${ENVIRONMENT}" == "kubernetes" ]]; then
   curl -LO https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl
-  mkdir -p ~/.local/bin/kubectl
-  mv ./kubectl ~/.local/bin/kubectl
+  chmod +x kubectl
+  mkdir -p ~/.local/bin
+  mv ./kubectl ~/.local/bin
   export PATH=$PATH:~/.local/bin
 fi
 
