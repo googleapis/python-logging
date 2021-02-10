@@ -57,7 +57,7 @@ python3.6 -m pip install --upgrade --quiet nox
 python3.6 -m nox --version
 
 # Install kubectl
-gcloud components install kubectl
+sudo apt-get install kubectl
 
 # create a unique id for this run
 UUID=$(python  -c 'import uuid; print(uuid.uuid1())' | head -c 7)
