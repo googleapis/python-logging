@@ -72,12 +72,6 @@ echo $ENVCTL_ID
 
 # Run the specified environment test
 set +e
-
-
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT deploy
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT verify
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT destroy
-
 python3.6 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
 TEST_STATUS_CODE=$?
 
