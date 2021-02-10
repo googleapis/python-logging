@@ -43,6 +43,9 @@ gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
 export PROJECT_ID=$(cat "${KOKORO_GFILE_DIR}/project-id.json")
 gcloud config set project $PROJECT_ID
 
+# set a default zone.
+gcloud config set compute/zone us-central1-b
+
 # authenticate docker
 gcloud auth configure-docker -q
 
