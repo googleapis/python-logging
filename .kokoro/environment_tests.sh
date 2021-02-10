@@ -57,7 +57,10 @@ python3.6 -m pip install --upgrade --quiet nox
 python3.6 -m nox --version
 
 # Install kubectl
-sudo apt-get install kubectl
+curl -LO https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl
+mkdir -p ~/.local/bin/kubectl
+mv ./kubectl ~/.local/bin/kubectl
+export PATH=$PATH:~/.local/bin
 
 # create a unique id for this run
 UUID=$(python  -c 'import uuid; print(uuid.uuid1())' | head -c 7)
