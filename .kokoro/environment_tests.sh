@@ -61,6 +61,14 @@ UUID=$(python  -c 'import uuid; print(uuid.uuid1())' | head -c 7)
 export ENVCTL_ID=ci-$UUID
 echo $ENVCTL_ID
 
+
+# testing the commands
+set +e
+${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT verify
+${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT deploy
+${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT verify
+${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT destroy
+
 # Run the specified environment test
 set +e
 python3.6 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
