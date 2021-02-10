@@ -57,23 +57,17 @@ python3.6 -m pip install --upgrade --quiet nox
 python3.6 -m nox --version
 
 # Install kubectl
-curl -LO https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl
-mkdir -p ~/.local/bin/kubectl
-mv ./kubectl ~/.local/bin/kubectl
-export PATH=$PATH:~/.local/bin
+if [[ "${ENVIRONMENT}" == "kubernetes" ]]; then
+  curl -LO https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl
+  mkdir -p ~/.local/bin/kubectl
+  mv ./kubectl ~/.local/bin/kubectl
+  export PATH=$PATH:~/.local/bin
+fi
 
 # create a unique id for this run
 UUID=$(python  -c 'import uuid; print(uuid.uuid1())' | head -c 7)
 export ENVCTL_ID=ci-$UUID
 echo $ENVCTL_ID
-
-
-# testing the commands
-set +e
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT verify
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT deploy
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT verify
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT destroy
 
 # Run the specified environment test
 set +e
