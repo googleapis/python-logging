@@ -381,4 +381,10 @@ class Client(ClientWithProject):
             dict: keyword args passed to handler constructor
         """
         handler = self.get_default_handler(**kw)
+        # disable built-in StreamHandlers in GAE Flex to avoid duplicate logs
+        if _APPENGINE_FLEXIBLE_ENV_VM in os.environ:
+            root_logger = logging.getLogger()
+            for handler in root_logger.handlers:
+                if isinstance(handler, logging.StreamHandler):
+                    root_logger.removeHandler(handler)
         setup_logging(handler, log_level=log_level, excluded_loggers=excluded_loggers)
