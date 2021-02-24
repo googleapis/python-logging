@@ -72,19 +72,12 @@ echo $ENVCTL_ID
 
 # Run the specified environment test
 set +e
-
-${PROJECT_ROOT}/tests/environment/envctl/envctl python  $ENVIRONMENT deploy
-kubectl get pods
-kubectl describe pod
-${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT destroy
-
-
-#python3.6 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
+python3.6 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
 TEST_STATUS_CODE=$?
 
 # destroy resources
-#echo "cleaning up..."
-#${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT destroy
+echo "cleaning up..."
+${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT destroy
 
 # exit with proper status code
 exit $TEST_STATUS_CODE
