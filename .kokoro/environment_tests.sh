@@ -75,6 +75,7 @@ set +e
 
 ${PROJECT_ROOT}/tests/environment/envctl/envctl python  $ENVIRONMENT deploy
 kubectl get pods
+kubectl describe pod
 ${PROJECT_ROOT}/tests/environment/envctl/envctl python $ENVIRONMENT destroy
 
 
