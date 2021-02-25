@@ -158,6 +158,10 @@ def setup_logging(
     all_excluded_loggers = set(excluded_loggers + EXCLUDED_LOGGER_DEFAULTS)
     logger = logging.getLogger()
     logger.setLevel(log_level)
+    # disable built-in StreamHandlers in GAE Flex to avoid duplicate logs
+    for h in root_logger.handlers:
+        if isinstance(h, logging.StreamHandler):
+            root_logger.removeHandler(h)
     logger.addHandler(handler)
     for logger_name in all_excluded_loggers:
         logger = logging.getLogger(logger_name)
