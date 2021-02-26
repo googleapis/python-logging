@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [2.2.1](https://www.github.com/googleapis/python-logging/compare/v2.2.0...v2.2.1) (2021-02-26)
+
+
+### Documentation
+
+* add python std_logging to sample browser ([#173](https://www.github.com/googleapis/python-logging/issues/173)) ([7cc7275](https://www.github.com/googleapis/python-logging/commit/7cc727598c33e7e264ddbeef0a2604a3c215b260))
+
 ## [2.2.0](https://www.github.com/googleapis/python-logging/compare/v2.1.1...v2.2.0) (2021-01-27)
 
 
