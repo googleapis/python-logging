@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-logging.git",
-        "sha": "18a0bb7fd8d158baef532b1c715524e5f6303311"
+        "sha": "de9c4c8bca265f6ecf98ecb9aa145891586232c8"
       }
     },
     {
