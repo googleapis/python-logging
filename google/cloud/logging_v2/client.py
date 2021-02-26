@@ -39,6 +39,7 @@ from google.cloud.logging_v2.handlers import AppEngineHandler
 from google.cloud.logging_v2.handlers import ContainerEngineHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
+from google.cloud.logging_v2.resource import Resource
 
 from google.cloud.logging_v2.logger import Logger
 from google.cloud.logging_v2.metric import Metric
@@ -57,6 +58,13 @@ _APPENGINE_INSTANCE_ID = "GAE_INSTANCE"
 _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
 """Attribute in metadata server when in GKE environment."""
 
+_CLOUD_RUN_SERVICE_ID = "K_SERVICE"
+_CLOUD_RUN_REVISION_ID = "K_REVISION"
+_CLOUD_RUN_CONFIGURATION_ID = "K_CONFIGURATION"
+"""Environment variables set in Cloud Run environment."""
+
+_REGION_ID = "instance/region"
+"""Attribute in metadata server for compute region."""
 
 class Client(ClientWithProject):
     """Client to bundle configuration needed for API requests."""
@@ -349,6 +357,7 @@ class Client(ClientWithProject):
             logging.Handler: The default log handler based on the environment
         """
         gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
+        region = retrieve_metadata_server(_REGION_ID)
 
         if (
             _APPENGINE_FLEXIBLE_ENV_VM in os.environ
@@ -357,7 +366,20 @@ class Client(ClientWithProject):
             return AppEngineHandler(self, **kw)
         elif gke_cluster_name is not None:
             return ContainerEngineHandler(**kw)
+        elif all([env in os.environ for env in (_CLOUD_RUN_SERVICE_ID, _CLOUD_RUN_REVISION_ID, _CLOUD_RUN_CONFIGURATION_ID)]):
+            resource = Resource(
+                type="cloud_run_revision",
+                labels={
+                    "project_id": self.project,
+                    "service_name": os.environ.get(_CLOUD_RUN_SERVICE_ID, ""),
+                    "revision_name": os.environ.get(_CLOUD_RUN_REVISION_ID, ""),
+                    "location": region if region else "",
+                    "configuration_name": os.environ.get(_CLOUD_RUN_CONFIGURATION_ID, ""),
+                },
+            )
+            return CloudLoggingHandler(self, resource=resource, **kw)
         else:
+            # generic handler. uses global resource
             return CloudLoggingHandler(self, **kw)
 
     def setup_logging(
