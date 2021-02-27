@@ -40,6 +40,15 @@ from google.cloud.logging_v2.handlers import ContainerEngineHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
 from google.cloud.logging_v2.resource import Resource
+from google.cloud.logging_v2.handlers._monitored_resources import GAE_ENV_VARS
+from google.cloud.logging_v2.handlers._monitored_resources import CLOUD_RUN_ENV_VARS
+from google.cloud.logging_v2.handlers._monitored_resources import FUNCTION_ENV_VARS
+from google.cloud.logging_v2.handlers._monitored_resources import LEGACY_FUNCTION_ENV_VARS
+from google.cloud.logging_v2.handlers._monitored_resources import GKE_CLUSTER_NAME
+from google.cloud.logging_v2.handlers._monitored_resources import GCE_INSTANCE_ID
+from google.cloud.logging_v2.handlers._monitored_resources import create_functions_resource
+from google.cloud.logging_v2.handlers._monitored_resources import create_compute_resource
+from google.cloud.logging_v2.handlers._monitored_resources import create_cloud_run_resource
 
 from google.cloud.logging_v2.logger import Logger
 from google.cloud.logging_v2.metric import Metric
@@ -48,36 +57,6 @@ from google.cloud.logging_v2.sink import Sink
 
 _DISABLE_GRPC = os.getenv(DISABLE_GRPC, False)
 _USE_GRPC = _HAVE_GRPC and not _DISABLE_GRPC
-
-_APPENGINE_FLEXIBLE_ENV_VM = "GAE_APPENGINE_HOSTNAME"
-"""Environment variable set in App Engine when vm:true is set."""
-
-_APPENGINE_INSTANCE_ID = "GAE_INSTANCE"
-"""Environment variable set in App Engine standard and flexible environment."""
-
-_GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
-"""Attribute in metadata server when in GKE environment."""
-
-_CLOUD_RUN_SERVICE_ID = "K_SERVICE"
-_CLOUD_RUN_REVISION_ID = "K_REVISION"
-_CLOUD_RUN_CONFIGURATION_ID = "K_CONFIGURATION"
-_CLOUD_RUN_ENV_VARS = [_CLOUD_RUN_SERVICE_ID, _CLOUD_RUN_REVISION_ID, _CLOUD_RUN_CONFIGURATION_ID]
-"""Environment variables set in Cloud Run environment."""
-
-_FUNCTION_TARGET = "FUNCTION_TARGET"
-_FUNCTION_SIGNATURE = "FUNCTION_SIGNATURE_TYPE"
-_FUNCTION_NAME = "FUNCTION_NAME"
-_FUNCTION_REGION = "FUNCTION_REGION"
-_FUNCTION_ENTRY = "ENTRY_POINT"
-_FUNCTION_ENV_VARS = [_FUNCTION_TARGET, _FUNCTION_SIGNATURE_TYPE, _CLOUD_RUN_SERVICE_ID]
-_LEGACY_FUNCTION_ENV_VARS = [_FUNCTION_NAME, _FUNCTION_REGION, _FUNCTION_ENTRY]
-"""Environment variables set in Cloud Functions environments."""
-
-
-_REGION_ID = "instance/region"
-_ZONE_ID = "instance/zone"
-_GCE_INSTANCE_ID = "instance/id"
-"""Attribute in metadata server for compute region and instance."""
 
 class Client(ClientWithProject):
     """Client to bundle configuration needed for API requests."""
@@ -370,62 +349,29 @@ class Client(ClientWithProject):
             logging.Handler: The default log handler based on the environment
         """
         gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
-        region = retrieve_metadata_server(_REGION_ID)
-        instance = retrieve_metadata_server(_GCE_INSTANCE_ID)
+        gce_instance_name = retrieve_metadata_server(_GCE_INSTANCE_ID)
+        resource = None
 
-        if (
-            _APPENGINE_FLEXIBLE_ENV_VM in os.environ
-            or _APPENGINE_INSTANCE_ID in os.environ
-        ):
+        if all([env in os.environ for env in _GAE_ENV_VARS]):
+            # App Engine Flex or Standard
             return AppEngineHandler(self, **kw)
         elif gke_cluster_name is not None:
+            # Kubernetes Engine
             return ContainerEngineHandler(**kw)
-        elif all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS]):
-            resource = Resource(
-                type="cloud_function",
-                labels={
-                    "project_id": self.project,
-                    "function_name": os.environ.get(_FUNCTION_NAME, ""),
-                    "region": region if region else "",
-                },
-            )
-            return CloudLoggingHandler(self, resource=resource, **kw)
-        elif all([env in os.environ for env in _FUNCTION_ENV_VARS]):
-            resource = Resource(
-                type="cloud_function",
-                labels={
-                    "project_id": self.project,
-                    "function_name": os.environ.get(_CLOUD_RUN_SERVICE_ID, ""),
-                    "region": region if region else "",
-                },
-            )
-            return CloudLoggingHandler(self, resource=resource, **kw)
+        elif all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS])
+                or all([env in os.environ for env in _FUNCTION_ENV_VARS]):
+            # Cloud Functions
+            resource = create_functions_resource(self.project)
         elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
-            resource = Resource(
-                type="cloud_run_revision",
-                labels={
-                    "project_id": self.project,
-                    "service_name": os.environ.get(_CLOUD_RUN_SERVICE_ID, ""),
-                    "revision_name": os.environ.get(_CLOUD_RUN_REVISION_ID, ""),
-                    "location": region if region else "",
-                    "configuration_name": os.environ.get(_CLOUD_RUN_CONFIGURATION_ID, ""),
-                },
-            )
-            return CloudLoggingHandler(self, resource=resource, **kw)
+            # Cloud Run
+            resource = create_cloud_run_resource(self.project)
         elif instance is not None:
-            resource = Resource(
-                type="gce_instance",
-                labels={
-                    "project_id": self.project,
-                    "instance_id": instance,
-                    "zone": retrieve_metadata_server(_ZONE_ID)
-                },
-            )
-            return CloudLoggingHandler(self, resource=resource, **kw)
-
+            # Compute Engine
+            resource = create_compute_resource(self.project)
         else:
-            # generic handler. uses global resource
-            return CloudLoggingHandler(self, **kw)
+            # use generic global resource
+            resource = create_global_resource(self.project)
+        return CloudLoggingHandler(self, resource=resource, **kw)
 
     def setup_logging(
         self, *, log_level=logging.INFO, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, **kw
