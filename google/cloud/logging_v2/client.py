@@ -358,8 +358,8 @@ class Client(ClientWithProject):
         elif gke_cluster_name is not None:
             # Kubernetes Engine
             return ContainerEngineHandler(**kw)
-        elif all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS])
-                or all([env in os.environ for env in _FUNCTION_ENV_VARS]):
+        elif (all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS])
+                or all([env in os.environ for env in _FUNCTION_ENV_VARS])):
             # Cloud Functions
             resource = create_functions_resource(self.project)
         elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
