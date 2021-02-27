@@ -75,7 +75,9 @@ _LEGACY_FUNCTION_ENV_VARS = [_FUNCTION_NAME, _FUNCTION_REGION, _FUNCTION_ENTRY]
 
 
 _REGION_ID = "instance/region"
-"""Attribute in metadata server for compute region."""
+_ZONE_ID = "instance/zone"
+_GCE_INSTANCE_ID = "instance/id"
+"""Attribute in metadata server for compute region and instance."""
 
 class Client(ClientWithProject):
     """Client to bundle configuration needed for API requests."""
@@ -369,6 +371,7 @@ class Client(ClientWithProject):
         """
         gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
         region = retrieve_metadata_server(_REGION_ID)
+        instance = retrieve_metadata_server(_GCE_INSTANCE_ID)
 
         if (
             _APPENGINE_FLEXIBLE_ENV_VM in os.environ
@@ -409,6 +412,17 @@ class Client(ClientWithProject):
                 },
             )
             return CloudLoggingHandler(self, resource=resource, **kw)
+        elif instance is not None:
+            resource = Resource(
+                type="gce_instance",
+                labels={
+                    "project_id": self.project,
+                    "instance_id": instance,
+                    "zone": retrieve_metadata_server(_ZONE_ID)
+                },
+            )
+            return CloudLoggingHandler(self, resource=resource, **kw)
+
         else:
             # generic handler. uses global resource
             return CloudLoggingHandler(self, **kw)
