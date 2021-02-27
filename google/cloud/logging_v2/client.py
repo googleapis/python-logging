@@ -348,21 +348,21 @@ class Client(ClientWithProject):
         Returns:
             logging.Handler: The default log handler based on the environment
         """
-        gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
-        gce_instance_name = retrieve_metadata_server(_GCE_INSTANCE_ID)
+        gke_cluster_name = retrieve_metadata_server(GKE_CLUSTER_NAME)
+        gce_instance_name = retrieve_metadata_server(GCE_INSTANCE_ID)
         resource = None
 
-        if all([env in os.environ for env in _GAE_ENV_VARS]):
+        if all([env in os.environ for env in GAE_ENV_VARS]):
             # App Engine Flex or Standard
             return AppEngineHandler(self, **kw)
         elif gke_cluster_name is not None:
             # Kubernetes Engine
             return ContainerEngineHandler(**kw)
-        elif (all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS])
-                or all([env in os.environ for env in _FUNCTION_ENV_VARS])):
+        elif (all([env in os.environ for env in LEGACY_FUNCTION_ENV_VARS])
+                or all([env in os.environ for env in FUNCTION_ENV_VARS])):
             # Cloud Functions
             resource = create_functions_resource(self.project)
-        elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
+        elif all([env in os.environ for env in CLOUD_RUN_ENV_VARS]):
             # Cloud Run
             resource = create_cloud_run_resource(self.project)
         elif instance is not None:
