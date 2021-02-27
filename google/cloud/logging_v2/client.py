@@ -365,7 +365,7 @@ class Client(ClientWithProject):
         elif all([env in os.environ for env in CLOUD_RUN_ENV_VARS]):
             # Cloud Run
             resource = create_cloud_run_resource(self.project)
-        elif instance is not None:
+        elif gce_instance_name is not None:
             # Compute Engine
             resource = create_compute_resource(self.project)
         else:
