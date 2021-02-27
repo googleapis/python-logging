@@ -61,7 +61,18 @@ _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
 _CLOUD_RUN_SERVICE_ID = "K_SERVICE"
 _CLOUD_RUN_REVISION_ID = "K_REVISION"
 _CLOUD_RUN_CONFIGURATION_ID = "K_CONFIGURATION"
+_CLOUD_RUN_ENV_VARS = [_CLOUD_RUN_SERVICE_ID, _CLOUD_RUN_REVISION_ID, _CLOUD_RUN_CONFIGURATION_ID]
 """Environment variables set in Cloud Run environment."""
+
+_FUNCTION_TARGET = "FUNCTION_TARGET"
+_FUNCTION_SIGNATURE = "FUNCTION_SIGNATURE_TYPE"
+_FUNCTION_NAME = "FUNCTION_NAME"
+_FUNCTION_REGION = "FUNCTION_REGION"
+_FUNCTION_ENTRY = "ENTRY_POINT"
+_FUNCTION_ENV_VARS = [_FUNCTION_TARGET, _FUNCTION_SIGNATURE_TYPE, _CLOUD_RUN_SERVICE_ID]
+_LEGACY_FUNCTION_ENV_VARS = [_FUNCTION_NAME, _FUNCTION_REGION, _FUNCTION_ENTRY]
+"""Environment variables set in Cloud Functions environments."""
+
 
 _REGION_ID = "instance/region"
 """Attribute in metadata server for compute region."""
@@ -366,7 +377,27 @@ class Client(ClientWithProject):
             return AppEngineHandler(self, **kw)
         elif gke_cluster_name is not None:
             return ContainerEngineHandler(**kw)
-        elif all([env in os.environ for env in (_CLOUD_RUN_SERVICE_ID, _CLOUD_RUN_REVISION_ID, _CLOUD_RUN_CONFIGURATION_ID)]):
+        elif all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS]):
+            resource = Resource(
+                type="cloud_function",
+                labels={
+                    "project_id": self.project,
+                    "function_name": os.environ.get(_FUNCTION_NAME, ""),
+                    "region": region if region else "",
+                },
+            )
+            return CloudLoggingHandler(self, resource=resource, **kw)
+        elif all([env in os.environ for env in _FUNCTION_ENV_VARS]):
+            resource = Resource(
+                type="cloud_function",
+                labels={
+                    "project_id": self.project,
+                    "function_name": os.environ.get(_CLOUD_RUN_SERVICE_ID, ""),
+                    "region": region if region else "",
+                },
+            )
+            return CloudLoggingHandler(self, resource=resource, **kw)
+        elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
             resource = Resource(
                 type="cloud_run_revision",
                 labels={
