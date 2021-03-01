@@ -29,7 +29,6 @@ import google.api_core.client_options
 from google.cloud.client import ClientWithProject
 from google.cloud.environment_vars import DISABLE_GRPC
 from google.cloud.logging_v2._helpers import _add_defaults_to_filter
-from google.cloud.logging_v2._helpers import retrieve_metadata_server
 from google.cloud.logging_v2._http import Connection
 from google.cloud.logging_v2._http import _LoggingAPI as JSONLoggingAPI
 from google.cloud.logging_v2._http import _MetricsAPI as JSONMetricsAPI
@@ -40,15 +39,8 @@ from google.cloud.logging_v2.handlers import ContainerEngineHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
 from google.cloud.logging_v2.resource import Resource
-from google.cloud.logging_v2.handlers._monitored_resources import GAE_ENV_VARS
-from google.cloud.logging_v2.handlers._monitored_resources import CLOUD_RUN_ENV_VARS
-from google.cloud.logging_v2.handlers._monitored_resources import FUNCTION_ENV_VARS
-from google.cloud.logging_v2.handlers._monitored_resources import LEGACY_FUNCTION_ENV_VARS
-from google.cloud.logging_v2.handlers._monitored_resources import GKE_CLUSTER_NAME
-from google.cloud.logging_v2.handlers._monitored_resources import GCE_INSTANCE_ID
-from google.cloud.logging_v2.handlers._monitored_resources import create_functions_resource
-from google.cloud.logging_v2.handlers._monitored_resources import create_compute_resource
-from google.cloud.logging_v2.handlers._monitored_resources import create_cloud_run_resource
+from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
+
 
 from google.cloud.logging_v2.logger import Logger
 from google.cloud.logging_v2.metric import Metric
@@ -348,30 +340,15 @@ class Client(ClientWithProject):
         Returns:
             logging.Handler: The default log handler based on the environment
         """
-        gke_cluster_name = retrieve_metadata_server(GKE_CLUSTER_NAME)
-        gce_instance_name = retrieve_metadata_server(GCE_INSTANCE_ID)
-        resource = None
+        monitored_resource = kw.pop("resource", detect_resource(self.project))
 
-        if all([env in os.environ for env in GAE_ENV_VARS]):
-            # App Engine Flex or Standard
+        if isinstance(monitored_resource, Resource) and monitored_resource.type == "gae_app":
             return AppEngineHandler(self, **kw)
-        elif gke_cluster_name is not None:
-            # Kubernetes Engine
+        elif isinstance(monitored_resource, Resource) and monitored_resource.type == "k8s_container":
             return ContainerEngineHandler(**kw)
-        elif (all([env in os.environ for env in LEGACY_FUNCTION_ENV_VARS])
-                or all([env in os.environ for env in FUNCTION_ENV_VARS])):
-            # Cloud Functions
-            resource = create_functions_resource(self.project)
-        elif all([env in os.environ for env in CLOUD_RUN_ENV_VARS]):
-            # Cloud Run
-            resource = create_cloud_run_resource(self.project)
-        elif gce_instance_name is not None:
-            # Compute Engine
-            resource = create_compute_resource(self.project)
         else:
-            # use generic global resource
-            resource = create_global_resource(self.project)
-        return CloudLoggingHandler(self, resource=resource, **kw)
+            return CloudLoggingHandler(self, resource=monitored_resource, **kw)
+
 
     def setup_logging(
         self, *, log_level=logging.INFO, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, **kw
