@@ -83,7 +83,7 @@ def _create_kubernetes_resource(project):
 
 
 def _create_compute_resource(project):
-    instance = retrieve_metadata_server(GCE_INSTANCE_ID)
+    instance = retrieve_metadata_server(_GCE_INSTANCE_ID)
     zone = retrieve_metadata_server(_ZONE_ID)
     resource = Resource(
         type="gce_instance",
