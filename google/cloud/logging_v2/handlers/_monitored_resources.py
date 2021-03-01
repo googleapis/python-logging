@@ -96,12 +96,14 @@ def create_cloud_run_resource(project):
     return resource
 
 def create_app_engine_resource(project):
+    zone = retrieve_metadata_server(_ZONE_ID)
     resource = Resource(
         type="gae_app",
         labels={
             "project_id": project,
             "module_id": os.environ.get(_GAE_SERVICE_ENV, ""),
             "version_id": os.environ.get(_GAE_VERSION_ENV, ""),
+            "zone": zone if zone else "",
         },
     )
     return resource
