@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import os
 
 from google.cloud.logging_v2.resource import Resource
@@ -74,10 +73,15 @@ def _create_functions_resource(project):
 
 def _create_kubernetes_resource(project):
     zone = retrieve_metadata_server(_ZONE_ID)
+    cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
 
     resource = Resource(
         type="k8s_container",
-        labels={"project_id": project, "location": zone if zone else "",},
+        labels={
+            "project_id": project,
+            "location": zone if zone else "",
+            "cluster_name": cluster_name if cluster_name else "",
+        },
     )
     return resource
 
@@ -126,8 +130,7 @@ def _create_app_engine_resource(project):
 
 
 def _create_global_resource(project):
-    resource = Resource(type="global", labels={"project_id": project,},)
-    return resource
+    return Resource(type="global", labels={"project_id": project})
 
 
 def detect_resource(project):
@@ -144,13 +147,13 @@ def detect_resource(project):
         [env in os.environ for env in _FUNCTION_ENV_VARS]
     ):
         # Cloud Functions
-        resource = _create_functions_resource(project)
+        return _create_functions_resource(project)
     elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
         # Cloud Run
-        resource = _create_cloud_run_resource(project)
+        return _create_cloud_run_resource(project)
     elif gce_instance_name is not None:
         # Compute Engine
-        resource = _create_compute_resource(project)
+        return _create_compute_resource(project)
     else:
         # use generic global resource
-        resource = _create_global_resource(project)
+        return _create_global_resource(project)
