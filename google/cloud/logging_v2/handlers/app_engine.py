@@ -22,7 +22,9 @@ import logging
 import os
 
 from google.cloud.logging_v2.handlers._helpers import get_request_data
-from google.cloud.logging_v2.handlers._monitored_resources import _create_app_engine_resource
+from google.cloud.logging_v2.handlers._monitored_resources import (
+    _create_app_engine_resource,
+)
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.resource import Resource
 

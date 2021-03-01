@@ -27,7 +27,11 @@ _GAE_ENV_VARS = [_GAE_SERVICE_ENV, _GAE_VERSION_ENV, _GAE_INSTANCE_ENV]
 _CLOUD_RUN_SERVICE_ID = "K_SERVICE"
 _CLOUD_RUN_REVISION_ID = "K_REVISION"
 _CLOUD_RUN_CONFIGURATION_ID = "K_CONFIGURATION"
-_CLOUD_RUN_ENV_VARS = [_CLOUD_RUN_SERVICE_ID, _CLOUD_RUN_REVISION_ID, _CLOUD_RUN_CONFIGURATION_ID]
+_CLOUD_RUN_ENV_VARS = [
+    _CLOUD_RUN_SERVICE_ID,
+    _CLOUD_RUN_REVISION_ID,
+    _CLOUD_RUN_CONFIGURATION_ID,
+]
 """Environment variables set in Cloud Run environment."""
 
 _FUNCTION_TARGET = "FUNCTION_TARGET"
@@ -67,17 +71,16 @@ def _create_functions_resource(project):
     )
     return resource
 
+
 def _create_kubernetes_resource(project):
     zone = retrieve_metadata_server(_ZONE_ID)
 
     resource = Resource(
         type="k8s_container",
-        labels={
-            "project_id": project,
-            "location": zone if zone else "",
-        },
+        labels={"project_id": project, "location": zone if zone else "",},
     )
     return resource
+
 
 def _create_compute_resource(project):
     instance = retrieve_metadata_server(GCE_INSTANCE_ID)
@@ -107,6 +110,7 @@ def _create_cloud_run_resource(project):
     )
     return resource
 
+
 def _create_app_engine_resource(project):
     zone = retrieve_metadata_server(_ZONE_ID)
     resource = Resource(
@@ -120,36 +124,33 @@ def _create_app_engine_resource(project):
     )
     return resource
 
+
 def _create_global_resource(project):
-    resource = Resource(
-        type="global",
-        labels={
-            "project_id": project,
-        },
-    )
+    resource = Resource(type="global", labels={"project_id": project,},)
     return resource
 
+
 def detect_resource(project):
-        gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
-        gce_instance_name = retrieve_metadata_server(_GCE_INSTANCE_ID)
+    gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
+    gce_instance_name = retrieve_metadata_server(_GCE_INSTANCE_ID)
 
-        if all([env in os.environ for env in _GAE_ENV_VARS]):
-            # App Engine Flex or Standard
-            return _create_app_engine_resource(project)
-        elif gke_cluster_name is not None:
-            # Kubernetes Engine
-            return _create_kubernetes_resource(project)
-        elif (all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS])
-                or all([env in os.environ for env in _FUNCTION_ENV_VARS])):
-            # Cloud Functions
-            resource = _create_functions_resource(project)
-        elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
-            # Cloud Run
-            resource = _create_cloud_run_resource(project)
-        elif gce_instance_name is not None:
-            # Compute Engine
-            resource = _create_compute_resource(project)
-        else:
-            # use generic global resource
-            resource = _create_global_resource(project)
-
+    if all([env in os.environ for env in _GAE_ENV_VARS]):
+        # App Engine Flex or Standard
+        return _create_app_engine_resource(project)
+    elif gke_cluster_name is not None:
+        # Kubernetes Engine
+        return _create_kubernetes_resource(project)
+    elif all([env in os.environ for env in _LEGACY_FUNCTION_ENV_VARS]) or all(
+        [env in os.environ for env in _FUNCTION_ENV_VARS]
+    ):
+        # Cloud Functions
+        resource = _create_functions_resource(project)
+    elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
+        # Cloud Run
+        resource = _create_cloud_run_resource(project)
+    elif gce_instance_name is not None:
+        # Compute Engine
+        resource = _create_compute_resource(project)
+    else:
+        # use generic global resource
+        resource = _create_global_resource(project)
