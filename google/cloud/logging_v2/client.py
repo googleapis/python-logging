@@ -50,6 +50,8 @@ from google.cloud.logging_v2.sink import Sink
 _DISABLE_GRPC = os.getenv(DISABLE_GRPC, False)
 _USE_GRPC = _HAVE_GRPC and not _DISABLE_GRPC
 
+_GAE_RESOURCE_TYPE = "gae_app"
+_GKE_RESOURCE_TYPE = "k8s_container"
 
 class Client(ClientWithProject):
     """Client to bundle configuration needed for API requests."""
@@ -345,12 +347,12 @@ class Client(ClientWithProject):
 
         if (
             isinstance(monitored_resource, Resource)
-            and monitored_resource.type == "gae_app"
+            and monitored_resource.type == _GAE_RESOURCE_TYPE
         ):
             return AppEngineHandler(self, **kw)
         elif (
             isinstance(monitored_resource, Resource)
-            and monitored_resource.type == "k8s_container"
+            and monitored_resource.type == _GKE_RESOURCE_TYPE
         ):
             return ContainerEngineHandler(**kw)
         else:
