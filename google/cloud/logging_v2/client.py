@@ -53,6 +53,7 @@ _USE_GRPC = _HAVE_GRPC and not _DISABLE_GRPC
 _GAE_RESOURCE_TYPE = "gae_app"
 _GKE_RESOURCE_TYPE = "k8s_container"
 
+
 class Client(ClientWithProject):
     """Client to bundle configuration needed for API requests."""
 
