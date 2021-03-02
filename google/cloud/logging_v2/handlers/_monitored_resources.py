@@ -53,6 +53,12 @@ _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
 
 
 def _create_functions_resource(project):
+    """Create a standardized Cloud Functions resource.
+    Args:
+        project (str): The project ID to pass on to the resource
+    Returns:
+        google.cloud.logging.Resource
+    """
     region = retrieve_metadata_server(_REGION_ID)
     if _FUNCTION_NAME in os.environ:
         function_name = os.environ.get(_FUNCTION_NAME)
@@ -72,6 +78,12 @@ def _create_functions_resource(project):
 
 
 def _create_kubernetes_resource(project):
+    """Create a standardized Kubernetes resource.
+    Args:
+        project (str): The project ID to pass on to the resource
+    Returns:
+        google.cloud.logging.Resource
+    """
     zone = retrieve_metadata_server(_ZONE_ID)
     cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
 
@@ -87,6 +99,12 @@ def _create_kubernetes_resource(project):
 
 
 def _create_compute_resource(project):
+    """Create a standardized Compute Engine resource.
+    Args:
+        project (str): The project ID to pass on to the resource
+    Returns:
+        google.cloud.logging.Resource
+    """
     instance = retrieve_metadata_server(_GCE_INSTANCE_ID)
     zone = retrieve_metadata_server(_ZONE_ID)
     resource = Resource(
@@ -101,6 +119,12 @@ def _create_compute_resource(project):
 
 
 def _create_cloud_run_resource(project):
+    """Create a standardized Cloud Run resource.
+    Args:
+        project (str): The project ID to pass on to the resource
+    Returns:
+        google.cloud.logging.Resource
+    """
     region = retrieve_metadata_server(_REGION_ID)
     resource = Resource(
         type="cloud_run_revision",
@@ -116,6 +140,12 @@ def _create_cloud_run_resource(project):
 
 
 def _create_app_engine_resource(project):
+    """Create a standardized App Engine resource.
+    Args:
+        project (str): The project ID to pass on to the resource
+    Returns:
+        google.cloud.logging.Resource
+    """
     zone = retrieve_metadata_server(_ZONE_ID)
     resource = Resource(
         type="gae_app",
@@ -134,6 +164,12 @@ def _create_global_resource(project):
 
 
 def detect_resource(project):
+    """Return the default monitored resource based on the local environment.
+    Args:
+        project (str): The project ID to pass on to the resource
+    Returns:
+        google.cloud.logging.Resource: The default resource based on the environment
+    """
     gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
     gce_instance_name = retrieve_metadata_server(_GCE_INSTANCE_ID)
 
