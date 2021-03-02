@@ -64,6 +64,9 @@ class Test_Create_Resources(unittest.TestCase):
         else:
             return None
 
+    def setUp(self):
+        os.environ.clear()
+
     def test_create_legacy_functions_resource(self):
         patch = mock.patch(
             "google.cloud.logging_v2.handlers._monitored_resources.retrieve_metadata_server",
@@ -236,6 +239,11 @@ class Test_Resource_Detection(unittest.TestCase):
             self.assertEqual(resource.type, "gce_instance")
 
     def test_detection_unknown(self):
-        resource = detect_resource(self.PROJECT)
-        self.assertIsInstance(resource, Resource)
-        self.assertEqual(resource.type, "global")
+        patch = mock.patch(
+            "google.cloud.logging_v2.handlers._monitored_resources.retrieve_metadata_server",
+            return_value=None,
+        )
+        with patch:
+            resource = detect_resource(self.PROJECT)
+            self.assertIsInstance(resource, Resource)
+            self.assertEqual(resource.type, "global")
