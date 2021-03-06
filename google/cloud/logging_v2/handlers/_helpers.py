@@ -33,7 +33,7 @@ _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
 _PROTOCOL_HEADER = "SERVER_PROTOCOL"
 
 
-def format_stackdriver_json(record, message, json_ensure_ascii):
+def format_stackdriver_json(record, message):
     """Helper to format a LogRecord in in Stackdriver fluentd format.
 
     Returns:
@@ -48,7 +48,7 @@ def format_stackdriver_json(record, message, json_ensure_ascii):
         "severity": record.levelname,
     }
 
-    return json.dumps(payload, ensure_ascii=json_ensure_ascii)
+    return json.dumps(payload, ensure_ascii=False)
 
 
 def get_request_data_from_flask():

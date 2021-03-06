@@ -31,7 +31,7 @@ class ContainerEngineHandler(logging.StreamHandler):
     (GKE) fluentd plugin, so that metadata such as log level are properly set.
     """
 
-    def __init__(self, *, name=None, stream=None, json_ensure_ascii=True):
+    def __init__(self, *, name=None, stream=None):
         """
         Args:
             name (Optional[str]): The name of the custom log in Cloud Logging.
@@ -40,7 +40,6 @@ class ContainerEngineHandler(logging.StreamHandler):
         """
         super(ContainerEngineHandler, self).__init__(stream=stream)
         self.name = name
-        self.json_ensure_ascii = json_ensure_ascii
 
     def format(self, record):
         """Format the message into JSON expected by fluentd.
@@ -52,4 +51,4 @@ class ContainerEngineHandler(logging.StreamHandler):
             str: A JSON string formatted for GKE fluentd.
         """
         message = super(ContainerEngineHandler, self).format(record)
-        return format_stackdriver_json(record, message, self.json_ensure_ascii)
+        return format_stackdriver_json(record, message)
