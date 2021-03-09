@@ -36,6 +36,7 @@ from google.cloud.logging_v2._http import _SinksAPI as JSONSinksAPI
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers import AppEngineHandler
 from google.cloud.logging_v2.handlers import ContainerEngineHandler
+from google.cloud.logging_v2.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
 from google.cloud.logging_v2.resource import Resource
