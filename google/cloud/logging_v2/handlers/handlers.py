@@ -23,6 +23,7 @@ DEFAULT_LOGGER_NAME = "python"
 
 EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2")
 
+_CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
 class CloudLoggingHandler(logging.StreamHandler):
     """Handler that directly makes Cloud Logging API calls.
@@ -162,8 +163,7 @@ def setup_logging(
     logger = logging.getLogger()
 
     # remove built-in handlers on App Engine or Cloud Functions environments
-    resource = detect_resource()
-    if resource.type == _GAE_RESOURCE_TYPE or resource.type == _GCF_RESOURCE_TYPE:
+    if detect_resource().type in _CLEAR_HANDLER_RESOURCE_TYPES:
         while logger.hasHandlers() > 0:
             logger.handlers.pop()
 
