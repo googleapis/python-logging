@@ -32,7 +32,7 @@ class StructuredLogHandler(logging.StreamHandler):
             stream (Optional[IO]): Stream to be used by the handler.
 
         """
-        super(ContainerEngineHandler, self).__init__(stream=stream)
+        super(StructuredLogHandler, self).__init__(stream=stream)
         self.name = name
 
     def format(self, record):
@@ -44,5 +44,5 @@ class StructuredLogHandler(logging.StreamHandler):
         Returns:
             str: A JSON string formatted for GKE fluentd.
         """
-        message = super(ContainerEngineHandler, self).format(record)
+        message = super(StructuredLogHandler, self).format(record)
         return format_stackdriver_json(record, message)
