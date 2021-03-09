@@ -387,4 +387,9 @@ class Client(ClientWithProject):
             dict: keyword args passed to handler constructor
         """
         handler = self.get_default_handler(**kw)
+        # remove built-in handlers for App Engine environment
+        if isinstance(handler, AppEngineHandler):
+            logger = logging.getLogger()
+            while len(logger.handlers) > 0:
+                logger.handlers.pop()
         setup_logging(handler, log_level=log_level, excluded_loggers=excluded_loggers)
