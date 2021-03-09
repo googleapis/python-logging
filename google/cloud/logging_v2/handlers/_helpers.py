@@ -16,6 +16,7 @@
 
 import math
 import json
+import uuid
 
 try:
     import flask
@@ -46,6 +47,7 @@ def format_stackdriver_json(record, message):
         "timestamp": {"seconds": int(second), "nanos": int(subsecond * 1e9)},
         "thread": record.thread,
         "severity": record.levelname,
+        "insertId": uuid.uuid1().hex,
     }
 
     return json.dumps(payload)
