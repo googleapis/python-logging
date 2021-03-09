@@ -160,6 +160,13 @@ def setup_logging(
     """
     all_excluded_loggers = set(excluded_loggers + EXCLUDED_LOGGER_DEFAULTS)
     logger = logging.getLogger()
+
+    # remove built-in handlers on App Engine or Cloud Functions environments
+    resource = detect_resource()
+    if resource.type == _GAE_RESOURCE_TYPE or resource.type == _GCF_RESOURCE_TYPE:
+        while logger.hasHandlers() > 0:
+            logger.handlers.pop()
+
     logger.setLevel(log_level)
     logger.addHandler(handler)
     for logger_name in all_excluded_loggers:
