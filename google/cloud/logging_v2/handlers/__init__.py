@@ -24,6 +24,6 @@ __all__ = [
     "AppEngineHandler",
     "CloudLoggingHandler",
     "ContainerEngineHandler",
-    "StructuredLogHandler"
+    "StructuredLogHandler",
     "setup_logging",
 ]

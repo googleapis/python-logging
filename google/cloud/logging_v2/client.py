@@ -360,7 +360,7 @@ class Client(ClientWithProject):
             return ContainerEngineHandler(**kw)
         elif (
             isinstance(monitored_resource, Resource)
-            and monitored_resource.resource.type == _GCF_RESOURCE_TYPE
+            and monitored_resource.type == _GCF_RESOURCE_TYPE
         ):
             return StructuredLogHandler(**kw)
         else:
