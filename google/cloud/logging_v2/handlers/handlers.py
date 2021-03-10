@@ -164,8 +164,7 @@ def setup_logging(
 
     # remove built-in handlers on App Engine or Cloud Functions environments
     if detect_resource().type in _CLEAR_HANDLER_RESOURCE_TYPES:
-        while logger.hasHandlers() > 0:
-            logger.handlers.pop()
+        logger.handlers.clear()
 
     logger.setLevel(log_level)
     logger.addHandler(handler)

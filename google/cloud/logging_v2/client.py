@@ -16,6 +16,7 @@
 
 import logging
 import os
+import sys
 
 try:
     from google.cloud.logging_v2 import _gapic
