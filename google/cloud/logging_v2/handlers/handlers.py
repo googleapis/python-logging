@@ -25,6 +25,7 @@ EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
+
 class CloudLoggingHandler(logging.StreamHandler):
     """Handler that directly makes Cloud Logging API calls.
 

@@ -362,7 +362,8 @@ class Client(ClientWithProject):
         elif (
             isinstance(monitored_resource, Resource)
             and monitored_resource.type == _GCF_RESOURCE_TYPE
-            and sys.version_info[0] == 3 and sys.version_info[1] >=8
+            and sys.version_info[0] == 3
+            and sys.version_info[1] >= 8
         ):
             # Cloud Functions with runtimes > 3.8 supports structured logs on standard out
             # 3.7 should use the standard CloudLoggingHandler
