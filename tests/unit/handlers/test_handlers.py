@@ -14,8 +14,14 @@
 
 import logging
 import unittest
+from unittest.mock import patch
 import mock
 import os
+
+from google.cloud.logging_v2.handlers._monitored_resources import (
+    _FUNCTION_ENV_VARS,
+    _GAE_ENV_VARS,
+)
 
 
 class TestCloudLoggingHandler(unittest.TestCase):
@@ -166,14 +172,8 @@ class TestSetupLogging(unittest.TestCase):
         self.assertNotIn(handler, excluded_logger.handlers)
         self.assertFalse(excluded_logger.propagate)
 
+    @patch.dict("os.environ", {envar: "1" for envar in _FUNCTION_ENV_VARS})
     def test_remove_handlers_gcf(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            _FUNCTION_ENV_VARS,
-        )
-
-        # mock GCF environment
-        for env in _FUNCTION_ENV_VARS:
-            os.environ[env] = "1"
         logger = logging.getLogger()
         # add fake handler
         added_handler = logging.StreamHandler()
@@ -185,12 +185,8 @@ class TestSetupLogging(unittest.TestCase):
         # handler should be removed from logger
         self.assertEqual(len(logger.handlers), 1)
 
+    @patch.dict("os.environ", {envar: "1" for envar in _GAE_ENV_VARS})
     def test_remove_handlers_gae(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import _GAE_ENV_VARS
-
-        # mock GAE environment
-        for env in _GAE_ENV_VARS:
-            os.environ[env] = "1"
         logger = logging.getLogger()
         # add fake handler
         added_handler = logging.StreamHandler()
@@ -221,8 +217,6 @@ class TestSetupLogging(unittest.TestCase):
 
     def setUp(self):
         self._handlers_cache = logging.getLogger().handlers[:]
-        # reset environment variables
-        os.environ.clear()
 
     def tearDown(self):
         # cleanup handlers
