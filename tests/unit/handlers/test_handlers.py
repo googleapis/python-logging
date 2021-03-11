@@ -167,7 +167,10 @@ class TestSetupLogging(unittest.TestCase):
         self.assertFalse(excluded_logger.propagate)
 
     def test_remove_handlers_gcf(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import _FUNCTION_ENV_VARS
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            _FUNCTION_ENV_VARS,
+        )
+
         # mock GCF environment
         for env in _FUNCTION_ENV_VARS:
             os.environ[env] = "1"
@@ -184,6 +187,7 @@ class TestSetupLogging(unittest.TestCase):
 
     def test_remove_handlers_gae(self):
         from google.cloud.logging_v2.handlers._monitored_resources import _GAE_ENV_VARS
+
         # mock GAE environment
         for env in _GAE_ENV_VARS:
             os.environ[env] = "1"
@@ -214,7 +218,6 @@ class TestSetupLogging(unittest.TestCase):
             self._call_fut(handler)
             # added handler should remain in logger
             self.assertIn(added_handler, logger.handlers)
-
 
     def setUp(self):
         self._handlers_cache = logging.getLogger().handlers[:]
