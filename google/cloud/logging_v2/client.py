@@ -16,7 +16,6 @@
 
 import logging
 import os
-import sys
 
 try:
     from google.cloud.logging_v2 import _gapic
@@ -37,7 +36,6 @@ from google.cloud.logging_v2._http import _SinksAPI as JSONSinksAPI
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers import AppEngineHandler
 from google.cloud.logging_v2.handlers import ContainerEngineHandler
-from google.cloud.logging_v2.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
 from google.cloud.logging_v2.resource import Resource
@@ -359,15 +357,6 @@ class Client(ClientWithProject):
             and monitored_resource.type == _GKE_RESOURCE_TYPE
         ):
             return ContainerEngineHandler(**kw)
-        elif (
-            isinstance(monitored_resource, Resource)
-            and monitored_resource.type == _GCF_RESOURCE_TYPE
-            and sys.version_info[0] == 3
-            and sys.version_info[1] >= 8
-        ):
-            # Cloud Functions with runtimes > 3.8 supports structured logs on standard out
-            # 3.7 should use the standard CloudLoggingHandler
-            return StructuredLogHandler(**kw)
         else:
             return CloudLoggingHandler(self, resource=monitored_resource, **kw)
 
