@@ -15,6 +15,7 @@
 import logging
 import unittest
 import mock
+import os
 
 
 class TestCloudLoggingHandler(unittest.TestCase):
@@ -165,8 +166,60 @@ class TestSetupLogging(unittest.TestCase):
         self.assertNotIn(handler, excluded_logger.handlers)
         self.assertFalse(excluded_logger.propagate)
 
+    def test_remove_handlers_gcf(self):
+        from google.cloud.logging_v2.handlers._monitored_resources import _FUNCTION_ENV_VARS
+        # mock GCF environment
+        for env in _FUNCTION_ENV_VARS:
+            os.environ[env] = "1"
+        logger = logging.getLogger()
+        # add fake handler
+        added_handler = logging.StreamHandler()
+        logger.addHandler(added_handler)
+
+        handler = _Handler(logging.INFO)
+        self._call_fut(handler)
+        self.assertNotIn(added_handler, logger.handlers)
+        # handler should be removed from logger
+        self.assertEqual(len(logger.handlers), 1)
+
+    def test_remove_handlers_gae(self):
+        from google.cloud.logging_v2.handlers._monitored_resources import _GAE_ENV_VARS
+        # mock GAE environment
+        for env in _GAE_ENV_VARS:
+            os.environ[env] = "1"
+        logger = logging.getLogger()
+        # add fake handler
+        added_handler = logging.StreamHandler()
+        logger.addHandler(added_handler)
+
+        handler = _Handler(logging.INFO)
+        self._call_fut(handler)
+        self.assertNotIn(added_handler, logger.handlers)
+        # handler should be removed from logger
+        self.assertEqual(len(logger.handlers), 1)
+
+    def test_keep_handlers_others(self):
+        # mock non-cloud environment
+        patch = mock.patch(
+            "google.cloud.logging_v2.handlers._monitored_resources.retrieve_metadata_server",
+            return_value=None,
+        )
+        with patch:
+            # add fake handler
+            added_handler = logging.StreamHandler()
+            logger = logging.getLogger()
+            logger.addHandler(added_handler)
+
+            handler = _Handler(logging.INFO)
+            self._call_fut(handler)
+            # added handler should remain in logger
+            self.assertIn(added_handler, logger.handlers)
+
+
     def setUp(self):
         self._handlers_cache = logging.getLogger().handlers[:]
+        # reset environment variables
+        os.environ.clear()
 
     def tearDown(self):
         # cleanup handlers
