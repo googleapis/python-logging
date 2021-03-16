@@ -1,8 +1,5 @@
 {
   "extends": [
     "config:base",  ":preserveSemverRanges"
-  ],
-  "git-submodules": {
-    "enabled": true
-  }
+  ]
 }
