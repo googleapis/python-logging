@@ -27,18 +27,21 @@ GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.g
 
 
 class GCPFilter(logging.Filter):
+
+    def __init(self, project=None):
+        self.project = project
+
     def filter(self, record):
         inferred_http, inferred_trace = get_request_data()
-        if not inferred_http:
-            inferred_http = {}
-        if not inferred_trace:
-            inferred_trace = ""
+        if inferred_trace is not None and self.project is not None:
+            inferred_trace = f"projects/{self.project_id}/traces/{inferred_trace}"
 
-        record.trace = trace_id = inferred_trace
-        record.request_method = inferred_http.get('requestMethod', "")
-        record.request_url = inferred_http.get('requestUrl', "")
-        record.user_agent = inferred_http.get('userAgent', "")
-        record.protocol = inferred_http.get('protocol', "")
+        record.trace = trace_id = record.trace or inferred_trace or ""
+        record.http_request = record.http_request or record.httpRequest or inferred_http or {}
+        record.request_method = record.http_request.get('requestMethod', "")
+        record.request_url = record.http_request.get('requestUrl', "")
+        record.user_agent = record.http_request.get('userAgent', "")
+        record.protocol = record.http_request.get('protocol', "")
         return True
 
 class StructuredLogHandler(logging.StreamHandler):
