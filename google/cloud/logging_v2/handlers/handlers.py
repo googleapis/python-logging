@@ -25,6 +25,31 @@ EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
+GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(filename)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
+
+class CloudLoggingFilter(logging.Filter):
+    """Python standard ``logging`` Filter class to add Cloud Logging
+    information to each LogRecord.
+
+    When attached to a LogHanler, each incoming log will receive trace and
+    http_request related to the request. This data can be overwritten using
+    the `extras` argument when writing logs.
+    """
+    def __init(self, project=None):
+        self.project = project
+
+    def filter(self, record):
+        inferred_http, inferred_trace = get_request_data()
+        if inferred_trace is not None and self.project is not None:
+            inferred_trace = f"projects/{self.project_id}/traces/{inferred_trace}"
+
+        record.trace = trace_id = record.trace or inferred_trace or ""
+        record.http_request = record.http_request or record.httpRequest or inferred_http or {}
+        record.request_method = record.http_request.get('requestMethod', "")
+        record.request_url = record.http_request.get('requestUrl', "")
+        record.user_agent = record.http_request.get('userAgent', "")
+        record.protocol = record.http_request.get('protocol', "")
+        return True
 
 class CloudLoggingHandler(logging.StreamHandler):
     """Handler that directly makes Cloud Logging API calls.
