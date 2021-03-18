@@ -18,6 +18,7 @@ import logging
 
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
+from google.cloud.logging_v2.handlers._helpers import get_request_data
 
 DEFAULT_LOGGER_NAME = "python"
 
@@ -35,16 +36,16 @@ class CloudLoggingFilter(logging.Filter):
     http_request related to the request. This data can be overwritten using
     the `extras` argument when writing logs.
     """
-    def __init(self, project=None):
+    def __init__(self, project=None):
         self.project = project
 
     def filter(self, record):
         inferred_http, inferred_trace = get_request_data()
         if inferred_trace is not None and self.project is not None:
-            inferred_trace = f"projects/{self.project_id}/traces/{inferred_trace}"
+            inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
 
-        record.trace = trace_id = record.trace or inferred_trace or ""
-        record.http_request = record.http_request or record.httpRequest or inferred_http or {}
+        record.trace = getattr(record, "trace", inferred_trace) or ""
+        record.http_request = getattr(record, "http_request", inferred_http) or {}
         record.request_method = record.http_request.get('requestMethod', "")
         record.request_url = record.http_request.get('requestUrl', "")
         record.user_agent = record.http_request.get('userAgent', "")

@@ -21,7 +21,6 @@ import json
 import logging.handlers
 
 from google.cloud.logging_v2.handlers._helpers import format_stackdriver_json
-from google.cloud.logging_v2.handlers._helpers import get_request_data
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
 from google.cloud.logging_v2.handlers.handlers import GCP_FORMAT
 
