@@ -15,17 +15,38 @@
 """Logging handler for printing formatted structured logs to standard output.
 """
 
+import math
+import json
+
 import logging.handlers
 
 from google.cloud.logging_v2.handlers._helpers import format_stackdriver_json
+from google.cloud.logging_v2.handlers._helpers import get_request_data
 
+GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(filename)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
+
+
+class GCPFilter(logging.Filter):
+    def filter(self, record):
+        inferred_http, inferred_trace = get_request_data()
+        if not inferred_http:
+            inferred_http = {}
+        if not inferred_trace:
+            inferred_trace = ""
+
+        record.trace = trace_id = inferred_trace
+        record.request_method = inferred_http.get('requestMethod', "")
+        record.request_url = inferred_http.get('requestUrl', "")
+        record.user_agent = inferred_http.get('userAgent', "")
+        record.protocol = inferred_http.get('protocol', "")
+        return True
 
 class StructuredLogHandler(logging.StreamHandler):
     """Handler to format logs into the Cloud Logging structured log format,
     and write them to standard output
     """
 
-    def __init__(self, *, name=None, stream=None):
+    def __init__(self, *, name=None, stream=None, project=None):
         """
         Args:
             name (Optional[str]): The name of the custom log in Cloud Logging.
@@ -33,6 +54,13 @@ class StructuredLogHandler(logging.StreamHandler):
         """
         super(StructuredLogHandler, self).__init__(stream=stream)
         self.name = name
+        self.project_id = project
+
+        # add extra keys to log record
+        self.addFilter(GCPFilter())
+
+        # make logs appear in GCP structured logging format
+        self.formatter = logging.Formatter(GCP_FORMAT)
 
     def format(self, record):
         """Format the message into structured log JSON.
@@ -41,5 +69,6 @@ class StructuredLogHandler(logging.StreamHandler):
         Returns:
             str: A JSON string formatted for GKE fluentd.
         """
-        message = super(StructuredLogHandler, self).format(record)
-        return format_stackdriver_json(record, message)
+
+        payload = self.formatter.format(record)
+        return payload
