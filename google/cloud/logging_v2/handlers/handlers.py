@@ -38,7 +38,7 @@ class CloudLoggingFilter(logging.Filter):
     def __init__(self, project=None, resource=None, labels={}):
         if not resource:
             # infer the correct monitored resource from the local environment
-            resource = detect_resource(client.project)
+            resource = detect_resource(project)
         self.project = project
         self.resource = resource
         self.default_labels = {}
@@ -56,9 +56,8 @@ class CloudLoggingFilter(logging.Filter):
         record.request_url = record.http_request.get('requestUrl', "")
         record.user_agent = record.http_request.get('userAgent', "")
         record.protocol = record.http_request.get('protocol', "")
-        total_labels = getattr(record, "labels", {})
-        total_labels.update(user_labels)
-        record.labels = total_labels
+        record.labels = getattr(record, "labels", {})
+        record.labels.update(self.default_labels)
         return True
 
 class CloudLoggingHandler(logging.StreamHandler):

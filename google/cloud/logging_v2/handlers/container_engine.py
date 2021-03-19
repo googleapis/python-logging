@@ -21,7 +21,7 @@ metadata such as log level is properly captured.
 
 import logging.handlers
 
-from google.cloud.logging_v2.handlers.handlers import StructuredLogHandler
+from google.cloud.logging_v2.handlers.structured_log import StructuredLogHandler
 
 
 class ContainerEngineHandler(StructuredLogHandler):
