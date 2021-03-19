@@ -21,10 +21,10 @@ metadata such as log level is properly captured.
 
 import logging.handlers
 
-from google.cloud.logging_v2.handlers._helpers import format_stackdriver_json
+from google.cloud.logging_v2.handlers.handlers import StructuredLogHandler
 
 
-class ContainerEngineHandler(logging.StreamHandler):
+class ContainerEngineHandler(StructuredLogHandler):
     """Handler to format log messages the format expected by GKE fluent.
 
     This handler is written to format messages for the Google Container Engine
@@ -40,15 +40,3 @@ class ContainerEngineHandler(logging.StreamHandler):
         """
         super(ContainerEngineHandler, self).__init__(stream=stream)
         self.name = name
-
-    def format(self, record):
-        """Format the message into JSON expected by fluentd.
-
-        Args:
-            record (logging.LogRecord): The log record.
-
-        Returns:
-            str: A JSON string formatted for GKE fluentd.
-        """
-        message = super(ContainerEngineHandler, self).format(record)
-        return format_stackdriver_json(record, message)
