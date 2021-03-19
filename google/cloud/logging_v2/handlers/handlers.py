@@ -26,7 +26,6 @@ EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
-GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(filename)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
 
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
@@ -143,11 +142,11 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.transport.send(
             record,
             message,
-            resource=record.resource,
-            labels=record.labels,
-            trace=record.trace,
-            span_id=record.spanId,
-            http_request=record.httpRequest,
+            resource=record.resource if record.resource else None,
+            labels=record.labels if len(record.labels) > 0 else None,
+            trace=record.trace if record.trace else None,
+            span_id=record.spanId if record.spanId else None,
+            http_request=record.httpRequest if len(record.httpRequest) > 0 else None,
         )
 
 

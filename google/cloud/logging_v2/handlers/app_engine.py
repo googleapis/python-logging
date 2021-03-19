@@ -61,10 +61,7 @@ class AppEngineHandler(logging.StreamHandler):
             stream (Optional[IO]): Stream to be used by the handler.
 
         """
-        super(AppEngineHandler, self).__init__(stream)
-        self.name = name
-        self.client = client
-        self.transport = transport(client, name)
+        super(AppEngineHandler, self).__init__(client, transport=transport, name=name, stream=stream)
         self.project_id = os.environ.get(
             _GAE_PROJECT_ENV_FLEX, os.environ.get(_GAE_PROJECT_ENV_STANDARD, "")
         )
@@ -110,16 +107,8 @@ class AppEngineHandler(logging.StreamHandler):
         Args:
             record (logging.LogRecord): The record to be logged.
         """
-        message = super(AppEngineHandler, self).format(record)
         # add AppEngine specific labels
         record.labels.update(self.get_gae_labels())
         # send off request
-        self.transport.send(
-            record,
-            message,
-            resource=record.resource,
-            labels=record.labels,
-            trace=record.trace,
-            span_id=record.spanId,
-            http_request=record.httpRequest,
-        )
+        super(AppEngineHandler, self).emit(record)
+
