@@ -132,7 +132,7 @@ class CloudLoggingHandler(logging.StreamHandler):
             # infer the correct monitored resource from the local environment
             resource = detect_resource(project)
 
-        self.addFilter(CloudLoggingFilter(project, resource, labels))
+        self.addFilter(CloudLoggingFilter(client.project, resource, labels))
 
     def emit(self, record):
         """Actually log the specified logging record.
