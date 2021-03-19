@@ -25,6 +25,7 @@ from google.cloud.logging_v2.handlers._helpers import get_request_data
 from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_app_engine_resource,
 )
+from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 
 _DEFAULT_GAE_LOGGER_NAME = "app"
@@ -71,6 +72,9 @@ class AppEngineHandler(logging.StreamHandler):
         self.version_id = os.environ.get(_GAE_VERSION_ENV, "")
         self.resource = self.get_gae_resource()
 
+        log_filter = CloudLoggingFilter(self.project_id, self.resource)
+        self.addFilter(log_filter)
+
     def get_gae_resource(self):
         """Return the GAE resource using the environment variables.
 
@@ -107,25 +111,15 @@ class AppEngineHandler(logging.StreamHandler):
             record (logging.LogRecord): The record to be logged.
         """
         message = super(AppEngineHandler, self).format(record)
-        inferred_http, inferred_trace = get_request_data()
-        if inferred_trace is not None:
-            inferred_trace = f"projects/{self.project_id}/traces/{inferred_trace}"
-        # allow user overrides
-        trace = getattr(record, "trace", inferred_trace)
-        span_id = getattr(record, "span_id", None)
-        http_request = getattr(record, "http_request", inferred_http)
-        resource = getattr(record, "resource", self.resource)
-        user_labels = getattr(record, "labels", {})
-        # merge labels
-        gae_labels = self.get_gae_labels()
-        gae_labels.update(user_labels)
+        # add AppEngine specific labels
+        record.labels.update(self.get_gae_labels())
         # send off request
         self.transport.send(
             record,
             message,
-            resource=resource,
-            labels=gae_labels,
-            trace=trace,
-            span_id=span_id,
-            http_request=http_request,
+            resource=record.resource,
+            labels=record.labels,
+            trace=record.trace,
+            span_id=record.spanId,
+            http_request=record.httpRequest,
         )

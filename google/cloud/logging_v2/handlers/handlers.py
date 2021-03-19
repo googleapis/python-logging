@@ -36,20 +36,30 @@ class CloudLoggingFilter(logging.Filter):
     http_request related to the request. This data can be overwritten using
     the `extras` argument when writing logs.
     """
-    def __init__(self, project=None):
+    def __init__(self, project=None, resource=None, labels={}):
+        if not resource:
+            # infer the correct monitored resource from the local environment
+            resource = detect_resource(client.project)
         self.project = project
+        self.resource = resource
+        self.default_labels = {}
 
     def filter(self, record):
         inferred_http, inferred_trace = get_request_data()
         if inferred_trace is not None and self.project is not None:
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
 
+        record.resource = getattr(record, "resource", self.resource) or ""
         record.trace = getattr(record, "trace", inferred_trace) or ""
-        record.http_request = getattr(record, "http_request", inferred_http) or {}
+        record.span_id = getattr(record, "spanId", "")
+        record.http_request = getattr(record, "httpRequest", inferred_http) or {}
         record.request_method = record.http_request.get('requestMethod', "")
         record.request_url = record.http_request.get('requestUrl', "")
         record.user_agent = record.http_request.get('userAgent', "")
         record.protocol = record.http_request.get('protocol', "")
+        total_labels = getattr(record, "labels", {})
+        total_labels.update(user_labels)
+        record.labels = total_labels
         return True
 
 class CloudLoggingHandler(logging.StreamHandler):
@@ -112,15 +122,11 @@ class CloudLoggingHandler(logging.StreamHandler):
             stream (Optional[IO]): Stream to be used by the handler.
         """
         super(CloudLoggingHandler, self).__init__(stream)
-        if not resource:
-            # infer the correct monitored resource from the local environment
-            resource = detect_resource(client.project)
         self.name = name
         self.client = client
         self.transport = transport(client, name)
-        self.project_id = client.project
-        self.resource = resource
-        self.labels = labels
+
+        self.addFilter(CloudLoggingFilter(project, resource, labels))
 
     def emit(self, record):
         """Actually log the specified logging record.
@@ -133,25 +139,15 @@ class CloudLoggingHandler(logging.StreamHandler):
             record (logging.LogRecord): The record to be logged.
         """
         message = super(CloudLoggingHandler, self).format(record)
-        trace_id = getattr(record, "trace", None)
-        span_id = getattr(record, "span_id", None)
-        http_request = getattr(record, "http_request", None)
-        resource = getattr(record, "resource", self.resource)
-        user_labels = getattr(record, "labels", {})
-        # merge labels
-        total_labels = self.labels if self.labels is not None else {}
-        total_labels.update(user_labels)
-        if len(total_labels) == 0:
-            total_labels = None
         # send off request
         self.transport.send(
             record,
             message,
-            resource=resource,
-            labels=(total_labels if total_labels else None),
-            trace=trace_id,
-            span_id=span_id,
-            http_request=http_request,
+            resource=record.resource,
+            labels=record.labels,
+            trace=record.trace,
+            span_id=record.spanId,
+            http_request=record.httpRequest,
         )
 
 

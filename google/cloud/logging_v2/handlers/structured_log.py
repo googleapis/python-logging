@@ -22,15 +22,15 @@ import logging.handlers
 
 from google.cloud.logging_v2.handlers._helpers import format_stackdriver_json
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
-from google.cloud.logging_v2.handlers.handlers import GCP_FORMAT
 
+GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(filename)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
 
 class StructuredLogHandler(logging.StreamHandler):
     """Handler to format logs into the Cloud Logging structured log format,
     and write them to standard output
     """
 
-    def __init__(self, *, name=None, stream=None, project=None):
+    def __init__(self, *, name=None, stream=None, project=None, resource=None):
         """
         Args:
             name (Optional[str]): The name of the custom log in Cloud Logging.

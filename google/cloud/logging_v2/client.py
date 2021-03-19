@@ -362,9 +362,9 @@ class Client(ClientWithProject):
             ):
                 # Cloud Functions with runtimes > 3.8 supports structured logs on standard out
                 # 3.7 should use the standard CloudLoggingHandler
-                return StructuredLogHandler(**kw, project=self.project)
+                return StructuredLogHandler(**kw, resource=monitored_resource, project=self.project)
             elif monitored_resource.type == _RUN_RESOURCE_TYPE:
-                return StructuredLogHandler(**kw, project=self.project)
+                return StructuredLogHandler(**kw, resource=monitored_resource, project=self.project)
         return CloudLoggingHandler(self, resource=monitored_resource, **kw)
 
     def setup_logging(
