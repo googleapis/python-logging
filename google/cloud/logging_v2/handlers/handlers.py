@@ -36,9 +36,6 @@ class CloudLoggingFilter(logging.Filter):
     the `extras` argument when writing logs.
     """
     def __init__(self, project=None, resource=None, labels={}):
-        if not resource:
-            # infer the correct monitored resource from the local environment
-            resource = detect_resource(project)
         self.project = project
         self.resource = resource
         self.default_labels = {}
@@ -123,6 +120,10 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.name = name
         self.client = client
         self.transport = transport(client, name)
+
+        if not resource:
+            # infer the correct monitored resource from the local environment
+            resource = detect_resource(project)
 
         self.addFilter(CloudLoggingFilter(project, resource, labels))
 

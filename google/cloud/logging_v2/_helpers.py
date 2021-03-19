@@ -106,7 +106,7 @@ def retrieve_metadata_server(metadata_key):
     url = METADATA_URL + metadata_key
 
     try:
-        response = requests.get(url, headers=METADATA_HEADERS)
+        response = requests.get(url, headers=METADATA_HEADERS, timeout=0.001)
 
         if response.status_code == requests.codes.ok:
             return response.text
