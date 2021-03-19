@@ -61,7 +61,9 @@ class AppEngineHandler(logging.StreamHandler):
             stream (Optional[IO]): Stream to be used by the handler.
 
         """
-        super(AppEngineHandler, self).__init__(client, transport=transport, name=name, stream=stream)
+        super(AppEngineHandler, self).__init__(
+            client, transport=transport, name=name, stream=stream
+        )
         self.project_id = os.environ.get(
             _GAE_PROJECT_ENV_FLEX, os.environ.get(_GAE_PROJECT_ENV_STANDARD, "")
         )
@@ -111,4 +113,3 @@ class AppEngineHandler(logging.StreamHandler):
         record.labels.update(self.get_gae_labels())
         # send off request
         super(AppEngineHandler, self).emit(record)
-

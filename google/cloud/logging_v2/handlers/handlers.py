@@ -22,7 +22,12 @@ from google.cloud.logging_v2.handlers._helpers import get_request_data
 
 DEFAULT_LOGGER_NAME = "python"
 
-EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2", "werkzeug")
+EXCLUDED_LOGGER_DEFAULTS = (
+    "google.cloud",
+    "google.auth",
+    "google_auth_httplib2",
+    "werkzeug",
+)
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
@@ -35,6 +40,7 @@ class CloudLoggingFilter(logging.Filter):
     http_request related to the request. This data can be overwritten using
     the `extras` argument when writing logs.
     """
+
     def __init__(self, project=None, resource=None, labels={}):
         self.project = project
         self.resource = resource
@@ -49,13 +55,14 @@ class CloudLoggingFilter(logging.Filter):
         record.trace = getattr(record, "trace", inferred_trace) or ""
         record.span_id = getattr(record, "spanId", "")
         record.http_request = getattr(record, "httpRequest", inferred_http) or {}
-        record.request_method = record.http_request.get('requestMethod', "")
-        record.request_url = record.http_request.get('requestUrl', "")
-        record.user_agent = record.http_request.get('userAgent', "")
-        record.protocol = record.http_request.get('protocol', "")
+        record.request_method = record.http_request.get("requestMethod", "")
+        record.request_url = record.http_request.get("requestUrl", "")
+        record.user_agent = record.http_request.get("userAgent", "")
+        record.protocol = record.http_request.get("protocol", "")
         record.labels = getattr(record, "labels", {})
         record.labels.update(self.default_labels)
         return True
+
 
 class CloudLoggingHandler(logging.StreamHandler):
     """Handler that directly makes Cloud Logging API calls.
