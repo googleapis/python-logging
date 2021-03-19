@@ -22,7 +22,7 @@ from google.cloud.logging_v2.handlers._helpers import get_request_data
 
 DEFAULT_LOGGER_NAME = "python"
 
-EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2")
+EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2", "werkzeug")
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
