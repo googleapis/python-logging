@@ -107,7 +107,7 @@ class TestLogger(unittest.TestCase):
         ENTRIES = [
             {
                 "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
-                "resource": detect_resource(self.PROJECT)._to_dict(),
+                "resource": {"type": "global", "labels": {}},
                 "labels": DEFAULT_LABELS,
             }
         ]
@@ -178,7 +178,7 @@ class TestLogger(unittest.TestCase):
             detect_resource,
         )
 
-        RESOURCE = detect_resource(self.PROJECT)._to_dict()
+        RESOURCE = {"type": "global", "labels": {}}
         TEXT = "TEXT"
         ENTRIES = [
             {
@@ -201,7 +201,7 @@ class TestLogger(unittest.TestCase):
         )
 
         TEXT = "TEXT"
-        RESOURCE = detect_resource(self.PROJECT)._to_dict()
+        RESOURCE = {"type": "global", "labels": {}}
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
             {
@@ -282,7 +282,7 @@ class TestLogger(unittest.TestCase):
         )
 
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
-        RESOURCE = detect_resource(self.PROJECT)._to_dict()
+        RESOURCE = {"type": "global", "labels": {}}
         ENTRIES = [
             {
                 "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
@@ -304,7 +304,7 @@ class TestLogger(unittest.TestCase):
         )
 
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
-        RESOURCE = detect_resource(self.PROJECT)._to_dict()
+        RESOURCE = {"type": "global", "labels": {}}
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
             {
@@ -392,7 +392,7 @@ class TestLogger(unittest.TestCase):
             {
                 "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
                 "protoPayload": json.loads(MessageToJson(message)),
-                "resource": detect_resource(self.PROJECT)._to_dict(),
+                "resource": {"type": "global", "labels": {}},
             }
         ]
         client = _Client(self.PROJECT)
@@ -417,7 +417,7 @@ class TestLogger(unittest.TestCase):
             {
                 "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
                 "protoPayload": json.loads(MessageToJson(message)),
-                "resource": detect_resource(self.PROJECT)._to_dict(),
+                "resource": {"type": "global", "labels": {}},
                 "labels": DEFAULT_LABELS,
             }
         ]
