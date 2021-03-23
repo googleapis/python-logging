@@ -54,6 +54,7 @@ _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
 _PROJECT_NAME = "project/project-id"
 """Attribute in metadata server when in GKE environment."""
 
+
 def _create_functions_resource():
     """Create a standardized Cloud Functions resource.
     Returns:
