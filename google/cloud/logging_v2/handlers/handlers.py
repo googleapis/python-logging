@@ -82,7 +82,7 @@ class CloudLoggingHandler(logging.StreamHandler):
                 :class:`.BackgroundThreadTransport`. The other
                 option is :class:`.SyncTransport`.
             resource (~logging_v2.resource.Resource):
-                Resource for this Handler. Defaults to ``GLOBAL_RESOURCE``.
+                Resource for this Handler. Defaults to ``global``.
             labels (Optional[dict]): Monitored resource of the entry, defaults
                 to the global resource type.
             stream (Optional[IO]): Stream to be used by the handler.
