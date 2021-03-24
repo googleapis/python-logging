@@ -99,10 +99,6 @@ class TestLogger(unittest.TestCase):
         self.assertIs(batch.client, client2)
 
     def test_log_empty_defaults_w_default_labels(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
-
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
             {
@@ -174,10 +170,6 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
     def test_log_text_defaults(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
-
         RESOURCE = {"type": "global", "labels": {}}
         TEXT = "TEXT"
         ENTRIES = [
@@ -196,10 +188,6 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
     def test_log_text_w_unicode_and_default_labels(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
-
         TEXT = "TEXT"
         RESOURCE = {"type": "global", "labels": {}}
         DEFAULT_LABELS = {"foo": "spam"}
@@ -277,10 +265,6 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
     def test_log_struct_defaults(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
-
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         RESOURCE = {"type": "global", "labels": {}}
         ENTRIES = [
@@ -299,10 +283,6 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
     def test_log_struct_w_default_labels(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
-
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         RESOURCE = {"type": "global", "labels": {}}
         DEFAULT_LABELS = {"foo": "spam"}
@@ -383,9 +363,6 @@ class TestLogger(unittest.TestCase):
         import json
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct, Value
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
 
         message = Struct(fields={"foo": Value(bool_value=True)})
         ENTRIES = [
@@ -407,9 +384,6 @@ class TestLogger(unittest.TestCase):
         import json
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct, Value
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
 
         message = Struct(fields={"foo": Value(bool_value=True)})
         DEFAULT_LABELS = {"foo": "spam"}
