@@ -28,6 +28,7 @@ _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
 GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(filename)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
 
+
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
     information to each LogRecord.
@@ -36,6 +37,7 @@ class CloudLoggingFilter(logging.Filter):
     http_request related to the request. This data can be overwritten using
     the `extras` argument when writing logs.
     """
+
     def __init__(self, project=None):
         self.project = project
 
@@ -46,11 +48,12 @@ class CloudLoggingFilter(logging.Filter):
 
         record.trace = getattr(record, "trace", inferred_trace) or ""
         record.http_request = getattr(record, "http_request", inferred_http) or {}
-        record.request_method = record.http_request.get('requestMethod', "")
-        record.request_url = record.http_request.get('requestUrl', "")
-        record.user_agent = record.http_request.get('userAgent', "")
-        record.protocol = record.http_request.get('protocol', "")
+        record.request_method = record.http_request.get("requestMethod", "")
+        record.request_url = record.http_request.get("requestUrl", "")
+        record.user_agent = record.http_request.get("userAgent", "")
+        record.protocol = record.http_request.get("protocol", "")
         return True
+
 
 class CloudLoggingHandler(logging.StreamHandler):
     """Handler that directly makes Cloud Logging API calls.
