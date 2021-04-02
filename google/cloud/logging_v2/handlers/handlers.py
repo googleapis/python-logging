@@ -42,11 +42,10 @@ class CloudLoggingFilter(logging.Filter):
     the `extras` argument when writing logs.
     """
 
-    def __init__(self, project=None, resource=None, labels={}):
+    def __init__(self, project=None, resource=None, labels=None):
         self.project = project
         self.resource = resource
-        self.default_labels = {}
-        self.default_labels.update(labels)
+        self.default_labels = labels if labels else {}
 
     def filter(self, record):
         inferred_http, inferred_trace = get_request_data()
