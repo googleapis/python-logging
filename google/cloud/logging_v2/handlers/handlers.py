@@ -46,6 +46,7 @@ class CloudLoggingFilter(logging.Filter):
         self.project = project
         self.resource = resource
         self.default_labels = {}
+        self.default_labels.update(labels)
 
     def filter(self, record):
         inferred_http, inferred_trace = get_request_data()
