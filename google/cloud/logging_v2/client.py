@@ -361,7 +361,7 @@ class Client(ClientWithProject):
                 and sys.version_info[1] >= 8
             ):
                 # Cloud Functions with runtimes > 3.8 supports structured logs on standard out
-                # 3.7 should use the standard CloudLoggingHandler
+                # 3.7 should use the standard CloudLoggingHandler, which sends logs over the network.
                 return StructuredLogHandler(
                     **kw, resource=monitored_resource, project=self.project
                 )

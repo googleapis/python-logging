@@ -32,11 +32,12 @@ EXCLUDED_LOGGER_DEFAULTS = (
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
 
+
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
     information to each LogRecord.
 
-    When attached to a LogHanler, each incoming log will receive trace and
+    When attached to a LogHandler, each incoming log will receive trace and
     http_request related to the request. This data can be overwritten using
     the `extras` argument when writing logs.
     """
