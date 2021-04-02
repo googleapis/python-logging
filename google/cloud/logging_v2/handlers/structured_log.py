@@ -27,7 +27,7 @@ class StructuredLogHandler(logging.StreamHandler):
     and write them to standard output
     """
 
-    def __init__(self, *, name=None, stream=None, project=None, resource=None):
+    def __init__(self, *, name=None, stream=None, project=None):
         """
         Args:
             name (Optional[str]): The name of the custom log in Cloud Logging.
