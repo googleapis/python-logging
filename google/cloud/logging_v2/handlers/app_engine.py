@@ -26,6 +26,7 @@ from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_app_engine_resource,
 )
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
+from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 
 _DEFAULT_GAE_LOGGER_NAME = "app"
@@ -38,7 +39,7 @@ _GAE_VERSION_ENV = "GAE_VERSION"
 _TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
 
-class AppEngineHandler(logging.StreamHandler):
+class AppEngineHandler(CloudLoggingHandler):
     """A logging handler that sends App Engine-formatted logs to Stackdriver."""
 
     def __init__(
