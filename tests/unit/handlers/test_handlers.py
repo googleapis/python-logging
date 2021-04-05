@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+from datetime import datetime
 import unittest
 from unittest.mock import patch
 import mock
@@ -21,6 +22,177 @@ from google.cloud.logging_v2.handlers._monitored_resources import (
     _FUNCTION_ENV_VARS,
     _GAE_ENV_VARS,
 )
+
+
+class TestCloudLoggingFilter(unittest.TestCase):
+
+    PROJECT = "PROJECT"
+
+    @staticmethod
+    def _get_target_class():
+        from google.cloud.logging.handlers import CloudLoggingFilter
+
+        return CloudLoggingFilter
+
+    def _make_one(self, *args, **kw):
+        return self._get_target_class()(*args, **kw)
+
+    @staticmethod
+    def create_app():
+        import flask
+
+        app = flask.Flask(__name__)
+
+        @app.route("/")
+        def index():
+            return "test flask trace"  # pragma: NO COVER
+
+        return app
+
+    def test_filter_record(self):
+        """
+        test adding fields to a standard record
+        """
+        import logging
+
+        filter_obj = self._make_one()
+        logname = "loggername"
+        message = "hello world，嗨 世界"
+        pathname = "testpath"
+        lineno = 1
+        func = "test-function"
+        record = logging.LogRecord(
+            logname, logging.INFO, pathname, lineno, message, None, None, func=func
+        )
+        record.created = 5.03
+        iso_timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
+
+        success = filter_obj.filter(record)
+        self.assertTrue(success)
+
+        self.assertEqual(record.lineno, lineno)
+        self.assertEqual(record.msg, message)
+        self.assertEqual(record.funcName, func)
+        self.assertEqual(record.pathname, pathname)
+        self.assertEqual(record.timestamp, iso_timestamp)
+        self.assertEqual(record.trace, "")
+        self.assertEqual(record.http_request, {})
+        self.assertEqual(record.request_method, "")
+        self.assertEqual(record.request_url, "")
+        self.assertEqual(record.user_agent, "")
+        self.assertEqual(record.protocol, "")
+
+    def test_minimal_record(self):
+        """
+        test filter adds empty strings on missing attributes
+        """
+        import logging
+
+        filter_obj = self._make_one()
+        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
+        record.created = None
+
+        success = filter_obj.filter(record)
+        self.assertTrue(success)
+
+        self.assertEqual(record.lineno, 0)
+        self.assertEqual(record.msg, "")
+        self.assertEqual(record.funcName, "")
+        self.assertEqual(record.pathname, "")
+        self.assertEqual(record.timestamp, "")
+        self.assertEqual(record.trace, "")
+        self.assertEqual(record.http_request, {})
+        self.assertEqual(record.request_method, "")
+        self.assertEqual(record.request_url, "")
+        self.assertEqual(record.user_agent, "")
+        self.assertEqual(record.protocol, "")
+
+    def test_record_with_request(self):
+        """
+        test filter adds http request data when available
+        """
+        import logging
+
+        filter_obj = self._make_one()
+        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
+        record.created = None
+
+        expected_path = "http://testserver/123"
+        expected_agent = "Mozilla/5.0"
+        expected_trace = "123"
+        expected_request = {
+            "requestMethod": "PUT",
+            "requestUrl": expected_path,
+            "userAgent": expected_agent,
+            "protocol": "HTTP/1.1",
+        }
+
+        app = self.create_app()
+        with app.test_client() as c:
+            c.put(
+                path=expected_path,
+                data="body",
+                headers={
+                    "User-Agent": expected_agent,
+                    "X_CLOUD_TRACE_CONTEXT": expected_trace,
+                },
+            )
+            success = filter_obj.filter(record)
+            self.assertTrue(success)
+
+            self.assertEqual(record.trace, expected_trace)
+            for key, val in expected_request.items():
+                self.assertEqual(record.http_request[key], val)
+            self.assertEqual(record.request_method, "PUT")
+            self.assertEqual(record.request_url, expected_path)
+            self.assertEqual(record.user_agent, expected_agent)
+            self.assertEqual(record.protocol, "HTTP/1.1")
+
+    def test_user_overrides(self):
+        """
+        ensure user can override fields
+        """
+        import logging
+
+        filter_obj = self._make_one()
+        record = logging.LogRecord(
+            "name", logging.INFO, "default", 99, "message", None, None, func="default"
+        )
+        record.created = 5.03
+
+        app = self.create_app()
+        with app.test_client() as c:
+            c.put(
+                path="http://testserver/123",
+                data="body",
+                headers={"User-Agent": "default", "X_CLOUD_TRACE_CONTEXT": "default"},
+            )
+            # override values
+            overwritten_timestamp = "123"
+            record.timestamp = overwritten_timestamp
+            overwritten_trace = "456"
+            record.trace = overwritten_trace
+            overwritten_method = "GET"
+            overwritten_url = "www.google.com"
+            overwritten_agent = "custom"
+            overwritten_protocol = "test"
+            overwritten_request_object = {
+                "requestMethod": overwritten_method,
+                "requestUrl": overwritten_url,
+                "userAgent": overwritten_agent,
+                "protocol": overwritten_protocol,
+            }
+            record.http_request = overwritten_request_object
+            success = filter_obj.filter(record)
+            self.assertTrue(success)
+
+            self.assertEqual(record.timestamp, overwritten_timestamp)
+            self.assertEqual(record.trace, overwritten_trace)
+            self.assertEqual(record.http_request, overwritten_request_object)
+            self.assertEqual(record.request_method, overwritten_method)
+            self.assertEqual(record.request_url, overwritten_url)
+            self.assertEqual(record.user_agent, overwritten_agent)
+            self.assertEqual(record.protocol, overwritten_protocol)
 
 
 class TestCloudLoggingHandler(unittest.TestCase):
@@ -38,9 +210,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
     def test_ctor_defaults(self):
         import sys
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            _create_global_resource,
-        )
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
         from google.cloud.logging_v2.handlers.handlers import DEFAULT_LOGGER_NAME
 
         patch = mock.patch(
@@ -55,8 +225,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
             self.assertIsInstance(handler.transport, _Transport)
             self.assertIs(handler.transport.client, client)
             self.assertEqual(handler.transport.name, DEFAULT_LOGGER_NAME)
-            global_resource = _create_global_resource(self.PROJECT)
-            self.assertEqual(handler.resource, global_resource)
+            self.assertEqual(handler.resource, _GLOBAL_RESOURCE)
             self.assertIsNone(handler.labels)
             self.assertIs(handler.stream, sys.stderr)
 

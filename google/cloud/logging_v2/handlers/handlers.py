@@ -17,6 +17,8 @@
 import logging
 from datetime import datetime
 
+
+from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
 from google.cloud.logging_v2.handlers._helpers import get_request_data
@@ -26,8 +28,6 @@ DEFAULT_LOGGER_NAME = "python"
 EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2")
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
-
-GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "timestamp": "%(timestamp)s", "thread": %(thread)d, "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(pathname)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
 
 
 class CloudLoggingFilter(logging.Filter):
@@ -43,6 +43,20 @@ class CloudLoggingFilter(logging.Filter):
         self.project = project
 
     def filter(self, record):
+        # ensure record has all required fields set
+        record.lineno = 0 if record.lineno is None else record.lineno
+        record.msg = "" if record.msg is None else record.msg
+        record.funcName = "" if record.funcName is None else record.funcName
+        record.pathname = "" if record.pathname is None else record.pathname
+        if record.created:
+            record.timestamp = getattr(
+                record,
+                "timestamp",
+                datetime.fromtimestamp(record.created).isoformat() + "Z",
+            )
+        else:
+            record.timestamp = ""
+        # find http request data
         inferred_http, inferred_trace = get_request_data()
         if inferred_trace is not None and self.project is not None:
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
@@ -95,7 +109,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         *,
         name=DEFAULT_LOGGER_NAME,
         transport=BackgroundThreadTransport,
-        resource=None,
+        resource=_GLOBAL_RESOURCE,
         labels=None,
         stream=None,
     ):
@@ -114,15 +128,12 @@ class CloudLoggingHandler(logging.StreamHandler):
                 :class:`.BackgroundThreadTransport`. The other
                 option is :class:`.SyncTransport`.
             resource (~logging_v2.resource.Resource):
-                Resource for this Handler. If not given, will be inferred from the environment.
+                Resource for this Handler. Defaults to ``global``.
             labels (Optional[dict]): Monitored resource of the entry, defaults
                 to the global resource type.
             stream (Optional[IO]): Stream to be used by the handler.
         """
         super(CloudLoggingHandler, self).__init__(stream)
-        if not resource:
-            # infer the correct monitored resource from the local environment
-            resource = detect_resource(client.project)
         self.name = name
         self.client = client
         self.transport = transport(client, name)
