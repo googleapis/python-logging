@@ -23,6 +23,7 @@ import logging.handlers
 
 from google.cloud.logging_v2.handlers.structured_log import StructuredLogHandler
 
+
 class ContainerEngineHandler(StructuredLogHandler):
     """Handler to format log messages the format expected by GKE fluent.
 
@@ -39,4 +40,3 @@ class ContainerEngineHandler(StructuredLogHandler):
         """
         super(ContainerEngineHandler, self).__init__(stream=stream)
         self.name = name
-

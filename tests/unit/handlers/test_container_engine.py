@@ -58,11 +58,11 @@ class TestContainerEngineHandler(unittest.TestCase):
             "logging.googleapis.com/sourceLocation": {
                 "file": pathname,
                 "line": str(lineno),
-                "function": func
-            }
+                "function": func,
+            },
         }
         handler.filter(record)
         payload = handler.format(record)
-        result =  json.loads(handler.format(record))
+        result = json.loads(handler.format(record))
         for (key, value) in expected_payload.items():
             self.assertEqual(value, result[key])
