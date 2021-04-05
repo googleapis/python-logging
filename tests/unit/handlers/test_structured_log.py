@@ -133,8 +133,10 @@ class TestStructuredLogHandler(unittest.TestCase):
         )
         expected_path = "http://testserver/123"
         expected_agent = "Mozilla/5.0"
+        expected_trace = "123"
         body_content = "test"
         expected_payload = {
+            "logging.googleapis.com/trace": expected_trace,
             "httpRequest": {
                 "requestMethod": "PUT",
                 "requestUrl": expected_path,
@@ -148,7 +150,8 @@ class TestStructuredLogHandler(unittest.TestCase):
             c.put(
                 path=expected_path,
                 data="body",
-                headers={"User-Agent": expected_agent},
+                headers={"User-Agent": expected_agent,
+                        "X_CLOUD_TRACE_CONTEXT": expected_trace},
             )
             handler.filter(record)
             payload = handler.format(record)
