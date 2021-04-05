@@ -18,8 +18,8 @@
 import logging.handlers
 
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
-from google.cloud.logging_v2.handlers.handlers import GCP_FORMAT
 
+GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(pathname)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
 
 class StructuredLogHandler(logging.StreamHandler):
     """Handler to format logs into the Cloud Logging structured log format,
