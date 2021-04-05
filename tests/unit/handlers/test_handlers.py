@@ -23,6 +23,7 @@ from google.cloud.logging_v2.handlers._monitored_resources import (
     _GAE_ENV_VARS,
 )
 
+
 class TestCloudLoggingFilter(unittest.TestCase):
 
     PROJECT = "PROJECT"
@@ -53,7 +54,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
         test adding fields to a standard record
         """
         import logging
-        import json
+
         filter_obj = self._make_one()
         logname = "loggername"
         message = "hello world，嗨 世界"
@@ -81,23 +82,14 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertEqual(record.user_agent, "")
         self.assertEqual(record.protocol, "")
 
-
-
     def test_minimal_record(self):
         """
         test filter adds empty strings on missing attributes
         """
         import logging
-        import json
+
         filter_obj = self._make_one()
-        logname = "loggername"
-        message = "hello world，嗨 世界"
-        pathname = "testpath"
-        lineno = 1
-        func = "test-function"
-        record = logging.LogRecord(
-            None, logging.INFO, None, None, None, None, None,
-        )
+        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
         record.created = None
 
         success = filter_obj.filter(record)
@@ -120,16 +112,9 @@ class TestCloudLoggingFilter(unittest.TestCase):
         test filter adds http request data when available
         """
         import logging
-        import json
+
         filter_obj = self._make_one()
-        logname = "loggername"
-        message = "hello world，嗨 世界"
-        pathname = "testpath"
-        lineno = 1
-        func = "test-function"
-        record = logging.LogRecord(
-            None, logging.INFO, None, None, None, None, None,
-        )
+        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
         record.created = None
 
         expected_path = "http://testserver/123"
@@ -139,17 +124,18 @@ class TestCloudLoggingFilter(unittest.TestCase):
             "requestMethod": "PUT",
             "requestUrl": expected_path,
             "userAgent": expected_agent,
-            "protocol": "HTTP/1.1"
+            "protocol": "HTTP/1.1",
         }
 
-        body_content = "test"
         app = self.create_app()
         with app.test_client() as c:
             c.put(
                 path=expected_path,
                 data="body",
-                headers={"User-Agent": expected_agent,
-                        "X_CLOUD_TRACE_CONTEXT": expected_trace},
+                headers={
+                    "User-Agent": expected_agent,
+                    "X_CLOUD_TRACE_CONTEXT": expected_trace,
+                },
             )
             success = filter_obj.filter(record)
             self.assertTrue(success)
@@ -167,21 +153,19 @@ class TestCloudLoggingFilter(unittest.TestCase):
         ensure user can override fields
         """
         import logging
-        import json
+
         filter_obj = self._make_one()
         record = logging.LogRecord(
             "name", logging.INFO, "default", 99, "message", None, None, func="default"
         )
         record.created = 5.03
 
-        body_content = "test"
         app = self.create_app()
         with app.test_client() as c:
             c.put(
                 path="http://testserver/123",
                 data="body",
-                headers={"User-Agent": "default",
-                        "X_CLOUD_TRACE_CONTEXT": "default"},
+                headers={"User-Agent": "default", "X_CLOUD_TRACE_CONTEXT": "default"},
             )
             # override values
             overwritten_timestamp = "123"
@@ -196,7 +180,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
                 "requestMethod": overwritten_method,
                 "requestUrl": overwritten_url,
                 "userAgent": overwritten_agent,
-                "protocol": overwritten_protocol
+                "protocol": overwritten_protocol,
             }
             record.http_request = overwritten_request_object
             success = filter_obj.filter(record)

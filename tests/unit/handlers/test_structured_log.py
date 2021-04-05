@@ -70,31 +70,31 @@ class TestStructuredLogHandler(unittest.TestCase):
             "logging.googleapis.com/sourceLocation": {
                 "file": pathname,
                 "line": str(lineno),
-                "function": func
+                "function": func,
             },
             "httpRequest": {
                 "requestMethod": "",
                 "requestUrl": "",
                 "userAgent": "",
-                "protocol": ""
-            }
+                "protocol": "",
+            },
         }
         handler.filter(record)
-        payload = handler.format(record)
-        result =  json.loads(handler.format(record))
+        result = json.loads(handler.format(record))
         for (key, value) in expected_payload.items():
             self.assertEqual(value, result[key])
-        self.assertEqual(len(expected_payload.keys()), len(result.keys()),
-            f"result dictionary has unexpected keys: {result.keys()}")
+        self.assertEqual(
+            len(expected_payload.keys()),
+            len(result.keys()),
+            f"result dictionary has unexpected keys: {result.keys()}",
+        )
 
     def test_format_minimal(self):
         import logging
         import json
 
         handler = self._make_one()
-        record = logging.LogRecord(
-            None, logging.INFO, None, None, None, None, None,
-        )
+        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
         record.created = None
         expected_payload = {
             "message": "",
@@ -103,23 +103,21 @@ class TestStructuredLogHandler(unittest.TestCase):
             "logging.googleapis.com/sourceLocation": {
                 "file": "",
                 "line": "0",
-                "function": ""
+                "function": "",
             },
             "httpRequest": {
                 "requestMethod": "",
                 "requestUrl": "",
                 "userAgent": "",
-                "protocol": ""
-            }
+                "protocol": "",
+            },
         }
         handler.filter(record)
-        payload = handler.format(record)
-        result =  json.loads(handler.format(record))
+        result = json.loads(handler.format(record))
         for (key, value) in expected_payload.items():
-            self.assertEqual(value, result[key],
-                f"expected_payload[{key}] != result[{key}]"
+            self.assertEqual(
+                value, result[key], f"expected_payload[{key}] != result[{key}]"
             )
-
 
     def test_format_with_request(self):
         import logging
@@ -128,21 +126,18 @@ class TestStructuredLogHandler(unittest.TestCase):
         handler = self._make_one()
         logname = "loggername"
         message = "hello world，嗨 世界"
-        record = logging.LogRecord(
-            logname, logging.INFO, "", 0, message, None, None
-        )
+        record = logging.LogRecord(logname, logging.INFO, "", 0, message, None, None)
         expected_path = "http://testserver/123"
         expected_agent = "Mozilla/5.0"
         expected_trace = "123"
-        body_content = "test"
         expected_payload = {
             "logging.googleapis.com/trace": expected_trace,
             "httpRequest": {
                 "requestMethod": "PUT",
                 "requestUrl": expected_path,
                 "userAgent": expected_agent,
-                "protocol": "HTTP/1.1"
-            }
+                "protocol": "HTTP/1.1",
+            },
         }
 
         app = self.create_app()
@@ -150,11 +145,12 @@ class TestStructuredLogHandler(unittest.TestCase):
             c.put(
                 path=expected_path,
                 data="body",
-                headers={"User-Agent": expected_agent,
-                        "X_CLOUD_TRACE_CONTEXT": expected_trace},
+                headers={
+                    "User-Agent": expected_agent,
+                    "X_CLOUD_TRACE_CONTEXT": expected_trace,
+                },
             )
             handler.filter(record)
-            payload = handler.format(record)
-            result =  json.loads(handler.format(record))
+            result = json.loads(handler.format(record))
             for (key, value) in expected_payload.items():
                 self.assertEqual(value, result[key])
