@@ -15,6 +15,7 @@
 """Python :mod:`logging` handlers for Cloud Logging."""
 
 import logging
+from datetime import datetime
 
 
 from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
@@ -52,6 +53,10 @@ class CloudLoggingFilter(logging.Filter):
         record.request_url = record.http_request.get("requestUrl", "")
         record.user_agent = record.http_request.get("userAgent", "")
         record.protocol = record.http_request.get("protocol", "")
+        if record.created:
+            record.timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
+        else:
+            record.timestamp = ""
         return True
 
 
