@@ -166,7 +166,49 @@ class TestCloudLoggingFilter(unittest.TestCase):
         """
         ensure user can override fields
         """
-        pass
+        import logging
+        import json
+        filter_obj = self._make_one()
+        record = logging.LogRecord(
+            "name", logging.INFO, "default", 99, "message", None, None, func="default"
+        )
+        record.created = 5.03
+
+        body_content = "test"
+        app = self.create_app()
+        with app.test_client() as c:
+            c.put(
+                path="http://testserver/123",
+                data="body",
+                headers={"User-Agent": "default",
+                        "X_CLOUD_TRACE_CONTEXT": "default"},
+            )
+            # override values
+            overwritten_timestamp = "123"
+            record.timestamp = overwritten_timestamp
+            overwritten_trace = "456"
+            record.trace = overwritten_trace
+            overwritten_method = "GET"
+            overwritten_url = "www.google.com"
+            overwritten_agent = "custom"
+            overwritten_protocol = "test"
+            overwritten_request_object = {
+                "requestMethod": overwritten_method,
+                "requestUrl": overwritten_url,
+                "userAgent": overwritten_agent,
+                "protocol": overwritten_protocol
+            }
+            record.http_request = overwritten_request_object
+            success = filter_obj.filter(record)
+            self.assertTrue(success)
+
+            self.assertEqual(record.timestamp, overwritten_timestamp)
+            self.assertEqual(record.trace, overwritten_trace)
+            self.assertEqual(record.http_request, overwritten_request_object)
+            self.assertEqual(record.request_method, overwritten_method)
+            self.assertEqual(record.request_url, overwritten_url)
+            self.assertEqual(record.user_agent, overwritten_agent)
+            self.assertEqual(record.protocol, overwritten_protocol)
 
 
 class TestCloudLoggingHandler(unittest.TestCase):

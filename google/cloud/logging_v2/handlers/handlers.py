@@ -49,7 +49,9 @@ class CloudLoggingFilter(logging.Filter):
         record.funcName = "" if record.funcName is None else record.funcName
         record.pathname = "" if record.pathname is None else record.pathname
         if record.created:
-            record.timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
+            record.timestamp = getattr(record, "timestamp",
+                datetime.fromtimestamp(record.created).isoformat() + "Z"
+            )
         else:
             record.timestamp = ""
         # find http request data
