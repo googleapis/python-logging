@@ -43,6 +43,16 @@ class CloudLoggingFilter(logging.Filter):
         self.project = project
 
     def filter(self, record):
+        # ensure record has all required fields set
+        record.lineno = 0 if record.lineno is None else record.lineno
+        record.msg = "" if record.msg is None else record.msg
+        record.funcName = "" if record.funcName is None else record.funcName
+        record.pathname = "" if record.pathname is None else record.pathname
+        if record.created:
+            record.timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
+        else:
+            record.timestamp = ""
+        # find http request data
         inferred_http, inferred_trace = get_request_data()
         if inferred_trace is not None and self.project is not None:
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
@@ -53,10 +63,6 @@ class CloudLoggingFilter(logging.Filter):
         record.request_url = record.http_request.get("requestUrl", "")
         record.user_agent = record.http_request.get("userAgent", "")
         record.protocol = record.http_request.get("protocol", "")
-        if record.created:
-            record.timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
-        else:
-            record.timestamp = ""
         return True
 
 

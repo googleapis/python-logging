@@ -66,6 +66,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             "message": message,
             "timestamp": iso_timestamp,
             "severity": record.levelname,
+            "logging.googleapis.com/trace": "",
             "logging.googleapis.com/sourceLocation": {
                 "file": pathname,
                 "line": str(lineno),
@@ -83,6 +84,42 @@ class TestStructuredLogHandler(unittest.TestCase):
         result =  json.loads(handler.format(record))
         for (key, value) in expected_payload.items():
             self.assertEqual(value, result[key])
+        self.assertEqual(len(expected_payload.keys()), len(result.keys()),
+            f"result dictionary has unexpected keys: {result.keys()}")
+
+    def test_format_minimal(self):
+        import logging
+        import json
+
+        handler = self._make_one()
+        record = logging.LogRecord(
+            None, logging.INFO, None, None, None, None, None,
+        )
+        record.created = None
+        expected_payload = {
+            "message": "",
+            "timestamp": "",
+            "logging.googleapis.com/trace": "",
+            "logging.googleapis.com/sourceLocation": {
+                "file": "",
+                "line": "0",
+                "function": ""
+            },
+            "httpRequest": {
+                "requestMethod": "",
+                "requestUrl": "",
+                "userAgent": "",
+                "protocol": ""
+            }
+        }
+        handler.filter(record)
+        payload = handler.format(record)
+        result =  json.loads(handler.format(record))
+        for (key, value) in expected_payload.items():
+            self.assertEqual(value, result[key],
+                f"expected_payload[{key}] != result[{key}]"
+            )
+
 
     def test_format_with_request(self):
         import logging
