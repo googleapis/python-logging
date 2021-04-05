@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import unittest
+from datetime import datetime
 
 
 class TestContainerEngineHandler(unittest.TestCase):
@@ -41,16 +42,27 @@ class TestContainerEngineHandler(unittest.TestCase):
         handler = self._make_one()
         logname = "loggername"
         message = "hello world，嗨 世界"
+        pathname = "testpath"
+        lineno = 1
+        func = "test-function"
         record = logging.LogRecord(
-            logname, logging.INFO, None, None, message, None, None
+            logname, logging.INFO, pathname, lineno, message, None, None, func=func
         )
         record.created = 5.03
+        iso_timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
         expected_payload = {
             "message": message,
-            "timestamp": {"seconds": 5, "nanos": int(0.03 * 1e9)},
+            "timestamp": iso_timestamp,
             "thread": record.thread,
             "severity": record.levelname,
+            "logging.googleapis.com/sourceLocation": {
+                "file": pathname,
+                "line": str(lineno),
+                "function": func
+            }
         }
+        handler.filter(record)
         payload = handler.format(record)
-
-        self.assertEqual(payload, json.dumps(expected_payload, ensure_ascii=False))
+        result =  json.loads(handler.format(record))
+        for (key, value) in expected_payload.items():
+            self.assertEqual(value, result[key])

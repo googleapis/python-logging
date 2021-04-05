@@ -49,6 +49,5 @@ class StructuredLogHandler(logging.StreamHandler):
         Returns:
             str: A JSON string formatted for GKE fluentd.
         """
-
         payload = self.formatter.format(record)
         return payload

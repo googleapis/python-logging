@@ -15,6 +15,7 @@
 """Python :mod:`logging` handlers for Cloud Logging."""
 
 import logging
+from datetime import datetime
 
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
@@ -26,7 +27,7 @@ EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
-GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(filename)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
+GCP_FORMAT = '{"message": "%(message)s", "severity": "%(levelname)s", "timestamp": "%(timestamp)s", "thread": %(thread)d, "logging.googleapis.com/trace": "%(trace)s", "logging.googleapis.com/sourceLocation": { "file": "%(pathname)s", "line": "%(lineno)d", "function": "%(funcName)s"}, "httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
 
 
 class CloudLoggingFilter(logging.Filter):
@@ -52,6 +53,10 @@ class CloudLoggingFilter(logging.Filter):
         record.request_url = record.http_request.get("requestUrl", "")
         record.user_agent = record.http_request.get("userAgent", "")
         record.protocol = record.http_request.get("protocol", "")
+        if record.created:
+            record.timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
+        else:
+            record.timestamp = "1"
         return True
 
 
