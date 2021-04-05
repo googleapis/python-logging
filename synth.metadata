@@ -4,29 +4,29 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-logging.git",
-        "sha": "42bda27dd3eee2123cbe5b21dd75a587af7a910b"
+        "sha": "7246e7b18d75fe252928d93576fcbb4f3d4be1f2"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "28a591963253d52ce3a25a918cafbdd9928de8cf",
-        "internalRef": "361662015"
+        "sha": "149a3a84c29c9b8189576c7442ccb6dcf6a8f95b",
+        "internalRef": "364411656"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "0780323da96d5a53925fe0547757181fe76e8f1e"
+        "sha": "eda422b90c3dde4a872a13e6b78a8f802c40d0db"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "0780323da96d5a53925fe0547757181fe76e8f1e"
+        "sha": "eda422b90c3dde4a872a13e6b78a8f802c40d0db"
       }
     }
   ],
@@ -132,6 +132,7 @@
     "google/cloud/logging_v2/types/logging.py",
     "google/cloud/logging_v2/types/logging_config.py",
     "google/cloud/logging_v2/types/logging_metrics.py",
+    "logging-v2-py.tar.gz",
     "mypy.ini",
     "noxfile.py",
     "renovate.json",
