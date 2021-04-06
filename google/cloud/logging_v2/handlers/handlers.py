@@ -136,6 +136,8 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.project_id = client.project
         self.resource = resource
         self.labels = labels
+        # add extra keys to log record
+        self.addFilter(CloudLoggingFilter(self.project_id))
 
     def emit(self, record):
         """Actually log the specified logging record.
@@ -169,9 +171,9 @@ class CloudLoggingHandler(logging.StreamHandler):
             message,
             resource=getattr(record, "resource", self.resource),
             labels=(total_labels if total_labels else None),
-            trace= getattr(record, "trace", None),
-            span_id=getattr(record, "span_id", None),
-            http_request=getattr(record, "http_request", None),
+            trace=(record.trace if record.trace else None),
+            span_id=getattr(record, "resource", None),
+            http_request=(record.http_request if record.http_request else None),
             source_location=source_location,
         )
 
