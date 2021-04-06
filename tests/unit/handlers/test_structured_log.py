@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import unittest
-from datetime import datetime
 
 
 class TestStructuredLogHandler(unittest.TestCase):
@@ -60,11 +59,8 @@ class TestStructuredLogHandler(unittest.TestCase):
         record = logging.LogRecord(
             logname, logging.INFO, pathname, lineno, message, None, None, func=func
         )
-        record.created = 5.03
-        iso_timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
         expected_payload = {
             "message": message,
-            "timestamp": iso_timestamp,
             "severity": record.levelname,
             "logging.googleapis.com/trace": "",
             "logging.googleapis.com/sourceLocation": {
@@ -98,7 +94,6 @@ class TestStructuredLogHandler(unittest.TestCase):
         record.created = None
         expected_payload = {
             "message": "",
-            "timestamp": "",
             "logging.googleapis.com/trace": "",
             "logging.googleapis.com/sourceLocation": {
                 "file": "",
