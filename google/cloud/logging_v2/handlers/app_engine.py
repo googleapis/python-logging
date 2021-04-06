@@ -119,6 +119,15 @@ class AppEngineHandler(logging.StreamHandler):
         # merge labels
         gae_labels = self.get_gae_labels()
         gae_labels.update(user_labels)
+        # create source location object
+        if record.lineno and record.funcName and record.pathName:
+            source_location = {
+                "file": record.pathName,
+                "line": str(record.lineno),
+                "function": record.funcName,
+            }
+        else:
+            source_location = None
         # send off request
         self.transport.send(
             record,
@@ -128,4 +137,5 @@ class AppEngineHandler(logging.StreamHandler):
             trace=trace,
             span_id=span_id,
             http_request=http_request,
+            source_location=source_location,
         )
