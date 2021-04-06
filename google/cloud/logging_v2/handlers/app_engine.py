@@ -70,6 +70,8 @@ class AppEngineHandler(logging.StreamHandler):
         self.module_id = os.environ.get(_GAE_SERVICE_ENV, "")
         self.version_id = os.environ.get(_GAE_VERSION_ENV, "")
         self.resource = self.get_gae_resource()
+        # add extra keys to log record
+        self.addFilter(CloudLoggingFilter(self.project_id))
 
     def get_gae_resource(self):
         """Return the GAE resource using the environment variables.
@@ -107,14 +109,6 @@ class AppEngineHandler(logging.StreamHandler):
             record (logging.LogRecord): The record to be logged.
         """
         message = super(AppEngineHandler, self).format(record)
-        inferred_http, inferred_trace = get_request_data()
-        if inferred_trace is not None:
-            inferred_trace = f"projects/{self.project_id}/traces/{inferred_trace}"
-        # allow user overrides
-        trace = getattr(record, "trace", inferred_trace)
-        span_id = getattr(record, "span_id", None)
-        http_request = getattr(record, "http_request", inferred_http)
-        resource = getattr(record, "resource", self.resource)
         user_labels = getattr(record, "labels", {})
         # merge labels
         gae_labels = self.get_gae_labels()
@@ -132,10 +126,10 @@ class AppEngineHandler(logging.StreamHandler):
         self.transport.send(
             record,
             message,
-            resource=resource,
-            labels=gae_labels,
-            trace=trace,
-            span_id=span_id,
-            http_request=http_request,
+            resource=getattr(record, "resource", self.resource),
+            labels=(total_labels if total_labels else None),
+            trace=(record.trace if record.trace else None),
+            span_id=getattr(record, "resource", None),
+            http_request=(record.http_request if record.http_request else None),
             source_location=source_location,
         )
