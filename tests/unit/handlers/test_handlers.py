@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import logging
-from datetime import datetime
 import unittest
 from unittest.mock import patch
 import mock

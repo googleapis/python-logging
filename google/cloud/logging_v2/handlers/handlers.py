@@ -15,8 +15,6 @@
 """Python :mod:`logging` handlers for Cloud Logging."""
 
 import logging
-from datetime import datetime
-
 
 from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
