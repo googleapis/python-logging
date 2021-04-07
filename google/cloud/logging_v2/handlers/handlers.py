@@ -48,14 +48,6 @@ class CloudLoggingFilter(logging.Filter):
         record.msg = "" if record.msg is None else record.msg
         record.funcName = "" if record.funcName is None else record.funcName
         record.pathname = "" if record.pathname is None else record.pathname
-        if record.created:
-            record.timestamp = getattr(
-                record,
-                "timestamp",
-                datetime.fromtimestamp(record.created).isoformat() + "Z",
-            )
-        else:
-            record.timestamp = ""
         # find http request data
         inferred_http, inferred_trace = get_request_data()
         if inferred_trace is not None and self.project is not None:
