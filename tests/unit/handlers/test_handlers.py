@@ -64,8 +64,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
         record = logging.LogRecord(
             logname, logging.INFO, pathname, lineno, message, None, None, func=func
         )
-        record.created = 5.03
-        iso_timestamp = datetime.fromtimestamp(record.created).isoformat() + "Z"
 
         success = filter_obj.filter(record)
         self.assertTrue(success)
@@ -74,7 +72,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertEqual(record.msg, message)
         self.assertEqual(record.funcName, func)
         self.assertEqual(record.pathname, pathname)
-        self.assertEqual(record.timestamp, iso_timestamp)
         self.assertEqual(record.trace, "")
         self.assertEqual(record.http_request, {})
         self.assertEqual(record.request_method, "")
@@ -99,7 +96,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertEqual(record.msg, "")
         self.assertEqual(record.funcName, "")
         self.assertEqual(record.pathname, "")
-        self.assertEqual(record.timestamp, "")
         self.assertEqual(record.trace, "")
         self.assertEqual(record.http_request, {})
         self.assertEqual(record.request_method, "")
@@ -168,8 +164,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
                 headers={"User-Agent": "default", "X_CLOUD_TRACE_CONTEXT": "default"},
             )
             # override values
-            overwritten_timestamp = "123"
-            record.timestamp = overwritten_timestamp
             overwritten_trace = "456"
             record.trace = overwritten_trace
             overwritten_method = "GET"
@@ -186,7 +180,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
             success = filter_obj.filter(record)
             self.assertTrue(success)
 
-            self.assertEqual(record.timestamp, overwritten_timestamp)
             self.assertEqual(record.trace, overwritten_trace)
             self.assertEqual(record.http_request, overwritten_request_object)
             self.assertEqual(record.request_method, overwritten_method)
