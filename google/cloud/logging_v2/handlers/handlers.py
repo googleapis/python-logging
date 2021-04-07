@@ -172,7 +172,7 @@ class CloudLoggingHandler(logging.StreamHandler):
             resource=getattr(record, "resource", self.resource),
             labels=(total_labels if total_labels else None),
             trace=(record.trace if record.trace else None),
-            span_id=getattr(record, "spanId", None),
+            span_id=getattr(record, "span_id", None),
             http_request=(record.http_request if record.http_request else None),
             source_location=source_location,
         )
