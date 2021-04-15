@@ -137,6 +137,8 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.project_id = client.project
         self.resource = resource
         self.labels = labels
+        # add extra keys to log record
+        self.addFilter(CloudLoggingFilter(self.project_id))
 
     def emit(self, record):
         """Actually log the specified logging record.
