@@ -152,7 +152,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         trace_id = getattr(record, "trace", None)
         span_id = getattr(record, "span_id", None)
         http_request = getattr(record, "http_request", None)
-        source_location = getattr(record "source_location", None)
+        source_location = getattr(record, "source_location", None)
         resource = getattr(record, "resource", self.resource)
         user_labels = getattr(record, "labels", {})
         # merge labels
