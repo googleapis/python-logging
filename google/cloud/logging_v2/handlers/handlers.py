@@ -50,6 +50,12 @@ class CloudLoggingFilter(logging.Filter):
             record.line = record.lineno if record.lineno else 0
             record.file = record.pathname if record.pathname else ""
             record.function = record.funcName if record.funcName else ""
+            if any(record.line, record.file, record.function):
+                record.source_location = {
+                    "line": record.line,
+                    "file": record.file,
+                    "function": record.function,
+                }
         record.msg = "" if record.msg is None else record.msg
         # find http request data
         inferred_http, inferred_trace = get_request_data()
@@ -146,6 +152,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         trace_id = getattr(record, "trace", None)
         span_id = getattr(record, "span_id", None)
         http_request = getattr(record, "http_request", None)
+        source_location = getattr(record "source_location", None)
         resource = getattr(record, "resource", self.resource)
         user_labels = getattr(record, "labels", {})
         # merge labels
@@ -162,6 +169,7 @@ class CloudLoggingHandler(logging.StreamHandler):
             trace=trace_id,
             span_id=span_id,
             http_request=http_request,
+            source_location=source_location,
         )
 
 
