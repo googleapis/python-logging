@@ -166,7 +166,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         inferred_path = "http://testserver/123"
         overwrite_trace = "456"
         inferred_trace = "123"
-        overwrite_file = 'test-file'
+        overwrite_file = "test-file"
         record.http_request = {"requestUrl": overwrite_path}
         record.source_location = {"file": overwrite_file}
         record.trace = overwrite_trace
@@ -175,7 +175,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             "logging.googleapis.com/sourceLocation": {
                 "file": overwrite_file,
                 "function": "",
-                "line": "0"
+                "line": "0",
             },
             "httpRequest": {
                 "requestMethod": "",
@@ -190,9 +190,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             c.put(
                 path=inferred_path,
                 data="body",
-                headers={
-                    "X_CLOUD_TRACE_CONTEXT": inferred_trace,
-                },
+                headers={"X_CLOUD_TRACE_CONTEXT": inferred_trace},
             )
             handler.filter(record)
             result = json.loads(handler.format(record))

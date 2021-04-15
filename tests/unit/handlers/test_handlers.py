@@ -181,7 +181,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
             overwritten_source_location = {
                 "file": overwritten_file,
                 "line": overwritten_line,
-                "function": overwritten_function
+                "function": overwritten_function,
             }
             record.http_request = overwritten_request_object
             record.source_location = overwritten_source_location
@@ -268,7 +268,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         )
         logname = "loggername"
         message = "hello world"
-        labels = {'test-key': 'test-value'}
+        labels = {"test-key": "test-value"}
         record = logging.LogRecord(logname, logging, None, None, message, None, None)
         record.labels = labels
         handler.emit(record)
@@ -296,7 +296,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         setattr(record, "span_id", expected_span)
         expected_http = {"reuqest_url": "manual"}
         setattr(record, "http_request", expected_http)
-        expected_source = {'file': 'test-file'}
+        expected_source = {"file": "test-file"}
         setattr(record, "source_location", expected_source)
         expected_resource = Resource(type="test", labels={})
         setattr(record, "resource", expected_resource)
