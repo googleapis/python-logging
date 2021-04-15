@@ -42,10 +42,15 @@ class CloudLoggingFilter(logging.Filter):
 
     def filter(self, record):
         # ensure record has all required fields set
-        record.lineno = 0 if record.lineno is None else record.lineno
+        if hasattr(record, "source_location"):
+            record.line = int(record.source_location.get("line", 0))
+            record.file = record.source_location.get("file", "")
+            record.function = record.source_location.get("function", "")
+        else:
+            record.line = record.lineno if record.lineno else 0
+            record.file = record.pathname if record.pathname else ""
+            record.function = record.funcName if record.funcName else ""
         record.msg = "" if record.msg is None else record.msg
-        record.funcName = "" if record.funcName is None else record.funcName
-        record.pathname = "" if record.pathname is None else record.pathname
         # find http request data
         inferred_http, inferred_trace = get_request_data()
         if inferred_trace is not None and self.project is not None:
