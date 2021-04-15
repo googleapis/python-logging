@@ -196,6 +196,5 @@ class TestStructuredLogHandler(unittest.TestCase):
             )
             handler.filter(record)
             result = json.loads(handler.format(record))
-            breakpoint()
             for (key, value) in expected_payload.items():
                 self.assertEqual(value, result[key])

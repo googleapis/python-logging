@@ -50,7 +50,7 @@ class CloudLoggingFilter(logging.Filter):
             record.line = record.lineno if record.lineno else 0
             record.file = record.pathname if record.pathname else ""
             record.function = record.funcName if record.funcName else ""
-            if any(record.line, record.file, record.function):
+            if any([record.line, record.file, record.function]):
                 record.source_location = {
                     "line": record.line,
                     "file": record.file,
