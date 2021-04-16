@@ -151,11 +151,6 @@ class CloudLoggingHandler(logging.StreamHandler):
             record (logging.LogRecord): The record to be logged.
         """
         message = super(CloudLoggingHandler, self).format(record)
-        trace_id = getattr(record, "trace", None)
-        span_id = getattr(record, "span_id", None)
-        http_request = getattr(record, "http_request", None)
-        source_location = getattr(record, "source_location", None)
-        resource = getattr(record, "resource", self.resource)
         user_labels = getattr(record, "labels", {})
         # merge labels
         total_labels = self.labels if self.labels is not None else {}
@@ -166,12 +161,12 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.transport.send(
             record,
             message,
-            resource=resource,
-            labels=(total_labels if total_labels else None),
-            trace=trace_id,
-            span_id=span_id,
-            http_request=http_request,
-            source_location=source_location,
+            resource=getattr(record, "resource", self.resource),
+            labels=total_labels,
+            trace=getattr(record, "trace", None),
+            span_id=getattr(record, "span_id", None),
+            http_request=getattr(record, "http_request", None),
+            source_location=getattr(record, "source_location", None),
         )
 
 

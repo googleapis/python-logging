@@ -272,7 +272,6 @@ class TestCloudLoggingHandler(unittest.TestCase):
         record = logging.LogRecord(logname, logging, None, None, message, None, None)
         record.labels = labels
         handler.emit(record)
-
         self.assertEqual(
             handler.transport.send_called_with,
             (record, message, _GLOBAL_RESOURCE, labels, None, None, None, None),
