@@ -65,6 +65,7 @@ class CloudLoggingFilter(logging.Filter):
         # set labels
         user_labels = getattr(record, "labels", {})
         record.total_labels = {**self.default_labels, **user_labels}
+        record.total_labels_str = str(record.total_labels)
 
         record.trace = getattr(record, "trace", inferred_trace) or ""
         record.http_request = getattr(record, "http_request", inferred_http) or {}
@@ -139,6 +140,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.transport = transport(client, name)
         self.project_id = client.project
         self.resource = resource
+        self.labels = labels
         # add extra keys to log record
         log_filter = CloudLoggingFilter(project=self.project_id, default_labels=labels)
         self.addFilter(log_filter)
@@ -159,11 +161,11 @@ class CloudLoggingHandler(logging.StreamHandler):
             record,
             message,
             resource=getattr(record, "resource", self.resource),
-            labels=getattr(record, "total_labels", None),
-            trace=getattr(record, "trace", None),
-            span_id=getattr(record, "span_id", None),
-            http_request=getattr(record, "http_request", None),
-            source_location=getattr(record, "source_location", None),
+            labels=getattr(record, "total_labels", None) or None,
+            trace=getattr(record, "trace", None) or None,
+            span_id=getattr(record, "span_id", None) or None,
+            http_request=getattr(record, "http_request", None) or None,
+            source_location=getattr(record, "source_location", None) or None,
         )
 
 

@@ -40,17 +40,18 @@ class TestStructuredLogHandler(unittest.TestCase):
 
     def test_ctor_defaults(self):
         handler = self._make_one()
-        self.assertIsNone(handler.name)
+        self.assertIsNone(handler.project_id)
 
-    def test_ctor_w_name(self):
-        handler = self._make_one(name="foo")
-        self.assertEqual(handler.name, "foo")
+    def test_ctor_w_project(self):
+        handler = self._make_one(project_id="foo")
+        self.assertEqual(handler.project_id, "foo")
 
     def test_format(self):
         import logging
         import json
 
-        handler = self._make_one()
+        labels = {"default_key": "default-value"}
+        handler = self._make_one(labels=labels)
         logname = "loggername"
         message = "hello world，嗨 世界"
         pathname = "testpath"
@@ -74,6 +75,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
+            "logging.googleapis.com/labels": str(labels)
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -106,6 +108,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
+            "logging.googleapis.com/labels": "{}"
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -158,7 +161,8 @@ class TestStructuredLogHandler(unittest.TestCase):
         import logging
         import json
 
-        handler = self._make_one()
+        default_labels = {"default_key": "default-value", "overwritten_key":"bad_value"}
+        handler = self._make_one(labels=default_labels)
         logname = "loggername"
         message = "hello world，嗨 世界"
         record = logging.LogRecord(logname, logging.INFO, "", 0, message, None, None)
@@ -170,6 +174,8 @@ class TestStructuredLogHandler(unittest.TestCase):
         record.http_request = {"requestUrl": overwrite_path}
         record.source_location = {"file": overwrite_file}
         record.trace = overwrite_trace
+        added_labels = {"added_key": "added_value", "overwritten_key":"new_value"}
+        record.labels = added_labels
         expected_payload = {
             "logging.googleapis.com/trace": overwrite_trace,
             "logging.googleapis.com/sourceLocation": {
@@ -183,6 +189,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
+            "logging.googleapis.com/labels": str({"default_key": "default-value", "overwritten_key":"new_value", "added_key": "added_value"})
         }
 
         app = self.create_app()
