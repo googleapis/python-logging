@@ -155,8 +155,10 @@ class TestStructuredLogHandler(unittest.TestCase):
 
     def test_format_overrides(self):
         """
-        Even if the environment provides source_location and http_request values,
-        the handler should prefer user inputs
+        Allow users to override log fields using `logging.info("", extra={})`
+
+        If supported fields were overriden by the user, those choices should
+        take precedence.
         """
         import logging
         import json
