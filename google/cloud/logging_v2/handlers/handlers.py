@@ -65,7 +65,7 @@ class CloudLoggingFilter(logging.Filter):
         # set labels
         user_labels = getattr(record, "labels", {})
         record.total_labels = {**self.default_labels, **user_labels}
-        record.total_labels_str = str(record.total_labels)
+        record.total_labels_str =  ", ".join([f'"{k}": "{v}"' for k,v in record.total_labels.items()])
 
         record.trace = getattr(record, "trace", inferred_trace) or ""
         record.http_request = getattr(record, "http_request", inferred_http) or {}
