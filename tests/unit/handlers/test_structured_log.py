@@ -75,7 +75,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
-            "logging.googleapis.com/labels": str(labels)
+            "logging.googleapis.com/labels": str(labels),
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -108,7 +108,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
-            "logging.googleapis.com/labels": "{}"
+            "logging.googleapis.com/labels": "{}",
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -163,7 +163,10 @@ class TestStructuredLogHandler(unittest.TestCase):
         import logging
         import json
 
-        default_labels = {"default_key": "default-value", "overwritten_key":"bad_value"}
+        default_labels = {
+            "default_key": "default-value",
+            "overwritten_key": "bad_value",
+        }
         handler = self._make_one(labels=default_labels)
         logname = "loggername"
         message = "hello world，嗨 世界"
@@ -176,7 +179,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         record.http_request = {"requestUrl": overwrite_path}
         record.source_location = {"file": overwrite_file}
         record.trace = overwrite_trace
-        added_labels = {"added_key": "added_value", "overwritten_key":"new_value"}
+        added_labels = {"added_key": "added_value", "overwritten_key": "new_value"}
         record.labels = added_labels
         expected_payload = {
             "logging.googleapis.com/trace": overwrite_trace,
@@ -191,7 +194,13 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
-            "logging.googleapis.com/labels": str({"default_key": "default-value", "overwritten_key":"new_value", "added_key": "added_value"})
+            "logging.googleapis.com/labels": str(
+                {
+                    "default_key": "default-value",
+                    "overwritten_key": "new_value",
+                    "added_key": "added_value",
+                }
+            ),
         }
 
         app = self.create_app()

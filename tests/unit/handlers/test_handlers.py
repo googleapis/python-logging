@@ -280,9 +280,15 @@ class TestCloudLoggingHandler(unittest.TestCase):
         from google.cloud.logging_v2.resource import Resource
 
         client = _Client(self.PROJECT)
-        default_labels = {"default_key": "default-value", "overwritten_key":"bad_value"}
+        default_labels = {
+            "default_key": "default-value",
+            "overwritten_key": "bad_value",
+        }
         handler = self._make_one(
-            client, transport=_Transport, resource=_GLOBAL_RESOURCE, labels=default_labels
+            client,
+            transport=_Transport,
+            resource=_GLOBAL_RESOURCE,
+            labels=default_labels,
         )
         logname = "loggername"
         message = "hello world"
@@ -298,8 +304,12 @@ class TestCloudLoggingHandler(unittest.TestCase):
         setattr(record, "source_location", expected_source)
         expected_resource = Resource(type="test", labels={})
         setattr(record, "resource", expected_resource)
-        added_labels = {"added_key": "added_value", "overwritten_key":"new_value"}
-        expected_labels = {"default_key": "default-value", "overwritten_key":"new_value", "added_key": "added_value"}
+        added_labels = {"added_key": "added_value", "overwritten_key": "new_value"}
+        expected_labels = {
+            "default_key": "default-value",
+            "overwritten_key": "new_value",
+            "added_key": "added_value",
+        }
         setattr(record, "labels", added_labels)
         handler.handle(record)
 
