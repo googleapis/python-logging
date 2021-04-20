@@ -75,7 +75,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
-            "logging.googleapis.com/labels": str(labels),
+            "logging.googleapis.com/labels": labels,
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -108,7 +108,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
-            "logging.googleapis.com/labels": "{}",
+            "logging.googleapis.com/labels": {},
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -194,13 +194,11 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "userAgent": "",
                 "protocol": "",
             },
-            "logging.googleapis.com/labels": str(
-                {
-                    "default_key": "default-value",
-                    "overwritten_key": "new_value",
-                    "added_key": "added_value",
-                }
-            ),
+            "logging.googleapis.com/labels": {
+                "default_key": "default-value",
+                "overwritten_key": "new_value",
+                "added_key": "added_value",
+            },
         }
 
         app = self.create_app()
