@@ -16,6 +16,7 @@
 
 import math
 import json
+import re
 
 try:
     import flask
@@ -31,8 +32,6 @@ _DJANGO_REMOTE_ADDR_HEADER = "REMOTE_ADDR"
 _DJANGO_REFERER_HEADER = "HTTP_REFERER"
 _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
 _PROTOCOL_HEADER = "SERVER_PROTOCOL"
-
-_ALHPANUM_REGEX = r'"[\dA-Za-z]*",'
 
 
 def format_stackdriver_json(record, message):
@@ -62,7 +61,7 @@ def get_request_data_from_flask():
             request. Both fields will be None if a flask request isn't found.
     """
     if flask is None or not flask.request:
-        return None, None
+        return None, None, None
 
     # build http_request
     http_request = {
@@ -75,16 +74,21 @@ def get_request_data_from_flask():
         "protocol": flask.request.environ.get(_PROTOCOL_HEADER),
     }
 
-    # find trace id
+    # find trace id and span id
     trace_id = None
+    span_id = None
     header = flask.request.headers.get(_FLASK_TRACE_HEADER)
     if header:
-        trace_id, *extras = header.split("/", 1)[0]
-        if extras:
+        split_header = header.split("/", 1)
+        trace_id = split_header[0]
+        try:
+            header_suffix = split_header[1]
             # the span is the set of alphanumeric characters after the /
-            span_id = re.findall(_ALHPANUM_REGEX, extras[0])[0]
+            span_id = re.findall(r"\w+", header_suffix)[0]
+        except IndexError:
+            pass
 
-    return http_request, trace_id
+    return http_request, trace_id, span_id
 
 
 def get_request_data_from_django():
@@ -98,7 +102,7 @@ def get_request_data_from_django():
     request = _get_django_request()
 
     if request is None:
-        return None, None
+        return None, None, None
 
     # convert content_length to int if it exists
     content_length = None
@@ -117,15 +121,19 @@ def get_request_data_from_django():
         "protocol": request.META.get(_PROTOCOL_HEADER),
     }
 
-    # find trace id
+    # find trace id and span id
     trace_id = None
     span_id = None
     header = request.META.get(_DJANGO_TRACE_HEADER)
     if header:
-        trace_id, *extras = header.split("/", 1)[0]
-        if extras:
+        split_header = header.split("/", 1)
+        trace_id = split_header[0]
+        try:
+            header_suffix = split_header[1]
             # the span is the set of alphanumeric characters after the /
-            span_id = re.findall(_ALHPANUM_REGEX, extras[0])[0]
+            span_id = re.findall(r"\w+", header_suffix)[0]
+        except IndexError:
+            pass
 
     return http_request, trace_id, span_id
 
@@ -149,4 +157,4 @@ def get_request_data():
         if http_request is not None:
             return http_request, trace_id, span_id
 
-    return None, None
+    return None, None, None
