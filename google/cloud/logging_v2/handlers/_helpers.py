@@ -32,6 +32,8 @@ _DJANGO_REFERER_HEADER = "HTTP_REFERER"
 _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
 _PROTOCOL_HEADER = "SERVER_PROTOCOL"
 
+_ALHPANUM_REGEX = r'"[\dA-Za-z]*",'
+
 
 def format_stackdriver_json(record, message):
     """Helper to format a LogRecord in in Stackdriver fluentd format.
@@ -77,7 +79,10 @@ def get_request_data_from_flask():
     trace_id = None
     header = flask.request.headers.get(_FLASK_TRACE_HEADER)
     if header:
-        trace_id = header.split("/", 1)[0]
+        trace_id, *extras = header.split("/", 1)[0]
+        if extras:
+            # the span is the set of alphanumeric characters after the /
+            span_id = re.findall(_ALHPANUM_REGEX, extras[0])[0]
 
     return http_request, trace_id
 
@@ -114,11 +119,15 @@ def get_request_data_from_django():
 
     # find trace id
     trace_id = None
+    span_id = None
     header = request.META.get(_DJANGO_TRACE_HEADER)
     if header:
-        trace_id = header.split("/", 1)[0]
+        trace_id, *extras = header.split("/", 1)[0]
+        if extras:
+            # the span is the set of alphanumeric characters after the /
+            span_id = re.findall(_ALHPANUM_REGEX, extras[0])[0]
 
-    return http_request, trace_id
+    return http_request, trace_id, span_id
 
 
 def get_request_data():
@@ -136,8 +145,8 @@ def get_request_data():
     )
 
     for checker in checkers:
-        http_request, trace_id = checker()
+        http_request, trace_id, span_id = checker()
         if http_request is not None:
-            return http_request, trace_id
+            return http_request, trace_id, span_id
 
     return None, None

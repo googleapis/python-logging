@@ -90,7 +90,7 @@ class AppEngineHandler(logging.StreamHandler):
         """
         gae_labels = {}
 
-        _, trace_id = get_request_data()
+        _, trace_id, _ = get_request_data()
         if trace_id is not None:
             gae_labels[_TRACE_ID_LABEL] = trace_id
 
