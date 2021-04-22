@@ -300,6 +300,7 @@ class Test_get_request_data(unittest.TestCase):
         output = self._call_fut()
         self.assertEqual(output, (None, None, None))
 
+
 class Test__parse_trace_span(unittest.TestCase):
     @staticmethod
     def _call_fut(header):
