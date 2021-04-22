@@ -299,3 +299,65 @@ class Test_get_request_data(unittest.TestCase):
     def test_wo_libraries(self):
         output = self._call_fut()
         self.assertEqual(output, (None, None, None))
+
+class Test__parse_trace_span(unittest.TestCase):
+    @staticmethod
+    def _call_fut(header):
+        from google.cloud.logging_v2.handlers import _helpers
+
+        return _helpers._parse_trace_span(header)
+
+    def test_empty_header(self):
+        header = ""
+        trace_id, span_id = self._call_fut(header)
+        self.assertEqual(trace_id, None)
+        self.assertEqual(span_id, None)
+
+    def test_no_span(self):
+        header = "12345"
+        trace_id, span_id = self._call_fut(header)
+        self.assertEqual(trace_id, header)
+        self.assertEqual(span_id, None)
+
+    def test_no_trace(self):
+        header = "/12345"
+        trace_id, span_id = self._call_fut(header)
+        self.assertEqual(trace_id, "")
+        self.assertEqual(span_id, "12345")
+
+    def test_with_span(self):
+        expected_trace = "12345"
+        expected_span = "67890"
+        header = f"{expected_trace}/{expected_span}"
+        trace_id, span_id = self._call_fut(header)
+        self.assertEqual(trace_id, expected_trace)
+        self.assertEqual(span_id, expected_span)
+
+    def test_with_extra_characters(self):
+        expected_trace = "12345"
+        expected_span = "67890"
+        header = f"{expected_trace}/{expected_span};o=0"
+        trace_id, span_id = self._call_fut(header)
+        self.assertEqual(trace_id, expected_trace)
+        self.assertEqual(span_id, expected_span)
+
+    def test_with_unicode_span(self):
+        """
+        Spans are expected to be alphanumeric
+        """
+        expected_trace = "12345"
+        header = f"{expected_trace}/😀123"
+        trace_id, span_id = self._call_fut(header)
+        self.assertEqual(trace_id, expected_trace)
+        self.assertEqual(span_id, None)
+
+    def test_with_unicode_trace(self):
+        """
+        Spans are expected to be alphanumeric
+        """
+        expected_trace = "12😀345"
+        expected_span = "67890"
+        header = f"{expected_trace}/{expected_span}"
+        trace_id, span_id = self._call_fut(header)
+        self.assertEqual(trace_id, expected_trace)
+        self.assertEqual(span_id, expected_span)
