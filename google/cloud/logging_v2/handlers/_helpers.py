@@ -132,9 +132,9 @@ def _parse_trace_span(header):
     trace_id = None
     span_id = None
     if header:
-        split_header = header.split("/", 1)
-        trace_id = split_header[0]
         try:
+            split_header = header.split("/", 1)
+            trace_id = split_header[0]
             header_suffix = split_header[1]
             # the span is the set of alphanumeric characters after the /
             span_id = re.findall(r"^\w+", header_suffix)[0]
