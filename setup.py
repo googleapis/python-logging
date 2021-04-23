@@ -44,6 +44,7 @@ version = "2.3.1"
 release_status = "Development Status :: 5 - Production/Stable"
 dependencies = [
     "google-api-core[grpc] >= 1.22.2, < 2.0.0dev",
+    "google-cloud-audit-log >= 0.1.0",
     "google-cloud-core >= 1.4.1, < 2.0dev",
     "proto-plus >= 1.11.0",
 ]
