@@ -297,7 +297,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         expected_trace = "123"
         setattr(record, "trace", expected_trace)
         expected_span = "456"
-        setattr(record, "spanId", expected_span)
+        setattr(record, "span_id", expected_span)
         expected_http = {"reuqest_url": "manual"}
         setattr(record, "http_request", expected_http)
         expected_source = {"file": "test-file"}

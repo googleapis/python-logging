@@ -184,7 +184,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         record.http_request = {"requestUrl": overwrite_path}
         record.source_location = {"file": overwrite_file}
         record.trace = overwrite_trace
-        record.spanId = overwrite_span
+        record.span_id = overwrite_span
         added_labels = {"added_key": "added_value", "overwritten_key": "new_value"}
         record.labels = added_labels
         expected_payload = {

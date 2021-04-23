@@ -70,7 +70,7 @@ class CloudLoggingFilter(logging.Filter):
         )
 
         record.trace = getattr(record, "trace", inferred_trace) or ""
-        record.span_id = getattr(record, "spanId", inferred_span) or ""
+        record.span_id = getattr(record, "span_id", inferred_span) or ""
         record.http_request = getattr(record, "http_request", inferred_http) or {}
         record.request_method = record.http_request.get("requestMethod", "")
         record.request_url = record.http_request.get("requestUrl", "")
