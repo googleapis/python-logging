@@ -142,16 +142,16 @@ class TestLogging(unittest.TestCase):
     def _logger_name(prefix):
         return prefix + unique_resource_id("-")
 
-    def test_list_entry_with_unregistered(self):
+    def test_list_entry_with_auditlog(self):
         from google.protobuf import any_pb2
         from google.protobuf import descriptor_pool
         from google.cloud.logging_v2 import entries
 
         pool = descriptor_pool.Default()
         type_name = "google.cloud.audit.AuditLog"
-        # Make sure the descriptor is not known in the registry.
-        with self.assertRaises(KeyError):
-            pool.FindMessageTypeByName(type_name)
+        # Make sure the descriptor is known in the registry.
+        # Raises KeyError if unknown
+        pool.FindMessageTypeByName(type_name)
 
         type_url = "type.googleapis.com/" + type_name
         filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
@@ -161,13 +161,11 @@ class TestLogging(unittest.TestCase):
         protobuf_entry = retry(lambda: next(entry_iter))()
 
         self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
-        if Config.CLIENT._use_grpc:
-            self.assertIsNone(protobuf_entry.payload_json)
-            self.assertIsInstance(protobuf_entry.payload_pb, any_pb2.Any)
-            self.assertEqual(protobuf_entry.payload_pb.type_url, type_url)
-        else:
-            self.assertIsNone(protobuf_entry.payload_pb)
-            self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
+        self.assertIsNone(protobuf_entry.payload_pb)
+        self.assertIsInstance(protobuf_entry.payload_json, dict)
+        self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
+        self.assertEqual(protobuf_entry.to_api_repr()['protoPayload']['@type'], type_url)
+
 
     def test_log_text(self):
         TEXT_PAYLOAD = "System test: test_log_text"
