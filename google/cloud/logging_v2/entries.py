@@ -317,7 +317,7 @@ class ProtobufEntry(LogEntry):
 
     @property
     def payload_json(self):
-        if not isinstance(self.payload, Any):
+        if isinstance(self.payload, dict):
             return self.payload
 
     def to_api_repr(self):
