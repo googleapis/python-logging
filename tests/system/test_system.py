@@ -197,7 +197,7 @@ class TestLogging(unittest.TestCase):
         filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
         entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
 
-        retry = RetryErrors(TooManyRequests, StopIteration)
+        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=6)
         protobuf_entry = retry(lambda: next(entry_iter))()
 
         self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
