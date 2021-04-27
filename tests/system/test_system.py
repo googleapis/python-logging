@@ -330,7 +330,7 @@ class TestLogging(unittest.TestCase):
 
         cloud_logger = logging.getLogger(handler.name)
         cloud_logger.addHandler(handler)
-        cloud_logger.warn(LOG_MESSAGE)
+        cloud_logger.warning(LOG_MESSAGE)
         handler.flush()
         entries = _list_entries(logger)
         expected_payload = {"message": LOG_MESSAGE, "python_logger": handler.name}
@@ -352,7 +352,7 @@ class TestLogging(unittest.TestCase):
         LOGGER_NAME = "mylogger"
         cloud_logger = logging.getLogger(LOGGER_NAME)
         cloud_logger.addHandler(handler)
-        cloud_logger.warn(LOG_MESSAGE)
+        cloud_logger.warning(LOG_MESSAGE)
 
         entries = _list_entries(logger)
         expected_payload = {"message": LOG_MESSAGE, "python_logger": LOGGER_NAME}
@@ -382,7 +382,7 @@ class TestLogging(unittest.TestCase):
                 "resource": Resource(type="cloudiot_device", labels={}),
                 "labels": {"test-label": "manual"},
             }
-            cloud_logger.warn(LOG_MESSAGE, extra=extra)
+            cloud_logger.warning(LOG_MESSAGE, extra=extra)
 
             entries = _list_entries(logger)
             self.assertEqual(len(entries), 1)
@@ -403,7 +403,7 @@ class TestLogging(unittest.TestCase):
         self.to_delete.append(logger)
 
         google.cloud.logging.handlers.handlers.setup_logging(handler)
-        logging.warn(LOG_MESSAGE)
+        logging.warning(LOG_MESSAGE)
 
         entries = _list_entries(logger)
         expected_payload = {"message": LOG_MESSAGE, "python_logger": "root"}
