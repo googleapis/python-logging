@@ -37,7 +37,7 @@ from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
 
-from google.protobuf.struct_pb2 import Struct, Value, ListValue
+from google.protobuf.struct_pb2 import Struct, Value, ListValue, NullValue
 
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
@@ -169,7 +169,6 @@ class TestLogging(unittest.TestCase):
         return Struct(fields={k: TestLogging._to_value(v) for k, v in data.items()})
 
     def test_list_entry_with_auditlog(self):
-        from google.protobuf import any_pb2
         from google.protobuf import descriptor_pool
         from google.cloud.logging_v2 import entries
 

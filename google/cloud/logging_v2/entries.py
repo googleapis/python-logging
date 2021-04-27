@@ -27,8 +27,6 @@ from google.cloud._helpers import _name_from_project_path
 from google.cloud._helpers import _rfc3339_nanos_to_datetime
 from google.cloud._helpers import _datetime_to_rfc3339
 
-import google.cloud.audit.audit_log_pb2
-
 _GLOBAL_RESOURCE = Resource(type="global", labels={})
 
 
