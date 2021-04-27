@@ -16,6 +16,7 @@ from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
 import logging
+import numbers
 import os
 import pytest
 import unittest
@@ -35,6 +36,8 @@ from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
+
+from google.protobuf.struct_pb2 import Struct, Value, ListValue
 
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
@@ -142,6 +145,27 @@ class TestLogging(unittest.TestCase):
     def _logger_name(prefix):
         return prefix + unique_resource_id("-")
 
+    @staticmethod
+    def _to_value(data):
+        if data is None:
+            return Value(null_value=NullValue.NULL_VALUE)
+        elif isinstance(data, numbers.Number):
+            return Value(number_value=data)
+        elif isinstance(data, str):
+            return Value(string_value=data)
+        elif isinstance(data, bool):
+            return Value(bool_value=data)
+        elif isinstance(data, (list, tuple, set)):
+            return Value(list_value=ListValue(values=(TestLogging._to_value(e) for e in data)))
+        elif isinstance(data, dict):
+            return Value(struct_value=TestLogging._dict_to_struct(data))
+        else:
+            raise TypeError('Unknown data type: %r' % type(data))
+
+    @staticmethod
+    def _dict_to_struct(data):
+        return Struct(fields={k: TestLogging._to_value(v) for k, v in data.items()})
+
     def test_list_entry_with_auditlog(self):
         from google.protobuf import any_pb2
         from google.protobuf import descriptor_pool
@@ -149,30 +173,45 @@ class TestLogging(unittest.TestCase):
 
         pool = descriptor_pool.Default()
         type_name = "google.cloud.audit.AuditLog"
+        type_url = "type.googleapis.com/" + type_name
         # Make sure the descriptor is known in the registry.
         # Raises KeyError if unknown
         pool.FindMessageTypeByName(type_name)
 
+        # create log
+        audit_dict = {
+            "@type": type_url,
+            "methodName": "test",
+            "requestMetadata": {
+                "callerIp": "::1",
+                "callerSuppliedUserAgent": "test"
+            },
+            "resourceName": "test",
+            "serviceName": "test",
+            "status": {"code": 0}
+        }
+        audit_struct = self._dict_to_struct(audit_dict)
+
+        logger = Config.CLIENT.logger("audit-proto")
+        logger.log_proto(audit_struct)
+
         # retrieve log
-        type_url = "type.googleapis.com/" + type_name
         filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
-        entry_iter = iter(Config.CLIENT.list_entries(page_size=1, filter_=filter_))
+        entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
 
-        try:
-            retry = RetryErrors(TooManyRequests)
-            protobuf_entry = retry(lambda: next(entry_iter))()
+        retry = RetryErrors(TooManyRequests)
+        protobuf_entry = retry(lambda: next(entry_iter))()
 
-            self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
-            self.assertIsNone(protobuf_entry.payload_pb)
-            self.assertIsInstance(protobuf_entry.payload_json, dict)
-            self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
-            self.assertEqual(protobuf_entry.to_api_repr()['protoPayload']['@type'], type_url)
-        except StopIteration:
-            # AuditLog not found in project
-            # We can't write these ourselves, so just pass the test
-            pass
+        self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
+        self.assertIsNone(protobuf_entry.payload_pb)
+        self.assertIsInstance(protobuf_entry.payload_json, dict)
+        self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
+        self.assertEqual(protobuf_entry.payload_json["methodName"], audit_dict['methodName'])
+        self.assertEqual(protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url)
+        self.assertEqual(protobuf_entry.to_api_repr()["protoPayload"]["methodName"], audit_dict['methodName'])
 
-      def test_log_text(self):
+
+    def test_log_text(self):
         TEXT_PAYLOAD = "System test: test_log_text"
         logger = Config.CLIENT.logger(self._logger_name("log_text"))
         self.to_delete.append(logger)
