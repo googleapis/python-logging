@@ -156,11 +156,13 @@ class TestLogging(unittest.TestCase):
         elif isinstance(data, bool):
             return Value(bool_value=data)
         elif isinstance(data, (list, tuple, set)):
-            return Value(list_value=ListValue(values=(TestLogging._to_value(e) for e in data)))
+            return Value(
+                list_value=ListValue(values=(TestLogging._to_value(e) for e in data))
+            )
         elif isinstance(data, dict):
             return Value(struct_value=TestLogging._dict_to_struct(data))
         else:
-            raise TypeError('Unknown data type: %r' % type(data))
+            raise TypeError("Unknown data type: %r" % type(data))
 
     @staticmethod
     def _dict_to_struct(data):
@@ -182,13 +184,10 @@ class TestLogging(unittest.TestCase):
         audit_dict = {
             "@type": type_url,
             "methodName": "test",
-            "requestMetadata": {
-                "callerIp": "::1",
-                "callerSuppliedUserAgent": "test"
-            },
+            "requestMetadata": {"callerIp": "::1", "callerSuppliedUserAgent": "test"},
             "resourceName": "test",
             "serviceName": "test",
-            "status": {"code": 0}
+            "status": {"code": 0},
         }
         audit_struct = self._dict_to_struct(audit_dict)
 
@@ -206,10 +205,16 @@ class TestLogging(unittest.TestCase):
         self.assertIsNone(protobuf_entry.payload_pb)
         self.assertIsInstance(protobuf_entry.payload_json, dict)
         self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
-        self.assertEqual(protobuf_entry.payload_json["methodName"], audit_dict['methodName'])
-        self.assertEqual(protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url)
-        self.assertEqual(protobuf_entry.to_api_repr()["protoPayload"]["methodName"], audit_dict['methodName'])
-
+        self.assertEqual(
+            protobuf_entry.payload_json["methodName"], audit_dict["methodName"]
+        )
+        self.assertEqual(
+            protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url
+        )
+        self.assertEqual(
+            protobuf_entry.to_api_repr()["protoPayload"]["methodName"],
+            audit_dict["methodName"],
+        )
 
     def test_log_text(self):
         TEXT_PAYLOAD = "System test: test_log_text"

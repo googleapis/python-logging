@@ -503,7 +503,6 @@ class TestStructEntry(unittest.TestCase):
         }
         self.assertEqual(entry.to_api_repr(), expected)
 
-
     def test_to_api_repr_struct(self):
         from google.protobuf.struct_pb2 import Struct, Value
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
@@ -652,6 +651,7 @@ class TestProtobufEntry(unittest.TestCase):
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
         from google.protobuf.struct_pb2 import Struct
         from google.protobuf.struct_pb2 import Value
+
         LOG_NAME = "test.log"
         message = Struct(fields={"foo": Value(bool_value=True)})
 
