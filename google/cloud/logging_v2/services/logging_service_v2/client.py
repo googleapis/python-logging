@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 from collections import OrderedDict
 from distutils import util
 import os
@@ -46,7 +44,6 @@ from google.api import monitored_resource_pb2 as monitored_resource  # type: ign
 from google.cloud.logging_v2.services.logging_service_v2 import pagers
 from google.cloud.logging_v2.types import log_entry
 from google.cloud.logging_v2.types import logging
-
 from .transports.base import LoggingServiceV2Transport, DEFAULT_CLIENT_INFO
 from .transports.grpc import LoggingServiceV2GrpcTransport
 from .transports.grpc_asyncio import LoggingServiceV2GrpcAsyncIOTransport
@@ -387,7 +384,6 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
                 This corresponds to the ``log_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -410,10 +406,8 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging.DeleteLogRequest):
             request = logging.DeleteLogRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if log_name is not None:
                 request.log_name = log_name
 
@@ -543,7 +537,6 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
                 This corresponds to the ``entries`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -570,10 +563,8 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging.WriteLogEntriesRequest):
             request = logging.WriteLogEntriesRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if log_name is not None:
                 request.log_name = log_name
             if resource is not None:
@@ -662,7 +653,6 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
                 This corresponds to the ``order_by`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -693,10 +683,8 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging.ListLogEntriesRequest):
             request = logging.ListLogEntriesRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if resource_names is not None:
                 request.resource_names = resource_names
             if filter is not None:
@@ -735,7 +723,6 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
             request (google.cloud.logging_v2.types.ListMonitoredResourceDescriptorsRequest):
                 The request object. The parameters to
                 ListMonitoredResourceDescriptors
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -752,7 +739,6 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging.ListMonitoredResourceDescriptorsRequest.
         # There's no risk of modifying the input as we've already verified
@@ -807,7 +793,6 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -838,10 +823,8 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging.ListLogsRequest):
             request = logging.ListLogsRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
 

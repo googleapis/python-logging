@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 from collections import OrderedDict
 from distutils import util
 import os
@@ -36,7 +34,6 @@ from google.cloud.logging_v2.services.config_service_v2 import pagers
 from google.cloud.logging_v2.types import logging_config
 from google.protobuf import field_mask_pb2 as field_mask  # type: ignore
 from google.protobuf import timestamp_pb2 as timestamp  # type: ignore
-
 from .transports.base import ConfigServiceV2Transport, DEFAULT_CLIENT_INFO
 from .transports.grpc import ConfigServiceV2GrpcTransport
 from .transports.grpc_asyncio import ConfigServiceV2GrpcAsyncIOTransport
@@ -428,7 +425,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -459,10 +455,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.ListBucketsRequest):
             request = logging_config.ListBucketsRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
 
@@ -501,7 +495,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.GetBucketRequest):
                 The request object. The parameters to `GetBucket`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -513,7 +506,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 Describes a repository of logs.
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.GetBucketRequest.
         # There's no risk of modifying the input as we've already verified
@@ -552,7 +544,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.CreateBucketRequest):
                 The request object. The parameters to `CreateBucket`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -564,7 +555,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 Describes a repository of logs.
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.CreateBucketRequest.
         # There's no risk of modifying the input as we've already verified
@@ -611,7 +601,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.UpdateBucketRequest):
                 The request object. The parameters to `UpdateBucket`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -623,7 +612,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 Describes a repository of logs.
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.UpdateBucketRequest.
         # There's no risk of modifying the input as we've already verified
@@ -662,7 +650,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.DeleteBucketRequest):
                 The request object. The parameters to `DeleteBucket`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -670,7 +657,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 sent along with the request as metadata.
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.DeleteBucketRequest.
         # There's no risk of modifying the input as we've already verified
@@ -707,7 +693,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.UndeleteBucketRequest):
                 The request object. The parameters to `UndeleteBucket`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -715,7 +700,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 sent along with the request as metadata.
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.UndeleteBucketRequest.
         # There's no risk of modifying the input as we've already verified
@@ -762,7 +746,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -793,10 +776,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.ListViewsRequest):
             request = logging_config.ListViewsRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
 
@@ -835,7 +816,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.GetViewRequest):
                 The request object. The parameters to `GetView`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -849,7 +829,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.GetViewRequest.
         # There's no risk of modifying the input as we've already verified
@@ -887,7 +866,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.CreateViewRequest):
                 The request object. The parameters to `CreateView`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -901,7 +879,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.CreateViewRequest.
         # There's no risk of modifying the input as we've already verified
@@ -939,7 +916,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.UpdateViewRequest):
                 The request object. The parameters to `UpdateView`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -953,7 +929,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.UpdateViewRequest.
         # There's no risk of modifying the input as we've already verified
@@ -990,7 +965,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Args:
             request (google.cloud.logging_v2.types.DeleteViewRequest):
                 The request object. The parameters to `DeleteView`.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -998,7 +972,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 sent along with the request as metadata.
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.DeleteViewRequest.
         # There's no risk of modifying the input as we've already verified
@@ -1049,7 +1022,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1080,10 +1052,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.ListSinksRequest):
             request = logging_config.ListSinksRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
 
@@ -1138,7 +1108,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``sink_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1174,10 +1143,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.GetSinkRequest):
             request = logging_config.GetSinkRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if sink_name is not None:
                 request.sink_name = sink_name
 
@@ -1241,7 +1208,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``sink`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1277,10 +1243,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.CreateSinkRequest):
             request = logging_config.CreateSinkRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
             if sink is not None:
@@ -1366,7 +1330,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1402,10 +1365,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.UpdateSinkRequest):
             request = logging_config.UpdateSinkRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if sink_name is not None:
                 request.sink_name = sink_name
             if sink is not None:
@@ -1462,7 +1423,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``sink_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1485,10 +1445,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.DeleteSinkRequest):
             request = logging_config.DeleteSinkRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if sink_name is not None:
                 request.sink_name = sink_name
 
@@ -1537,7 +1495,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1568,10 +1525,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.ListExclusionsRequest):
             request = logging_config.ListExclusionsRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
 
@@ -1627,7 +1582,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1665,10 +1619,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.GetExclusionRequest):
             request = logging_config.GetExclusionRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if name is not None:
                 request.name = name
 
@@ -1731,7 +1683,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``exclusion`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1769,10 +1720,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.CreateExclusionRequest):
             request = logging_config.CreateExclusionRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
             if exclusion is not None:
@@ -1849,7 +1798,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1887,10 +1835,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.UpdateExclusionRequest):
             request = logging_config.UpdateExclusionRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if name is not None:
                 request.name = name
             if exclusion is not None:
@@ -1945,7 +1891,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1968,10 +1913,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_config.DeleteExclusionRequest):
             request = logging_config.DeleteExclusionRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if name is not None:
                 request.name = name
 
@@ -2015,7 +1958,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 See [Enabling CMEK for Logs
                 Router](https://cloud.google.com/logging/docs/routing/managed-
                 encryption) for more information.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -2039,7 +1981,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.GetCmekSettingsRequest.
         # There's no risk of modifying the input as we've already verified
@@ -2094,7 +2035,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
                 See [Enabling CMEK for Logs
                 Router](https://cloud.google.com/logging/docs/routing/managed-
                 encryption) for more information.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -2118,7 +2058,6 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-
         # Minor optimization to avoid making a copy if the user passes
         # in a logging_config.UpdateCmekSettingsRequest.
         # There's no risk of modifying the input as we've already verified

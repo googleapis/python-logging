@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 from collections import OrderedDict
 from distutils import util
 import os
@@ -38,7 +36,6 @@ from google.api import metric_pb2 as metric  # type: ignore
 from google.cloud.logging_v2.services.metrics_service_v2 import pagers
 from google.cloud.logging_v2.types import logging_metrics
 from google.protobuf import timestamp_pb2 as timestamp  # type: ignore
-
 from .transports.base import MetricsServiceV2Transport, DEFAULT_CLIENT_INFO
 from .transports.grpc import MetricsServiceV2GrpcTransport
 from .transports.grpc_asyncio import MetricsServiceV2GrpcAsyncIOTransport
@@ -369,7 +366,6 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -400,10 +396,8 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_metrics.ListLogMetricsRequest):
             request = logging_metrics.ListLogMetricsRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
 
@@ -453,7 +447,6 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
                 This corresponds to the ``metric_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -491,10 +484,8 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_metrics.GetLogMetricRequest):
             request = logging_metrics.GetLogMetricRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if metric_name is not None:
                 request.metric_name = metric_name
 
@@ -552,7 +543,6 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
                 This corresponds to the ``metric`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -590,10 +580,8 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_metrics.CreateLogMetricRequest):
             request = logging_metrics.CreateLogMetricRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if parent is not None:
                 request.parent = parent
             if metric is not None:
@@ -650,7 +638,6 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
                 This corresponds to the ``metric`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -688,10 +675,8 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_metrics.UpdateLogMetricRequest):
             request = logging_metrics.UpdateLogMetricRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if metric_name is not None:
                 request.metric_name = metric_name
             if metric is not None:
@@ -739,7 +724,6 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
                 This corresponds to the ``metric_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -762,10 +746,8 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         # there are no flattened fields.
         if not isinstance(request, logging_metrics.DeleteLogMetricRequest):
             request = logging_metrics.DeleteLogMetricRequest(request)
-
             # If we have keyword arguments corresponding to fields on the
             # request, apply these.
-
             if metric_name is not None:
                 request.metric_name = metric_name
 
