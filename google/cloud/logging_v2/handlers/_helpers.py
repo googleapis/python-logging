@@ -121,7 +121,7 @@ def get_request_data_from_django():
 
 
 def _parse_trace_span(header):
-    """Given an X_CLOUD_TRACE header, extrace the trace and span ids.
+    """Given an X_CLOUD_TRACE header, extract the trace and span ids.
 
     Args:
         header (str): the string extracted from the X_CLOUD_TRACE header
