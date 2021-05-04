@@ -53,8 +53,9 @@ class CloudLoggingFilter(logging.Filter):
             name_map =[("line", "lineno"), ("file", "pathname"), ("function", "funcName")]
             output = {}
             for (gcp_name, std_lib_name) in name_map:
-                if hasattr(record, std_lib_name):
-                    output[gcp_name] = getattr(record, std_lib_name)
+                value = getattr(record, std_lib_name, None)
+                if value is not None:
+                    output[gcp_name] = value
             return output if output else None
 
     def filter(self, record):
@@ -66,11 +67,12 @@ class CloudLoggingFilter(logging.Filter):
         if inferred_trace is not None and self.project is not None:
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
         # set new record values
+        record._resource = getattr(record, "resource", None)
         record._trace = getattr(record, "trace", inferred_trace) or None
         record._span_id = getattr(record, "span_id", inferred_span) or None
         record._http_request = getattr(record, "http_request", inferred_http)
         record._source_location = CloudLoggingFilter._infer_source_location(record)
-        record._labels = {**self.default_labels, **user_labels}
+        record._labels = {**self.default_labels, **user_labels} or None
         # create guaranteed string representations for structured logging
         record._msg_str = record.msg or ""
         record._trace_str = record._trace or ""
@@ -165,12 +167,12 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.transport.send(
             record,
             message,
-            resource=getattr(record, "_resource", self.resource),
-            labels=getattr(record, "_total_labels", None),
-            trace=getattr(record, "_trace", None),
-            span_id=getattr(record, "_span_id", None),
-            http_request=getattr(record, "_http_request", None),
-            source_location=getattr(record, "_source_location", None),
+            resource=(record._resource or self.resource),
+            labels=record._labels,
+            trace=record._trace,
+            span_id=record._span_id,
+            http_request=record._http_request,
+            source_location=record._source_location,
         )
 
 
