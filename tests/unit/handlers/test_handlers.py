@@ -64,7 +64,14 @@ class TestCloudLoggingFilter(unittest.TestCase):
             "function": "test-function",
         }
         record = logging.LogRecord(
-            logname, logging.INFO, expected_location['file'], expected_location['line'], message, None, None, func=expected_location['function']
+            logname,
+            logging.INFO,
+            expected_location["file"],
+            expected_location["line"],
+            message,
+            None,
+            None,
+            func=expected_location["function"],
         )
 
         success = filter_obj.filter(record)
@@ -207,9 +214,13 @@ class TestCloudLoggingFilter(unittest.TestCase):
             self.assertEqual(record._span_id, overwritten_span)
             self.assertEqual(record._span_id_str, overwritten_span)
             self.assertEqual(record._http_request, overwritten_request_object)
-            self.assertEqual(record._http_request_str, json.dumps(overwritten_request_object))
+            self.assertEqual(
+                record._http_request_str, json.dumps(overwritten_request_object)
+            )
             self.assertEqual(record._source_location, overwritten_source_location)
-            self.assertEqual(record._source_location_str, json.dumps(overwritten_source_location))
+            self.assertEqual(
+                record._source_location_str, json.dumps(overwritten_source_location)
+            )
             self.assertEqual(record._resource, overwritten_resource)
 
 

@@ -50,7 +50,11 @@ class CloudLoggingFilter(logging.Filter):
         if hasattr(record, "source_location"):
             return record.source_location
         else:
-            name_map =[("line", "lineno"), ("file", "pathname"), ("function", "funcName")]
+            name_map = [
+                ("line", "lineno"),
+                ("file", "pathname"),
+                ("function", "funcName"),
+            ]
             output = {}
             for (gcp_name, std_lib_name) in name_map:
                 value = getattr(record, std_lib_name, None)

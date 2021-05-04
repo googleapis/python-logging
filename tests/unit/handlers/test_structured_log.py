@@ -176,12 +176,8 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_payload = {
             "logging.googleapis.com/trace": overwrite_trace,
             "logging.googleapis.com/spanId": overwrite_span,
-            "logging.googleapis.com/sourceLocation": {
-                "file": overwrite_file,
-            },
-            "httpRequest": {
-                "requestUrl": overwrite_path,
-            },
+            "logging.googleapis.com/sourceLocation": {"file": overwrite_file},
+            "httpRequest": {"requestUrl": overwrite_path},
             "logging.googleapis.com/labels": {
                 "default_key": "default-value",
                 "overwritten_key": "new_value",
