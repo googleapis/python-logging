@@ -46,7 +46,9 @@ class CloudLoggingFilter(logging.Filter):
         Helper function to print a dictionary in the format expected by Cloud Logging
         https://cloud.google.com/logging/docs/structured-logging
         """
-        inner_str =  ", ".join([f'"{k}": "{v}"' for k, v in input_dict.items()])
+        inner_str = ""
+        if input_dict is not None:
+            inner_str =  ", ".join([f'"{k}": "{v}"' for k, v in input_dict.items()])
         return "{{ {0} }}".format(inner_str)
 
     def _infer_source_location(record):
@@ -61,25 +63,26 @@ class CloudLoggingFilter(logging.Filter):
             for (gcp_name, std_lib_name) in name_map:
                 if hasattr(record, std_lib_name):
                     output[gcp_name] = getattr(record, std_lib_name)
-            return output
+            return output if output else None
 
     def filter(self, record):
-        record.msg = "" if record.msg is None else record.msg
-
         user_labels = getattr(record, "labels", {})
         inferred_http, inferred_trace, inferred_span = get_request_data()
         if inferred_trace is not None and self.project is not None:
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
         # set new record values
-        record._trace = getattr(record, "trace", inferred_trace) or ""
-        record._span_id = getattr(record, "span_id", inferred_span) or ""
-        record._http_request = getattr(record, "http_request", inferred_http) or {}
+        record._trace = getattr(record, "trace", inferred_trace) or None
+        record._span_id = getattr(record, "span_id", inferred_span) or None
+        record._http_request = getattr(record, "http_request", inferred_http)
         record._source_location = _infer_source_location(record)
         record._labels = {**self.default_labels, **user_labels}
-        # create string representations for structured logging
+        # create guaranteed string representations for structured logging
+        record._msg_str = record.msg or ""
+        record._trace_str = record._trace or ""
+        record._span_id_str = record._span_id or ""
+        record._http_request_str = _dict_to_string(_http_request)
         record._source_location_str = _dict_to_string(record._source_location)
         record._labels_str = _dict_to_string(record._labels)
-        record._http_request_str = _dict_to_string(_http_request)
         return True
 
 
@@ -168,11 +171,11 @@ class CloudLoggingHandler(logging.StreamHandler):
             record,
             message,
             resource=getattr(record, "_resource", self.resource),
-            labels=getattr(record, "_total_labels", None) or None,
-            trace=getattr(record, "_trace", None) or None,
-            span_id=getattr(record, "_span_id", None) or None,
-            http_request=getattr(record, "_http_request", None) or None,
-            source_location=getattr(record, "_source_location", None) or None,
+            labels=getattr(record, "_total_labels", None),
+            trace=getattr(record, "_trace", None),
+            span_id=getattr(record, "_span_id", None),
+            http_request=getattr(record, "_http_request", None),
+            source_location=getattr(record, "_source_location", None),
         )
 
 
