@@ -44,19 +44,16 @@ class CloudLoggingFilter(logging.Filter):
     def filter(self, record):
         # ensure record has all required fields set
         if hasattr(record, "source_location"):
-            record._line = int(record.source_location.get("line", 0))
-            record._file = record.source_location.get("file", "")
-            record._function = record.source_location.get("function", "")
+            record._source_location = record.source_location
         else:
-            record._line = record.lineno if record.lineno else 0
-            record._file = record.pathname if record.pathname else ""
-            record._function = record.funcName if record.funcName else ""
-        if any([record._line, record._file, record._function]):
-            record._source_location = {
-                "line": record._line,
-                "file": record._file,
-                "function": record._function,
-            }
+            record._source_location = {}
+            name_map =[("line", "lineno"), ("file", "pathname"), ("function", "funcName")]
+            for (gcp_name, std_lib_name) in name_map:
+                if hasattr(record, std_lib_name):
+                    record.source_location[gcp_name] = getattr(record, std_lib_name)
+        record._source_location_str = ", ".join(
+            [f'"{k}": "{v}"' for k, v in record._source_location.items()]
+        )
         record._msg = "" if record.msg is None else record.msg
         # find http request data
         inferred_http, inferred_trace, inferred_span = get_request_data()
@@ -72,10 +69,9 @@ class CloudLoggingFilter(logging.Filter):
         record._trace = getattr(record, "trace", inferred_trace) or ""
         record._span_id = getattr(record, "span_id", inferred_span) or ""
         record._http_request = getattr(record, "http_request", inferred_http) or {}
-        record._request_method = record._http_request.get("requestMethod", "")
-        record._request_url = record._http_request.get("requestUrl", "")
-        record._user_agent = record._http_request.get("userAgent", "")
-        record._protocol = record._http_request.get("protocol", "")
+        record._http_request_str = ", ".join(
+            [f'"{k}": "{v}"' for k, v in record._http_request.items()]
+        )
         return True
 
 

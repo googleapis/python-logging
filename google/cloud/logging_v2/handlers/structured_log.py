@@ -25,8 +25,8 @@ GCP_FORMAT = (
     '"logging.googleapis.com/labels": { %(_labels_str)s }, '
     '"logging.googleapis.com/trace": "%(_trace)s", '
     '"logging.googleapis.com/spanId": "%(_span_id)s", '
-    '"logging.googleapis.com/sourceLocation": { "file": "%(_file)s", "line": "%(_line)d", "function": "%(_function)s"}, '
-    '"httpRequest": {"requestMethod": "%(_request_method)s", "requestUrl": "%(_request_url)s", "userAgent": "%(_user_agent)s", "protocol": "%(_protocol)s"} }'
+    '"logging.googleapis.com/sourceLocation": { %(_source_location_str)s }, '
+    '"httpRequest": { %(_http_request_str)s }'
 )
 
 
