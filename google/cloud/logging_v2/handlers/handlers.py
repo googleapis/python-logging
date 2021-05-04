@@ -44,38 +44,38 @@ class CloudLoggingFilter(logging.Filter):
     def filter(self, record):
         # ensure record has all required fields set
         if hasattr(record, "source_location"):
-            record.line = int(record.source_location.get("line", 0))
-            record.file = record.source_location.get("file", "")
-            record.function = record.source_location.get("function", "")
+            record._line = int(record.source_location.get("line", 0))
+            record._file = record.source_location.get("file", "")
+            record._function = record.source_location.get("function", "")
         else:
-            record.line = record.lineno if record.lineno else 0
-            record.file = record.pathname if record.pathname else ""
-            record.function = record.funcName if record.funcName else ""
-            if any([record.line, record.file, record.function]):
-                record.source_location = {
-                    "line": record.line,
-                    "file": record.file,
-                    "function": record.function,
-                }
-        record.msg = "" if record.msg is None else record.msg
+            record._line = record.lineno if record.lineno else 0
+            record._file = record.pathname if record.pathname else ""
+            record._function = record.funcName if record.funcName else ""
+        if any([record._line, record._file, record._function]):
+            record._source_location = {
+                "line": record._line,
+                "file": record._file,
+                "function": record._function,
+            }
+        record._msg = "" if record.msg is None else record.msg
         # find http request data
         inferred_http, inferred_trace, inferred_span = get_request_data()
         if inferred_trace is not None and self.project is not None:
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
         # set labels
         user_labels = getattr(record, "labels", {})
-        record.total_labels = {**self.default_labels, **user_labels}
-        record.total_labels_str = ", ".join(
-            [f'"{k}": "{v}"' for k, v in record.total_labels.items()]
+        record._labels = {**self.default_labels, **user_labels}
+        record._labels_str = ", ".join(
+            [f'"{k}": "{v}"' for k, v in record._labels.items()]
         )
 
-        record.trace = getattr(record, "trace", inferred_trace) or ""
-        record.span_id = getattr(record, "span_id", inferred_span) or ""
-        record.http_request = getattr(record, "http_request", inferred_http) or {}
-        record.request_method = record.http_request.get("requestMethod", "")
-        record.request_url = record.http_request.get("requestUrl", "")
-        record.user_agent = record.http_request.get("userAgent", "")
-        record.protocol = record.http_request.get("protocol", "")
+        record._trace = getattr(record, "trace", inferred_trace) or ""
+        record._span_id = getattr(record, "span_id", inferred_span) or ""
+        record._http_request = getattr(record, "http_request", inferred_http) or {}
+        record._request_method = record._http_request.get("requestMethod", "")
+        record._request_url = record._http_request.get("requestUrl", "")
+        record._user_agent = record._http_request.get("userAgent", "")
+        record._protocol = record._http_request.get("protocol", "")
         return True
 
 
@@ -163,12 +163,12 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.transport.send(
             record,
             message,
-            resource=getattr(record, "resource", self.resource),
-            labels=getattr(record, "total_labels", None) or None,
-            trace=getattr(record, "trace", None) or None,
-            span_id=getattr(record, "span_id", None) or None,
-            http_request=getattr(record, "http_request", None) or None,
-            source_location=getattr(record, "source_location", None) or None,
+            resource=getattr(record, "_resource", self.resource),
+            labels=getattr(record, "_total_labels", None) or None,
+            trace=getattr(record, "_trace", None) or None,
+            span_id=getattr(record, "_span_id", None) or None,
+            http_request=getattr(record, "_http_request", None) or None,
+            source_location=getattr(record, "_source_location", None) or None,
         )
 
 

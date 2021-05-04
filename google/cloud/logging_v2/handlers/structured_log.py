@@ -22,11 +22,11 @@ from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
 GCP_FORMAT = (
     '{"message": "%(message)s", '
     '"severity": "%(levelname)s", '
-    '"logging.googleapis.com/labels": { %(total_labels_str)s }, '
-    '"logging.googleapis.com/trace": "%(trace)s", '
-    '"logging.googleapis.com/spanId": "%(span_id)s", '
-    '"logging.googleapis.com/sourceLocation": { "file": "%(file)s", "line": "%(line)d", "function": "%(function)s"}, '
-    '"httpRequest": {"requestMethod": "%(request_method)s", "requestUrl": "%(request_url)s", "userAgent": "%(user_agent)s", "protocol": "%(protocol)s"} }'
+    '"logging.googleapis.com/labels": { %(_labels_str)s }, '
+    '"logging.googleapis.com/trace": "%(_trace)s", '
+    '"logging.googleapis.com/spanId": "%(_span_id)s", '
+    '"logging.googleapis.com/sourceLocation": { "file": "%(_file)s", "line": "%(_line)d", "function": "%(_function)s"}, '
+    '"httpRequest": {"requestMethod": "%(_request_method)s", "requestUrl": "%(_request_url)s", "userAgent": "%(_user_agent)s", "protocol": "%(_protocol)s"} }'
 )
 
 
