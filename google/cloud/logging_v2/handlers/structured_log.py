@@ -26,7 +26,7 @@ GCP_FORMAT = (
     '"logging.googleapis.com/trace": "%(_trace_str)s", '
     '"logging.googleapis.com/spanId": "%(_span_id_str)s", '
     '"logging.googleapis.com/sourceLocation": %(_source_location_str)s, '
-    '"httpRequest": %(_http_request_str)s'
+    '"httpRequest": %(_http_request_str)s }'
 )
 
 

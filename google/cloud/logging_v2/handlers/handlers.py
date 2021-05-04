@@ -50,7 +50,7 @@ class CloudLoggingFilter(logging.Filter):
         inner_str = ""
         if input_dict is not None:
             inner_str =  ", ".join([f'"{k}": "{v}"' for k, v in input_dict.items()])
-        return "{{ {0} }}".format(inner_str)
+        return "{{{0}}}".format(inner_str)
 
     @staticmethod
     def _infer_source_location(record):
