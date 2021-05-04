@@ -85,7 +85,7 @@ class CloudLoggingFilter(logging.Filter):
         record._msg_str = record.msg or ""
         record._trace_str = record._trace or ""
         record._span_id_str = record._span_id or ""
-        record._http_request_str = CloudLoggingFilter._dict_to_string(_http_request)
+        record._http_request_str = CloudLoggingFilter._dict_to_string(record._http_request)
         record._source_location_str = CloudLoggingFilter._dict_to_string(record._source_location)
         record._labels_str = CloudLoggingFilter._dict_to_string(record._labels)
         return True
