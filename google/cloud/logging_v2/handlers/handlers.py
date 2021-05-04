@@ -41,37 +41,45 @@ class CloudLoggingFilter(logging.Filter):
         self.project = project
         self.default_labels = default_labels if default_labels else {}
 
-    def filter(self, record):
-        # ensure record has all required fields set
+    def _dict_to_string(input_dict):
+        """
+        Helper function to print a dictionary in the format expected by Cloud Logging
+        https://cloud.google.com/logging/docs/structured-logging
+        """
+        inner_str =  ", ".join([f'"{k}": "{v}"' for k, v in input_dict.items()])
+        return "{{ {0} }}".format(inner_str)
+
+    def _infer_source_location(record):
+        """Helper function to infer source location data from a LogRecord.
+        Will default to record.source_location if already set
+        """
         if hasattr(record, "source_location"):
-            record._source_location = record.source_location
+            return record.source_location
         else:
-            record._source_location = {}
             name_map =[("line", "lineno"), ("file", "pathname"), ("function", "funcName")]
+            output = {}
             for (gcp_name, std_lib_name) in name_map:
                 if hasattr(record, std_lib_name):
-                    record.source_location[gcp_name] = getattr(record, std_lib_name)
-        record._source_location_str = ", ".join(
-            [f'"{k}": "{v}"' for k, v in record._source_location.items()]
-        )
-        record._msg = "" if record.msg is None else record.msg
-        # find http request data
+                    output[gcp_name] = getattr(record, std_lib_name)
+            return output
+
+    def filter(self, record):
+        record.msg = "" if record.msg is None else record.msg
+
+        user_labels = getattr(record, "labels", {})
         inferred_http, inferred_trace, inferred_span = get_request_data()
         if inferred_trace is not None and self.project is not None:
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
-        # set labels
-        user_labels = getattr(record, "labels", {})
-        record._labels = {**self.default_labels, **user_labels}
-        record._labels_str = ", ".join(
-            [f'"{k}": "{v}"' for k, v in record._labels.items()]
-        )
-
+        # set new record values
         record._trace = getattr(record, "trace", inferred_trace) or ""
         record._span_id = getattr(record, "span_id", inferred_span) or ""
         record._http_request = getattr(record, "http_request", inferred_http) or {}
-        record._http_request_str = ", ".join(
-            [f'"{k}": "{v}"' for k, v in record._http_request.items()]
-        )
+        record._source_location = _infer_source_location(record)
+        record._labels = {**self.default_labels, **user_labels}
+        # create string representations for structured logging
+        record._source_location_str = _dict_to_string(record._source_location)
+        record._labels_str = _dict_to_string(record._labels)
+        record._http_request_str = _dict_to_string(_http_request)
         return True
 
 
