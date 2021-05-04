@@ -41,6 +41,7 @@ class CloudLoggingFilter(logging.Filter):
         self.project = project
         self.default_labels = default_labels if default_labels else {}
 
+    @staticmethod
     def _dict_to_string(input_dict):
         """
         Helper function to print a dictionary in the format expected by Cloud Logging
@@ -51,6 +52,7 @@ class CloudLoggingFilter(logging.Filter):
             inner_str =  ", ".join([f'"{k}": "{v}"' for k, v in input_dict.items()])
         return "{{ {0} }}".format(inner_str)
 
+    @staticmethod
     def _infer_source_location(record):
         """Helper function to infer source location data from a LogRecord.
         Will default to record.source_location if already set
@@ -77,15 +79,15 @@ class CloudLoggingFilter(logging.Filter):
         record._trace = getattr(record, "trace", inferred_trace) or None
         record._span_id = getattr(record, "span_id", inferred_span) or None
         record._http_request = getattr(record, "http_request", inferred_http)
-        record._source_location = _infer_source_location(record)
+        record._source_location = CloudLoggingFilter._infer_source_location(record)
         record._labels = {**self.default_labels, **user_labels}
         # create guaranteed string representations for structured logging
         record._msg_str = record.msg or ""
         record._trace_str = record._trace or ""
         record._span_id_str = record._span_id or ""
-        record._http_request_str = _dict_to_string(_http_request)
-        record._source_location_str = _dict_to_string(record._source_location)
-        record._labels_str = _dict_to_string(record._labels)
+        record._http_request_str = CloudLoggingFilter._dict_to_string(_http_request)
+        record._source_location_str = CloudLoggingFilter._dict_to_string(record._source_location)
+        record._labels_str = CloudLoggingFilter._dict_to_string(record._labels)
         return True
 
 
