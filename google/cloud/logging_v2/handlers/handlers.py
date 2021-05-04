@@ -32,9 +32,9 @@ class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
     information to each LogRecord.
 
-    When attached to a LogHandler, each incoming log will receive trace and
-    http_request related to the request. This data can be overwritten using
-    the `extras` argument when writing logs.
+    When attached to a LogHandler, each incoming log will be modified
+    to include new Cloud Logging relevant data. This data can be manually
+    overwritten using the `extras` argument when writing logs.
     """
 
     def __init__(self, project=None, default_labels=None):
@@ -66,6 +66,9 @@ class CloudLoggingFilter(logging.Filter):
             return output if output else None
 
     def filter(self, record):
+        """
+        Add new Cloud Logging data to each LogRecord as it comes in
+        """
         user_labels = getattr(record, "labels", {})
         inferred_http, inferred_trace, inferred_span = get_request_data()
         if inferred_trace is not None and self.project is not None:
