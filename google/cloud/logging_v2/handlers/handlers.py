@@ -14,6 +14,7 @@
 
 """Python :mod:`logging` handlers for Cloud Logging."""
 
+import json
 import logging
 
 from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
@@ -40,17 +41,6 @@ class CloudLoggingFilter(logging.Filter):
     def __init__(self, project=None, default_labels=None):
         self.project = project
         self.default_labels = default_labels if default_labels else {}
-
-    @staticmethod
-    def _dict_to_string(input_dict):
-        """
-        Helper function to print a dictionary in the format expected by Cloud Logging
-        https://cloud.google.com/logging/docs/structured-logging
-        """
-        inner_str = ""
-        if input_dict is not None:
-            inner_str =  ", ".join([f'"{k}": "{v}"' for k, v in input_dict.items()])
-        return "{{{0}}}".format(inner_str)
 
     @staticmethod
     def _infer_source_location(record):
@@ -85,9 +75,9 @@ class CloudLoggingFilter(logging.Filter):
         record._msg_str = record.msg or ""
         record._trace_str = record._trace or ""
         record._span_id_str = record._span_id or ""
-        record._http_request_str = CloudLoggingFilter._dict_to_string(record._http_request)
-        record._source_location_str = CloudLoggingFilter._dict_to_string(record._source_location)
-        record._labels_str = CloudLoggingFilter._dict_to_string(record._labels)
+        record._http_request_str = json.dumps(record._http_request or {})
+        record._source_location_str = json.dumps(record._source_location or {})
+        record._labels_str = json.dumps(record._labels or {})
         return True
 
 
