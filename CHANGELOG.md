@@ -4,6 +4,14 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [2.3.2](https://www.github.com/googleapis/python-logging/compare/v2.3.1...v2.3.2) (2021-05-10)
+
+
+### Bug Fixes
+
+* changed region format on serverless ([#291](https://www.github.com/googleapis/python-logging/issues/291)) ([360d3d2](https://www.github.com/googleapis/python-logging/commit/360d3d23db7709b7c3946c092ef373f888f47c3d))
+* **deps:** fix minimum required version of google-api-core ([#244](https://www.github.com/googleapis/python-logging/issues/244)) ([37d33fc](https://www.github.com/googleapis/python-logging/commit/37d33fcd8402b973377486a572c04ba6d4029b58))
+
 ### [2.3.1](https://www.github.com/googleapis/python-logging/compare/v2.3.0...v2.3.1) (2021-03-24)
 
 
