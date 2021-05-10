@@ -24,7 +24,7 @@ from google.cloud.logging_v2.handlers._helpers import get_request_data
 
 DEFAULT_LOGGER_NAME = "python"
 
-EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2")
+EXCLUDED_LOGGER_DEFAULTS = ("google.cloud", "google.auth", "google_auth_httplib2", "google.api_core.bidi", "werkzeug")
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
@@ -223,4 +223,3 @@ def setup_logging(
     for logger_name in all_excluded_loggers:
         logger = logging.getLogger(logger_name)
         logger.propagate = False
-        logger.addHandler(logging.StreamHandler())
