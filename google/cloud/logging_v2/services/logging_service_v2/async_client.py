@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 from collections import OrderedDict
 import functools
 import re
@@ -31,17 +29,16 @@ from typing import (
 import pkg_resources
 
 import google.api_core.client_options as ClientOptions  # type: ignore
-from google.api_core import exceptions  # type: ignore
+from google.api_core import exceptions as core_exceptions  # type: ignore
 from google.api_core import gapic_v1  # type: ignore
 from google.api_core import retry as retries  # type: ignore
-from google.auth import credentials  # type: ignore
+from google.auth import credentials as ga_credentials  # type: ignore
 from google.oauth2 import service_account  # type: ignore
 
-from google.api import monitored_resource_pb2 as monitored_resource  # type: ignore
+from google.api import monitored_resource_pb2  # type: ignore
 from google.cloud.logging_v2.services.logging_service_v2 import pagers
 from google.cloud.logging_v2.types import log_entry
 from google.cloud.logging_v2.types import logging
-
 from .transports.base import LoggingServiceV2Transport, DEFAULT_CLIENT_INFO
 from .transports.grpc_asyncio import LoggingServiceV2GrpcAsyncIOTransport
 from .client import LoggingServiceV2Client
@@ -57,31 +54,26 @@ class LoggingServiceV2AsyncClient:
 
     log_path = staticmethod(LoggingServiceV2Client.log_path)
     parse_log_path = staticmethod(LoggingServiceV2Client.parse_log_path)
-
     common_billing_account_path = staticmethod(
         LoggingServiceV2Client.common_billing_account_path
     )
     parse_common_billing_account_path = staticmethod(
         LoggingServiceV2Client.parse_common_billing_account_path
     )
-
     common_folder_path = staticmethod(LoggingServiceV2Client.common_folder_path)
     parse_common_folder_path = staticmethod(
         LoggingServiceV2Client.parse_common_folder_path
     )
-
     common_organization_path = staticmethod(
         LoggingServiceV2Client.common_organization_path
     )
     parse_common_organization_path = staticmethod(
         LoggingServiceV2Client.parse_common_organization_path
     )
-
     common_project_path = staticmethod(LoggingServiceV2Client.common_project_path)
     parse_common_project_path = staticmethod(
         LoggingServiceV2Client.parse_common_project_path
     )
-
     common_location_path = staticmethod(LoggingServiceV2Client.common_location_path)
     parse_common_location_path = staticmethod(
         LoggingServiceV2Client.parse_common_location_path
@@ -135,7 +127,7 @@ class LoggingServiceV2AsyncClient:
     def __init__(
         self,
         *,
-        credentials: credentials.Credentials = None,
+        credentials: ga_credentials.Credentials = None,
         transport: Union[str, LoggingServiceV2Transport] = "grpc_asyncio",
         client_options: ClientOptions = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
@@ -172,7 +164,6 @@ class LoggingServiceV2AsyncClient:
             google.auth.exceptions.MutualTlsChannelError: If mutual TLS transport
                 creation failed for any reason.
         """
-
         self._client = LoggingServiceV2Client(
             credentials=credentials,
             transport=transport,
@@ -217,7 +208,6 @@ class LoggingServiceV2AsyncClient:
                 This corresponds to the ``log_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -238,7 +228,6 @@ class LoggingServiceV2AsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if log_name is not None:
             request.log_name = log_name
 
@@ -277,7 +266,7 @@ class LoggingServiceV2AsyncClient:
         request: logging.WriteLogEntriesRequest = None,
         *,
         log_name: str = None,
-        resource: monitored_resource.MonitoredResource = None,
+        resource: monitored_resource_pb2.MonitoredResource = None,
         labels: Sequence[logging.WriteLogEntriesRequest.LabelsEntry] = None,
         entries: Sequence[log_entry.LogEntry] = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
@@ -383,7 +372,6 @@ class LoggingServiceV2AsyncClient:
                 This corresponds to the ``entries`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -408,7 +396,6 @@ class LoggingServiceV2AsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if log_name is not None:
             request.log_name = log_name
         if resource is not None:
@@ -416,7 +403,6 @@ class LoggingServiceV2AsyncClient:
 
         if labels:
             request.labels.update(labels)
-
         if entries:
             request.entries.extend(entries)
 
@@ -514,7 +500,6 @@ class LoggingServiceV2AsyncClient:
                 This corresponds to the ``order_by`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -543,12 +528,10 @@ class LoggingServiceV2AsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if filter is not None:
             request.filter = filter
         if order_by is not None:
             request.order_by = order_by
-
         if resource_names:
             request.resource_names.extend(resource_names)
 
@@ -598,7 +581,6 @@ class LoggingServiceV2AsyncClient:
             request (:class:`google.cloud.logging_v2.types.ListMonitoredResourceDescriptorsRequest`):
                 The request object. The parameters to
                 ListMonitoredResourceDescriptors
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -615,7 +597,6 @@ class LoggingServiceV2AsyncClient:
 
         """
         # Create or coerce a protobuf request object.
-
         request = logging.ListMonitoredResourceDescriptorsRequest(request)
 
         # Wrap the RPC method; this adds retry and timeout information,
@@ -678,7 +659,6 @@ class LoggingServiceV2AsyncClient:
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -707,7 +687,6 @@ class LoggingServiceV2AsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if parent is not None:
             request.parent = parent
 
