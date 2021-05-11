@@ -106,7 +106,7 @@ class TestStructuredLogHandler(unittest.TestCase):
 
     def test_format_with_quotes(self):
         """
-        When logging a message containing quotes, escape chars (\) should be added
+        When logging a message containing quotes, escape chars should be added
         """
         import logging
         import json
@@ -116,13 +116,6 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_result = '\\"test\\"'
         record = logging.LogRecord(None, logging.INFO, None, None, message, None, None,)
         record.created = None
-        expected_payload = {
-            "message": "",
-            "logging.googleapis.com/trace": "",
-            "logging.googleapis.com/sourceLocation": {},
-            "httpRequest": {},
-            "logging.googleapis.com/labels": {},
-        }
         handler.filter(record)
         result = json.loads(handler.format(record))
         result["message"] = expected_result
