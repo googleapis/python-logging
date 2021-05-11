@@ -104,6 +104,30 @@ class TestStructuredLogHandler(unittest.TestCase):
                 value, result[key], f"expected_payload[{key}] != result[{key}]"
             )
 
+    def test_format_with_quotes(self):
+        """
+        When logging a message containing quotes, escape chars (\) should be added
+        """
+        import logging
+        import json
+
+        handler = self._make_one()
+        message = '"test"'
+        expected_result = '\\"test\\"'
+        record = logging.LogRecord(None, logging.INFO, None, None, message, None, None,)
+        record.created = None
+        expected_payload = {
+            "message": "",
+            "logging.googleapis.com/trace": "",
+            "logging.googleapis.com/sourceLocation": {},
+            "httpRequest": {},
+            "logging.googleapis.com/labels": {},
+        }
+        handler.filter(record)
+        result = json.loads(handler.format(record))
+        result['message'] = expected_result
+        self.assertEqual(result['message'], expected_result)
+
     def test_format_with_request(self):
         import logging
         import json
