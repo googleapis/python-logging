@@ -93,7 +93,7 @@ class CloudLoggingFilter(logging.Filter):
         record._source_location_str = json.dumps(record._source_location or {})
         record._labels_str = json.dumps(record._labels or {})
         # break quotes for parsing through structured logging
-        record._msg_str = record.msg.replace('"', '\\"') or ""
+        record._msg_str = str(record.msg).replace('"', '\\"') if record.msg else ""
         return True
 
 
