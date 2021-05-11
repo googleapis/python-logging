@@ -96,6 +96,13 @@ def get_request_data_from_django():
     if request is None:
         return None, None, None
 
+    # convert content_length to int if it exists
+    content_length = None
+    try:
+        content_length = int(request.META.get(_DJANGO_CONTENT_LENGTH))
+    except (ValueError, TypeError):
+        content_length = None
+
     # build http_request
     http_request = {
         "requestMethod": request.method,
