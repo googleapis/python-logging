@@ -145,7 +145,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             "logging.googleapis.com/trace": expected_trace,
             "logging.googleapis.com/spanId": expected_span,
             "httpRequest": {
-                "requestMethod": "PUT",
+                "requestMethod": "GET",
                 "requestUrl": expected_path,
                 "userAgent": expected_agent,
                 "protocol": "HTTP/1.1",
@@ -153,15 +153,8 @@ class TestStructuredLogHandler(unittest.TestCase):
         }
 
         app = self.create_app()
-        with app.test_client() as c:
-            c.put(
-                path=expected_path,
-                data="body",
-                headers={
-                    "User-Agent": expected_agent,
-                    "X_CLOUD_TRACE_CONTEXT": trace_header,
-                },
-            )
+        with app.test_request_context(expected_path,
+                headers={"User-Agent": expected_agent, "X_CLOUD_TRACE_CONTEXT": trace_header}):
             handler.filter(record)
             result = json.loads(handler.format(record))
             for (key, value) in expected_payload.items():
