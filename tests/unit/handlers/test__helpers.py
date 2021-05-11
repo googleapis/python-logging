@@ -81,9 +81,9 @@ class Test_get_request_data_from_flask(unittest.TestCase):
         }
 
         app = self.create_app()
-        with app.test_request_context(expected_path,
-                headers=headers,
-                environ_base={"REMOTE_ADDR": expected_ip}):
+        with app.test_request_context(
+            expected_path, headers=headers, environ_base={"REMOTE_ADDR": expected_ip}
+        ):
             http_request, *_ = self._call_fut()
 
         self.assertEqual(http_request["requestMethod"], "GET")

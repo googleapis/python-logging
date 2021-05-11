@@ -75,7 +75,11 @@ class CloudLoggingFilter(logging.Filter):
         inferred_http, inferred_trace, inferred_span = get_request_data()
         if inferred_http is not None:
             # filter inferred_http to include only well-supported fields
-            inferred_http = {k:v for (k,v) in inferred_http.items() if k in self._supported_http_fields and v is not None}
+            inferred_http = {
+                k: v
+                for (k, v) in inferred_http.items()
+                if k in self._supported_http_fields and v is not None
+            }
         if inferred_trace is not None and self.project is not None:
             # add full path for detected trace
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"

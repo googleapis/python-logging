@@ -141,8 +141,13 @@ class TestCloudLoggingFilter(unittest.TestCase):
         }
 
         app = self.create_app()
-        with app.test_request_context(expected_path,
-                headers={"User-Agent": expected_agent, "X_CLOUD_TRACE_CONTEXT": combined_trace}):
+        with app.test_request_context(
+            expected_path,
+            headers={
+                "User-Agent": expected_agent,
+                "X_CLOUD_TRACE_CONTEXT": combined_trace,
+            },
+        ):
             success = filter_obj.filter(record)
             self.assertTrue(success)
 

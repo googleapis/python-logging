@@ -125,8 +125,8 @@ class TestStructuredLogHandler(unittest.TestCase):
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
-        result['message'] = expected_result
-        self.assertEqual(result['message'], expected_result)
+        result["message"] = expected_result
+        self.assertEqual(result["message"], expected_result)
 
     def test_format_with_request(self):
         import logging
@@ -153,8 +153,13 @@ class TestStructuredLogHandler(unittest.TestCase):
         }
 
         app = self.create_app()
-        with app.test_request_context(expected_path,
-                headers={"User-Agent": expected_agent, "X_CLOUD_TRACE_CONTEXT": trace_header}):
+        with app.test_request_context(
+            expected_path,
+            headers={
+                "User-Agent": expected_agent,
+                "X_CLOUD_TRACE_CONTEXT": trace_header,
+            },
+        ):
             handler.filter(record)
             result = json.loads(handler.format(record))
             for (key, value) in expected_payload.items():
