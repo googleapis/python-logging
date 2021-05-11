@@ -40,7 +40,7 @@ class CloudLoggingFilter(logging.Filter):
 
     # The subset of http_request fields have been tested to work consistently across GCP environments
     # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#httprequest
-    _supported_http_fields = ("requestMethod", "requestUrl", "requestSize", "userAgent", "protocol")
+    _supported_http_fields = ("requestMethod", "requestUrl", "userAgent", "protocol")
 
     def __init__(self, project=None, default_labels=None):
         self.project = project
