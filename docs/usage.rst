@@ -327,19 +327,14 @@ logging handler can use different transports. The default is
 fluentd logging handlers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Besides :class:`~google.cloud.logging.handlers.handlers.CloudLoggingHandler`,
-which writes directly to the API, two other handlers are provided.
-:class:`~google.cloud.logging.handlers.app_engine.AppEngineHandler`, which is
-recommended when running on the Google App Engine Flexible vanilla runtimes
-(i.e. your app.yaml contains ``runtime: python``), and
-:class:`~google.cloud.logging.handlers.container_engine.ContainerEngineHandler`
-, which is recommended when running on `Google Kubernetes Engine`_ with the
-Cloud Logging plugin enabled.
+Two handler classes are provided: :class:`~google.cloud.logging.handlers.handlers.CloudLoggingHandler`,
+which writes directly to the API, and :class:`~google.cloud.logging.handlers.structured_log.StructuredLogHandler`,
+which writes logs as structured JSON to standard output (to be later parsed by the environment).
 
 :meth:`~google.cloud.logging.client.Client.get_default_handler` and
 :meth:`~google.cloud.logging.client.Client.setup_logging` will attempt to use
-the environment to automatically detect whether the code is running in
-these platforms and use the appropriate handler.
+the environment to automatically detect where the code is running and use the
+appropriate handler.
 
 In both cases, the fluentd agent is configured to automatically parse log files
 in an expected format and forward them to Cloud Logging. The handlers
