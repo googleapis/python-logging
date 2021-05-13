@@ -46,10 +46,6 @@ class CloudLoggingFilter(logging.Filter):
     overwritten using the `extras` argument when writing logs.
     """
 
-    # The subset of http_request fields have been tested to work consistently across GCP environments
-    # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#httprequest
-    _supported_http_fields = ("requestMethod", "requestUrl", "userAgent", "protocol")
-
     def __init__(self, project=None, default_labels=None):
         self.project = project
         self.default_labels = default_labels if default_labels else {}
@@ -81,13 +77,6 @@ class CloudLoggingFilter(logging.Filter):
         user_labels = getattr(record, "labels", {})
         # infer request data from the environment
         inferred_http, inferred_trace, inferred_span = get_request_data()
-        if inferred_http is not None:
-            # filter inferred_http to include only well-supported fields
-            inferred_http = {
-                k: v
-                for (k, v) in inferred_http.items()
-                if k in self._supported_http_fields and v is not None
-            }
         if inferred_trace is not None and self.project is not None:
             # add full path for detected trace
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
