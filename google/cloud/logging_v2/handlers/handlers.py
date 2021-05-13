@@ -35,6 +35,7 @@ EXCLUDED_LOGGER_DEFAULTS = (
 
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
+_GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
@@ -146,6 +147,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         resource=_GLOBAL_RESOURCE,
         labels=None,
         stream=None,
+        include_gae_labels=False,
     ):
         """
         Args:
@@ -165,6 +167,7 @@ class CloudLoggingHandler(logging.StreamHandler):
                 Resource for this Handler. Defaults to ``global``.
             labels (Optional[dict]): Additional labels to attach to logs.
             stream (Optional[IO]): Stream to be used by the handler.
+            include_gae_labels (Optional[bool]): If true, logs will include the "appengine.googleapis.com/trace_id" label
         """
         super(CloudLoggingHandler, self).__init__(stream)
         self.name = name
@@ -188,12 +191,15 @@ class CloudLoggingHandler(logging.StreamHandler):
             record (logging.LogRecord): The record to be logged.
         """
         message = super(CloudLoggingHandler, self).format(record)
+        labels = record._labels or {}
+        if self.include_gae_labels and record._trace is not None:
+            labels[_GAE_TRACE_ID_LABEL] = record._trace
         # send off request
         self.transport.send(
             record,
             message,
             resource=(record._resource or self.resource),
-            labels=record._labels,
+            labels=labels,
             trace=record._trace,
             span_id=record._span_id,
             http_request=record._http_request,

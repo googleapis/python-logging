@@ -349,7 +349,9 @@ class Client(ClientWithProject):
         monitored_resource = kw.pop("resource", detect_resource(self.project))
 
         if isinstance(monitored_resource, Resource):
-            if monitored_resource.type == _GKE_RESOURCE_TYPE:
+            if monitored_resource.type == _GAE_RESOURCE_TYPE:
+                CloudLoggingHandler(self, resource=monitored_resource, include_gae_labels=True, **kw)
+            elif monitored_resource.type == _GKE_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif (
                 monitored_resource.type == _GCF_RESOURCE_TYPE
