@@ -37,6 +37,7 @@ _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
 _GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
+
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
     information to each LogRecord.

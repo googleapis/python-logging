@@ -319,10 +319,12 @@ class TestLogging(unittest.TestCase):
     def test_handlers_w_extras(self):
         LOG_MESSAGE = "Testing with injected extras."
 
-        LOGGER_NAME = f"handler_extras"
+        LOGGER_NAME = "handler_extras"
         handler_name = self._logger_name(LOGGER_NAME)
 
-        handler = CloudLoggingHandler(Config.CLIENT, name=handler_name, transport=SyncTransport)
+        handler = CloudLoggingHandler(
+            Config.CLIENT, name=handler_name, transport=SyncTransport
+        )
 
         # only create the logger to delete, hidden otherwise
         logger = Config.CLIENT.logger(handler.name)

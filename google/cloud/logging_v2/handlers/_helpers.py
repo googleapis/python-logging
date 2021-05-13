@@ -14,8 +14,6 @@
 
 """Helper functions for logging handlers."""
 
-import math
-import json
 import re
 
 try:

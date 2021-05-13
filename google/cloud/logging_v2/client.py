@@ -350,7 +350,9 @@ class Client(ClientWithProject):
 
         if isinstance(monitored_resource, Resource):
             if monitored_resource.type == _GAE_RESOURCE_TYPE:
-                CloudLoggingHandler(self, resource=monitored_resource, include_gae_labels=True, **kw)
+                CloudLoggingHandler(
+                    self, resource=monitored_resource, include_gae_labels=True, **kw
+                )
             elif monitored_resource.type == _GKE_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif (
