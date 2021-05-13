@@ -34,24 +34,6 @@ _FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
 _PROTOCOL_HEADER = "SERVER_PROTOCOL"
 
 
-def format_stackdriver_json(record, message):
-    """Helper to format a LogRecord in in Stackdriver fluentd format.
-
-    Returns:
-        str: JSON str to be written to the log file.
-    """
-    subsecond, second = math.modf(record.created)
-
-    payload = {
-        "message": message,
-        "timestamp": {"seconds": int(second), "nanos": int(subsecond * 1e9)},
-        "thread": record.thread,
-        "severity": record.levelname,
-    }
-
-    return json.dumps(payload, ensure_ascii=False)
-
-
 def get_request_data_from_flask():
     """Get http_request and trace data from flask request headers.
 
