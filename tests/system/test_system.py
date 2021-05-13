@@ -322,7 +322,9 @@ class TestLogging(unittest.TestCase):
         LOGGER_NAME = f"handler_extras"
         handler_name = self._logger_name(LOGGER_NAME)
 
-        handler = CloudLoggingHandler(Config.CLIENT, name=handler_name, transport=SyncTransport)
+        handler = CloudLoggingHandler(
+            Config.CLIENT, name=handler_name, transport=SyncTransport
+        )
 
         # only create the logger to delete, hidden otherwise
         logger = Config.CLIENT.logger(handler.name)
