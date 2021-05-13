@@ -35,8 +35,6 @@ from google.cloud.logging_v2._http import _LoggingAPI as JSONLoggingAPI
 from google.cloud.logging_v2._http import _MetricsAPI as JSONMetricsAPI
 from google.cloud.logging_v2._http import _SinksAPI as JSONSinksAPI
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
-from google.cloud.logging_v2.handlers import AppEngineHandler
-from google.cloud.logging_v2.handlers import ContainerEngineHandler
 from google.cloud.logging_v2.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
@@ -351,10 +349,8 @@ class Client(ClientWithProject):
         monitored_resource = kw.pop("resource", detect_resource(self.project))
 
         if isinstance(monitored_resource, Resource):
-            if monitored_resource.type == _GAE_RESOURCE_TYPE:
-                return AppEngineHandler(self, **kw)
-            elif monitored_resource.type == _GKE_RESOURCE_TYPE:
-                return ContainerEngineHandler(**kw)
+            if monitored_resource.type == _GKE_RESOURCE_TYPE:
+                return StructuredLogHandler(**kw, project_id=self.project)
             elif (
                 monitored_resource.type == _GCF_RESOURCE_TYPE
                 and sys.version_info[0] == 3

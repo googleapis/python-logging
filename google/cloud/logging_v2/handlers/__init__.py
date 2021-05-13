@@ -14,18 +14,14 @@
 
 """Python :mod:`logging` handlers for Google Cloud Logging."""
 
-from google.cloud.logging_v2.handlers.app_engine import AppEngineHandler
-from google.cloud.logging_v2.handlers.container_engine import ContainerEngineHandler
 from google.cloud.logging_v2.handlers.structured_log import StructuredLogHandler
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
 from google.cloud.logging_v2.handlers.handlers import setup_logging
 
 __all__ = [
-    "AppEngineHandler",
     "CloudLoggingFilter",
     "CloudLoggingHandler",
-    "ContainerEngineHandler",
     "StructuredLogHandler",
     "setup_logging",
 ]
