@@ -176,6 +176,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.project_id = client.project
         self.resource = resource
         self.labels = labels
+        self.include_gae_labels = include_gae_labels
         # add extra keys to log record
         log_filter = CloudLoggingFilter(project=self.project_id, default_labels=labels)
         self.addFilter(log_filter)
@@ -191,8 +192,8 @@ class CloudLoggingHandler(logging.StreamHandler):
             record (logging.LogRecord): The record to be logged.
         """
         message = super(CloudLoggingHandler, self).format(record)
-        labels = record._labels or {}
-        if self.include_gae_labels and record._trace is not None:
+        labels = record._labels
+        if self.include_gae_labels and record._trace and labels:
             labels[_GAE_TRACE_ID_LABEL] = record._trace
         # send off request
         self.transport.send(
