@@ -17,7 +17,6 @@
 import json
 import logging
 
-from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
 from google.cloud.logging_v2.handlers._helpers import get_request_data
@@ -134,7 +133,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         *,
         name=DEFAULT_LOGGER_NAME,
         transport=BackgroundThreadTransport,
-        resource=_GLOBAL_RESOURCE,
+        resource=None,
         labels=None,
         stream=None,
         include_gae_labels=False,
@@ -154,12 +153,15 @@ class CloudLoggingHandler(logging.StreamHandler):
                 :class:`.BackgroundThreadTransport`. The other
                 option is :class:`.SyncTransport`.
             resource (~logging_v2.resource.Resource):
-                Resource for this Handler. Defaults to ``global``.
+                Resource for this Handler. If not given, will be inferred from the environment.
             labels (Optional[dict]): Additional labels to attach to logs.
             stream (Optional[IO]): Stream to be used by the handler.
             include_gae_labels (Optional[bool]): If true, logs will include the "appengine.googleapis.com/trace_id" label
         """
         super(CloudLoggingHandler, self).__init__(stream)
+        if not resource:
+            # infer the correct monitored resource from the local environment
+            resource = detect_resource(client.project)
         self.name = name
         self.client = client
         self.transport = transport(client, name)
