@@ -183,8 +183,9 @@ class CloudLoggingHandler(logging.StreamHandler):
         """
         message = super(CloudLoggingHandler, self).format(record)
         labels = record._labels
-        if self.include_gae_labels and record._trace and labels:
-            labels[_GAE_TRACE_ID_LABEL] = record._trace
+        if self.include_gae_labels and record._trace:
+            # add GAE-specific label
+            labels = {_GAE_TRACE_ID_LABEL: record._trace, **(labels or {})}
         # send off request
         self.transport.send(
             record,
