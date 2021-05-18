@@ -33,10 +33,14 @@ EXCLUDED_LOGGER_DEFAULTS = (
     "werkzeug",
 )
 
+"""These environments require us to remove extra handlers on setup"""
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
+"""Extra trace label to be added on App Engine environments"""
 _GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
+"""Resource name for App Engine environments"""
+_GAE_RESOURCE_TYPE = "gae_app"
 
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
@@ -157,7 +161,6 @@ class CloudLoggingHandler(logging.StreamHandler):
                 Resource for this Handler. Defaults to ``global``.
             labels (Optional[dict]): Additional labels to attach to logs.
             stream (Optional[IO]): Stream to be used by the handler.
-            include_gae_labels (Optional[bool]): If true, logs will include the "appengine.googleapis.com/trace_id" label
         """
         super(CloudLoggingHandler, self).__init__(stream)
         self.name = name
@@ -166,7 +169,6 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.project_id = client.project
         self.resource = resource
         self.labels = labels
-        self.include_gae_labels = include_gae_labels
         # add extra keys to log record
         log_filter = CloudLoggingFilter(project=self.project_id, default_labels=labels)
         self.addFilter(log_filter)
@@ -183,14 +185,15 @@ class CloudLoggingHandler(logging.StreamHandler):
         """
         message = super(CloudLoggingHandler, self).format(record)
         labels = record._labels
-        if self.include_gae_labels and record._trace:
+        resource = (record._resource or self.resource)
+        if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
             # add GAE-specific label
             labels = {_GAE_TRACE_ID_LABEL: record._trace, **(labels or {})}
         # send off request
         self.transport.send(
             record,
             message,
-            resource=(record._resource or self.resource),
+            resource=resource,
             labels=labels,
             trace=record._trace,
             span_id=record._span_id,
