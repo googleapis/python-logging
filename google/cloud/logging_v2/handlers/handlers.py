@@ -42,6 +42,7 @@ _GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 """Resource name for App Engine environments"""
 _GAE_RESOURCE_TYPE = "gae_app"
 
+
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging
     information to each LogRecord.
@@ -185,7 +186,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         """
         message = super(CloudLoggingHandler, self).format(record)
         labels = record._labels
-        resource = (record._resource or self.resource)
+        resource = record._resource or self.resource
         if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
             # add GAE-specific label
             labels = {_GAE_TRACE_ID_LABEL: record._trace, **(labels or {})}
