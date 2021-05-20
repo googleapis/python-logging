@@ -232,7 +232,11 @@ class _Worker(object):
                         formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
-        info = message if isinstance(message, collections.abc.Mapping) else {"message": message}
+        info = (
+            message
+            if isinstance(message, collections.abc.Mapping)
+            else {"message": message}
+        )
         queue_entry = {
             "info": info,
             "severity": _helpers._normalize_severity(record.levelno),
