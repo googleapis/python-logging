@@ -50,7 +50,7 @@ class TestSyncHandler(unittest.TestCase):
         )
 
         transport.send(record, message, resource=_GLOBAL_RESOURCE)
-        EXPECTED_STRUCT = {"message": message, "python_logger": python_logger_name}
+        EXPECTED_STRUCT = {"message": message}
         EXPECTED_SENT = (
             EXPECTED_STRUCT,
             LogSeverity.INFO,
