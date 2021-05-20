@@ -97,11 +97,11 @@ class CloudLoggingFilter(logging.Filter):
         # create string representations for structured logging
         record._trace_str = record._trace or ""
         record._span_id_str = record._span_id or ""
-        record._http_request_str = json.dumps(record._http_request or {})
-        record._source_location_str = json.dumps(record._source_location or {})
-        record._labels_str = json.dumps(record._labels or {})
+        record._http_request_str = json.dumps(record._http_request or {}, ensure_ascii=False)
+        record._source_location_str = json.dumps(record._source_location or {}, ensure_ascii=False)
+        record._labels_str = json.dumps(record._labels or {}, ensure_ascii=False)
         # set string payload values
-        encoded_string = json.dumps(record.msg)
+        encoded_string = json.dumps(record.msg or "", ensure_ascii=False)
         if isinstance(record.msg, collections.abc.Mapping) and len(encoded_string) > 2:
             # if dict input, extract key/value pairs
             record._payload_str = encoded_string[1:-1]
