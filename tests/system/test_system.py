@@ -291,7 +291,7 @@ class TestLogging(unittest.TestCase):
         cloud_logger.warn(LOG_MESSAGE)
         handler.flush()
         entries = _list_entries(logger)
-        expected_payload = {"message": LOG_MESSAGE, "python_logger": handler.name}
+        expected_payload = {"message": LOG_MESSAGE}
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
 
@@ -313,7 +313,7 @@ class TestLogging(unittest.TestCase):
         cloud_logger.warn(LOG_MESSAGE)
 
         entries = _list_entries(logger)
-        expected_payload = {"message": LOG_MESSAGE, "python_logger": LOGGER_NAME}
+        expected_payload = {"message": LOG_MESSAGE}
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
 
@@ -366,7 +366,7 @@ class TestLogging(unittest.TestCase):
         logging.warn(LOG_MESSAGE)
 
         entries = _list_entries(logger)
-        expected_payload = {"message": LOG_MESSAGE, "python_logger": "root"}
+        expected_payload = {"message": LOG_MESSAGE}
 
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
