@@ -42,7 +42,11 @@ class SyncTransport(Transport):
             kwargs: Additional optional arguments for the logger
         """
         # wrap message in a dict if needed
-        info = message if isinstance(message, collections.abc.Mapping) else {"message": message}
+        info = (
+            message
+            if isinstance(message, collections.abc.Mapping)
+            else {"message": message}
+        )
         self.logger.log_struct(
             info, severity=_helpers._normalize_severity(record.levelno), **kwargs,
         )
