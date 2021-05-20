@@ -78,7 +78,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertTrue(success)
 
         self.assertEqual(record.msg, message)
-        self.assertEqual(record._msg_str, message)
+        self.assertEqual(record._payload_str, '"message": "{}"'.format(message))
         self.assertEqual(record._source_location, expected_location)
         self.assertEqual(record._source_location_str, json.dumps(expected_location))
         self.assertIsNone(record._resource)
@@ -105,7 +105,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertTrue(success)
 
         self.assertIsNone(record.msg)
-        self.assertEqual(record._msg_str, "")
+        self.assertEqual(record._payload_str, '"message": ""')
         self.assertIsNone(record._source_location)
         self.assertEqual(record._source_location_str, "{}")
         self.assertIsNone(record._resource)
