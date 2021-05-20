@@ -20,6 +20,7 @@ Uses a background worker to log to Cloud Logging asynchronously.
 from __future__ import print_function
 
 import atexit
+import collections
 import datetime
 import logging
 import sys
@@ -231,8 +232,9 @@ class _Worker(object):
                         formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
+        info = message if isinstance(message, collections.abc.Mapping) else {"message": message}
         queue_entry = {
-            "info": {"message": message, "python_logger": record.name},
+            "info": info,
             "severity": _helpers._normalize_severity(record.levelno),
             "timestamp": datetime.datetime.utcfromtimestamp(record.created),
         }

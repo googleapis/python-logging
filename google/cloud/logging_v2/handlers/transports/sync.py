@@ -16,6 +16,7 @@
 
 Logs directly to the the Cloud Logging API with a synchronous call.
 """
+import collections
 
 from google.cloud.logging_v2 import _helpers
 from google.cloud.logging_v2.handlers.transports.base import Transport
@@ -36,11 +37,12 @@ class SyncTransport(Transport):
         Args:
             record (logging.LogRecord):
                 Python log record that the handler was called with.
-            message (str): The message from the ``LogRecord`` after being
+            message (str or dict): The message from the ``LogRecord`` after being
                 formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
-        info = {"message": message, "python_logger": record.name}
+        # wrap message in a dict if needed
+        info = message if isinstance(message, collections.abc.Mapping) else {"message": message}
         self.logger.log_struct(
             info, severity=_helpers._normalize_severity(record.levelno), **kwargs,
         )
