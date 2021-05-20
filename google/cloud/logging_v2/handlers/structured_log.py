@@ -20,7 +20,7 @@ import logging.handlers
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
 
 GCP_FORMAT = (
-    '{"message": "%(_msg_str)s", '
+    '{%(_payload_str)s, '
     '"severity": "%(levelname)s", '
     '"logging.googleapis.com/labels": %(_labels_str)s, '
     '"logging.googleapis.com/trace": "%(_trace_str)s", '
