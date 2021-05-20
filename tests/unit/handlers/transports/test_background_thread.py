@@ -279,7 +279,7 @@ class Test_Worker(unittest.TestCase):
         self._enqueue_record(worker, message)
 
         entry = worker._queue.get_nowait()
-        expected_info = {"message": message, "python_logger": "testing"}
+        expected_info = {"message": message}
         self.assertEqual(entry["info"], expected_info)
         self.assertEqual(entry["severity"], LogSeverity.INFO)
         self.assertIsInstance(entry["timestamp"], datetime.datetime)
@@ -313,7 +313,7 @@ class Test_Worker(unittest.TestCase):
 
         entry = worker._queue.get_nowait()
 
-        expected_info = {"message": message, "python_logger": "testing"}
+        expected_info = {"message": message}
         self.assertEqual(entry["info"], expected_info)
         self.assertEqual(entry["severity"], LogSeverity.ERROR)
         self.assertIs(entry["resource"], resource)
