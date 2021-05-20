@@ -14,6 +14,7 @@
 
 """Python :mod:`logging` handlers for Cloud Logging."""
 
+import collections
 import json
 import logging
 
@@ -99,8 +100,14 @@ class CloudLoggingFilter(logging.Filter):
         record._http_request_str = json.dumps(record._http_request or {})
         record._source_location_str = json.dumps(record._source_location or {})
         record._labels_str = json.dumps(record._labels or {})
-        # break quotes for parsing through structured logging
-        record._msg_str = str(record.msg).replace('"', '\\"') if record.msg else ""
+        # set string payload values
+        encoded_string = json.dumps(record.msg)
+        if isinstance(record.msg, collections.abc.Mapping) and len(encoded_string) > 2:
+            # if dict input, extract key/value pairs
+            record._payload_str = encoded_string[1:-1]
+        else:
+            # otherwise, the message is the string value of the input
+            record._payload_str = '"message": {}'.format(encoded_string)
         return True
 
 
