@@ -35,8 +35,6 @@ from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
-from google.protobuf.json_format import MessageToJson
-from google.protobuf.struct_pb2 import Struct, Value
 
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
