@@ -279,8 +279,7 @@ class Test_Worker(unittest.TestCase):
         self._enqueue_record(worker, message)
 
         entry = worker._queue.get_nowait()
-        expected_info = {"message": message}
-        self.assertEqual(entry["info"], expected_info)
+        self.assertEqual(entry["message"], message)
         self.assertEqual(entry["severity"], LogSeverity.INFO)
         self.assertIsInstance(entry["timestamp"], datetime.datetime)
         self.assertNotIn("resource", entry.keys())
@@ -313,8 +312,7 @@ class Test_Worker(unittest.TestCase):
 
         entry = worker._queue.get_nowait()
 
-        expected_info = {"message": message}
-        self.assertEqual(entry["info"], expected_info)
+        self.assertEqual(entry["message"], message)
         self.assertEqual(entry["severity"], LogSeverity.ERROR)
         self.assertIs(entry["resource"], resource)
         self.assertIs(entry["labels"], labels)
@@ -389,9 +387,9 @@ class Test_Worker(unittest.TestCase):
         worker._queue = mock.create_autospec(queue.Queue, instance=True)
 
         worker._queue.get.side_effect = [
-            {"info": {"message": "1"}},  # Single record.
+            {"message": 1},  # Single record.
             queue.Empty(),  # Emulate a queue.get() timeout.
-            {"info": {"message": "1"}},  # Second record.
+            {"message": "2"},  # Second record.
             background_thread._WORKER_TERMINATOR,  # Stop the thread.
             queue.Empty(),  # Emulate a queue.get() timeout.
         ]
@@ -480,9 +478,9 @@ class _Batch(object):
         self.commit_called = False
         self.commit_count = None
 
-    def log_struct(
+    def log(
         self,
-        info,
+        message,
         severity=logging.INFO,
         resource=None,
         labels=None,
@@ -496,8 +494,8 @@ class _Batch(object):
         assert resource is None
         resource = _GLOBAL_RESOURCE
 
-        self.log_struct_called_with = (info, severity, resource, labels, trace, span_id)
-        self.entries.append(info)
+        self.log_called_with = (message, severity, resource, labels, trace, span_id)
+        self.entries.append(message)
 
     def commit(self):
         self.commit_called = True
