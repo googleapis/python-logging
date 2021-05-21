@@ -34,6 +34,8 @@ from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
+from google.protobuf.json_format import MessageToJson
+from google.protobuf.struct_pb2 import Struct, Value
 
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
@@ -276,6 +278,35 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(request["requestUrl"], URI)
         self.assertEqual(request["status"], STATUS)
 
+    def test_log_w_text(self):
+        TEXT_PAYLOAD = "System test: test_log_w_text"
+        logger = Config.CLIENT.logger(self._logger_name("log_w_text"))
+        self.to_delete.append(logger)
+        logger.log(TEXT_PAYLOAD)
+        entries = _list_entries(logger)
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
+
+    def test_log_w_struct(self):
+        logger = Config.CLIENT.logger(self._logger_name("log_w_struct"))
+        self.to_delete.append(logger)
+
+        logger.log(self.JSON_PAYLOAD)
+        entries = _list_entries(logger)
+
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0].payload, self.JSON_PAYLOAD)
+
+    def test_log_empty(self):
+        logger = Config.CLIENT.logger(self._logger_name("log_empty"))
+        self.to_delete.append(logger)
+
+        logger.log()
+        entries = _list_entries(logger)
+
+        self.assertEqual(len(entries), 1)
+        self.assertIsNone(entries[0].payload)
+
     def test_log_handler_async(self):
         LOG_MESSAGE = "It was the worst of times"
 
@@ -290,7 +321,7 @@ class TestLogging(unittest.TestCase):
         cloud_logger.warn(LOG_MESSAGE)
         handler.flush()
         entries = _list_entries(logger)
-        expected_payload = {"message": LOG_MESSAGE}
+        expected_payload = LOG_MESSAGE
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
 
@@ -312,7 +343,7 @@ class TestLogging(unittest.TestCase):
         cloud_logger.warn(LOG_MESSAGE)
 
         entries = _list_entries(logger)
-        expected_payload = {"message": LOG_MESSAGE}
+        expected_payload = LOG_MESSAGE
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
 
@@ -366,7 +397,7 @@ class TestLogging(unittest.TestCase):
         logging.warn(LOG_MESSAGE)
 
         entries = _list_entries(logger)
-        expected_payload = {"message": LOG_MESSAGE}
+        expected_payload = LOG_MESSAGE
 
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
