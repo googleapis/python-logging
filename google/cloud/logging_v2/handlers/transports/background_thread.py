@@ -231,6 +231,11 @@ class _Worker(object):
                         formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
+        # set python logger name as label if missing
+        labels = kwargs.pop("labels", {})
+        labels['python_logger'] = labels.get('python_logger', record.name)
+        kwargs['labels'] = labels
+        # enqueue new entry
         queue_entry = {
             "message": message,
             "severity": _helpers._normalize_severity(record.levelno),

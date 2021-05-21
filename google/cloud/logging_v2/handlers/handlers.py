@@ -93,7 +93,7 @@ class CloudLoggingFilter(logging.Filter):
         record._span_id = getattr(record, "span_id", inferred_span) or None
         record._http_request = getattr(record, "http_request", inferred_http)
         record._source_location = CloudLoggingFilter._infer_source_location(record)
-        record._labels = {**self.default_labels, **user_labels} or None
+        record._labels = {"python_logger":record.name, **self.default_labels, **user_labels}
         # create string representations for structured logging
         record._trace_str = record._trace or ""
         record._span_id_str = record._span_id or ""
