@@ -464,7 +464,6 @@ class TestLogger(unittest.TestCase):
 
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
-
     def test_log_inference_empty(self):
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
@@ -499,7 +498,6 @@ class TestLogger(unittest.TestCase):
         logger.log(TEXT)
 
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
-
 
     def test_log_inference_struct(self):
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}

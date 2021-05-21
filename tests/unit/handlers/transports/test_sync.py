@@ -70,7 +70,7 @@ class TestSyncHandler(unittest.TestCase):
         stackdriver_logger_name = "python"
         python_logger_name = "mylogger"
         transport = self._make_one(client, stackdriver_logger_name)
-        message = {"message":"hello world", "extra":"test"}
+        message = {"message": "hello world", "extra": "test"}
         record = logging.LogRecord(
             python_logger_name, logging.INFO, None, None, message, None, None
         )
@@ -86,6 +86,7 @@ class TestSyncHandler(unittest.TestCase):
             None,
         )
         self.assertEqual(transport.logger.log_called_with, EXPECTED_SENT)
+
 
 class _Logger(object):
     from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
