@@ -139,7 +139,7 @@ class _Worker(object):
                 if item is _WORKER_TERMINATOR:
                     done = True  # Continue processing items.
                 else:
-                    batch.log_struct(**item)
+                    batch.log(**item)
 
             self._safely_commit_batch(batch)
 
@@ -228,17 +228,12 @@ class _Worker(object):
 
         Args:
             record (logging.LogRecord): Python log record that the handler was called with.
-            message (str): The message from the ``LogRecord`` after being
+            message (str or dict): The message from the ``LogRecord`` after being
                         formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
-        info = (
-            message
-            if isinstance(message, collections.abc.Mapping)
-            else {"message": message}
-        )
         queue_entry = {
-            "info": info,
+            "message": message,
             "severity": _helpers._normalize_severity(record.levelno),
             "timestamp": datetime.datetime.utcfromtimestamp(record.created),
         }
@@ -292,7 +287,7 @@ class BackgroundThreadTransport(Transport):
 
         Args:
             record (logging.LogRecord): Python log record that the handler was called with.
-            message (str): The message from the ``LogRecord`` after being
+            message (str or dict): The message from the ``LogRecord`` after being
                 formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
