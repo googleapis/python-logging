@@ -200,7 +200,7 @@ class Logger(object):
         """
         self._do_log(client, ProtobufEntry, message, **kw)
 
-    def log(self, message, **kw):
+    def log(self, message=None, *, client=None, **kw):
         """Log an arbitrary message via a POST request.
         Type will be inferred based on the input message.
 
@@ -388,7 +388,7 @@ class Batch(object):
         """
         self.entries.append(ProtobufEntry(payload=message, **kw))
 
-    def log(self, message, **kw):
+    def log(self, message=None, **kw):
         """Add an arbitrary message to be logged during :meth:`commit`.
         Type will be inferred based on the input message.
 
