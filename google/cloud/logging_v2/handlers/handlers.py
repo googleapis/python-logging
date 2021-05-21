@@ -195,9 +195,14 @@ class CloudLoggingHandler(logging.StreamHandler):
         Args:
             record (logging.LogRecord): The record to be logged.
         """
-        message = super(CloudLoggingHandler, self).format(record)
-        labels = record._labels
         resource = record._resource or self.resource
+        labels = record._labels
+        if isinstance(record.msg, collections.abc.Mapping):
+            # if input is a dictionary, pass as-is for structured logging
+            message = record.msg
+        else:
+            # otherwise, format message string based on superclass
+            message = super(CloudLoggingHandler, self).format(record)
         if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
             # add GAE-specific label
             labels = {_GAE_TRACE_ID_LABEL: record._trace, **(labels or {})}
