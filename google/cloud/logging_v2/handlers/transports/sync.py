@@ -39,7 +39,10 @@ class SyncTransport(Transport):
                 formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
-
+        # set python logger name as label if missing
+        labels = kwargs.pop("labels", {})
+        labels['python_logger'] = labels.get('python_logger', record.name)
+        # send log synchronously
         self.logger.log(
-            message, severity=_helpers._normalize_severity(record.levelno), **kwargs,
+            message, severity=_helpers._normalize_severity(record.levelno), labels=labels, **kwargs,
         )
