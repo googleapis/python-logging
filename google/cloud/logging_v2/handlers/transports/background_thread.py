@@ -20,7 +20,6 @@ Uses a background worker to log to Cloud Logging asynchronously.
 from __future__ import print_function
 
 import atexit
-import collections
 import datetime
 import logging
 import sys
