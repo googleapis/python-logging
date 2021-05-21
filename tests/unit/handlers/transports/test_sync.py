@@ -50,9 +50,8 @@ class TestSyncHandler(unittest.TestCase):
         )
 
         transport.send(record, message, resource=_GLOBAL_RESOURCE)
-        EXPECTED_STRUCT = {"message": message}
         EXPECTED_SENT = (
-            EXPECTED_STRUCT,
+            message,
             LogSeverity.INFO,
             _GLOBAL_RESOURCE,
             None,
@@ -60,7 +59,7 @@ class TestSyncHandler(unittest.TestCase):
             None,
             None,
         )
-        self.assertEqual(transport.logger.log_struct_called_with, EXPECTED_SENT)
+        self.assertEqual(transport.logger.log_called_with, EXPECTED_SENT)
 
 
 class _Logger(object):
@@ -69,7 +68,7 @@ class _Logger(object):
     def __init__(self, name):
         self.name = name
 
-    def log_struct(
+    def log(
         self,
         message,
         severity=None,
@@ -79,7 +78,7 @@ class _Logger(object):
         span_id=None,
         http_request=None,
     ):
-        self.log_struct_called_with = (
+        self.log_called_with = (
             message,
             severity,
             resource,

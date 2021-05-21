@@ -41,11 +41,7 @@ class SyncTransport(Transport):
                 formatted by the associated log formatters.
             kwargs: Additional optional arguments for the logger
         """
-        if isinstance(message, collections.abc.Mapping):
-            self.logger.log_struct(
-                message, severity=_helpers._normalize_severity(record.levelno), **kwargs,
-            )
-        else:
-            self.logger.log_text(
-                str(message), severity=_helpers._normalize_severity(record.levelno), **kwargs,
-            )
+
+        self.logger.log(
+            message, severity=_helpers._normalize_severity(record.levelno), **kwargs,
+        )
