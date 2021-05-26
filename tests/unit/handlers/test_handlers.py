@@ -63,6 +63,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
             "file": "testpath",
             "function": "test-function",
         }
+        expected_label = {"python_logger":logname}
         record = logging.LogRecord(
             logname,
             logging.INFO,
@@ -88,8 +89,8 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertEqual(record._span_id_str, "")
         self.assertIsNone(record._http_request)
         self.assertEqual(record._http_request_str, "{}")
-        self.assertIsNone(record._labels)
-        self.assertEqual(record._labels_str, "{}")
+        self.assertEqual(record._labels, expected_label)
+        self.assertEqual(record._labels_str, json.dumps(expected_label))
 
     def test_minimal_record(self):
         """
@@ -295,7 +296,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         handler.handle(record)
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, message, _GLOBAL_RESOURCE, None, None, None, None, None),
+            (record, message, _GLOBAL_RESOURCE, {"python_logger":logname}, None, None, None, None),
         )
 
     def test_emit_manual_field_override(self):
@@ -332,6 +333,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
             "default_key": "default-value",
             "overwritten_key": "new_value",
             "added_key": "added_value",
+            "python_logger": logname,
         }
         setattr(record, "labels", added_labels)
         handler.handle(record)
