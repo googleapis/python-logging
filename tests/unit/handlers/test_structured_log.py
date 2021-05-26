@@ -60,6 +60,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         record = logging.LogRecord(
             logname, logging.INFO, pathname, lineno, message, None, None, func=func
         )
+        expected_labels = {**labels, "python_logger": logname}
         expected_payload = {
             "message": message,
             "severity": record.levelname,
@@ -71,7 +72,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "function": func,
             },
             "httpRequest": {},
-            "logging.googleapis.com/labels": labels,
+            "logging.googleapis.com/labels": expected_labels,
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -197,6 +198,7 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "default_key": "default-value",
                 "overwritten_key": "new_value",
                 "added_key": "added_value",
+                "python_logger": logname,
             },
         }
 

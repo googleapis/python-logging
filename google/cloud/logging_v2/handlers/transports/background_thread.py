@@ -233,7 +233,8 @@ class _Worker(object):
         """
         # set python logger name as label if missing
         labels = kwargs.pop("labels", {})
-        labels['python_logger'] = labels.get('python_logger', record.name)
+        if record.name:
+            labels['python_logger'] = labels.get('python_logger', record.name)
         kwargs['labels'] = labels
         # enqueue new entry
         queue_entry = {
