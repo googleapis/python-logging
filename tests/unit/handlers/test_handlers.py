@@ -63,7 +63,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
             "file": "testpath",
             "function": "test-function",
         }
-        expected_label = {"python_logger":logname}
+        expected_label = {"python_logger": logname}
         record = logging.LogRecord(
             logname,
             logging.INFO,
@@ -296,7 +296,16 @@ class TestCloudLoggingHandler(unittest.TestCase):
         handler.handle(record)
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, message, _GLOBAL_RESOURCE, {"python_logger":logname}, None, None, None, None),
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                {"python_logger": logname},
+                None,
+                None,
+                None,
+                None,
+            ),
         )
 
     def test_emit_manual_field_override(self):

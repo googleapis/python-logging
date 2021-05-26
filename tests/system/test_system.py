@@ -378,7 +378,9 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(entries[0].trace, extra["trace"])
         self.assertEqual(entries[0].span_id, extra["span_id"])
         self.assertEqual(entries[0].http_request, expected_request)
-        self.assertEqual(entries[0].labels, {**extra["labels"], "python_logger":LOGGER_NAME})
+        self.assertEqual(
+            entries[0].labels, {**extra["labels"], "python_logger": LOGGER_NAME}
+        )
         self.assertEqual(entries[0].resource.type, extra["resource"].type)
 
     def test_log_root_handler(self):

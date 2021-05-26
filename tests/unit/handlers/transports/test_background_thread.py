@@ -286,7 +286,7 @@ class Test_Worker(unittest.TestCase):
         self.assertNotIn("trace", entry.keys())
         self.assertNotIn("span_id", entry.keys())
         self.assertNotIn("http_request", entry.keys())
-        self.assertEqual(entry["labels"], {"python_logger":"testing"})
+        self.assertEqual(entry["labels"], {"python_logger": "testing"})
 
     def test_enqueue_explicit(self):
         import datetime
@@ -315,7 +315,7 @@ class Test_Worker(unittest.TestCase):
         self.assertEqual(entry["message"], message)
         self.assertEqual(entry["severity"], LogSeverity.ERROR)
         self.assertIs(entry["resource"], resource)
-        self.assertEqual(entry["labels"], {**labels, "python_logger":"testing"})
+        self.assertEqual(entry["labels"], {**labels, "python_logger": "testing"})
         self.assertIs(entry["trace"], trace)
         self.assertIs(entry["span_id"], span_id)
         self.assertIsInstance(entry["timestamp"], datetime.datetime)
