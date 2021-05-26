@@ -348,38 +348,38 @@ class TestLogging(unittest.TestCase):
 
     def test_handlers_w_extras(self):
         LOG_MESSAGE = "Testing with injected extras."
+        LOGGER_NAME = "handler_extras"
+        handler_name = self._logger_name(LOGGER_NAME)
 
-        for cls in [CloudLoggingHandler, AppEngineHandler]:
-            LOGGER_NAME = f"{cls.__name__}-handler_extras"
-            handler_name = self._logger_name(LOGGER_NAME)
+        handler = CloudLoggingHandler(
+            Config.CLIENT, name=handler_name, transport=SyncTransport
+        )
 
-            handler = cls(Config.CLIENT, name=handler_name, transport=SyncTransport)
+        # only create the logger to delete, hidden otherwise
+        logger = Config.CLIENT.logger(handler.name)
+        self.to_delete.append(logger)
 
-            # only create the logger to delete, hidden otherwise
-            logger = Config.CLIENT.logger(handler.name)
-            self.to_delete.append(logger)
+        cloud_logger = logging.getLogger(LOGGER_NAME)
+        cloud_logger.addHandler(handler)
+        expected_request = {"requestUrl": "localhost"}
+        expected_source = {"file": "test.py"}
+        extra = {
+            "trace": "123",
+            "span_id": "456",
+            "http_request": expected_request,
+            "source_location": expected_source,
+            "resource": Resource(type="cloudiot_device", labels={}),
+            "labels": {"test-label": "manual"},
+        }
+        cloud_logger.warn(LOG_MESSAGE, extra=extra)
 
-            cloud_logger = logging.getLogger(LOGGER_NAME)
-            cloud_logger.addHandler(handler)
-            expected_request = {"requestUrl": "localhost"}
-            expected_source = {"file": "test.py"}
-            extra = {
-                "trace": "123",
-                "span_id": "456",
-                "http_request": expected_request,
-                "source_location": expected_source,
-                "resource": Resource(type="cloudiot_device", labels={}),
-                "labels": {"test-label": "manual"},
-            }
-            cloud_logger.warn(LOG_MESSAGE, extra=extra)
-
-            entries = _list_entries(logger)
-            self.assertEqual(len(entries), 1)
-            self.assertEqual(entries[0].trace, extra["trace"])
-            self.assertEqual(entries[0].span_id, extra["span_id"])
-            self.assertEqual(entries[0].http_request, expected_request)
-            self.assertEqual(entries[0].labels, extra["labels"])
-            self.assertEqual(entries[0].resource.type, extra["resource"].type)
+        entries = _list_entries(logger)
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0].trace, extra["trace"])
+        self.assertEqual(entries[0].span_id, extra["span_id"])
+        self.assertEqual(entries[0].http_request, expected_request)
+        self.assertEqual(entries[0].labels, {**extra["labels"], "python_logger":LOGGER_NAME})
+        self.assertEqual(entries[0].resource.type, extra["resource"].type)
 
     def test_log_root_handler(self):
         LOG_MESSAGE = "It was the best of times."
