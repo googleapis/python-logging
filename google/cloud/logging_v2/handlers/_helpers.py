@@ -17,6 +17,7 @@
 import math
 import json
 import re
+import warnings
 
 try:
     import flask
@@ -39,6 +40,8 @@ def format_stackdriver_json(record, message):
 
     Returns:
         str: JSON str to be written to the log file.
+
+    DEPRECATED:  use StructuredLogHandler to write formatted logs to standard out instead.
     """
     subsecond, second = math.modf(record.created)
 
@@ -48,7 +51,7 @@ def format_stackdriver_json(record, message):
         "thread": record.thread,
         "severity": record.levelname,
     }
-
+    warnings.warn("format_stackdriver_json is deprecated. Use StructuredLogHandler instead.", DeprecationWarning)
     return json.dumps(payload, ensure_ascii=False)
 
 
