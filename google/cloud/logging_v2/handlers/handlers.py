@@ -33,14 +33,15 @@ EXCLUDED_LOGGER_DEFAULTS = (
     "werkzeug",
 )
 
-"""These environments require us to remove extra handlers on setup"""""""""
+"""These environments require us to remove extra handlers on setup""" """"""
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
 
-"""Extra trace label to be added on App Engine environments"""""
+"""Extra trace label to be added on App Engine environments""" ""
 _GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
-"""Resource name for App Engine environments"""""
+"""Resource name for App Engine environments""" ""
 _GAE_RESOURCE_TYPE = "gae_app"
+
 
 class CloudLoggingFilter(logging.Filter):
     """Python standard ``logging`` Filter class to add Cloud Logging

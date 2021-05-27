@@ -51,7 +51,10 @@ def format_stackdriver_json(record, message):
         "thread": record.thread,
         "severity": record.levelname,
     }
-    warnings.warn("format_stackdriver_json is deprecated. Use StructuredLogHandler instead.", DeprecationWarning)
+    warnings.warn(
+        "format_stackdriver_json is deprecated. Use StructuredLogHandler instead.",
+        DeprecationWarning,
+    )
     return json.dumps(payload, ensure_ascii=False)
 
 
