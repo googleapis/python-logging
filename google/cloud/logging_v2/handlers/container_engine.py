@@ -24,7 +24,10 @@ import warnings
 
 from google.cloud.logging_v2.handlers._helpers import format_stackdriver_json
 
-_DEPRECATION_MSG = "ContainerEngineHandler is deprecated. Use StructuredLogHandler instead."
+_DEPRECATION_MSG = (
+    "ContainerEngineHandler is deprecated. Use StructuredLogHandler instead."
+)
+
 
 class ContainerEngineHandler(logging.StreamHandler):
     """Handler to format log messages the format expected by GKE fluent.

@@ -39,6 +39,7 @@ _TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
 _DEPRECATION_MSG = "AppEngineHandler is deprecated. Use CloudLoggingHandler instead."
 
+
 class AppEngineHandler(logging.StreamHandler):
     """A logging handler that sends App Engine-formatted logs to Stackdriver.
 
