@@ -169,6 +169,9 @@ class TestLogging(unittest.TestCase):
         return Struct(fields={k: TestLogging._to_value(v) for k, v in data.items()})
 
     def test_list_entry_with_auditlog(self):
+        """
+        Test emitting and listing logs containing a google.cloud.audit.AuditLog proto message
+        """
         from google.protobuf import descriptor_pool
         from google.cloud.logging_v2 import entries
 
@@ -216,6 +219,9 @@ class TestLogging(unittest.TestCase):
         )
 
     def test_list_entry_with_requestlog(self):
+        """
+        Test emitting and listing logs containing a google.appengine.logging.v1.RequestLog proto message
+        """
         from google.protobuf import descriptor_pool
         from google.cloud.logging_v2 import entries
 
