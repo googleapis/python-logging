@@ -239,7 +239,7 @@ class TestLogging(unittest.TestCase):
             "method": "GET",
             "status": 500,
             "resource": "test",
-            "httpVersion": "HTTP/1.1"
+            "httpVersion": "HTTP/1.1",
         }
         req_struct = self._dict_to_struct(req_dict)
 
@@ -690,6 +690,7 @@ class TestLogging(unittest.TestCase):
 
         self.assertEqual(sink.filter_, UPDATED_FILTER)
         self.assertEqual(sink.destination, dataset_uri)
+
 
 class _DeleteWrapper(object):
     def __init__(self, publisher, topic_path):
