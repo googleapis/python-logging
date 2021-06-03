@@ -197,7 +197,7 @@ class TestLogging(unittest.TestCase):
         filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
         entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
 
-        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=6)
+        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=10)
         protobuf_entry = retry(lambda: next(entry_iter))()
 
         self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
@@ -213,6 +213,52 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(
             protobuf_entry.to_api_repr()["protoPayload"]["methodName"],
             audit_dict["methodName"],
+        )
+
+    def test_list_entry_with_requestlog(self):
+        from google.protobuf import descriptor_pool
+        from google.cloud.logging_v2 import entries
+
+        pool = descriptor_pool.Default()
+        type_name = "google.appengine.logging.v1.RequestLog"
+        type_url = "type.googleapis.com/" + type_name
+        # Make sure the descriptor is known in the registry.
+        # Raises KeyError if unknown
+        pool.FindMessageTypeByName(type_name)
+
+        # create log
+        req_dict = {
+            "@type": type_url,
+            "ip": "0.0.0.0",
+            "appId": "test",
+            "versionId": "test",
+            "requestId": "12345",
+            "startTime": "2021-06-02T23:15:41.225062Z",
+            "endTime": "2021-06-02T23:16:41.225062Z",
+            "latency": "500.0s",
+            "method": "GET",
+            "status": 500,
+            "resource": "test",
+            "httpVersion": "HTTP/1.1"
+        }
+        req_struct = self._dict_to_struct(req_dict)
+
+        logger = Config.CLIENT.logger("req-proto")
+        logger.log_proto(req_struct)
+
+        # retrieve log
+        filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
+        entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
+
+        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=10)
+        protobuf_entry = retry(lambda: next(entry_iter))()
+
+        self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
+        self.assertIsNone(protobuf_entry.payload_pb)
+        self.assertIsInstance(protobuf_entry.payload_json, dict)
+        self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
+        self.assertEqual(
+            protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url
         )
 
     def test_log_text(self):
@@ -644,7 +690,6 @@ class TestLogging(unittest.TestCase):
 
         self.assertEqual(sink.filter_, UPDATED_FILTER)
         self.assertEqual(sink.destination, dataset_uri)
-
 
 class _DeleteWrapper(object):
     def __init__(self, publisher, topic_path):

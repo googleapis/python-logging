@@ -46,7 +46,7 @@ dependencies = [
     "google-api-core[grpc] >= 1.22.2, < 2.0.0dev",
     "google-cloud-appengine-logging >= 0.1.0, < 1.0.0dev",
     "google-cloud-audit-log >= 0.1.0, < 1.0.0dev",
-    "google-cloud-bigquery-logging >- 0.1.0, < 1.0.0dev",
+    "google-cloud-bigquery-logging >= 0.1.0, < 1.0.0dev",
     "google-cloud-core >= 1.4.1, < 2.0dev",
     "google-cloud-iam-logging >= 0.1.0, <1.0.0dev",
     "proto-plus >= 1.11.0",
