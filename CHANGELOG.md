@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [2.4.1](https://www.github.com/googleapis/python-logging/compare/v2.4.0...v2.4.1) (2021-06-04)
+
+
+### Bug Fixes
+
+* **deps:** add packaging requirement ([#300](https://www.github.com/googleapis/python-logging/issues/300)) ([68c5cec](https://www.github.com/googleapis/python-logging/commit/68c5ceced3288253af8e3c6013a35fa3954b37bc))
+
 ## [2.4.0](https://www.github.com/googleapis/python-logging/compare/v2.3.1...v2.4.0) (2021-05-12)
 
 
