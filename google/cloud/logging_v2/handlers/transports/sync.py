@@ -42,7 +42,7 @@ class SyncTransport(Transport):
         # set python logger name as label if missing
         labels = kwargs.pop("labels", {})
         if record.name:
-            labels['python_logger'] = labels.get('python_logger', record.name)
+            labels["python_logger"] = labels.get("python_logger", record.name)
         # send log synchronously
         self.logger.log(
             message,
