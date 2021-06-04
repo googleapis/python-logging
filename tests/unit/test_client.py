@@ -243,8 +243,10 @@ class TestClient(unittest.TestCase):
 
         creds = _make_credentials()
         client = self._make_one(project=self.PROJECT, credentials=creds)
-        labels = {"test":"true"}
-        logger = client.logger(self.LOGGER_NAME, resource=_GLOBAL_RESOURCE, labels=labels)
+        labels = {"test": "true"}
+        logger = client.logger(
+            self.LOGGER_NAME, resource=_GLOBAL_RESOURCE, labels=labels
+        )
         self.assertIsInstance(logger, Logger)
         self.assertEqual(logger.name, self.LOGGER_NAME)
         self.assertIs(logger.client, client)

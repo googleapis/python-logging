@@ -177,6 +177,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
         TEXT = "TEXT"
         ENTRIES = [
@@ -198,6 +199,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         TEXT = "TEXT"
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
         DEFAULT_LABELS = {"foo": "spam"}
@@ -278,6 +280,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
         ENTRIES = [
@@ -299,6 +302,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
         DEFAULT_LABELS = {"foo": "spam"}
