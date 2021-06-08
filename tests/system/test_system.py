@@ -200,7 +200,7 @@ class TestLogging(unittest.TestCase):
         filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
         entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
 
-        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=10)
+        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=7)
         protobuf_entry = retry(lambda: next(entry_iter))()
 
         self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
@@ -239,8 +239,6 @@ class TestLogging(unittest.TestCase):
             "appId": "test",
             "versionId": "test",
             "requestId": "12345",
-            "startTime": "2021-06-02T23:15:41.225062Z",
-            "endTime": "2021-06-02T23:16:41.225062Z",
             "latency": "500.0s",
             "method": "GET",
             "status": 500,
@@ -256,7 +254,7 @@ class TestLogging(unittest.TestCase):
         filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
         entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
 
-        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=10)
+        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=7)
         protobuf_entry = retry(lambda: next(entry_iter))()
 
         self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
