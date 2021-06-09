@@ -20,6 +20,7 @@ import numbers
 import os
 import pytest
 import unittest
+import uuid
 
 from google.api_core.exceptions import BadGateway
 from google.api_core.exceptions import Conflict
@@ -193,11 +194,11 @@ class TestLogging(unittest.TestCase):
         }
         audit_struct = self._dict_to_struct(audit_dict)
 
-        logger = Config.CLIENT.logger("audit-proto")
+        logger = Config.CLIENT.logger(f"audit-proto-{uuid.uuid1()}")
         logger.log_proto(audit_struct)
 
         # retrieve log
-        filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
+        filter_ = self.TYPE_FILTER.format(type_url)
         entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
 
         retry = RetryErrors((TooManyRequests, StopIteration), max_tries=7)
@@ -247,11 +248,11 @@ class TestLogging(unittest.TestCase):
         }
         req_struct = self._dict_to_struct(req_dict)
 
-        logger = Config.CLIENT.logger("req-proto")
+        logger = Config.CLIENT.logger(f"req-proto-{uuid.uuid1()}")
         logger.log_proto(req_struct)
 
         # retrieve log
-        filter_ = self.TYPE_FILTER.format(type_url) + f" AND {_time_filter}"
+        filter_ = self.TYPE_FILTER.format(type_url)
         entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
 
         retry = RetryErrors((TooManyRequests, StopIteration), max_tries=7)
