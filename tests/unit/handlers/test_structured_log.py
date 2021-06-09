@@ -144,11 +144,13 @@ class TestStructuredLogHandler(unittest.TestCase):
         import json
 
         handler = self._make_one()
-        logFormatter = logging.Formatter(fmt='%(name)s :: %(levelname)s :: %(message)s')
+        logFormatter = logging.Formatter(fmt="%(name)s :: %(levelname)s :: %(message)s")
         handler.setFormatter(logFormatter)
         message = "test"
         expected_result = "logname :: INFO :: test"
-        record = logging.LogRecord("logname", logging.INFO, None, None, message, None, None,)
+        record = logging.LogRecord(
+            "logname", logging.INFO, None, None, message, None, None,
+        )
         record.created = None
         handler.filter(record)
         result = handler.format(record)
@@ -165,7 +167,9 @@ class TestStructuredLogHandler(unittest.TestCase):
         message = "name: %s"
         name_arg = "Daniel"
         expected_result = "name: Daniel"
-        record = logging.LogRecord(None, logging.INFO, None, None, message, name_arg, None,)
+        record = logging.LogRecord(
+            None, logging.INFO, None, None, message, name_arg, None,
+        )
         record.created = None
         handler.filter(record)
         result = handler.format(record)
