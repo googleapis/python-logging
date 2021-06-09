@@ -198,11 +198,8 @@ class TestLogging(unittest.TestCase):
         logger.log_proto(audit_struct)
 
         # retrieve log
-        filter_ = self.TYPE_FILTER.format(type_url)
-        entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
-
-        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=7)
-        protobuf_entry = retry(lambda: next(entry_iter))()
+        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=8)
+        protobuf_entry = retry(lambda: next(logger.list_entries()))()
 
         self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
         self.assertIsNone(protobuf_entry.payload_pb)
@@ -252,11 +249,8 @@ class TestLogging(unittest.TestCase):
         logger.log_proto(req_struct)
 
         # retrieve log
-        filter_ = self.TYPE_FILTER.format(type_url)
-        entry_iter = iter(logger.list_entries(page_size=1, filter_=filter_))
-
-        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=7)
-        protobuf_entry = retry(lambda: next(entry_iter))()
+        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=8)
+        protobuf_entry = retry(lambda: next(logger.list_entries()))()
 
         self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
         self.assertIsNone(protobuf_entry.payload_pb)
