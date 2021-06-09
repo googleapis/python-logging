@@ -59,8 +59,10 @@ class StructuredLogHandler(logging.StreamHandler):
         Returns:
             str: A JSON string formatted for GKE fluentd.
         """
-        # let other formatters alter to message
-        super_payload = super(StructuredLogHandler, self).format(record)
+        # let other formatters alter the message
+        super_payload = None
+        if record.msg:
+            super_payload = super(StructuredLogHandler, self).format(record)
         # properly break any formatting in string to make it json safe
         record._formatted_msg = json.dumps(super_payload or "")
         # convert to GCP structred logging format
