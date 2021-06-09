@@ -291,7 +291,9 @@ class TestCloudLoggingHandler(unittest.TestCase):
         )
         logname = "loggername"
         message = "hello world"
-        record = logging.LogRecord(logname, logging.INFO, None, None, message, None, None)
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, message, None, None
+        )
         handler.handle(record)
         self.assertEqual(
             handler.transport.send_called_with,
@@ -315,7 +317,9 @@ class TestCloudLoggingHandler(unittest.TestCase):
         )
         logname = "loggername"
         message = "hello world"
-        record = logging.LogRecord(logname, logging.INFO, None, None, message, None, None)
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, message, None, None
+        )
         # set attributes manually
         expected_trace = "123"
         setattr(record, "trace", expected_trace)
@@ -359,29 +363,20 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         client = _Client(self.PROJECT)
         handler = self._make_one(
-            client,
-            transport=_Transport,
-            resource=_GLOBAL_RESOURCE,
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
         )
-        logFormatter = logging.Formatter(fmt='%(name)s :: %(levelname)s :: %(message)s')
+        logFormatter = logging.Formatter(fmt="%(name)s :: %(levelname)s :: %(message)s")
         handler.setFormatter(logFormatter)
         message = "test"
         expected_result = "logname :: INFO :: test"
-        record = logging.LogRecord("logname", logging.INFO, None, None, message, None, None)
+        record = logging.LogRecord(
+            "logname", logging.INFO, None, None, message, None, None
+        )
         handler.handle(record)
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (
-                record,
-                expected_result,
-                _GLOBAL_RESOURCE,
-                None,
-                None,
-                None,
-                None,
-                None,
-            ),
+            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, None, None,),
         )
 
     def test_format_with_arguments(self):
@@ -393,28 +388,19 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         client = _Client(self.PROJECT)
         handler = self._make_one(
-            client,
-            transport=_Transport,
-            resource=_GLOBAL_RESOURCE,
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
         )
         message = "name: %s"
         name_arg = "Daniel"
         expected_result = "name: Daniel"
-        record = logging.LogRecord(None, logging.INFO, None, None, message, name_arg, None)
+        record = logging.LogRecord(
+            None, logging.INFO, None, None, message, name_arg, None
+        )
         handler.handle(record)
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (
-                record,
-                expected_result,
-                _GLOBAL_RESOURCE,
-                None,
-                None,
-                None,
-                None,
-                None,
-            ),
+            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, None, None,),
         )
 
 
