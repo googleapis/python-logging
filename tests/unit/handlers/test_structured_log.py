@@ -109,7 +109,6 @@ class TestStructuredLogHandler(unittest.TestCase):
         When logging a message containing quotes, escape chars should be added
         """
         import logging
-        import json
 
         handler = self._make_one()
         message = '"test"'
@@ -125,7 +124,6 @@ class TestStructuredLogHandler(unittest.TestCase):
         When logging a message containing \n, it should be properly escaped
         """
         import logging
-        import json
 
         handler = self._make_one()
         message = "test\ntest"
@@ -141,7 +139,6 @@ class TestStructuredLogHandler(unittest.TestCase):
         Handler should respect custom formatters attached
         """
         import logging
-        import json
 
         handler = self._make_one()
         logFormatter = logging.Formatter(fmt="%(name)s :: %(levelname)s :: %(message)s")
@@ -161,7 +158,6 @@ class TestStructuredLogHandler(unittest.TestCase):
         Handler should support format string arguments
         """
         import logging
-        import json
 
         handler = self._make_one()
         message = "name: %s"

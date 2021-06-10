@@ -359,7 +359,6 @@ class TestCloudLoggingHandler(unittest.TestCase):
         Handler should respect custom formatters attached
         """
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
-        from google.cloud.logging_v2.resource import Resource
 
         client = _Client(self.PROJECT)
         handler = self._make_one(
@@ -384,7 +383,6 @@ class TestCloudLoggingHandler(unittest.TestCase):
         Handler should support format string arguments
         """
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
-        from google.cloud.logging_v2.resource import Resource
 
         client = _Client(self.PROJECT)
         handler = self._make_one(
