@@ -240,7 +240,6 @@ class TestCloudLoggingHandler(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             _create_global_resource,
         )
-        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
         from google.cloud.logging_v2.handlers.handlers import DEFAULT_LOGGER_NAME
 
         patch = mock.patch(
