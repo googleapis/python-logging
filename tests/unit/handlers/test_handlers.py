@@ -79,7 +79,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertTrue(success)
 
         self.assertEqual(record.msg, message)
-        self.assertEqual(record._payload_str, '"message": "{}"'.format(message))
         self.assertEqual(record._source_location, expected_location)
         self.assertEqual(record._source_location_str, json.dumps(expected_location))
         self.assertIsNone(record._resource)
@@ -106,7 +105,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertTrue(success)
 
         self.assertIsNone(record.msg)
-        self.assertEqual(record._payload_str, '"message": ""')
         self.assertIsNone(record._source_location)
         self.assertEqual(record._source_location_str, "{}")
         self.assertIsNone(record._resource)
@@ -379,14 +377,16 @@ class TestCloudLoggingHandler(unittest.TestCase):
         handler.setFormatter(logFormatter)
         message = "test"
         expected_result = "logname :: INFO :: test"
+        logname = "logname"
+        expected_label = {"python_logger":logname}
         record = logging.LogRecord(
-            "logname", logging.INFO, None, None, message, None, None
+            logname, logging.INFO, None, None, message, None, None
         )
         handler.handle(record)
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, None, None,),
+            (record, expected_result, _GLOBAL_RESOURCE, expected_label, None, None, None, None,),
         )
 
     def test_format_with_arguments(self):

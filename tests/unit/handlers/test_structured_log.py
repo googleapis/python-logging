@@ -92,7 +92,6 @@ class TestStructuredLogHandler(unittest.TestCase):
         record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
         record.created = None
         expected_payload = {
-            "message": "",
             "logging.googleapis.com/trace": "",
             "logging.googleapis.com/sourceLocation": {},
             "httpRequest": {},
