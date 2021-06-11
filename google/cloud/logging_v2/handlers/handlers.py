@@ -105,14 +105,6 @@ class CloudLoggingFilter(logging.Filter):
             record._source_location or {}, ensure_ascii=False
         )
         record._labels_str = json.dumps(record._labels or {}, ensure_ascii=False)
-        # set string payload values
-        encoded_string = json.dumps(record.msg or "", ensure_ascii=False)
-        if isinstance(record.msg, collections.abc.Mapping) and len(encoded_string) > 2:
-            # if dict input, extract key/value pairs
-            record._payload_str = encoded_string[1:-1]
-        else:
-            # otherwise, the message is the string value of the input
-            record._payload_str = '"message": {}'.format(encoded_string)
         return True
 
 
@@ -197,10 +189,11 @@ class CloudLoggingHandler(logging.StreamHandler):
         """
         resource = record._resource or self.resource
         labels = record._labels
+        message = None
         if isinstance(record.msg, collections.abc.Mapping):
             # if input is a dictionary, pass as-is for structured logging
             message = record.msg
-        else:
+        elif record.msg:
             # otherwise, format message string based on superclass
             message = super(CloudLoggingHandler, self).format(record)
         if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
