@@ -378,7 +378,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         message = "test"
         expected_result = "logname :: INFO :: test"
         logname = "logname"
-        expected_label = {"python_logger":logname}
+        expected_label = {"python_logger": logname}
         record = logging.LogRecord(
             logname, logging.INFO, None, None, message, None, None
         )
@@ -386,7 +386,16 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, expected_result, _GLOBAL_RESOURCE, expected_label, None, None, None, None,),
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                expected_label,
+                None,
+                None,
+                None,
+                None,
+            ),
         )
 
     def test_format_with_arguments(self):

@@ -32,7 +32,6 @@ from google.api_core.exceptions import RetryError
 from google.api_core.exceptions import ServiceUnavailable
 import google.cloud.logging
 from google.cloud._helpers import UTC
-from google.cloud.logging_v2.handlers import AppEngineHandler
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
