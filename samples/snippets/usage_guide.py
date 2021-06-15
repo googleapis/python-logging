@@ -265,9 +265,9 @@ def _sink_pubsub_setup(client):
     # [END sink_topic_permissions]
 
     # create callback wrapper to delete topic when done
-    class TopicDeleter():
+    class TopicDeleter:
         def delete(self):
-            client.delete_topic(request={"topic":topic_path})
+            client.delete_topic(request={"topic": topic_path})
 
     return topic, TopicDeleter()
 
