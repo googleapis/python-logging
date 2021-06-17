@@ -41,9 +41,9 @@ class TestSyncHandler(unittest.TestCase):
 
         client = _Client(self.PROJECT)
 
-        stackdriver_logger_name = "python"
+        client_name = "python"
         python_logger_name = "mylogger"
-        transport = self._make_one(client, stackdriver_logger_name)
+        transport = self._make_one(client, client_name)
         message = "hello world"
         record = logging.LogRecord(
             python_logger_name, logging.INFO, None, None, message, None, None
@@ -67,9 +67,9 @@ class TestSyncHandler(unittest.TestCase):
 
         client = _Client(self.PROJECT)
 
-        stackdriver_logger_name = "python"
+        client_name = "python"
         python_logger_name = "mylogger"
-        transport = self._make_one(client, stackdriver_logger_name)
+        transport = self._make_one(client, client_name)
         message = {"message": "hello world", "extra": "test"}
         record = logging.LogRecord(
             python_logger_name, logging.INFO, None, None, message, None, None
