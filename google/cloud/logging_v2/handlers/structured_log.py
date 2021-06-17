@@ -59,7 +59,7 @@ class StructuredLogHandler(logging.StreamHandler):
         Args:
             record (logging.LogRecord): The log record.
         Returns:
-            str: A JSON string formatted for GKE fluentd.
+            str: A JSON string formatted for GCP structured logging.
         """
         payload = None
         if isinstance(record.msg, collections.abc.Mapping):
