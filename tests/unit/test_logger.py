@@ -494,6 +494,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
             {
@@ -514,6 +515,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         TEXT = "TEXT"
         ENTRIES = [
             {
@@ -534,6 +536,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         ENTRIES = [
             {
