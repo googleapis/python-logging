@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [2.5.1](https://www.github.com/googleapis/python-logging/compare/v2.5.0...v2.5.1) (2021-06-22)
+
+
+### Documentation
+
+* omit mention of Python 2.7 in 'CONTRIBUTING.rst' ([#1127](https://www.github.com/googleapis/python-logging/issues/1127)) ([#327](https://www.github.com/googleapis/python-logging/issues/327)) ([faa6fb9](https://www.github.com/googleapis/python-logging/commit/faa6fb9a86c82b99b529e979160bfdd7a505793b)), closes [#1126](https://www.github.com/googleapis/python-logging/issues/1126)
+
 ## [2.5.0](https://www.github.com/googleapis/python-logging/compare/v2.4.0...v2.5.0) (2021-06-10)
 
 
