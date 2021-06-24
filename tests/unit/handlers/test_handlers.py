@@ -401,6 +401,40 @@ class TestCloudLoggingHandler(unittest.TestCase):
             ),
         )
 
+    def test_emit_with_encoded_json(self):
+        """
+        Handler should respect custom formatters attached
+        """
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
+        )
+        logFormatter = logging.Formatter(fmt='{ "x" : "%(name)s" }')
+        handler.setFormatter(logFormatter)
+        logname = "logname"
+        expected_result = {"x": logname}
+        expected_label = {"python_logger": logname}
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, "", None, None
+        )
+        handler.handle(record)
+
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                expected_label,
+                None,
+                None,
+                None,
+                None,
+            ),
+        )
+
     def test_format_with_arguments(self):
         """
         Handler should support format string arguments
