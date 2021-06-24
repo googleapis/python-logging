@@ -192,21 +192,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         """
         resource = record._resource or self.resource
         labels = record._labels
-
-        if isinstance(record.msg, str):
-            # format message string based on superclass
-            parsed_message = super(StructuredLogHandler, self).format(record)
-            try:
-                # attempt to parse encoded json into dictionary
-                if message[0] = '{':
-                    json_message = json.loads(message)
-                    if isinstance(json_message, collections.abc.Mapping):
-                        parsed_message = json_message
-            except (json.decoder.JSONDecodeError, IndexError):
-                pass
-        else:
-            # if non-string, pass along as-is
-            parsed_message = record.msg
+        message = _format_and_parse_message(record, self)
 
         if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
             # add GAE-specific label
@@ -214,7 +200,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         # send off request
         self.transport.send(
             record,
-            parsed_message,
+            message,
             resource=resource,
             labels=labels,
             trace=record._trace,
@@ -222,6 +208,29 @@ class CloudLoggingHandler(logging.StreamHandler):
             http_request=record._http_request,
             source_location=record._source_location,
         )
+
+def _format_and_parse_message(record, formatter_handler):
+    """
+    Helper function to apply formatting to a LogRecord message,
+    and attempt to parse encoded JSON into a dictionary object.
+
+    Args:
+        record (logging.LogRecord): The record object representing the log
+        formatter_handler (logging.Handler): The handler used to format the log
+    """
+    message = record.msg
+    if isinstance(message, str):
+        # format message string based on superclass
+        message = formatter_handler.format(record)
+        try:
+            # attempt to parse encoded json into dictionary
+            if message[0] == '{':
+                json_message = json.loads(message)
+                if isinstance(json_message, collections.abc.Mapping):
+                    message = json_message
+        except (json.decoder.JSONDecodeError, IndexError):
+            pass
+    return message
 
 
 def setup_logging(

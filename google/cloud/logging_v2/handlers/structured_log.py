@@ -19,6 +19,7 @@ import json
 import logging.handlers
 
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
+from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 
 GCP_FORMAT = (
     "{%(_payload_str)s"
@@ -62,22 +63,7 @@ class StructuredLogHandler(logging.StreamHandler):
             str: A JSON string formatted for GCP structured logging.
         """
         payload = None
-
-
-        if isinstance(record.msg, str):
-            # format message string based on superclass
-            parsed_message = super(StructuredLogHandler, self).format(record)
-            try:
-                if message[0] = '{':
-                    # attempt to parse encoded json into dictionary
-                    json_message = json.loads(message)
-                    if isinstance(json_message, collections.abc.Mapping):
-                        parsed_message = json_message
-            except (json.decoder.JSONDecodeError, IndexError):
-                pass
-        else:
-            # if non-string, pass along as-is
-            parsed_message = record.msg
+        message = _format_and_parse_message(record, super(StructuredLogHandler, self))
 
         if isinstance(message, collections.abc.Mapping):
             # if input is a dictionary, encode it as a json string
