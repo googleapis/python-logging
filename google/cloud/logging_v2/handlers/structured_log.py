@@ -62,16 +62,31 @@ class StructuredLogHandler(logging.StreamHandler):
             str: A JSON string formatted for GCP structured logging.
         """
         payload = None
-        if isinstance(record.msg, collections.abc.Mapping):
+
+
+        if isinstance(record.msg, str):
+            # format message string based on superclass
+            parsed_message = super(StructuredLogHandler, self).format(record)
+            try:
+                if message[0] = '{':
+                    # attempt to parse encoded json into dictionary
+                    json_message = json.loads(message)
+                    if isinstance(json_message, collections.abc.Mapping):
+                        parsed_message = json_message
+            except (json.decoder.JSONDecodeError, IndexError):
+                pass
+        else:
+            # if non-string, pass along as-is
+            parsed_message = record.msg
+
+        if isinstance(message, collections.abc.Mapping):
             # if input is a dictionary, encode it as a json string
-            encoded_msg = json.dumps(record.msg, ensure_ascii=False)
+            encoded_msg = json.dumps(message, ensure_ascii=False)
             # strip out open and close parentheses
             payload = encoded_msg.lstrip("{").rstrip("}") + ","
-        elif record.msg:
-            # otherwise, format based on superclass
-            super_message = super(StructuredLogHandler, self).format(record)
+        elif message:
             # properly break any formatting in string to make it json safe
-            encoded_message = json.dumps(super_message, ensure_ascii=False)
+            encoded_message = json.dumps(message, ensure_ascii=False)
             payload = '"message": {},'.format(encoded_message)
 
         record._payload_str = payload or ""

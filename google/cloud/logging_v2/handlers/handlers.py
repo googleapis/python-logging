@@ -192,20 +192,29 @@ class CloudLoggingHandler(logging.StreamHandler):
         """
         resource = record._resource or self.resource
         labels = record._labels
-        message = None
-        if isinstance(record.msg, collections.abc.Mapping):
-            # if input is a dictionary, pass as-is for structured logging
-            message = record.msg
-        elif record.msg:
-            # otherwise, format message string based on superclass
-            message = super(CloudLoggingHandler, self).format(record)
+
+        if isinstance(record.msg, str):
+            # format message string based on superclass
+            parsed_message = super(StructuredLogHandler, self).format(record)
+            try:
+                # attempt to parse encoded json into dictionary
+                if message[0] = '{':
+                    json_message = json.loads(message)
+                    if isinstance(json_message, collections.abc.Mapping):
+                        parsed_message = json_message
+            except (json.decoder.JSONDecodeError, IndexError):
+                pass
+        else:
+            # if non-string, pass along as-is
+            parsed_message = record.msg
+
         if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
             # add GAE-specific label
             labels = {_GAE_TRACE_ID_LABEL: record._trace, **(labels or {})}
         # send off request
         self.transport.send(
             record,
-            message,
+            parsed_message,
             resource=resource,
             labels=labels,
             trace=record._trace,
