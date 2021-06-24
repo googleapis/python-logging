@@ -230,8 +230,10 @@ def _format_and_parse_message(record, formatter_handler):
             if isinstance(json_message, collections.abc.Mapping):
                 message = json_message
     except (json.decoder.JSONDecodeError, IndexError):
+        # log string is not valid json
         pass
-    return message
+    # if formatted message contains no content, return None
+    return message if message != "None" else None
 
 
 def setup_logging(

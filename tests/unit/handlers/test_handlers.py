@@ -311,6 +311,31 @@ class TestCloudLoggingHandler(unittest.TestCase):
             ),
         )
 
+    def test_emit_minimal(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE
+        )
+        record = logging.LogRecord(
+            None, logging.INFO, None, None, None, None, None
+        )
+        handler.handle(record)
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                None,
+                _GLOBAL_RESOURCE,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ),
+        )
+
     def test_emit_manual_field_override(self):
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
         from google.cloud.logging_v2.resource import Resource
