@@ -181,10 +181,9 @@ class TestStructuredLogHandler(unittest.TestCase):
         handler = self._make_one()
         logFormatter = logging.Formatter(fmt='{ "name" : "%(name)s" }')
         handler.setFormatter(logFormatter)
-        message = ""
         expected_result = '"name": "logname"'
         record = logging.LogRecord(
-            "logname", logging.INFO, None, None, message, None, None,
+            "logname", logging.INFO, None, None, None, None, None,
         )
         record.created = None
         handler.filter(record)

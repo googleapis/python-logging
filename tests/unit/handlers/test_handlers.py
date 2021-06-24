@@ -449,7 +449,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         expected_result = {"x": logname}
         expected_label = {"python_logger": logname}
         record = logging.LogRecord(
-            logname, logging.INFO, None, None, "", None, None
+            logname, logging.INFO, None, None, None, None, None
         )
         handler.handle(record)
 

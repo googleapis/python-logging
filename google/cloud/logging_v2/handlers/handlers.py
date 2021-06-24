@@ -218,18 +218,19 @@ def _format_and_parse_message(record, formatter_handler):
         record (logging.LogRecord): The record object representing the log
         formatter_handler (logging.Handler): The handler used to format the log
     """
-    message = record.msg
-    if isinstance(message, str):
-        # format message string based on superclass
-        message = formatter_handler.format(record)
-        try:
-            # attempt to parse encoded json into dictionary
-            if message[0] == '{':
-                json_message = json.loads(message)
-                if isinstance(json_message, collections.abc.Mapping):
-                    message = json_message
-        except (json.decoder.JSONDecodeError, IndexError):
-            pass
+    # if message is a dictionary, return as-is
+    if isinstance(record.msg, collections.abc.Mapping):
+        return record.msg
+    # format message string based on superclass
+    message = formatter_handler.format(record)
+    try:
+        # attempt to parse encoded json into dictionary
+        if message[0] == '{':
+            json_message = json.loads(message)
+            if isinstance(json_message, collections.abc.Mapping):
+                message = json_message
+    except (json.decoder.JSONDecodeError, IndexError):
+        pass
     return message
 
 
