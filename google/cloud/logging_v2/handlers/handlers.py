@@ -209,6 +209,7 @@ class CloudLoggingHandler(logging.StreamHandler):
             source_location=record._source_location,
         )
 
+
 def _format_and_parse_message(record, formatter_handler):
     """
     Helper function to apply formatting to a LogRecord message,
@@ -225,7 +226,7 @@ def _format_and_parse_message(record, formatter_handler):
     message = formatter_handler.format(record)
     try:
         # attempt to parse encoded json into dictionary
-        if message[0] == '{':
+        if message[0] == "{":
             json_message = json.loads(message)
             if isinstance(json_message, collections.abc.Mapping):
                 message = json_message
