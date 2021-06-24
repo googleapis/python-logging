@@ -215,6 +215,8 @@ def _format_and_parse_message(record, formatter_handler):
     Helper function to apply formatting to a LogRecord message,
     and attempt to parse encoded JSON into a dictionary object.
 
+    Resulting output will be of type (str | dict | None)
+
     Args:
         record (logging.LogRecord): The record object representing the log
         formatter_handler (logging.Handler): The handler used to format the log
