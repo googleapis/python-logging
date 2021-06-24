@@ -516,6 +516,122 @@ class TestCloudLoggingHandler(unittest.TestCase):
         )
 
 
+
+class TestFormatAndParseMessage(unittest.TestCase):
+
+    def test_none(self):
+        """
+        None messages with no special formatting should return 
+        None after formatting
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = None
+        record = logging.LogRecord(
+            None, None, None, None, message, None, None
+        )
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, None)
+
+    def test_none_formatted(self):
+        """
+        None messages with formatting rules should return formatted string
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = None
+        record = logging.LogRecord(
+            "logname", None, None, None, message, None, None
+        )
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('name: %(name)s')
+        handler.setFormatter(formatter)
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, "name: logname")
+
+    def test_unformatted_string(self):
+        """
+        Unformated strings should be returned unchanged
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = '"test"'
+        record = logging.LogRecord(
+            "logname", None, None, None, message, None, None
+        )
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_empty_string(self):
+        """
+        Empty strings should be returned unchanged
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = ""
+        record = logging.LogRecord(
+            "logname", None, None, None, message, None, None
+        )
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_string_formatted_with_args(self):
+        """
+        string messages should properly apply formatting and arguments
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = "argument: %s"
+        arg = "test"
+        record = logging.LogRecord(
+            "logname", None, None, None, message, arg, None
+        )
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('name: %(name)s :: message: %(message)s')
+        handler.setFormatter(formatter)
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, "name: logname :: message: argument: test")
+
+    def test_dict(self):
+        """
+        dict messages should be unchanged
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = {"a": "b"}
+        record = logging.LogRecord(
+            "logname", None, None, None, message, None, None
+        )
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('name: %(name)s')
+        handler.setFormatter(formatter)
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_string_encoded_dict(self):
+        """
+        dicts should be extracted from string messages
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = '{ "x": { "y" : "z"  } }'
+        record = logging.LogRecord(
+            "logname", None, None, None, message, None, None
+        )
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, {"x":{"y":"z"}})
+
+    def test_broken_encoded_dict(self):
+        """
+        unparseable encoded dicts should be kept as strings
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+        message = '{ "x": { "y" : '
+        record = logging.LogRecord(
+            "logname", None, None, None, message, None, None
+        )
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+
 class TestSetupLogging(unittest.TestCase):
     def _call_fut(self, handler, excludes=None):
         from google.cloud.logging.handlers import setup_logging
