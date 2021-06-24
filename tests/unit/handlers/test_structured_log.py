@@ -154,6 +154,24 @@ class TestStructuredLogHandler(unittest.TestCase):
         self.assertIn(expected_result, result)
         self.assertIn("message", result)
 
+    def test_dict(self):
+        """
+        Handler should parse json encoded as a string
+        """
+        import logging
+
+        handler = self._make_one()
+        message = {"x": "test"}
+        expected_result = '"x": "test"'
+        record = logging.LogRecord(
+            "logname", logging.INFO, None, None, message, None, None,
+        )
+        record.created = None
+        handler.filter(record)
+        result = handler.format(record)
+        self.assertIn(expected_result, result)
+        self.assertNotIn("message", result)
+
     def test_encoded_json(self):
         """
         Handler should parse json encoded as a string

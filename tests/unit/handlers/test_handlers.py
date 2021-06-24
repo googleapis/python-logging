@@ -401,9 +401,41 @@ class TestCloudLoggingHandler(unittest.TestCase):
             ),
         )
 
+    def test_emit_dict(self):
+        """
+        Handler should support logging dictionaries
+        """
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
+        )
+        message = {"x": "test"}
+        logname = "logname"
+        expected_label = {"python_logger": logname}
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, message, None, None
+        )
+        handler.handle(record)
+
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                expected_label,
+                None,
+                None,
+                None,
+                None,
+            ),
+        )
+
     def test_emit_with_encoded_json(self):
         """
-        Handler should respect custom formatters attached
+        Handler should parse json encoded as a string
         """
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 
