@@ -10,7 +10,6 @@
 ### Features
 
 * add always_use_jwt_access ([#334](https://www.github.com/googleapis/python-logging/issues/334)) ([ae67d10](https://www.github.com/googleapis/python-logging/commit/ae67d10a661a3561b366bb05f5cf6d34520164b4))
-* add Samples section to CONTRIBUTING.rst ([#357](https://www.github.com/googleapis/python-logging/issues/357)) ([8771716](https://www.github.com/googleapis/python-logging/commit/8771716cae7cf67d710b3741b8b718fc4a8aa2b6))
 
 
 ### Bug Fixes
@@ -23,6 +22,8 @@
 ### Documentation
 
 * omit mention of Python 2.7 in 'CONTRIBUTING.rst' ([#1127](https://www.github.com/googleapis/python-logging/issues/1127)) ([#327](https://www.github.com/googleapis/python-logging/issues/327)) ([faa6fb9](https://www.github.com/googleapis/python-logging/commit/faa6fb9a86c82b99b529e979160bfdd7a505793b)), closes [#1126](https://www.github.com/googleapis/python-logging/issues/1126)
+* add Samples section to CONTRIBUTING.rst ([#357](https://www.github.com/googleapis/python-logging/issues/357)) ([8771716](https://www.github.com/googleapis/python-logging/commit/8771716cae7cf67d710b3741b8b718fc4a8aa2b6))
+
 
 ## [2.5.0](https://www.github.com/googleapis/python-logging/compare/v2.4.0...v2.5.0) (2021-06-10)
 
