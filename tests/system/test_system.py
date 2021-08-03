@@ -97,11 +97,13 @@ class Config(object):
     """
 
     CLIENT = None
+    HTTP_CLIENT = None
     use_mtls = os.environ.get("GOOGLE_API_USE_MTLS_ENDPOINT", "never")
 
 
 def setUpModule():
     Config.CLIENT = client.Client()
+    Config.HTTP_CLIENT =  client.Client(_use_grpc=False)
 
 
 # Skip the test cases using bigquery, storage and pubsub clients for mTLS testing.
@@ -261,12 +263,15 @@ class TestLogging(unittest.TestCase):
 
     def test_log_text(self):
         TEXT_PAYLOAD = "System test: test_log_text"
-        logger = Config.CLIENT.logger(self._logger_name("log_text"))
-        self.to_delete.append(logger)
-        logger.log_text(TEXT_PAYLOAD)
-        entries = _list_entries(logger)
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_text"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_http"))
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
+            # test gapic
+            logger.log_text(TEXT_PAYLOAD)
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
 
     def test_log_text_with_timestamp(self):
         text_payload = "System test: test_log_text_with_timestamp"
