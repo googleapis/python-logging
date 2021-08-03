@@ -251,39 +251,65 @@ class TestLogging(unittest.TestCase):
         for logger in [gapic_logger, http_logger]:
             logger.log_proto(req_struct)
 
+            # retrieve log
+            retry = RetryErrors((TooManyRequests, StopIteration), max_tries=8)
+            protobuf_entry = retry(lambda: next(logger.list_entries()))()
+
+            self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
+            self.assertIsNone(protobuf_entry.payload_pb)
+            self.assertIsInstance(protobuf_entry.payload_json, dict)
+            self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
+            self.assertEqual(
+                protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url
+            )
+
+    def test_log_text(self):
+        TEXT_PAYLOAD = "System test: test_log_text"
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_text"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_http"))
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
+            # test gapic
+            logger.log_text(TEXT_PAYLOAD)
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
+
     def test_log_text_with_timestamp(self):
         text_payload = "System test: test_log_text_with_timestamp"
-        logger = Config.CLIENT.logger(self._logger_name("log_text_ts"))
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_text_ts"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_ts_http"))
         now = datetime.utcnow()
-
-        self.to_delete.append(logger)
-
-        logger.log_text(text_payload, timestamp=now)
-        entries = _list_entries(logger)
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].payload, text_payload)
-        self.assertEqual(entries[0].timestamp, now.replace(tzinfo=UTC))
-        self.assertIsInstance(entries[0].received_timestamp, datetime)
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
+            logger.log_text(text_payload, timestamp=now)
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, text_payload)
+            self.assertEqual(entries[0].timestamp, now.replace(tzinfo=UTC))
+            self.assertIsInstance(entries[0].received_timestamp, datetime)
 
     def test_log_text_with_resource(self):
         text_payload = "System test: test_log_text_with_timestamp"
 
-        logger = Config.CLIENT.logger(self._logger_name("log_text_res"))
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_text_res"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_res_http"))
         now = datetime.utcnow()
-        resource = Resource(
-            type="gae_app",
-            labels={"module_id": "default", "version_id": "test", "zone": ""},
-        )
+        for logger in [gapic_logger, http_logger]:
+            resource = Resource(
+                type="gae_app",
+                labels={"module_id": "default", "version_id": "test", "zone": ""},
+            )
 
-        self.to_delete.append(logger)
+            self.to_delete.append(logger)
 
-        logger.log_text(text_payload, timestamp=now, resource=resource)
-        entries = _list_entries(logger)
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].payload, text_payload)
-        # project_id is output only so we don't want it in assertion
-        del entries[0].resource.labels["project_id"]
-        self.assertEqual(entries[0].resource, resource)
+            logger.log_text(text_payload, timestamp=now, resource=resource)
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, text_payload)
+            # project_id is output only so we don't want it in assertion
+            del entries[0].resource.labels["project_id"]
+            self.assertEqual(entries[0].resource, resource)
 
     def test_log_text_w_metadata(self):
         TEXT_PAYLOAD = "System test: test_log_text"
@@ -293,35 +319,39 @@ class TestLogging(unittest.TestCase):
         URI = "https://api.example.com/endpoint"
         STATUS = 500
         REQUEST = {"requestMethod": METHOD, "requestUrl": URI, "status": STATUS}
-        logger = Config.CLIENT.logger(self._logger_name("log_text_md"))
-        self.to_delete.append(logger)
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_text_md"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_md_http"))
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
 
-        logger.log_text(
-            TEXT_PAYLOAD, insert_id=INSERT_ID, severity=SEVERITY, http_request=REQUEST
-        )
-        entries = _list_entries(logger)
+            logger.log_text(
+                TEXT_PAYLOAD, insert_id=INSERT_ID, severity=SEVERITY, http_request=REQUEST
+            )
+            entries = _list_entries(logger)
 
-        self.assertEqual(len(entries), 1)
+            self.assertEqual(len(entries), 1)
 
-        entry = entries[0]
-        self.assertEqual(entry.payload, TEXT_PAYLOAD)
-        self.assertEqual(entry.insert_id, INSERT_ID)
-        self.assertEqual(entry.severity, SEVERITY)
+            entry = entries[0]
+            self.assertEqual(entry.payload, TEXT_PAYLOAD)
+            self.assertEqual(entry.insert_id, INSERT_ID)
+            self.assertEqual(entry.severity, SEVERITY)
 
-        request = entry.http_request
-        self.assertEqual(request["requestMethod"], METHOD)
-        self.assertEqual(request["requestUrl"], URI)
-        self.assertEqual(request["status"], STATUS)
+            request = entry.http_request
+            self.assertEqual(request["requestMethod"], METHOD)
+            self.assertEqual(request["requestUrl"], URI)
+            self.assertEqual(request["status"], STATUS)
 
     def test_log_struct(self):
-        logger = Config.CLIENT.logger(self._logger_name("log_struct"))
-        self.to_delete.append(logger)
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_struct"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_struct_http"))
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
 
-        logger.log_struct(self.JSON_PAYLOAD)
-        entries = _list_entries(logger)
+            logger.log_struct(self.JSON_PAYLOAD)
+            entries = _list_entries(logger)
 
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].payload, self.JSON_PAYLOAD)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, self.JSON_PAYLOAD)
 
     def test_log_struct_w_metadata(self):
         INSERT_ID = "INSERTID"
@@ -330,54 +360,63 @@ class TestLogging(unittest.TestCase):
         URI = "https://api.example.com/endpoint"
         STATUS = 500
         REQUEST = {"requestMethod": METHOD, "requestUrl": URI, "status": STATUS}
-        logger = Config.CLIENT.logger(self._logger_name("log_struct_md"))
-        self.to_delete.append(logger)
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_struct_md"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_struct_md_http"))
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
 
-        logger.log_struct(
-            self.JSON_PAYLOAD,
-            insert_id=INSERT_ID,
-            severity=SEVERITY,
-            http_request=REQUEST,
-        )
-        entries = _list_entries(logger)
+            logger.log_struct(
+                self.JSON_PAYLOAD,
+                insert_id=INSERT_ID,
+                severity=SEVERITY,
+                http_request=REQUEST,
+            )
+            entries = _list_entries(logger)
 
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].payload, self.JSON_PAYLOAD)
-        self.assertEqual(entries[0].insert_id, INSERT_ID)
-        self.assertEqual(entries[0].severity, SEVERITY)
-        request = entries[0].http_request
-        self.assertEqual(request["requestMethod"], METHOD)
-        self.assertEqual(request["requestUrl"], URI)
-        self.assertEqual(request["status"], STATUS)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, self.JSON_PAYLOAD)
+            self.assertEqual(entries[0].insert_id, INSERT_ID)
+            self.assertEqual(entries[0].severity, SEVERITY)
+            request = entries[0].http_request
+            self.assertEqual(request["requestMethod"], METHOD)
+            self.assertEqual(request["requestUrl"], URI)
+            self.assertEqual(request["status"], STATUS)
 
     def test_log_w_text(self):
         TEXT_PAYLOAD = "System test: test_log_w_text"
-        logger = Config.CLIENT.logger(self._logger_name("log_w_text"))
-        self.to_delete.append(logger)
-        logger.log(TEXT_PAYLOAD)
-        entries = _list_entries(logger)
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_w_text"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_w_text"))
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
+            logger.log(TEXT_PAYLOAD)
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
 
     def test_log_w_struct(self):
-        logger = Config.CLIENT.logger(self._logger_name("log_w_struct"))
-        self.to_delete.append(logger)
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_w_struct"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_w_struct_http"))
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
 
-        logger.log(self.JSON_PAYLOAD)
-        entries = _list_entries(logger)
+            logger.log(self.JSON_PAYLOAD)
+            entries = _list_entries(logger)
 
-        self.assertEqual(len(entries), 1)
-        self.assertEqual(entries[0].payload, self.JSON_PAYLOAD)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].payload, self.JSON_PAYLOAD)
 
     def test_log_empty(self):
-        logger = Config.CLIENT.logger(self._logger_name("log_empty"))
-        self.to_delete.append(logger)
+        gapic_logger = Config.CLIENT.logger(self._logger_name("log_empty"))
+        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_empty_http"))
 
-        logger.log()
-        entries = _list_entries(logger)
+        for logger in [gapic_logger, http_logger]:
+            self.to_delete.append(logger)
 
-        self.assertEqual(len(entries), 1)
-        self.assertIsNone(entries[0].payload)
+            logger.log()
+            entries = _list_entries(logger)
+
+            self.assertEqual(len(entries), 1)
+            self.assertIsNone(entries[0].payload)
 
     def test_log_handler_async(self):
         LOG_MESSAGE = "It was the worst of times"
