@@ -188,34 +188,34 @@ class TestLogging(unittest.TestCase):
         audit_dict = {
             "@type": type_url,
             "methodName": "test",
-            "requestMetadata": {"callerIp": "::1", "callerSuppliedUserAgent": "test"},
             "resourceName": "test",
             "serviceName": "test",
-            "status": {"code": 0},
         }
         audit_struct = self._dict_to_struct(audit_dict)
 
-        logger = Config.CLIENT.logger(f"audit-proto-{uuid.uuid1()}")
-        logger.log_proto(audit_struct)
+        gapic_logger = Config.CLIENT.logger(f"audit-proto-{uuid.uuid1()}")
+        http_logger = Config.HTTP_CLIENT.logger(f"audit-proto-{uuid.uuid1()}-http")
+        for logger in [gapic_logger, http_logger]:
+            logger.log_proto(audit_struct)
 
-        # retrieve log
-        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=8)
-        protobuf_entry = retry(lambda: next(logger.list_entries()))()
+            # retrieve log
+            retry = RetryErrors((TooManyRequests, StopIteration), max_tries=8)
+            protobuf_entry = retry(lambda: next(logger.list_entries()))()
 
-        self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
-        self.assertIsNone(protobuf_entry.payload_pb)
-        self.assertIsInstance(protobuf_entry.payload_json, dict)
-        self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
-        self.assertEqual(
-            protobuf_entry.payload_json["methodName"], audit_dict["methodName"]
-        )
-        self.assertEqual(
-            protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url
-        )
-        self.assertEqual(
-            protobuf_entry.to_api_repr()["protoPayload"]["methodName"],
-            audit_dict["methodName"],
-        )
+            self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
+            self.assertIsNone(protobuf_entry.payload_pb)
+            self.assertIsInstance(protobuf_entry.payload_json, dict)
+            self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
+            self.assertEqual(
+                protobuf_entry.payload_json["methodName"], audit_dict["methodName"]
+            )
+            self.assertEqual(
+                protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url
+            )
+            self.assertEqual(
+                protobuf_entry.to_api_repr()["protoPayload"]["methodName"],
+                audit_dict["methodName"],
+            )
 
     def test_list_entry_with_requestlog(self):
         """
@@ -246,32 +246,10 @@ class TestLogging(unittest.TestCase):
         }
         req_struct = self._dict_to_struct(req_dict)
 
-        logger = Config.CLIENT.logger(f"req-proto-{uuid.uuid1()}")
-        logger.log_proto(req_struct)
-
-        # retrieve log
-        retry = RetryErrors((TooManyRequests, StopIteration), max_tries=8)
-        protobuf_entry = retry(lambda: next(logger.list_entries()))()
-
-        self.assertIsInstance(protobuf_entry, entries.ProtobufEntry)
-        self.assertIsNone(protobuf_entry.payload_pb)
-        self.assertIsInstance(protobuf_entry.payload_json, dict)
-        self.assertEqual(protobuf_entry.payload_json["@type"], type_url)
-        self.assertEqual(
-            protobuf_entry.to_api_repr()["protoPayload"]["@type"], type_url
-        )
-
-    def test_log_text(self):
-        TEXT_PAYLOAD = "System test: test_log_text"
-        gapic_logger = Config.CLIENT.logger(self._logger_name("log_text"))
-        http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_http"))
+        gapic_logger = Config.CLIENT.logger(f"req-proto-{uuid.uuid1()}")
+        http_logger = Config.CLIENT.logger(f"req-proto-{uuid.uuid1()}-http")
         for logger in [gapic_logger, http_logger]:
-            self.to_delete.append(logger)
-            # test gapic
-            logger.log_text(TEXT_PAYLOAD)
-            entries = _list_entries(logger)
-            self.assertEqual(len(entries), 1)
-            self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
+            logger.log_proto(req_struct)
 
     def test_log_text_with_timestamp(self):
         text_payload = "System test: test_log_text_with_timestamp"
