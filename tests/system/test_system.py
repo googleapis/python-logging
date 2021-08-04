@@ -747,20 +747,38 @@ class TestLogging(unittest.TestCase):
         unique_id = uuid.uuid1()
         gapic_logger = Config.CLIENT.logger(f"api-list-{unique_id}")
         http_logger = Config.HTTP_CLIENT.logger(f"api-list-{unique_id}")
-        # write log
-        gapic_logger.log_text("test")
-        # read log
+        # write logs
+        log_count = 5
+        for i in range(log_count):
+            gapic_logger.log_text(f"test {i}")
         def retryable():
-            gapic_generator = gapic_logger.list_entries()
-            http_generator = http_logger.list_entries()
+            max_results = 3
+            gapic_generator = gapic_logger.list_entries(max_results=max_results)
+            http_generator = http_logger.list_entries(max_results=max_results)
+            # returned objects should be consistent
             self.assertEqual(type(gapic_generator), type(http_generator))
             gapic_list, http_list = list(gapic_generator), list(http_generator)
-            self.assertEqual(len(gapic_list), 1)
-            self.assertEqual(len(http_list), 1)
+            # max_results should limit the number of logs returned
+            self.assertEqual(len(gapic_list), max_results)
+            self.assertEqual(len(http_list), max_results)
+            # returned logs should be the same
             self.assertEqual(gapic_list[0].insert_id, http_list[0].insert_id)
+            # should return in ascending order
+            self.assertEqual(gapic_list[0].payload, "test 0")
+            # test reverse ordering
+            gapic_generator = gapic_logger.list_entries(max_results=max_results, order_by=google.cloud.logging_v2.DESCENDING)
+            http_generator = http_logger.list_entries(max_results=max_results, order_by=google.cloud.logging_v2.DESCENDING)
+            gapic_list, http_list = list(gapic_generator), list(http_generator)
+            self.assertEqual(len(gapic_list), max_results)
+            self.assertEqual(len(http_list), max_results)
+            # http and gapic results should be consistent
+            self.assertEqual(gapic_list[0].insert_id, http_list[0].insert_id)
+            # returned logs should be in descending order
+            self.assertEqual(gapic_list[0].payload, f"test {log_count-1}")
+
         RetryErrors(
                 (ServiceUnavailable, InternalServerError, AssertionError),
-                delay=2, backoff=2, max_tries=6
+                delay=2, backoff=2, max_tries=3
         )(retryable)()
 
 
