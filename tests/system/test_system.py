@@ -743,6 +743,25 @@ class TestLogging(unittest.TestCase):
 
         self.assertEqual(sink.filter_, UPDATED_FILTER)
         self.assertEqual(sink.destination, dataset_uri)
+    def test_api_equality_list_logs(self):
+        unique_id = uuid.uuid1()
+        gapic_logger = Config.CLIENT.logger(f"api-list-{unique_id}")
+        http_logger = Config.HTTP_CLIENT.logger(f"api-list-{unique_id}")
+        # write log
+        gapic_logger.log_text("test")
+        # read log
+        def retryable():
+            gapic_generator = gapic_logger.list_entries()
+            http_generator = http_logger.list_entries()
+            self.assertEqual(type(gapic_generator), type(http_generator))
+            gapic_list, http_list = list(gapic_generator), list(http_generator)
+            self.assertEqual(len(gapic_list), 1)
+            self.assertEqual(len(http_list), 1)
+            self.assertEqual(gapic_list[0].insert_id, http_list[0].insert_id)
+        RetryErrors(
+                (ServiceUnavailable, InternalServerError, AssertionError),
+                delay=2, backoff=2, max_tries=6
+        )(retryable)()
 
 
 class _DeleteWrapper(object):

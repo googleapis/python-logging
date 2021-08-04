@@ -131,7 +131,12 @@ class _LoggingAPI(object):
         )
         # This method uses POST to make a read-only request.
         iterator._HTTP_METHOD = "POST"
-        return iterator
+
+        def log_entries_pager(page_iter):
+            for page in page_iter:
+                yield page
+
+        return log_entries_pager(iterator)
 
     def write_entries(
         self,
