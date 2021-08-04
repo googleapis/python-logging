@@ -74,8 +74,7 @@ class _LoggingAPI(object):
         *,
         filter_=None,
         order_by=None,
-        page_size=None,
-        page_token=None,
+        max_results=None,
     ):
         """Return a page of log entry resources.
 
@@ -94,11 +93,6 @@ class _LoggingAPI(object):
                 https://cloud.google.com/logging/docs/view/advanced_filters
             order_by (str) One of :data:`~logging_v2.ASCENDING`
                 or :data:`~logging_v2.DESCENDING`.
-            page_size (int): maximum number of entries to return, If not passed,
-                defaults to a value set by the API.
-            page_token (str): opaque marker for the next "page" of entries. If not
-                passed, the API will return the first page of
-                entries.
 
         Returns:
             Iterator[~logging_v2.LogEntry]
@@ -110,9 +104,6 @@ class _LoggingAPI(object):
 
         if order_by is not None:
             extra_params["orderBy"] = order_by
-
-        if page_size is not None:
-            extra_params["pageSize"] = page_size
 
         path = "/entries:list"
         # We attach a mutable loggers dictionary so that as Logger
@@ -126,15 +117,18 @@ class _LoggingAPI(object):
             path=path,
             item_to_value=item_to_value,
             items_key="entries",
-            page_token=page_token,
             extra_params=extra_params,
         )
         # This method uses POST to make a read-only request.
         iterator._HTTP_METHOD = "POST"
 
         def log_entries_pager(page_iter):
+            i = 0
             for page in page_iter:
+                if max_results is not None and i >= max_results:
+                    break
                 yield page
+                i += 1
 
         return log_entries_pager(iterator)
 

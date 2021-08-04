@@ -266,6 +266,7 @@ class Logger(object):
         order_by=None,
         page_size=None,
         page_token=None,
+        max_results=None
     ):
         """Return a page of log entries.
 
@@ -289,16 +290,10 @@ class Logger(object):
                 By default, a 24 hour filter is applied.
             order_by (Optional[str]): One of :data:`~logging_v2.ASCENDING`
                 or :data:`~logging_v2.DESCENDING`.
-            page_size (Optional[int]):
-                Optional. The maximum number of entries in each page of results
-                from this request. Non-positive values are ignored. Defaults
-                to a sensible value set by the API.
-            page_token (Optional[str]):
-                Optional. If present, return the next batch of entries, using
-                the value, which must correspond to the ``nextPageToken`` value
-                returned in the previous response.  Deprecated: use the ``pages``
-                property of the returned iterator instead of manually passing
-                the token.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are ignored. Defaults
+                to unlimited.
 
         Returns:
             Iterator[~logging_v2.entries.LogEntry]
@@ -317,8 +312,7 @@ class Logger(object):
             resource_names=resource_names,
             filter_=filter_,
             order_by=order_by,
-            page_size=page_size,
-            page_token=page_token,
+            max_results=max_results,
         )
 
 

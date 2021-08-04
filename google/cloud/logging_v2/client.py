@@ -204,8 +204,7 @@ class Client(ClientWithProject):
         resource_names=None,
         filter_=None,
         order_by=None,
-        page_size=None,
-        page_token=None,
+        max_results=None,
     ):
         """Return a page of log entry resources.
 
@@ -226,11 +225,10 @@ class Client(ClientWithProject):
                 https://cloud.google.com/logging/docs/view/advanced_filters
             order_by (str) One of :data:`~logging_v2.ASCENDING`
                 or :data:`~logging_v2.DESCENDING`.
-            page_size (int): maximum number of entries to return, If not passed,
-                defaults to a value set by the API.
-            page_token (str): opaque marker for the next "page" of entries. If not
-                passed, the API will return the first page of
-                entries.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are ignored. Defaults
+                to API unlimited.
 
         Returns:
             Iterator[~logging_v2.LogEntry]
@@ -243,8 +241,7 @@ class Client(ClientWithProject):
             resource_names=resource_names,
             filter_=filter_,
             order_by=order_by,
-            page_size=page_size,
-            page_token=page_token,
+            max_results=max_results,
         )
 
     def sink(self, name, *, filter_=None, destination=None):

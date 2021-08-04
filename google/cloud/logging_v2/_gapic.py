@@ -49,8 +49,7 @@ class _LoggingAPI(object):
         *,
         filter_=None,
         order_by=None,
-        page_size=None,
-        page_token=None,
+        max_results=None,
     ):
         """Return a page of log entry resources.
 
@@ -69,11 +68,6 @@ class _LoggingAPI(object):
                 https://cloud.google.com/logging/docs/view/advanced_filters
             order_by (str) One of :data:`~logging_v2.ASCENDING`
                 or :data:`~logging_v2.DESCENDING`.
-            page_size (int): maximum number of entries to return, If not passed,
-                defaults to a value set by the API.
-            page_token (str): opaque marker for the next "page" of entries. If not
-                passed, the API will return the first page of
-                entries.
 
         Returns:
             Iterator[~logging_v2.LogEntry]
@@ -84,8 +78,7 @@ class _LoggingAPI(object):
             resource_names=resource_names,
             filter=filter_,
             order_by=order_by,
-            page_size=page_size,
-            page_token=page_token,
+            page_size=None,
         )
 
         response = self._gapic_api.list_log_entries(request=request)
@@ -97,9 +90,13 @@ class _LoggingAPI(object):
         loggers = {}
 
         def log_entries_pager(page_iter):
+            i = 0
             for page in page_iter:
+                if max_results is not None and i >= max_results:
+                    break
                 log_entry_dict = _parse_log_entry(LogEntryPB.pb(page))
                 yield entry_from_resource(log_entry_dict, self._client, loggers=loggers)
+                i += 1
 
         return log_entries_pager(page_iter)
 
