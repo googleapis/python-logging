@@ -227,8 +227,7 @@ class Client(ClientWithProject):
                 or :data:`~logging_v2.DESCENDING`.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. Defaults
-                to API unlimited.
+                Non-positive values are ignored. If None, uses API defaults.
 
         Returns:
             Iterator[~logging_v2.LogEntry]
@@ -263,7 +262,7 @@ class Client(ClientWithProject):
         """
         return Sink(name, filter_=filter_, destination=destination, client=self)
 
-    def list_sinks(self, *, parent=None, page_size=None, page_token=None):
+    def list_sinks(self, *, parent=None, max_results=None):
         """List sinks for the a parent resource.
 
         See
@@ -280,14 +279,9 @@ class Client(ClientWithProject):
                     "folders/[FOLDER_ID]".
 
                 If not passed, defaults to the project bound to the API's client.
-            page_size (Optional[int]): The maximum number of sinks in each
-                page of results from this request. Non-positive values are ignored. Defaults to a
-                sensible value set by the API.
-            page_token (Optional[str]): If present, return the next batch of sinks, using the
-                value, which must correspond to the ``nextPageToken`` value
-                returned in the previous response.  Deprecated: use the ``pages``
-                property ofthe returned iterator instead of manually passing the
-                token.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are ignored. If None, uses API defaults.
 
         Returns:
             Iterator[~logging_v2.sink.Sink]
@@ -295,7 +289,7 @@ class Client(ClientWithProject):
         if parent is None:
             parent = f"projects/{self.project}"
         return self.sinks_api.list_sinks(
-            parent=parent, page_size=page_size, page_token=page_token
+            parent=parent, max_results=max_results,
         )
 
     def metric(self, name, *, filter_=None, description=""):
@@ -316,27 +310,22 @@ class Client(ClientWithProject):
         """
         return Metric(name, filter_=filter_, client=self, description=description)
 
-    def list_metrics(self, *, page_size=None, page_token=None):
+    def list_metrics(self, *, max_results=None):
         """List metrics for the project associated with this client.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/list
 
         Args:
-            page_size (Optional[int]): The maximum number of sinks in each
-                page of results from this request. Non-positive values are ignored. Defaults to a
-                sensible value set by the API.
-            page_token (Optional[str]): If present, return the next batch of sinks, using the
-                value, which must correspond to the ``nextPageToken`` value
-                returned in the previous response.  Deprecated: use the ``pages``
-                property ofthe returned iterator instead of manually passing the
-                token.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are ignored. If None, uses API defaults.
 
         Returns:
             Iterator[~logging_v2.metric.Metric]
         """
         return self.metrics_api.list_metrics(
-            self.project, page_size=page_size, page_token=page_token
+            self.project, max_results=max_results
         )
 
     def get_default_handler(self, **kw):

@@ -264,8 +264,6 @@ class Logger(object):
         resource_names=None,
         filter_=None,
         order_by=None,
-        page_size=None,
-        page_token=None,
         max_results=None
     ):
         """Return a page of log entries.
@@ -292,8 +290,7 @@ class Logger(object):
                 or :data:`~logging_v2.DESCENDING`.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. Defaults
-                to unlimited.
+                Non-positive values are ignored. If None, uses API defaults.
 
         Returns:
             Iterator[~logging_v2.entries.LogEntry]

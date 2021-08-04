@@ -68,6 +68,9 @@ class _LoggingAPI(object):
                 https://cloud.google.com/logging/docs/view/advanced_filters
             order_by (str) One of :data:`~logging_v2.ASCENDING`
                 or :data:`~logging_v2.DESCENDING`.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are ignored. If None, uses API defaults.
 
         Returns:
             Iterator[~logging_v2.LogEntry]
@@ -78,7 +81,7 @@ class _LoggingAPI(object):
             resource_names=resource_names,
             filter=filter_,
             order_by=order_by,
-            page_size=None,
+            page_size=max_results,
         )
 
         response = self._gapic_api.list_log_entries(request=request)
@@ -172,7 +175,7 @@ class _SinksAPI(object):
         self._gapic_api = gapic_api
         self._client = client
 
-    def list_sinks(self, parent, *, page_size=0, page_token=None):
+    def list_sinks(self, parent, *, max_results=None):
         """List sinks for the parent resource.
 
         Args:
@@ -184,26 +187,25 @@ class _SinksAPI(object):
                     "organizations/[ORGANIZATION_ID]"
                     "billingAccounts/[BILLING_ACCOUNT_ID]"
                     "folders/[FOLDER_ID]".
-            page_size (Optional[int]): Maximum number of sinks to return, If not passed,
-                defaults to a value set by the API.
-            page_token (Optional[str]): Opaque marker for the next "page" of sinks. If not
-                passed, the API will return the first page of
-                sinks.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are ignored. If None, uses API defaults.
 
         Returns:
             Iterator[~logging_v2.Sink]
         """
-        request = ListSinksRequest(
-            parent=parent, page_size=page_size, page_token=page_token
-        )
+        request = ListSinksRequest(parent=parent)
         response = self._gapic_api.list_sinks(request)
         page_iter = iter(response)
 
         def sinks_pager(page_iter):
+            i = 0
             for page in page_iter:
+                if max_results is not None and i >= max_results:
+                    break
                 # Convert the GAPIC sink type into the handwritten `Sink` type
                 yield Sink.from_api_repr(LogSink.to_dict(page), client=self._client)
-
+                i += 1
         return sinks_pager(page_iter)
 
     def sink_create(
@@ -344,16 +346,14 @@ class _MetricsAPI(object):
         self._gapic_api = gapic_api
         self._client = client
 
-    def list_metrics(self, project, *, page_size=0, page_token=None):
+    def list_metrics(self, project, *, max_results=None):
         """List metrics for the project associated with this client.
 
         Args:
             project (str): ID of the project whose metrics are to be listed.
-            page_size (int): Maximum number of metrics to return, If not passed,
-                defaults to a value set by the API.
-            page_token (str): Opaque marker for the next "page" of metrics. If not
-                passed, the API will return the first page of
-                sinks.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are ignored. If None, uses API defaults.
 
         Returns:
             Iterable[logging_v2.Metric]: Iterable of metrics.
@@ -366,9 +366,13 @@ class _MetricsAPI(object):
         page_iter = iter(response)
 
         def metrics_pager(page_iter):
+            i = 0
             for page in page_iter:
+                if max_results is not None and i >= max_results:
+                    break
                 # Convert GAPIC metrics type into handwritten `Metric` type
                 yield Metric.from_api_repr(LogMetric.to_dict(page), client=self._client)
+                i += 1
 
         return metrics_pager(page_iter)
 
