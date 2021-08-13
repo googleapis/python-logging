@@ -44,12 +44,7 @@ class _LoggingAPI(object):
         self._client = client
 
     def list_entries(
-        self,
-        resource_names,
-        *,
-        filter_=None,
-        order_by=None,
-        max_results=None,
+        self, resource_names, *, filter_=None, order_by=None, max_results=None,
     ):
         """Return a page of log entry resources.
 
@@ -206,6 +201,7 @@ class _SinksAPI(object):
                 # Convert the GAPIC sink type into the handwritten `Sink` type
                 yield Sink.from_api_repr(LogSink.to_dict(page), client=self._client)
                 i += 1
+
         return sinks_pager(page_iter)
 
     def sink_create(

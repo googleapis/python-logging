@@ -259,12 +259,7 @@ class Logger(object):
         client.logging_api.logger_delete(logger_name)
 
     def list_entries(
-        self,
-        *,
-        resource_names=None,
-        filter_=None,
-        order_by=None,
-        max_results=None
+        self, *, resource_names=None, filter_=None, order_by=None, max_results=None
     ):
         """Return a page of log entries.
 

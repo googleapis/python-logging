@@ -69,12 +69,7 @@ class _LoggingAPI(object):
         self.api_request = client._connection.api_request
 
     def list_entries(
-        self,
-        resource_names,
-        *,
-        filter_=None,
-        order_by=None,
-        max_results=None,
+        self, resource_names, *, filter_=None, order_by=None, max_results=None,
     ):
         """Return a page of log entry resources.
 
@@ -241,7 +236,7 @@ class _SinksAPI(object):
             extra_params["pageSize"] = max_results
 
         path = f"/{parent}/sinks"
-        iterator =  page_iterator.HTTPIterator(
+        iterator = page_iterator.HTTPIterator(
             client=self._client,
             api_request=self._client._connection.api_request,
             path=path,
@@ -251,7 +246,6 @@ class _SinksAPI(object):
         )
 
         return _entries_pager(iterator, max_results)
-
 
     def sink_create(
         self, parent, sink_name, filter_, destination, *, unique_writer_identity=False
@@ -387,7 +381,7 @@ class _MetricsAPI(object):
             extra_params["pageSize"] = max_results
 
         path = f"/projects/{project}/metrics"
-        iterator =  page_iterator.HTTPIterator(
+        iterator = page_iterator.HTTPIterator(
             client=self._client,
             api_request=self._client._connection.api_request,
             path=path,
@@ -396,7 +390,6 @@ class _MetricsAPI(object):
             extra_params=extra_params,
         )
         return _entries_pager(iterator, max_results)
-
 
     def metric_create(self, project, metric_name, filter_, description):
         """Create a metric resource.
@@ -458,6 +451,7 @@ class _MetricsAPI(object):
         target = f"/projects/{project}/metrics/{metric_name}"
         self.api_request(method="DELETE", path=target)
 
+
 def _entries_pager(page_iter, limit):
     i = 0
     for page in page_iter:
@@ -465,6 +459,7 @@ def _entries_pager(page_iter, limit):
             break
         yield page
         i += 1
+
 
 def _item_to_entry(iterator, resource, loggers):
     """Convert a log entry resource to the native object.

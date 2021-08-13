@@ -199,12 +199,7 @@ class Client(ClientWithProject):
         return Logger(name, client=self, labels=labels, resource=resource)
 
     def list_entries(
-        self,
-        *,
-        resource_names=None,
-        filter_=None,
-        order_by=None,
-        max_results=None,
+        self, *, resource_names=None, filter_=None, order_by=None, max_results=None,
     ):
         """Return a page of log entry resources.
 
@@ -288,9 +283,7 @@ class Client(ClientWithProject):
         """
         if parent is None:
             parent = f"projects/{self.project}"
-        return self.sinks_api.list_sinks(
-            parent=parent, max_results=max_results,
-        )
+        return self.sinks_api.list_sinks(parent=parent, max_results=max_results,)
 
     def metric(self, name, *, filter_=None, description=""):
         """Creates a metric bound to the current client.
@@ -324,9 +317,7 @@ class Client(ClientWithProject):
         Returns:
             Iterator[~logging_v2.metric.Metric]
         """
-        return self.metrics_api.list_metrics(
-            self.project, max_results=max_results
-        )
+        return self.metrics_api.list_metrics(self.project, max_results=max_results)
 
     def get_default_handler(self, **kw):
         """Return the default logging handler based on the local environment.

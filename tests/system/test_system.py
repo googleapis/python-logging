@@ -103,7 +103,7 @@ class Config(object):
 
 def setUpModule():
     Config.CLIENT = client.Client()
-    Config.HTTP_CLIENT =  client.Client(_use_grpc=False)
+    Config.HTTP_CLIENT = client.Client(_use_grpc=False)
 
 
 # Skip the test cases using bigquery, storage and pubsub clients for mTLS testing.
@@ -325,7 +325,10 @@ class TestLogging(unittest.TestCase):
             self.to_delete.append(logger)
 
             logger.log_text(
-                TEXT_PAYLOAD, insert_id=INSERT_ID, severity=SEVERITY, http_request=REQUEST
+                TEXT_PAYLOAD,
+                insert_id=INSERT_ID,
+                severity=SEVERITY,
+                http_request=REQUEST,
             )
             entries = _list_entries(logger)
 
@@ -743,6 +746,7 @@ class TestLogging(unittest.TestCase):
 
         self.assertEqual(sink.filter_, UPDATED_FILTER)
         self.assertEqual(sink.destination, dataset_uri)
+
     def test_api_equality_list_logs(self):
         unique_id = uuid.uuid1()
         gapic_logger = Config.CLIENT.logger(f"api-list-{unique_id}")
@@ -751,6 +755,7 @@ class TestLogging(unittest.TestCase):
         log_count = 5
         for i in range(log_count):
             gapic_logger.log_text(f"test {i}")
+
         def retryable():
             max_results = 3
             gapic_generator = gapic_logger.list_entries(max_results=max_results)
@@ -766,8 +771,12 @@ class TestLogging(unittest.TestCase):
             # should return in ascending order
             self.assertEqual(gapic_list[0].payload, "test 0")
             # test reverse ordering
-            gapic_generator = gapic_logger.list_entries(max_results=max_results, order_by=google.cloud.logging_v2.DESCENDING)
-            http_generator = http_logger.list_entries(max_results=max_results, order_by=google.cloud.logging_v2.DESCENDING)
+            gapic_generator = gapic_logger.list_entries(
+                max_results=max_results, order_by=google.cloud.logging_v2.DESCENDING
+            )
+            http_generator = http_logger.list_entries(
+                max_results=max_results, order_by=google.cloud.logging_v2.DESCENDING
+            )
             gapic_list, http_list = list(gapic_generator), list(http_generator)
             self.assertEqual(len(gapic_list), max_results)
             self.assertEqual(len(http_list), max_results)
@@ -777,8 +786,10 @@ class TestLogging(unittest.TestCase):
             self.assertEqual(gapic_list[0].payload, f"test {log_count-1}")
 
         RetryErrors(
-                (ServiceUnavailable, InternalServerError, AssertionError),
-                delay=2, backoff=2, max_tries=3
+            (ServiceUnavailable, InternalServerError, AssertionError),
+            delay=2,
+            backoff=2,
+            max_tries=3,
         )(retryable)()
 
 
