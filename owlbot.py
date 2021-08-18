@@ -99,10 +99,4 @@ s.replace(
 
 python.py_samples()
 
-# --------------------------------------------------------------------------
-# Samples templates
-# --------------------------------------------------------------------------
-
-python.py_samples()
-
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)
