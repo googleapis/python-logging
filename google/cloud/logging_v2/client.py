@@ -56,6 +56,7 @@ _GAE_RESOURCE_TYPE = "gae_app"
 _GKE_RESOURCE_TYPE = "k8s_container"
 _GCF_RESOURCE_TYPE = "cloud_function"
 _RUN_RESOURCE_TYPE = "cloud_run_revision"
+_BUILD_RESOURCE_TYPE = "build"
 
 
 class Client(ClientWithProject):
@@ -364,6 +365,8 @@ class Client(ClientWithProject):
                 # 3.7 should use the standard CloudLoggingHandler, which sends logs over the network.
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _RUN_RESOURCE_TYPE:
+                return StructuredLogHandler(**kw, project_id=self.project)
+            elif monitored_resource.type == _BUILD_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
         return CloudLoggingHandler(self, resource=monitored_resource, **kw)
 

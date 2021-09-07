@@ -33,6 +33,18 @@ _CLOUD_RUN_ENV_VARS = [
 ]
 """Environment variables set in Cloud Run environment."""
 
+_CLOUD_BUILD_PROJECT_ID = "PROJECT_ID"
+_CLOUD_BUILD_PROJECT_NUMBER = "PROJECT_NUMBER"
+_CLOUD_BUILD_BUILD_ID = "BUILD_ID"
+_CLOUD_BUILD_TRIGGER_ID = "TRIGGER_NAME"
+_CLOUD_BUILD_REQUIRED_ENV_VARS = [
+    _CLOUD_BUILD_PROJECT_ID,
+    _CLOUD_BUILD_PROJECT_NUMBER,
+    _CLOUD_BUILD_BUILD_ID,
+]
+"""Environment variables set in Cloud Build environment."""
+
+
 _FUNCTION_TARGET = "FUNCTION_TARGET"
 _FUNCTION_SIGNATURE = "FUNCTION_SIGNATURE_TYPE"
 _FUNCTION_NAME = "FUNCTION_NAME"
@@ -137,6 +149,20 @@ def _create_cloud_run_resource():
     )
     return resource
 
+def _create_cloud_build_resource():
+    """Create a standardized Cloud Build resource.
+    Returns:
+        google.cloud.logging.Resource
+    """
+    resource = Resource(
+        type="build",
+        labels={
+            "project_id": os.environ.get(_CLOUD_BUILD_PROJECT_ID, ""),
+            "build_id": os.environ.get(_CLOUD_BUILD_BUILD_ID, ""),
+            "build_trigger_id": os.environ.get(_CLOUD_BUILD_TRIGGER_ID, ""),
+        },
+    )
+    return resource
 
 def _create_app_engine_resource():
     """Create a standardized App Engine resource.
@@ -191,6 +217,8 @@ def detect_resource(project=""):
     elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
         # Cloud Run
         return _create_cloud_run_resource()
+    elif all([env in os.environ for env in _CLOUD_BUILD_REQUIRED_ENV_VARS]):
+        return _create_cloud_build_resource()
     elif gce_instance_name is not None:
         # Compute Engine
         return _create_compute_resource()
