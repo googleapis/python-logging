@@ -149,6 +149,7 @@ def _create_cloud_run_resource():
     )
     return resource
 
+
 def _create_cloud_build_resource():
     """Create a standardized Cloud Build resource.
     Returns:
@@ -163,6 +164,7 @@ def _create_cloud_build_resource():
         },
     )
     return resource
+
 
 def _create_app_engine_resource():
     """Create a standardized App Engine resource.
