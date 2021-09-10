@@ -145,12 +145,7 @@ def _create_cloud_build_resource():
         google.cloud.logging.Resource
     """
     project = retrieve_metadata_server(_PROJECT_NAME)
-    resource = Resource(
-        type="build",
-        labels={
-            "project_id": project,
-        },
-    )
+    resource = Resource(type="build", labels={"project_id": project,},)
     return resource
 
 
