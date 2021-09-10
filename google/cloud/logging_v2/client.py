@@ -366,8 +366,6 @@ class Client(ClientWithProject):
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _RUN_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
-            elif monitored_resource.type == _BUILD_RESOURCE_TYPE:
-                return StructuredLogHandler(**kw, project_id=self.project)
         return CloudLoggingHandler(self, resource=monitored_resource, **kw)
 
     def setup_logging(
