@@ -129,13 +129,11 @@ class TestStructuredLogHandler(unittest.TestCase):
         handler = self._make_one()
         exception_tuple = (Exception, Exception(), None)
         message = 'test'
-        expected_result = 'test'
         record = logging.LogRecord(None, logging.INFO, None, None, message, None, exception_tuple)
         record.created = None
         handler.filter(record)
-        # result = json.loads(handler.format(record))
-        result = handler.format(record)
-        self.assertIn(expected_result, result)
+        result = json.loads(handler.format(record))
+        self.assertEqual(result['message'], message)
 
     def test_format_with_line_break(self):
         """
