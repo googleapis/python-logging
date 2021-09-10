@@ -33,18 +33,6 @@ _CLOUD_RUN_ENV_VARS = [
 ]
 """Environment variables set in Cloud Run environment."""
 
-_CLOUD_BUILD_PROJECT_ID = "PROJECT_ID"
-_CLOUD_BUILD_PROJECT_NUMBER = "PROJECT_NUMBER"
-_CLOUD_BUILD_BUILD_ID = "BUILD_ID"
-_CLOUD_BUILD_TRIGGER_ID = "TRIGGER_NAME"
-_CLOUD_BUILD_REQUIRED_ENV_VARS = [
-    _CLOUD_BUILD_PROJECT_ID,
-    _CLOUD_BUILD_PROJECT_NUMBER,
-    _CLOUD_BUILD_BUILD_ID,
-]
-"""Environment variables set in Cloud Build environment."""
-
-
 _FUNCTION_TARGET = "FUNCTION_TARGET"
 _FUNCTION_SIGNATURE = "FUNCTION_SIGNATURE_TYPE"
 _FUNCTION_NAME = "FUNCTION_NAME"
@@ -58,6 +46,7 @@ _LEGACY_FUNCTION_ENV_VARS = [_FUNCTION_NAME, _FUNCTION_REGION, _FUNCTION_ENTRY]
 _REGION_ID = "instance/region"
 _ZONE_ID = "instance/zone"
 _GCE_INSTANCE_ID = "instance/id"
+_SERVICE_ACCOUNT_EMAIL = "instance/service-accounts/default/email"
 """Attribute in metadata server for compute region and instance."""
 
 _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
@@ -154,12 +143,11 @@ def _create_cloud_build_resource():
     Returns:
         google.cloud.logging.Resource
     """
+    project = retrieve_metadata_server(_PROJECT_NAME)
     resource = Resource(
         type="build",
         labels={
-            "project_id": os.environ.get(_CLOUD_BUILD_PROJECT_ID, ""),
-            "build_id": os.environ.get(_CLOUD_BUILD_BUILD_ID, ""),
-            "build_trigger_id": os.environ.get(_CLOUD_BUILD_TRIGGER_ID, ""),
+            "project_id": project,
         },
     )
     return resource
@@ -202,6 +190,7 @@ def detect_resource(project=""):
     """
     gke_cluster_name = retrieve_metadata_server(_GKE_CLUSTER_NAME)
     gce_instance_name = retrieve_metadata_server(_GCE_INSTANCE_ID)
+    service_account_email = retrieve_metadata_server(_SERVICE_ACCOUNT_EMAIL)
 
     if all([env in os.environ for env in _GAE_ENV_VARS]):
         # App Engine Flex or Standard
@@ -217,7 +206,7 @@ def detect_resource(project=""):
     elif all([env in os.environ for env in _CLOUD_RUN_ENV_VARS]):
         # Cloud Run
         return _create_cloud_run_resource()
-    elif all([env in os.environ for env in _CLOUD_BUILD_REQUIRED_ENV_VARS]):
+    elif service_account_email.endswith("@cloudbuild.gserviceaccount.com"):
         return _create_cloud_build_resource()
     elif gce_instance_name is not None:
         # Compute Engine
