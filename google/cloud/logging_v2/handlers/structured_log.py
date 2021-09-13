@@ -15,7 +15,6 @@
 """Logging handler for printing formatted structured logs to standard output.
 """
 import json
-from copy import copy
 import logging.handlers
 
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
@@ -60,9 +59,6 @@ class StructuredLogHandler(logging.StreamHandler):
         Returns:
             str: A JSON string formatted for GKE fluentd.
         """
-        # remove unwanted fields
-        record = copy(record)
-        record.exc_info = None
         # let other formatters alter the message
         super_payload = None
         if record.msg:
@@ -70,6 +66,9 @@ class StructuredLogHandler(logging.StreamHandler):
             super_payload = super(StructuredLogHandler, self).format(record)
         # properly break any formatting in string to make it json safe
         record._formatted_msg = json.dumps(super_payload or "")
+        # remove exception info to avoid duplicating it
+        record.exc_info = None
+        record.exc_text = None
         # convert to GCP structred logging format
         gcp_payload = self._gcp_formatter.format(record)
         return gcp_payload

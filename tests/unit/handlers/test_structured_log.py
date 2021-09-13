@@ -133,7 +133,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         record.created = None
         handler.filter(record)
         result = json.loads(handler.format(record))
-        self.assertEqual(result['message'], message)
+        self.assertEqual(result['message'], f"{message}\nException")
 
     def test_format_with_line_break(self):
         """
