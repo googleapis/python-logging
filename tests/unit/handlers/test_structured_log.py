@@ -128,8 +128,10 @@ class TestStructuredLogHandler(unittest.TestCase):
 
         handler = self._make_one()
         exception_tuple = (Exception, Exception(), None)
-        message = 'test'
-        record = logging.LogRecord(None, logging.INFO, None, None, message, None, exception_tuple)
+        message = "test"
+        record = logging.LogRecord(
+            None, logging.INFO, None, None, message, None, exception_tuple
+        )
         record.created = None
         handler.filter(record)
         result = json.loads(handler.format(record))
