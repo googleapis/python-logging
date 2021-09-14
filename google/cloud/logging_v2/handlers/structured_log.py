@@ -67,6 +67,7 @@ class StructuredLogHandler(logging.StreamHandler):
         # properly break any formatting in string to make it json safe
         record._formatted_msg = json.dumps(super_payload or "")
         # remove exception info to avoid duplicating it
+        # https://github.com/googleapis/python-logging/issues/382
         record.exc_info = None
         record.exc_text = None
         # convert to GCP structred logging format
