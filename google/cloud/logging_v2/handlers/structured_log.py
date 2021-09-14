@@ -76,6 +76,10 @@ class StructuredLogHandler(logging.StreamHandler):
             payload = '"message": {},'.format(encoded_message)
 
         record._payload_str = payload or ""
+        # remove exception info to avoid duplicating it
+        # https://github.com/googleapis/python-logging/issues/382
+        record.exc_info = None
+        record.exc_text = None
         # convert to GCP structred logging format
         gcp_payload = self._gcp_formatter.format(record)
         return gcp_payload
