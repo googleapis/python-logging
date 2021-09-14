@@ -275,11 +275,7 @@ class TestLogging(unittest.TestCase):
         pool.FindMessageTypeByName(type_name)
 
         # create log
-        req_dict = {
-            "@type": type_url,
-            "policyDelta": {
-            }
-        }
+        req_dict = {"@type": type_url, "policyDelta": {}}
         req_struct = self._dict_to_struct(req_dict)
 
         logger = Config.CLIENT.logger(f"auditdata-proto-{uuid.uuid1()}")
