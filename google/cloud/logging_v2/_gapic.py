@@ -356,7 +356,7 @@ class _MetricsAPI(object):
         """
         path = f"projects/{project}"
         request = ListLogMetricsRequest(
-            parent=path, page_size=page_size, page_token=page_token,
+                parent=path, page_size=max_results,
         )
         response = self._gapic_api.list_log_metrics(request=request)
         page_iter = iter(response)

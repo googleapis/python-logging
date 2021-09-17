@@ -36,6 +36,10 @@ from google.cloud.logging_v2.handlers import CloudLoggingHandler
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
+from google.cloud.logging_v2.entries import LogEntry
+from google.cloud.logging_v2.entries import ProtobufEntry
+from google.cloud.logging_v2.entries import StructEntry
+from google.cloud.logging_v2.entries import TextEntry
 
 from google.protobuf.struct_pb2 import Struct, Value, ListValue, NullValue
 
@@ -269,11 +273,11 @@ class TestLogging(unittest.TestCase):
         http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_http"))
         for logger in [gapic_logger, http_logger]:
             self.to_delete.append(logger)
-            # test gapic
             logger.log_text(TEXT_PAYLOAD)
             entries = _list_entries(logger)
             self.assertEqual(len(entries), 1)
             self.assertEqual(entries[0].payload, TEXT_PAYLOAD)
+            self.assertTrue(isinstance(entries[0], TextEntry))
 
     def test_log_text_with_timestamp(self):
         text_payload = "System test: test_log_text_with_timestamp"
