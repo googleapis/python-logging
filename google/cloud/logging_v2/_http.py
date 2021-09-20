@@ -401,7 +401,7 @@ class _MetricsAPI(object):
                 passed, the API will return the first page of entries.
 
         Returns:
-            Iterable[logging_v2.Metric]: Iterable of metrics.
+            Generator[logging_v2.Metric]
 
         """
         extra_params = {}

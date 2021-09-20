@@ -299,7 +299,6 @@ class Client(ClientWithProject):
             page_token (str): opaque marker for the starting "page" of entries. If not
                 passed, the API will return the first page of entries.
 
-
         Returns:
             Generator[~logging_v2.Sink]
         """
@@ -347,7 +346,7 @@ class Client(ClientWithProject):
                 passed, the API will return the first page of entries.
 
         Returns:
-            Generator[logging_v2.Metric]: Iterable of metrics.
+            Generator[logging_v2.Metric]
         """
         return self.metrics_api.list_metrics(
             self.project,
