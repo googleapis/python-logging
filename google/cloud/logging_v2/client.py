@@ -199,9 +199,16 @@ class Client(ClientWithProject):
         return Logger(name, client=self, labels=labels, resource=resource)
 
     def list_entries(
-        self, *, resource_names=None, filter_=None, order_by=None, max_results=None,
+        self,
+        *,
+        resource_names=None,
+        filter_=None,
+        order_by=None,
+        max_results=None,
+        page_size=None,
+        page_token=None,
     ):
-        """Return a page of log entry resources.
+        """Return a generator of log entry resources.
 
         Args:
             resource_names (Sequence[str]): Names of one or more parent resources
@@ -222,10 +229,15 @@ class Client(ClientWithProject):
                 or :data:`~logging_v2.DESCENDING`.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[~logging_v2.LogEntry]
+            Generator[~logging_v2.LogEntry]
         """
         if resource_names is None:
             resource_names = [f"projects/{self.project}"]
@@ -236,6 +248,8 @@ class Client(ClientWithProject):
             filter_=filter_,
             order_by=order_by,
             max_results=max_results,
+            page_size=page_size,
+            page_token=page_token,
         )
 
     def sink(self, name, *, filter_=None, destination=None):
@@ -257,7 +271,9 @@ class Client(ClientWithProject):
         """
         return Sink(name, filter_=filter_, destination=destination, client=self)
 
-    def list_sinks(self, *, parent=None, max_results=None):
+    def list_sinks(
+        self, *, parent=None, max_results=None, page_size=None, page_token=None
+    ):
         """List sinks for the a parent resource.
 
         See
@@ -276,14 +292,25 @@ class Client(ClientWithProject):
                 If not passed, defaults to the project bound to the API's client.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
+
 
         Returns:
-            Iterator[~logging_v2.sink.Sink]
+            Generator[~logging_v2.Sink]
         """
         if parent is None:
             parent = f"projects/{self.project}"
-        return self.sinks_api.list_sinks(parent=parent, max_results=max_results,)
+        return self.sinks_api.list_sinks(
+            parent=parent,
+            max_results=max_results,
+            page_size=page_size,
+            page_token=page_token,
+        )
 
     def metric(self, name, *, filter_=None, description=""):
         """Creates a metric bound to the current client.
@@ -303,7 +330,7 @@ class Client(ClientWithProject):
         """
         return Metric(name, filter_=filter_, client=self, description=description)
 
-    def list_metrics(self, *, max_results=None):
+    def list_metrics(self, *, max_results=None, page_size=None, page_token=None):
         """List metrics for the project associated with this client.
 
         See
@@ -312,12 +339,22 @@ class Client(ClientWithProject):
         Args:
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[~logging_v2.metric.Metric]
+            Generator[logging_v2.Metric]: Iterable of metrics.
         """
-        return self.metrics_api.list_metrics(self.project, max_results=max_results)
+        return self.metrics_api.list_metrics(
+            self.project,
+            max_results=max_results,
+            page_size=page_size,
+            page_token=page_token,
+        )
 
     def get_default_handler(self, **kw):
         """Return the default logging handler based on the local environment.

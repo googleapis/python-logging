@@ -44,9 +44,16 @@ class _LoggingAPI(object):
         self._client = client
 
     def list_entries(
-        self, resource_names, *, filter_=None, order_by=None, max_results=None,
+        self,
+        resource_names,
+        *,
+        filter_=None,
+        order_by=None,
+        max_results=None,
+        page_size=None,
+        page_token=None,
     ):
-        """Return a page of log entry resources.
+        """Return a generator of log entry resources.
 
         Args:
             resource_names (Sequence[str]): Names of one or more parent resources
@@ -65,10 +72,14 @@ class _LoggingAPI(object):
                 or :data:`~logging_v2.DESCENDING`.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
-
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
         Returns:
-            Iterator[~logging_v2.LogEntry]
+            Generator[~logging_v2.LogEntry]
         """
         # full resource names are expected by the API
         resource_names = resource_names
@@ -76,27 +87,33 @@ class _LoggingAPI(object):
             resource_names=resource_names,
             filter=filter_,
             order_by=order_by,
-            page_size=max_results,
+            page_size=page_size,
+            page_token=page_token,
         )
 
         response = self._gapic_api.list_log_entries(request=request)
-        page_iter = iter(response)
+        log_iter = iter(response)
 
         # We attach a mutable loggers dictionary so that as Logger
         # objects are created by entry_from_resource, they can be
         # re-used by other log entries from the same logger.
         loggers = {}
 
-        def log_entries_pager(page_iter):
+        if max_results is not None:
+            # drop negative values
+            max_results = max(max_results, 0)
+
+        # create generator
+        def log_entries_pager(log_iter):
             i = 0
-            for page in page_iter:
+            for entry in log_iter:
                 if max_results is not None and i >= max_results:
                     break
-                log_entry_dict = _parse_log_entry(LogEntryPB.pb(page))
+                log_entry_dict = _parse_log_entry(LogEntryPB.pb(entry))
                 yield entry_from_resource(log_entry_dict, self._client, loggers=loggers)
                 i += 1
 
-        return log_entries_pager(page_iter)
+        return log_entries_pager(log_iter)
 
     def write_entries(
         self,
@@ -170,7 +187,7 @@ class _SinksAPI(object):
         self._gapic_api = gapic_api
         self._client = client
 
-    def list_sinks(self, parent, *, max_results=None):
+    def list_sinks(self, parent, *, max_results=None, page_size=None, page_token=None):
         """List sinks for the parent resource.
 
         Args:
@@ -184,25 +201,36 @@ class _SinksAPI(object):
                     "folders/[FOLDER_ID]".
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[~logging_v2.Sink]
+            Generator[~logging_v2.Sink]
         """
-        request = ListSinksRequest(parent=parent)
+        request = ListSinksRequest(
+            parent=parent, page_size=page_size, page_token=page_token
+        )
         response = self._gapic_api.list_sinks(request)
-        page_iter = iter(response)
+        sink_iter = iter(response)
 
-        def sinks_pager(page_iter):
+        if max_results is not None:
+            # drop negative values
+            max_results = max(max_results, 0)
+
+        def sinks_pager(sink_iter):
             i = 0
-            for page in page_iter:
+            for entry in sink_iter:
                 if max_results is not None and i >= max_results:
                     break
                 # Convert the GAPIC sink type into the handwritten `Sink` type
-                yield Sink.from_api_repr(LogSink.to_dict(page), client=self._client)
+                yield Sink.from_api_repr(LogSink.to_dict(entry), client=self._client)
                 i += 1
 
-        return sinks_pager(page_iter)
+        return sinks_pager(sink_iter)
 
     def sink_create(
         self, parent, sink_name, filter_, destination, *, unique_writer_identity=False
@@ -342,35 +370,48 @@ class _MetricsAPI(object):
         self._gapic_api = gapic_api
         self._client = client
 
-    def list_metrics(self, project, *, max_results=None):
+    def list_metrics(
+        self, project, *, max_results=None, page_size=None, page_token=None
+    ):
         """List metrics for the project associated with this client.
 
         Args:
             project (str): ID of the project whose metrics are to be listed.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
             Iterable[logging_v2.Metric]: Iterable of metrics.
         """
         path = f"projects/{project}"
         request = ListLogMetricsRequest(
-                parent=path, page_size=max_results,
+            parent=path, page_size=page_size, page_token=page_token,
         )
         response = self._gapic_api.list_log_metrics(request=request)
-        page_iter = iter(response)
+        metric_iter = iter(response)
 
-        def metrics_pager(page_iter):
+        if max_results is not None:
+            # drop negative values
+            max_results = max(max_results, 0)
+
+        def metrics_pager(metric_iter):
             i = 0
-            for page in page_iter:
+            for entry in metric_iter:
                 if max_results is not None and i >= max_results:
                     break
                 # Convert GAPIC metrics type into handwritten `Metric` type
-                yield Metric.from_api_repr(LogMetric.to_dict(page), client=self._client)
+                yield Metric.from_api_repr(
+                    LogMetric.to_dict(entry), client=self._client
+                )
                 i += 1
 
-        return metrics_pager(page_iter)
+        return metrics_pager(metric_iter)
 
     def metric_create(self, project, metric_name, filter_, description):
         """Create a metric resource.

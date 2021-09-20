@@ -69,7 +69,14 @@ class _LoggingAPI(object):
         self.api_request = client._connection.api_request
 
     def list_entries(
-        self, resource_names, *, filter_=None, order_by=None, max_results=None,
+        self,
+        resource_names,
+        *,
+        filter_=None,
+        order_by=None,
+        max_results=None,
+        page_size=None,
+        page_token=None,
     ):
         """Return a page of log entry resources.
 
@@ -90,10 +97,14 @@ class _LoggingAPI(object):
                 or :data:`~logging_v2.DESCENDING`.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
-
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
         Returns:
-            Iterator[~logging_v2.LogEntry]
+            Generator[~logging_v2.LogEntry]
         """
         extra_params = {"resourceNames": resource_names}
 
@@ -102,6 +113,9 @@ class _LoggingAPI(object):
 
         if order_by is not None:
             extra_params["orderBy"] = order_by
+
+        if page_size is not None:
+            extra_params["pageSize"] = page_size
 
         path = "/entries:list"
         # We attach a mutable loggers dictionary so that as Logger
@@ -115,6 +129,7 @@ class _LoggingAPI(object):
             path=path,
             item_to_value=item_to_value,
             items_key="entries",
+            page_token=page_token,
             extra_params=extra_params,
         )
         # This method uses POST to make a read-only request.
@@ -208,7 +223,7 @@ class _SinksAPI(object):
         self._client = client
         self.api_request = client._connection.api_request
 
-    def list_sinks(self, parent, *, max_results=None):
+    def list_sinks(self, parent, *, max_results=None, page_size=None, page_token=None):
         """List sinks for the parent resource.
 
         See
@@ -225,15 +240,20 @@ class _SinksAPI(object):
                     "folders/[FOLDER_ID]".
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[~logging_v2.Sink]
+            Generator[~logging_v2.Sink]
         """
         extra_params = {}
 
-        if max_results is not None:
-            extra_params["pageSize"] = max_results
+        if page_size is not None:
+            extra_params["pageSize"] = page_size
 
         path = f"/{parent}/sinks"
         iterator = page_iterator.HTTPIterator(
@@ -242,6 +262,7 @@ class _SinksAPI(object):
             path=path,
             item_to_value=_item_to_sink,
             items_key="sinks",
+            page_token=page_token,
             extra_params=extra_params,
         )
 
@@ -361,7 +382,9 @@ class _MetricsAPI(object):
         self._client = client
         self.api_request = client._connection.api_request
 
-    def list_metrics(self, project, *, max_results=None):
+    def list_metrics(
+        self, project, *, max_results=None, page_size=None, page_token=None
+    ):
         """List metrics for the project associated with this client.
 
         See
@@ -370,15 +393,21 @@ class _MetricsAPI(object):
         Args:
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[google.cloud.logging_v2.metric.Metric]
+            Iterable[logging_v2.Metric]: Iterable of metrics.
+
         """
         extra_params = {}
 
-        if max_results is not None:
-            extra_params["pageSize"] = max_results
+        if page_size is not None:
+            extra_params["pageSize"] = page_size
 
         path = f"/projects/{project}/metrics"
         iterator = page_iterator.HTTPIterator(
@@ -387,6 +416,7 @@ class _MetricsAPI(object):
             path=path,
             item_to_value=_item_to_metric,
             items_key="metrics",
+            page_token=page_token,
             extra_params=extra_params,
         )
         return _entries_pager(iterator, max_results)
@@ -453,6 +483,9 @@ class _MetricsAPI(object):
 
 
 def _entries_pager(page_iter, limit):
+    if limit is not None:
+        # drop negative values
+        limit = max(limit, 0)
     i = 0
     for page in page_iter:
         if limit is not None and i >= limit:

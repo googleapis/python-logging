@@ -259,9 +259,16 @@ class Logger(object):
         client.logging_api.logger_delete(logger_name)
 
     def list_entries(
-        self, *, resource_names=None, filter_=None, order_by=None, max_results=None
+        self,
+        *,
+        resource_names=None,
+        filter_=None,
+        order_by=None,
+        max_results=None,
+        page_size=None,
+        page_token=None,
     ):
-        """Return a page of log entries.
+        """Return a generator of log entry resources.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list
@@ -285,10 +292,14 @@ class Logger(object):
                 or :data:`~logging_v2.DESCENDING`.
             max_results (Optional[int]):
                 Optional. The maximum number of entries to return.
-                Non-positive values are ignored. If None, uses API defaults.
-
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
         Returns:
-            Iterator[~logging_v2.entries.LogEntry]
+            Generator[~logging_v2.LogEntry]
         """
 
         if resource_names is None:
@@ -305,6 +316,8 @@ class Logger(object):
             filter_=filter_,
             order_by=order_by,
             max_results=max_results,
+            page_size=page_size,
+            page_token=page_token,
         )
 
 
