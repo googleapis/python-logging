@@ -838,6 +838,7 @@ class TestLogger(unittest.TestCase):
             },
         )
 
+
 class TestBatch(unittest.TestCase):
 
     PROJECT = "test-project"

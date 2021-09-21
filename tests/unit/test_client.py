@@ -298,7 +298,6 @@ class TestClient(unittest.TestCase):
                 "data": {
                     "filter": "removed",
                     "resourceNames": [f"projects/{self.PROJECT}"],
-
                 },
             },
         )
@@ -562,7 +561,7 @@ class TestClient(unittest.TestCase):
         PAGE_SIZE = 42
         SINKS = [
             {"name": SINK_NAME, "filter": FILTER, "destination": self.DESTINATION_URI},
-            {"name": "test", "filter": "test", "destination": "test"}
+            {"name": "test", "filter": "test", "destination": "test"},
         ]
         client = self._make_one(
             project=PROJECT, credentials=_make_credentials(), _use_grpc=False
@@ -570,7 +569,9 @@ class TestClient(unittest.TestCase):
         returned = {"sinks": SINKS}
         client._connection = _Connection(returned)
 
-        iterator = client.list_sinks(page_size=PAGE_SIZE, page_token=TOKEN, max_results=1)
+        iterator = client.list_sinks(
+            page_size=PAGE_SIZE, page_token=TOKEN, max_results=1
+        )
         sinks = list(iterator)
         # Check the sinks returned.
         self.assertEqual(len(sinks), 1)
@@ -670,12 +671,7 @@ class TestClient(unittest.TestCase):
                 "filter": self.FILTER,
                 "description": self.DESCRIPTION,
             },
-            {
-                "name": "test",
-                "filter": "test",
-                "description": "test",
-            }
-
+            {"name": "test", "filter": "test", "description": "test",},
         ]
         client = self._make_one(
             project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
@@ -684,7 +680,9 @@ class TestClient(unittest.TestCase):
         client._connection = _Connection(returned)
 
         # Execute request.
-        iterator = client.list_metrics(page_size=page_size, page_token=token, max_results=1)
+        iterator = client.list_metrics(
+            page_size=page_size, page_token=token, max_results=1
+        )
         metrics = list(iterator)
         # Check the metrics returned.
         self.assertEqual(len(metrics), 1)

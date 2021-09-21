@@ -392,11 +392,7 @@ class Test_SinksAPI(unittest.TestCase):
                     "filter": self.FILTER,
                     "destination": self.DESTINATION_URI,
                 },
-                {
-                    "name": "test",
-                    "filter": "test",
-                    "destination": "test",
-                }
+                {"name": "test", "filter": "test", "destination": "test",},
             ],
         }
         # try with negative max_results
