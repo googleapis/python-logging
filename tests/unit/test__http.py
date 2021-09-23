@@ -140,7 +140,6 @@ class Test_LoggingAPI(unittest.TestCase):
         IID2 = "IID2"
         TEXT = "TEXT"
         SENT = {"resourceNames": [self.PROJECT_PATH]}
-        TOKEN = "TOKEN"
         PAYLOAD = {"message": "MESSAGE", "weather": "partly cloudy"}
         PROTO_PAYLOAD = PAYLOAD.copy()
         PROTO_PAYLOAD["@type"] = "type.googleapis.com/testing.example"
@@ -384,7 +383,6 @@ class Test_SinksAPI(unittest.TestCase):
     def test_list_sinks_max_returned(self):
         from google.cloud.logging import Sink
 
-        TOKEN = "TOKEN"
         RETURNED = {
             "sinks": [
                 {
@@ -392,7 +390,7 @@ class Test_SinksAPI(unittest.TestCase):
                     "filter": self.FILTER,
                     "destination": self.DESTINATION_URI,
                 },
-                {"name": "test", "filter": "test", "destination": "test",},
+                {"name": "test", "filter": "test", "destination": "test"},
             ],
         }
         # try with negative max_results
@@ -658,7 +656,6 @@ class Test_MetricsAPI(unittest.TestCase):
     def test_list_metrics_max_results(self):
         from google.cloud.logging import Metric
 
-        TOKEN = "TOKEN"
         RETURNED = {
             "metrics": [
                 {"name": self.METRIC_PATH, "filter": self.FILTER},

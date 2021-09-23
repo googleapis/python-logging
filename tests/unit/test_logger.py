@@ -605,8 +605,6 @@ class TestLogger(unittest.TestCase):
     def test_list_entries_defaults(self):
         from google.cloud.logging import Client
 
-        TOKEN = "TOKEN"
-
         client = Client(
             project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )

@@ -671,7 +671,7 @@ class TestClient(unittest.TestCase):
                 "filter": self.FILTER,
                 "description": self.DESCRIPTION,
             },
-            {"name": "test", "filter": "test", "description": "test",},
+            {"name": "test", "filter": "test", "description": "test"},
         ]
         client = self._make_one(
             project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
