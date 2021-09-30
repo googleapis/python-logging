@@ -4,6 +4,15 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [2.6.1](https://www.github.com/googleapis/python-logging/compare/v2.6.0...v2.6.1) (2021-09-30)
+
+
+### Bug Fixes
+
+* add 'dict' annotation type to 'request' ([23f9e1f](https://www.github.com/googleapis/python-logging/commit/23f9e1f6e9af30c4e65578edbf73c8c893b35285))
+* exception log message format ([#394](https://www.github.com/googleapis/python-logging/issues/394)) ([c426bf5](https://www.github.com/googleapis/python-logging/commit/c426bf56787fa02140e8aa142ecd4d4e45432697))
+* improper types in pagers generation ([6a837a5](https://www.github.com/googleapis/python-logging/commit/6a837a5d1faab1f9fa8ac94e424e847821a0069f))
+
 ## [2.6.0](https://www.github.com/googleapis/python-logging/compare/v2.5.0...v2.6.0) (2021-07-28)
 
 
