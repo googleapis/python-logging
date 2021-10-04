@@ -11,5 +11,5 @@
     "distribution_name": "google-cloud-logging",
     "api_id": "logging.googleapis.com",
     "codeowner_team": "@googleapis/api-logging",
-    "default_version": ""
+    "default_version": "v2"
 }
