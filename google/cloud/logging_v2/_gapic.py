@@ -100,7 +100,7 @@ class _LoggingAPI(object):
         loggers = {}
 
         if max_results is not None and max_results < 0:
-            raise ValueError('max_results must be positive')
+            raise ValueError("max_results must be positive")
 
         # create generator
         def log_entries_pager(log_iter):
@@ -217,7 +217,7 @@ class _SinksAPI(object):
         sink_iter = iter(response)
 
         if max_results is not None and max_results < 0:
-            raise ValueError('max_results must be positive')
+            raise ValueError("max_results must be positive")
 
         def sinks_pager(sink_iter):
             i = 0
@@ -395,7 +395,7 @@ class _MetricsAPI(object):
         metric_iter = iter(response)
 
         if max_results is not None and max_results < 0:
-            raise ValueError('max_results must be positive')
+            raise ValueError("max_results must be positive")
 
         def metrics_pager(metric_iter):
             i = 0

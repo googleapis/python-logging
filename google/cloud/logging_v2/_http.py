@@ -484,7 +484,7 @@ class _MetricsAPI(object):
 
 def _entries_pager(page_iter, max_results=None):
     if max_results is not None and max_results < 0:
-        raise ValueError('max_results must be positive')
+        raise ValueError("max_results must be positive")
 
     i = 0
     for page in page_iter:

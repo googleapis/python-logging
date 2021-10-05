@@ -114,14 +114,16 @@ class Test_LoggingAPI(unittest.TestCase):
         with mock.patch.object(
             type(client._gapic_api.transport.list_log_entries), "__call__"
         ) as call:
-            call.return_value = logging_v2.types.ListLogEntriesResponse(entries=[log_entry_msg, log_entry_msg])
+            call.return_value = logging_v2.types.ListLogEntriesResponse(
+                entries=[log_entry_msg, log_entry_msg]
+            )
             result = client.list_entries(
                 [PROJECT_PATH],
                 filter_=FILTER,
                 order_by=google.cloud.logging.ASCENDING,
                 page_size=42,
                 page_token="token",
-                max_results=1
+                max_results=1,
             )
 
         # Check the request
@@ -142,7 +144,7 @@ class Test_LoggingAPI(unittest.TestCase):
                     order_by=google.cloud.logging.ASCENDING,
                     page_size=42,
                     page_token="token",
-                    max_results=-1
+                    max_results=-1,
                 )
             # Check the request
             list(result)
@@ -258,7 +260,9 @@ class Test_SinksAPI(unittest.TestCase):
         with mock.patch.object(
             type(client._gapic_api.transport.list_sinks), "__call__"
         ) as call:
-            call.return_value = logging_v2.types.ListSinksResponse(sinks=[sink_msg, sink_msg])
+            call.return_value = logging_v2.types.ListSinksResponse(
+                sinks=[sink_msg, sink_msg]
+            )
             result = client.list_sinks(
                 self.PARENT_PATH, page_size=42, page_token="token", max_results=1
             )
@@ -460,7 +464,9 @@ class Test_MetricsAPI(unittest.TestCase):
         with mock.patch.object(
             type(client._gapic_api.transport.list_log_metrics), "__call__"
         ) as call:
-            call.return_value = logging_v2.types.ListLogMetricsResponse(metrics=[metric, metric])
+            call.return_value = logging_v2.types.ListLogMetricsResponse(
+                metrics=[metric, metric]
+            )
             result = client.list_metrics(
                 PROJECT, page_size=42, page_token="token", max_results=1
             )
