@@ -482,13 +482,13 @@ class _MetricsAPI(object):
         self.api_request(method="DELETE", path=target)
 
 
-def _entries_pager(page_iter, limit):
-    if limit is not None:
-        # drop negative values
-        limit = max(limit, 0)
+def _entries_pager(page_iter, max_results=None):
+    if max_results is not None and max_results < 0:
+        raise ValueError('max_results must be positive')
+
     i = 0
     for page in page_iter:
-        if limit is not None and i >= limit:
+        if max_results is not None and i >= max_results:
             break
         yield page
         i += 1

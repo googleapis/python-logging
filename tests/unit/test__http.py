@@ -172,10 +172,10 @@ class Test_LoggingAPI(unittest.TestCase):
             project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
         # try with negative max_results
-        client._connection = _Connection(RETURNED)
-        api = self._make_one(client)
-        empty = list(api.list_entries([self.PROJECT_PATH], max_results=-1))
-        self.assertEqual(empty, [])
+        with self.assertRaises(ValueError):
+            client._connection = _Connection(RETURNED)
+            api = self._make_one(client)
+            empty = list(api.list_entries([self.PROJECT_PATH], max_results=-1))
         # try with max_results of 0
         client._connection = _Connection(RETURNED)
         api = self._make_one(client)
@@ -394,11 +394,11 @@ class Test_SinksAPI(unittest.TestCase):
             ],
         }
         # try with negative max_results
-        conn = _Connection(RETURNED)
-        client = _Client(conn)
-        api = self._make_one(client)
-        empty = list(api.list_sinks(self.PROJECT_PATH, max_results=-1))
-        self.assertEqual(empty, [])
+        with self.assertRaises(ValueError):
+            conn = _Connection(RETURNED)
+            client = _Client(conn)
+            api = self._make_one(client)
+            empty = list(api.list_sinks(self.PROJECT_PATH, max_results=-1))
         # try with max_results of 0
         conn = _Connection(RETURNED)
         client = _Client(conn)
@@ -663,11 +663,11 @@ class Test_MetricsAPI(unittest.TestCase):
             ],
         }
         # try with negative max_results
-        conn = _Connection(RETURNED)
-        client = _Client(conn)
-        api = self._make_one(client)
-        empty = list(api.list_metrics(self.PROJECT, max_results=-1))
-        self.assertEqual(empty, [])
+        with self.assertRaises(ValueError):
+            conn = _Connection(RETURNED)
+            client = _Client(conn)
+            api = self._make_one(client)
+            empty = list(api.list_metrics(self.PROJECT, max_results=-1))
         # try with max_results of 0
         conn = _Connection(RETURNED)
         client = _Client(conn)

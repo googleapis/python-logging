@@ -99,9 +99,8 @@ class _LoggingAPI(object):
         # re-used by other log entries from the same logger.
         loggers = {}
 
-        if max_results is not None:
-            # drop negative values
-            max_results = max(max_results, 0)
+        if max_results is not None and max_results < 0:
+            raise ValueError('max_results must be positive')
 
         # create generator
         def log_entries_pager(log_iter):
@@ -217,9 +216,8 @@ class _SinksAPI(object):
         response = self._gapic_api.list_sinks(request)
         sink_iter = iter(response)
 
-        if max_results is not None:
-            # drop negative values
-            max_results = max(max_results, 0)
+        if max_results is not None and max_results < 0:
+            raise ValueError('max_results must be positive')
 
         def sinks_pager(sink_iter):
             i = 0
@@ -396,9 +394,8 @@ class _MetricsAPI(object):
         response = self._gapic_api.list_log_metrics(request=request)
         metric_iter = iter(response)
 
-        if max_results is not None:
-            # drop negative values
-            max_results = max(max_results, 0)
+        if max_results is not None and max_results < 0:
+            raise ValueError('max_results must be positive')
 
         def metrics_pager(metric_iter):
             i = 0
