@@ -45,6 +45,7 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
     ("source_location", None),
 )
 
+_STRUCT_EXTRACTABLE_FIELDS = ['severity', 'trace', 'span_id', 'timestamp', "insert_id"]
 
 class Logger(object):
     """Loggers represent named targets for log entries.
@@ -186,6 +187,10 @@ class Logger(object):
             kw (Optional[dict]): additional keyword arguments for the entry.
                 See :class:`~logging_v2.entries.LogEntry`.
         """
+        for field in _STRUCT_EXTRACTABLE_FIELDS:
+            # see if LogEntry data was left in the struct dict
+            if field in info and field not in kw:
+                kw[field] = info[field]
         self._do_log(client, StructEntry, info, **kw)
 
     def log_proto(self, message, *, client=None, **kw):
