@@ -47,6 +47,7 @@ try:
     if not _DISABLE_GRPC:
         # only import if DISABLE_GRPC is not set
         from google.cloud.logging_v2 import _gapic
+
         _HAVE_GRPC = True
 except ImportError:  # pragma: NO COVER
     # could not import gapic library. Fall back to HTTP mode
