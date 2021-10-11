@@ -134,6 +134,11 @@ class Logger(object):
         kw["labels"] = kw.pop("labels", self.labels)
         kw["resource"] = kw.pop("resource", self.default_resource)
 
+        severity = kw.pop("severity", None).upper()
+        if isinstance(severity, str) and not severity.isupper():
+            # convert severity to upper case, as expected by enum definition
+            kw["severity"] = severity.upper()
+
         if payload is not None:
             entry = _entry_class(payload=payload, **kw)
         else:
