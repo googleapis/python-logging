@@ -45,7 +45,7 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
     ("source_location", None),
 )
 
-_STRUCT_EXTRACTABLE_FIELDS = ['severity', 'trace', 'span_id', 'timestamp', "insert_id"]
+_STRUCT_EXTRACTABLE_FIELDS = ['severity', 'trace', 'span_id', "insert_id"]
 
 class Logger(object):
     """Loggers represent named targets for log entries.
@@ -134,7 +134,7 @@ class Logger(object):
         kw["labels"] = kw.pop("labels", self.labels)
         kw["resource"] = kw.pop("resource", self.default_resource)
 
-        severity = kw.pop("severity", None).upper()
+        severity = kw.get("severity", None)
         if isinstance(severity, str) and not severity.isupper():
             # convert severity to upper case, as expected by enum definition
             kw["severity"] = severity.upper()
@@ -230,14 +230,15 @@ class Logger(object):
             kw (Optional[dict]): additional keyword arguments for the entry.
                 See :class:`~logging_v2.entries.LogEntry`.
         """
-        entry_type = LogEntry
         if isinstance(message, google.protobuf.message.Message):
-            entry_type = ProtobufEntry
+            self.log_proto(message, client=client, **kw)
         elif isinstance(message, collections.abc.Mapping):
-            entry_type = StructEntry
+            self.log_struct(message, client=client, **kw)
         elif isinstance(message, str):
-            entry_type = TextEntry
-        self._do_log(client, entry_type, message, **kw)
+            self.log_text(message, client=client, **kw)
+        else:
+            self._do_log(client, LogEntry, message, **kw)
+
 
     def delete(self, logger_name=None, *, client=None):
         """Delete all entries in a logger via a DELETE request
