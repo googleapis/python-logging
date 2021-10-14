@@ -45,7 +45,8 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
     ("source_location", None),
 )
 
-_STRUCT_EXTRACTABLE_FIELDS = ['severity', 'trace', 'span_id', 'timestamp', "insert_id"]
+_STRUCT_EXTRACTABLE_FIELDS = ["severity", "trace", "span_id", "timestamp", "insert_id"]
+
 
 class Logger(object):
     """Loggers represent named targets for log entries.
