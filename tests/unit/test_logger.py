@@ -379,6 +379,41 @@ class TestLogger(unittest.TestCase):
 
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
+    def test_log_struct_inference(self):
+        """
+        if _STRUCT_EXTRACTABLE_FIELDS are present in the struct and not given,
+        they should be used in the LogEntry
+        """
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
+        STRUCT = {
+            "message": "System test: test_log_struct_logentry_data",
+            "severity": "warning",
+            "trace": "123",
+            "span_id": "456",
+            "insert_id": "0",
+        }
+        RESOURCE = detect_resource(self.PROJECT)._to_dict()
+        ENTRIES = [
+            {
+                "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
+                "jsonPayload": STRUCT,
+                "severity": "WARNING",
+                "trace": "123",
+                "spanId": "456",
+                "insertId": "0",
+                "resource": RESOURCE,
+            }
+        ]
+        client = _Client(self.PROJECT)
+        api = client.logging_api = _DummyLoggingAPI()
+        logger = self._make_one(self.LOGGER_NAME, client=client)
+
+        logger.log_struct(STRUCT)
+
+        self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
+
     def test_log_proto_defaults(self):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
