@@ -407,7 +407,6 @@ class TestLogging(unittest.TestCase):
             "span_id": "456",
             "insert_id": "0",
         }
-        # breakpoint()
         logger.log(JSON_PAYLOAD)
         entries = _list_entries(logger)
 

@@ -139,6 +139,15 @@ class Logger(object):
             # convert severity to upper case, as expected by enum definition
             kw["severity"] = severity.upper()
 
+        if isinstance(kw["resource"], collections.abc.Mapping):
+            # if resource was passed as a dict, attempt to parse it into a 
+            # Resource object
+            try:
+                kw["resource"] = Resource(**kw["resource"])
+            except TypeError as e:
+                # dict couldn't be parsed as a Resource
+                raise TypeError(f"invalid resource dict. {e}")
+
         if payload is not None:
             entry = _entry_class(payload=payload, **kw)
         else:
