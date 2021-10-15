@@ -45,7 +45,8 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
     ("source_location", None),
 )
 
-_STRUCT_EXTRACTABLE_FIELDS = ['severity', 'trace', 'span_id', "insert_id"]
+_STRUCT_EXTRACTABLE_FIELDS = ["severity", "trace", "span_id", "insert_id"]
+
 
 class Logger(object):
     """Loggers represent named targets for log entries.
@@ -140,7 +141,7 @@ class Logger(object):
             kw["severity"] = severity.upper()
 
         if isinstance(kw["resource"], collections.abc.Mapping):
-            # if resource was passed as a dict, attempt to parse it into a 
+            # if resource was passed as a dict, attempt to parse it into a
             # Resource object
             try:
                 kw["resource"] = Resource(**kw["resource"])
@@ -247,7 +248,6 @@ class Logger(object):
             self.log_text(message, client=client, **kw)
         else:
             self._do_log(client, LogEntry, message, **kw)
-
 
     def delete(self, logger_name=None, *, client=None):
         """Delete all entries in a logger via a DELETE request

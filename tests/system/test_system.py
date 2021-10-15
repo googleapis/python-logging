@@ -413,9 +413,9 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, JSON_PAYLOAD)
         self.assertEqual(entries[0].severity, "WARNING")
-        self.assertEqual(entries[0].trace, JSON_PAYLOAD['trace'])
-        self.assertEqual(entries[0].span_id, JSON_PAYLOAD['span_id'])
-        self.assertEqual(entries[0].insert_id, JSON_PAYLOAD['insert_id'])
+        self.assertEqual(entries[0].trace, JSON_PAYLOAD["trace"])
+        self.assertEqual(entries[0].span_id, JSON_PAYLOAD["span_id"])
+        self.assertEqual(entries[0].insert_id, JSON_PAYLOAD["insert_id"])
 
     def test_log_handler_async(self):
         LOG_MESSAGE = "It was the worst of times"

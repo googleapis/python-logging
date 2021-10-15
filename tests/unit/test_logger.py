@@ -387,6 +387,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
+
         STRUCT = {
             "message": "System test: test_log_struct_logentry_data",
             "severity": "warning",
@@ -420,18 +421,19 @@ class TestLogger(unittest.TestCase):
         of a Resource object
         """
         import pytest
+
         MESSAGE = "hello world"
         client = _Client(self.PROJECT)
         api = client.logging_api = _DummyLoggingAPI()
         logger = self._make_one(self.LOGGER_NAME, client=client)
-        broken_resource_dicts = [{}, {"type":""}, {"labels":""}]
+        broken_resource_dicts = [{}, {"type": ""}, {"labels": ""}]
         for resource in broken_resource_dicts:
             # ensure bad inputs result in a helpful error
             with pytest.raises(TypeError) as e_info:
                 logger.log(MESSAGE, resource=resource)
                 self.assertIn("invalid resource dict", e_info)
         # ensure well-formed dict is converted to a resource
-        resource = {"type":"gae_app", "labels":[]}
+        resource = {"type": "gae_app", "labels": []}
         ENTRIES = [
             {
                 "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
@@ -442,7 +444,6 @@ class TestLogger(unittest.TestCase):
         logger.log(MESSAGE, resource=resource)
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
-
     def test_log_lowercase_severity(self):
         """
        lower case severity strings should be accepted
@@ -451,7 +452,17 @@ class TestLogger(unittest.TestCase):
             detect_resource,
         )
 
-        for lower_severity in ["default", "debug", "info", "notice", "warning", "error", "critical", "alert", "emergency"]:
+        for lower_severity in [
+            "default",
+            "debug",
+            "info",
+            "notice",
+            "warning",
+            "error",
+            "critical",
+            "alert",
+            "emergency",
+        ]:
             MESSAGE = "hello world"
             RESOURCE = detect_resource(self.PROJECT)._to_dict()
             ENTRIES = [
@@ -468,7 +479,9 @@ class TestLogger(unittest.TestCase):
 
             logger.log(MESSAGE, severity=lower_severity)
 
-            self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
+            self.assertEqual(
+                api._write_entries_called_with, (ENTRIES, None, None, None)
+            )
 
     def test_log_proto_defaults(self):
         from google.cloud.logging_v2.handlers._monitored_resources import (
