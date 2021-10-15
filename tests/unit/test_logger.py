@@ -427,7 +427,7 @@ class TestLogger(unittest.TestCase):
         broken_resource_dicts = [{}, {"type": ""}, {"labels": ""}]
         for resource in broken_resource_dicts:
             # ensure bad inputs result in a helpful error
-            with pytest.raises(TypeError) as e_info:
+            with pytest.raises(TypeError):
                 logger.log(MESSAGE, resource=resource)
         # ensure well-formed dict is converted to a resource
         resource = {"type": "gae_app", "labels": []}
