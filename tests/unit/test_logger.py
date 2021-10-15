@@ -392,7 +392,6 @@ class TestLogger(unittest.TestCase):
             "severity": "warning",
             "trace": "123",
             "span_id": "456",
-            "insert_id": "0",
         }
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
         ENTRIES = [
@@ -402,7 +401,6 @@ class TestLogger(unittest.TestCase):
                 "severity": "WARNING",
                 "trace": "123",
                 "spanId": "456",
-                "insertId": "0",
                 "resource": RESOURCE,
             }
         ]
