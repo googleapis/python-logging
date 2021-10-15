@@ -147,7 +147,7 @@ class Logger(object):
                 kw["resource"] = Resource(**kw["resource"])
             except TypeError as e:
                 # dict couldn't be parsed as a Resource
-                raise TypeError(f"invalid resource dict. {e}")
+                raise TypeError("invalid resource dict") from e
 
         if payload is not None:
             entry = _entry_class(payload=payload, **kw)

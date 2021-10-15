@@ -429,7 +429,6 @@ class TestLogger(unittest.TestCase):
             # ensure bad inputs result in a helpful error
             with pytest.raises(TypeError) as e_info:
                 logger.log(MESSAGE, resource=resource)
-                self.assertIn("invalid resource dict", e_info)
         # ensure well-formed dict is converted to a resource
         resource = {"type": "gae_app", "labels": []}
         ENTRIES = [
