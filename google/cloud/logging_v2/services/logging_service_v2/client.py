@@ -17,17 +17,7 @@ from collections import OrderedDict
 from distutils import util
 import os
 import re
-from typing import (
-    Callable,
-    Dict,
-    Optional,
-    Iterable,
-    Iterator,
-    Sequence,
-    Tuple,
-    Type,
-    Union,
-)
+from typing import Dict, Optional, Iterable, Iterator, Sequence, Tuple, Type, Union
 import pkg_resources
 
 from google.api_core import client_options as client_options_lib  # type: ignore
@@ -351,15 +341,12 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
                 client_cert_source_for_mtls=client_cert_source_func,
                 quota_project_id=client_options.quota_project_id,
                 client_info=client_info,
-                always_use_jwt_access=(
-                    Transport == type(self).get_transport_class("grpc")
-                    or Transport == type(self).get_transport_class("grpc_asyncio")
-                ),
+                always_use_jwt_access=True,
             )
 
     def delete_log(
         self,
-        request: logging.DeleteLogRequest = None,
+        request: Union[logging.DeleteLogRequest, dict] = None,
         *,
         log_name: str = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
@@ -373,7 +360,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         with a timestamp before the operation will be deleted.
 
         Args:
-            request (google.cloud.logging_v2.types.DeleteLogRequest):
+            request (Union[google.cloud.logging_v2.types.DeleteLogRequest, dict]):
                 The request object. The parameters to DeleteLog.
             log_name (str):
                 Required. The resource name of the log to delete:
@@ -438,7 +425,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
     def write_log_entries(
         self,
-        request: logging.WriteLogEntriesRequest = None,
+        request: Union[logging.WriteLogEntriesRequest, dict] = None,
         *,
         log_name: str = None,
         resource: monitored_resource_pb2.MonitoredResource = None,
@@ -457,7 +444,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         organizations, billing accounts or folders)
 
         Args:
-            request (google.cloud.logging_v2.types.WriteLogEntriesRequest):
+            request (Union[google.cloud.logging_v2.types.WriteLogEntriesRequest, dict]):
                 The request object. The parameters to WriteLogEntries.
             log_name (str):
                 Optional. A default log resource name that is assigned
@@ -596,7 +583,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
     def list_log_entries(
         self,
-        request: logging.ListLogEntriesRequest = None,
+        request: Union[logging.ListLogEntriesRequest, dict] = None,
         *,
         resource_names: Sequence[str] = None,
         filter: str = None,
@@ -611,7 +598,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         Logs <https://cloud.google.com/logging/docs/export>`__.
 
         Args:
-            request (google.cloud.logging_v2.types.ListLogEntriesRequest):
+            request (Union[google.cloud.logging_v2.types.ListLogEntriesRequest, dict]):
                 The request object. The parameters to `ListLogEntries`.
             resource_names (Sequence[str]):
                 Required. Names of one or more parent resources from
@@ -720,7 +707,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
     def list_monitored_resource_descriptors(
         self,
-        request: logging.ListMonitoredResourceDescriptorsRequest = None,
+        request: Union[logging.ListMonitoredResourceDescriptorsRequest, dict] = None,
         *,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
@@ -730,7 +717,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         used by Logging.
 
         Args:
-            request (google.cloud.logging_v2.types.ListMonitoredResourceDescriptorsRequest):
+            request (Union[google.cloud.logging_v2.types.ListMonitoredResourceDescriptorsRequest, dict]):
                 The request object. The parameters to
                 ListMonitoredResourceDescriptors
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
@@ -776,7 +763,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
     def list_logs(
         self,
-        request: logging.ListLogsRequest = None,
+        request: Union[logging.ListLogsRequest, dict] = None,
         *,
         parent: str = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
@@ -788,7 +775,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         listed.
 
         Args:
-            request (google.cloud.logging_v2.types.ListLogsRequest):
+            request (Union[google.cloud.logging_v2.types.ListLogsRequest, dict]):
                 The request object. The parameters to ListLogs.
             parent (str):
                 Required. The resource name that owns the logs:
@@ -895,6 +882,19 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         # Done; return the response.
         return response
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        """Releases underlying transport's resources.
+
+        .. warning::
+            ONLY use as a context manager if the transport is NOT shared
+            with other clients! Exiting the with block will CLOSE the transport
+            and may cause errors in other clients!
+        """
+        self.transport.close()
 
 
 try:
