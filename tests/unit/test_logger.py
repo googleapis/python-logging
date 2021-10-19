@@ -381,8 +381,8 @@ class TestLogger(unittest.TestCase):
 
     def test_log_struct_inference(self):
         """
-        if _STRUCT_EXTRACTABLE_FIELDS are present in the struct and not given,
-        they should be used in the LogEntry
+        LogEntry fields in _STRUCT_EXTRACTABLE_FIELDS should be inferred from
+        the payload data if not passed as a parameter
         """
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
