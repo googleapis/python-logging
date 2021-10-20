@@ -83,7 +83,8 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
     # Cloud Logging expects a timestamp in RFC3339 UTC "Zulu" format
     # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
     time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
-    # build a filter that returns GKE audit Logs from the past 24 hours
+    # build a filter that returns GKE Admin Activity audit Logs from
+    # the past 24 hours
     # https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging
     filter_str = (
         f'logName="projects/{project_id}/logs/cloudaudit.googleapis.com%2Factivity"'
