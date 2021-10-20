@@ -71,6 +71,29 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
         # [END client_list_entries_order_by]
         break
 
+    # [START client_list_gke_audit_logs]
+    import google.cloud.logging
+    from datetime import datetime, timedelta, timezone
+
+    # enter your GCP project ID
+    project_id = "your-project"
+    # construct a date object representing yesterday
+    yesterday = datetime.now(timezone.utc) - timedelta(days=1)
+    # Cloud Logging expects timestamps in A timestamp in RFC3339 UTC "Zulu" format
+    # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
+    time_format = "%Y-%m-%dT%H:%M:%S.%f%z"
+    # build a filter string that returns GKE audit Logs from the past day
+    # https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging#audit_logs_in_your_project
+    filter_str = (
+        f'logName="projects/{project_id}/logs/cloudaudit.googleapis.com%2Factivity" '
+        f'AND timestamp>="{yesterday.strftime(time_format)}"'
+    )
+    # query and print all matching logs
+    client = google.cloud.logging.Client()
+    for entry in client.list_entries(filter_=filter_str):
+        print(entry)
+    # [END client_list_gke_audit_logs]
+
 
 @snippet
 def logger_usage(client, to_delete):
