@@ -95,8 +95,8 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
     client = google.cloud.logging.Client()
     for entry in client.list_entries(filter_=filter_str):
         print(entry)
-    # [END client_list_gke_audit_logs]
-        break # we don't really need to print them all
+        # [END client_list_gke_audit_logs]
+        break  # we don't really need to print them all
 
 
 @snippet
