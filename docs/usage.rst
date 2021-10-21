@@ -90,8 +90,8 @@ from the past 24 hours:
 .. _GKE Admin Activity audit logs: https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging#audit_logs_in_your_project
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
-    :start-after: [START client_list_gke_audit_logs]
-    :end-before: [END client_list_gke_audit_logs]
+    :start-after: [START logging_list_gke_audit_logs]
+    :end-before: [END logging_list_gke_audit_logs]
     :dedent: 4
 
 Delete all entries for a logger

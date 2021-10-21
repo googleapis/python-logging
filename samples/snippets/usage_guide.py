@@ -71,7 +71,7 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
         # [END client_list_entries_order_by]
         break
 
-    # [START client_list_gke_audit_logs]
+    # [START logging_list_gke_audit_logs]
     import google.cloud.logging
     from datetime import datetime, timedelta, timezone
     import os
@@ -95,7 +95,7 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
     client = google.cloud.logging.Client()
     for entry in client.list_entries(filter_=filter_str):
         print(entry)
-        # [END client_list_gke_audit_logs]
+        # [END logging_list_gke_audit_logs]
         break  # we don't really need to print them all
 
 
