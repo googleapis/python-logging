@@ -16,7 +16,6 @@
 
 import logging
 import os
-import sys
 
 try:
     from google.cloud.logging_v2 import _gapic
@@ -355,13 +354,7 @@ class Client(ClientWithProject):
                 return AppEngineHandler(self, **kw)
             elif monitored_resource.type == _GKE_RESOURCE_TYPE:
                 return ContainerEngineHandler(**kw)
-            elif (
-                monitored_resource.type == _GCF_RESOURCE_TYPE
-                and sys.version_info[0] == 3
-                and sys.version_info[1] >= 8
-            ):
-                # Cloud Functions with runtimes > 3.8 supports structured logs on standard out
-                # 3.7 should use the standard CloudLoggingHandler, which sends logs over the network.
+            elif monitored_resource.type == _GCF_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _RUN_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
