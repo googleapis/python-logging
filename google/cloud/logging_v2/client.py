@@ -16,6 +16,7 @@
 
 import logging
 import os
+import sys
 
 try:
     from google.cloud.logging_v2 import _gapic
@@ -355,6 +356,8 @@ class Client(ClientWithProject):
             elif monitored_resource.type == _GKE_RESOURCE_TYPE:
                 return ContainerEngineHandler(**kw)
             elif monitored_resource.type == _GCF_RESOURCE_TYPE:
+                # __stdout__ stream required to support structured logging on Python 3.7
+                kw["stream"] = sys.__stdout__
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _RUN_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
