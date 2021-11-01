@@ -41,7 +41,6 @@ dependencies = [
     "google-cloud-core >= 1.4.1, <3.0.0dev",
     "grpc-google-iam-v1 >= 0.12.3, < 0.13dev",
     "proto-plus >= 1.15.0",
-    "packaging >= 14.3",
 ]
 extras = {}
 
