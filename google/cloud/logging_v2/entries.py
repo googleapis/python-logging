@@ -23,7 +23,6 @@ from google.protobuf.json_format import MessageToDict
 from google.protobuf.json_format import Parse
 
 from google.cloud.logging_v2.resource import Resource
-from google.cloud._helpers import _name_from_project_path
 from google.cloud._helpers import _rfc3339_nanos_to_datetime
 from google.cloud._helpers import _datetime_to_rfc3339
 
@@ -34,20 +33,26 @@ from google.iam.v1.logging import audit_data_pb2  # noqa: F401
 
 _GLOBAL_RESOURCE = Resource(type="global", labels={})
 
-
+"""
+logger paths should one of the following formats:
+    "projects/[PROJECT_ID]/logs/[NAME]"
+    "organizations/[ORGANIZATION_ID]/logs/[NAME]"
+    "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[NAME]"
+    "folders/[FOLDER_ID]/logs/[NAME]"
+"""
 _LOGGER_TEMPLATE = re.compile(
-    r"""
-    projects/            # static prefix
-    (?P<project>[^/]+)   # initial letter, wordchars + hyphen
-    /logs/               # static midfix
-    (?P<name>[^/]+)      # initial letter, wordchars + allowed punc
-""",
+    r"^(projects|organizations|billingAccounts|folders)/(?P<id>[^/]+)/logs/(?P<name>[^/]+)",
     re.VERBOSE,
 )
 
 
 def logger_name_from_path(path):
     """Validate a logger URI path and get the logger name.
+    Path should be one of the following formats:
+        "projects/[PROJECT_ID]/logs/[NAME]"
+        "organizations/[ORGANIZATION_ID]/logs/[NAME]"
+        "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[NAME]"
+        "folders/[FOLDER_ID]/logs/[NAME]"
 
     Args:
         path (str): URI path for a logger API request
@@ -56,10 +61,15 @@ def logger_name_from_path(path):
         str: Logger name parsed from ``path``.
 
     Raises:
-        ValueError: If the ``path`` is ill-formed of if the project
-            from ``path`` does not agree with the ``project`` passed in.
+        ValueError: If the ``path`` is ill-formed
     """
-    return _name_from_project_path(path, None, _LOGGER_TEMPLATE)
+    template = re.compile(_LOGGER_TEMPLATE)
+    match = template.match(path)
+    if not match:
+        raise ValueError(
+            'path "%s" did not match expected pattern "%s"' % (path, template.pattern)
+        )
+    return match.group("name")
 
 
 def _int_or_none(value):

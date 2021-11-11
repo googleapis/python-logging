@@ -23,20 +23,79 @@ class Test_logger_name_from_path(unittest.TestCase):
 
         return logger_name_from_path(path)
 
-    def test_w_simple_name(self):
+    def test_project_w_simple_name(self):
         LOGGER_NAME = "LOGGER_NAME"
         PROJECT = "my-project-1234"
         PATH = "projects/%s/logs/%s" % (PROJECT, LOGGER_NAME)
         logger_name = self._call_fut(PATH)
         self.assertEqual(logger_name, LOGGER_NAME)
 
-    def test_w_name_w_all_extras(self):
+    def test_project_w_name_w_all_extras(self):
         LOGGER_NAME = "LOGGER_NAME-part.one~part.two%part-three"
         PROJECT = "my-project-1234"
         PATH = "projects/%s/logs/%s" % (PROJECT, LOGGER_NAME)
         logger_name = self._call_fut(PATH)
         self.assertEqual(logger_name, LOGGER_NAME)
 
+    def test_org_w_simple_name(self):
+        LOGGER_NAME = "LOGGER_NAME"
+        ORG = "my-org-1234"
+        PATH = "organizations/%s/logs/%s" % (ORG, LOGGER_NAME)
+        logger_name = self._call_fut(PATH)
+        self.assertEqual(logger_name, LOGGER_NAME)
+
+    def test_org_w_name_w_all_extras(self):
+        LOGGER_NAME = "LOGGER_NAME-part.one~part.two%part-three"
+        ORG = "my-org-1234"
+        PATH = "organizations/%s/logs/%s" % (ORG, LOGGER_NAME)
+        logger_name = self._call_fut(PATH)
+        self.assertEqual(logger_name, LOGGER_NAME)
+
+    def test_billing_acct_w_simple_name(self):
+        LOGGER_NAME = "LOGGER_NAME"
+        ID = "my-bill-acct-1234"
+        PATH = "billingAccounts/%s/logs/%s" % (ID, LOGGER_NAME)
+        logger_name = self._call_fut(PATH)
+        self.assertEqual(logger_name, LOGGER_NAME)
+
+    def test_billing_acct_w_name_w_all_extras(self):
+        LOGGER_NAME = "LOGGER_NAME-part.one~part.two%part-three"
+        ID = "my-bill-acct-1234"
+        PATH = "billingAccounts/%s/logs/%s" % (ID, LOGGER_NAME)
+        logger_name = self._call_fut(PATH)
+        self.assertEqual(logger_name, LOGGER_NAME)
+
+    def test_folder_w_simple_name(self):
+        LOGGER_NAME = "LOGGER_NAME"
+        ID = "my-folder-1234"
+        PATH = "folders/%s/logs/%s" % (ID, LOGGER_NAME)
+        logger_name = self._call_fut(PATH)
+        self.assertEqual(logger_name, LOGGER_NAME)
+
+    def test_folder_w_name_w_all_extras(self):
+        LOGGER_NAME = "LOGGER_NAME-part.one~part.two%part-three"
+        ID = "my-folder-1234"
+        PATH = "folders/%s/logs/%s" % (ID, LOGGER_NAME)
+        logger_name = self._call_fut(PATH)
+        self.assertEqual(logger_name, LOGGER_NAME)
+
+    def test_invalid_inputs(self):
+        LOGGER_NAME = "LOGGER_NAME"
+        PROJECT = "my-folder-1234"
+        invalid_list = [
+            "",
+            "abc/123/logs/456",
+            "projects//logs/",
+            "projects/123/logs",
+            "projects/123logs/",
+            "projects123/logs",
+            "project/123",
+            "projects123logs456",
+            "/logs/123"
+        ]
+        for path in invalid_list:
+            with self.assertRaises(ValueError):
+                self._call_fut(path)
 
 class Test__int_or_none(unittest.TestCase):
     def _call_fut(self, value):
