@@ -91,11 +91,12 @@ class Test_logger_name_from_path(unittest.TestCase):
             "projects123/logs",
             "project/123",
             "projects123logs456",
-            "/logs/123"
+            "/logs/123",
         ]
         for path in invalid_list:
             with self.assertRaises(ValueError):
                 self._call_fut(path)
+
 
 class Test__int_or_none(unittest.TestCase):
     def _call_fut(self, value):
