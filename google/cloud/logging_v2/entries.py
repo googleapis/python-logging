@@ -156,7 +156,8 @@ class LogEntry(_LogEntryTuple):
                 Client which holds credentials and project configuration.
             loggers (Optional[dict]):
                 A mapping of logger fullnames -> loggers.  If not
-                passed, the entry will have a newly-created logger.
+                passed, the entry will have a newly-created logger if possible,
+                or an empty logger field if not.
 
         Returns:
             google.cloud.logging.entries.LogEntry: Log entry parsed from ``resource``.
