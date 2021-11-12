@@ -49,6 +49,7 @@ _LOGGER_TEMPLATE = re.compile(
 def logger_name_from_path(path):
     """Validate a logger URI path and get the logger name.
     Path should be one of the following formats:
+
         "projects/[PROJECT_ID]/logs/[NAME]"
         "organizations/[ORGANIZATION_ID]/logs/[NAME]"
         "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[NAME]"

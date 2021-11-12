@@ -80,8 +80,6 @@ class Test_logger_name_from_path(unittest.TestCase):
         self.assertEqual(logger_name, LOGGER_NAME)
 
     def test_invalid_inputs(self):
-        LOGGER_NAME = "LOGGER_NAME"
-        PROJECT = "my-folder-1234"
         invalid_list = [
             "",
             "abc/123/logs/456",
