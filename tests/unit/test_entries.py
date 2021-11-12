@@ -43,7 +43,7 @@ class Test_logger_name_from_path(unittest.TestCase):
         PATH_PROJECT = "path-project"
         PATH = "projects/%s/logs/%s" % (PATH_PROJECT, LOGGER_NAME)
         with self.assertRaises(ValueError):
-            logger_name = self._call_fut(PATH, IN_PROJECT)
+            self._call_fut(PATH, IN_PROJECT)
 
     def test_invalid_inputs(self):
         invalid_list = [
@@ -373,7 +373,6 @@ class TestLogEntry(unittest.TestCase):
             "sourceLocation": SOURCE_LOCATION,
             "operation": OPERATION,
         }
-        LOGGER = object()
         klass = self._get_target_class()
 
         entry = klass.from_api_repr(API_REPR, client)
