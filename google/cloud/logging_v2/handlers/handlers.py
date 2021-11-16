@@ -224,7 +224,11 @@ def _format_and_parse_message(record, formatter_handler):
     passed_json_fields = getattr(record, "json_fields", {})
     # if message is a dictionary, return as-is
     if isinstance(record.msg, collections.abc.Mapping):
-        return {**record.msg, **passed_json_fields}
+        payload = record.msg
+        if passed_json_fields and isinstance(passed_json_fields, collections.abc.Mapping):
+            # append any json data in `json_fields`
+            payload = {**payload, **passed_json_fields}
+        return payload
     # format message string based on superclass
     message = formatter_handler.format(record)
     try:
