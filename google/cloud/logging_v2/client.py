@@ -376,14 +376,10 @@ class Client(ClientWithProject):
             if monitored_resource.type == _GAE_RESOURCE_TYPE:
                 return CloudLoggingHandler(self, resource=monitored_resource, **kw)
             elif monitored_resource.type == _GKE_RESOURCE_TYPE:
-                return StructuredLogHandler(**kw, project_id=self.project)
-            elif (
-                monitored_resource.type == _GCF_RESOURCE_TYPE
-                and sys.version_info[0] == 3
-                and sys.version_info[1] >= 8
-            ):
-                # Cloud Functions with runtimes > 3.8 supports structured logs on standard out
-                # 3.7 should use the standard CloudLoggingHandler, which sends logs over the network.
+                return ContainerEngineHandler(**kw)
+            elif monitored_resource.type == _GCF_RESOURCE_TYPE:
+                # __stdout__ stream required to support structured logging on Python 3.7
+                kw["stream"] = kw.get("stream", sys.__stdout__)
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _RUN_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)

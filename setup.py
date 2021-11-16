@@ -22,7 +22,7 @@ import setuptools
 
 name = "google-cloud-logging"
 description = "Stackdriver Logging API client library"
-version = "2.6.0"
+version = "2.7.0"
 # Should be one of:
 # 'Development Status :: 3 - Alpha'
 # 'Development Status :: 4 - Beta'
@@ -33,7 +33,7 @@ dependencies = [
     # Until this issue is closed
     # https://github.com/googleapis/google-cloud-python/issues/10566
     "google-api-core[grpc] >= 1.26.0, <3.0.0dev",
-    "google-cloud-appengine-logging>=0.1.0, <1.0.1",
+    "google-cloud-appengine-logging>=0.1.0, <2.0.0dev",
     "google-cloud-audit-log >= 0.1.0, < 1.0.0dev",
     # NOTE: Maintainers, please do not require google-api-core>=2.x.x
     # Until this issue is closed
@@ -41,7 +41,6 @@ dependencies = [
     "google-cloud-core >= 1.4.1, <3.0.0dev",
     "grpc-google-iam-v1 >= 0.12.3, < 0.13dev",
     "proto-plus >= 1.15.0",
-    "packaging >= 14.3",
 ]
 extras = {}
 
