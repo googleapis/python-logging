@@ -221,9 +221,10 @@ def _format_and_parse_message(record, formatter_handler):
         record (logging.LogRecord): The record object representing the log
         formatter_handler (logging.Handler): The handler used to format the log
     """
+    passed_json_fields = getattr(record, "json_fields", {})
     # if message is a dictionary, return as-is
     if isinstance(record.msg, collections.abc.Mapping):
-        return record.msg
+        return {**record.msg, **passed_json_fields}
     # format message string based on superclass
     message = formatter_handler.format(record)
     try:
@@ -235,6 +236,11 @@ def _format_and_parse_message(record, formatter_handler):
     except (json.decoder.JSONDecodeError, IndexError):
         # log string is not valid json
         pass
+    # if json_fields was set, create a dictionary using that
+    if passed_json_fields and isinstance(passed_json_fields, collections.abc.Mapping):
+        if message != 'None':
+            passed_json_fields['message'] = message
+        return passed_json_fields
     # if formatted message contains no content, return None
     return message if message != "None" else None
 
