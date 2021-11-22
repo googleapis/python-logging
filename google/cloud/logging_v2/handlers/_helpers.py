@@ -78,8 +78,8 @@ def get_request_data_from_flask():
     }
 
     # find trace id and span id
-    header = flask.request.headers.get(_FLASK_TRACE_HEADER)
-    trace_id, span_id, trace_sampled = _parse_trace_span(header)
+    x_cloud_header = flask.request.headers.get(_FLASK_TRACE_HEADER)
+    trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
 
     return http_request, trace_id, span_id, trace_sampled
 
@@ -106,13 +106,42 @@ def get_request_data_from_django():
     }
 
     # find trace id and span id
-    header = request.META.get(_DJANGO_TRACE_HEADER)
-    trace_id, span_id, trace_sampled = _parse_trace_span(header)
+    x_cloud_header = request.META.get(_DJANGO_TRACE_HEADER)
+    trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
 
     return http_request, trace_id, span_id, trace_sampled
 
 
-def _parse_trace_span(header):
+def _parse_trace_parent(header):
+    """Given a w3 traceparent header, extract the trace and span ids.
+    For more information see https://www.w3.org/TR/trace-context/
+
+    Args:
+        header (str): the string extracted from the traceparent header
+    Returns:
+        Tuple[Optional[dict], Optional[str], Optional[bool]]:
+            The trace_id, span_id and trace_sampled extracted from the header
+            Each field will be None if not found.
+    """
+    trace_id = span_id = trace_sampled = None
+    # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
+    if header:
+        try:
+            VERSION_PART = r'(?!ff)[\\da-f]{2}';
+            TRACE_ID_PART = r'(?![0]{32})[\\da-f]{32}';
+            PARENT_ID_PART = r'(?![0]{16})[\\da-f]{16}';
+            FLAGS_PART = r'[\\da-f]{2}';
+            regex = f'^\\s?({VERSION_PART})-({TRACE_ID_PART})-({PARENT_ID_PART})-({FLAGS_PART})(-.*)?\\s?$'
+            match = re.match(regex, header)
+            trace_id = match.group(2)
+            span_id = match.group(3)
+            trace_sampled = (int(match.group(5), 16) == 1)
+        except IndexError:
+            pass
+    return trace_id, span_id, trace_sampled
+
+
+def _parse_xcloud_trace(header):
     """Given an X_CLOUD_TRACE header, extract the trace and span ids.
 
     Args:
@@ -130,7 +159,7 @@ def _parse_trace_span(header):
             match = re.match(regex, header)
             trace_id = match.group(1)
             span_id = match.group(3)
-            trace_sampled = match.group(5) == '1'
+            trace_sampled = (match.group(5) == '1')
         except IndexError:
             pass
     return trace_id, span_id, trace_sampled
