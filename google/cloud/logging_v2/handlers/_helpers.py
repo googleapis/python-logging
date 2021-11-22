@@ -63,9 +63,8 @@ def get_request_data_from_flask():
 
     Returns:
         Tuple[Optional[dict], Optional[str], Optional[str]]:
-            Data related to the current http request, trace_id, and span_id for
-            the request. All fields will be None if a django request isn't
-            found.
+            Data related to the current http request, trace_id, span_id and trace_sampled
+            for the request. All fields will be None if a django request isn't found.
     """
     if flask is None or not flask.request:
         return None, None, None
@@ -80,19 +79,18 @@ def get_request_data_from_flask():
 
     # find trace id and span id
     header = flask.request.headers.get(_FLASK_TRACE_HEADER)
-    trace_id, span_id = _parse_trace_span(header)
+    trace_id, span_id, trace_sampled = _parse_trace_span(header)
 
-    return http_request, trace_id, span_id
+    return http_request, trace_id, span_id, trace_sampled
 
 
 def get_request_data_from_django():
     """Get http_request and trace data from django request headers.
 
     Returns:
-        Tuple[Optional[dict], Optional[str], Optional[str]]:
-            Data related to the current http request, trace_id, and span_id for
-            the request. All fields will be None if a django request isn't
-            found.
+        Tuple[Optional[dict], Optional[str], Optional[str], Optional[bool]]:
+            Data related to the current http request, trace_id, span_id, and trace_sampled
+            for the request. All fields will be None if a django request isn't found.
     """
     request = _get_django_request()
 
@@ -109,9 +107,9 @@ def get_request_data_from_django():
 
     # find trace id and span id
     header = request.META.get(_DJANGO_TRACE_HEADER)
-    trace_id, span_id = _parse_trace_span(header)
+    trace_id, span_id, trace_sampled = _parse_trace_span(header)
 
-    return http_request, trace_id, span_id
+    return http_request, trace_id, span_id, trace_sampled
 
 
 def _parse_trace_span(header):
@@ -120,22 +118,22 @@ def _parse_trace_span(header):
     Args:
         header (str): the string extracted from the X_CLOUD_TRACE header
     Returns:
-        Tuple[Optional[dict], Optional[str]]:
-            The trace_id and span_id extracted from the header
+        Tuple[Optional[dict], Optional[str], Optional[bool]]:
+            The trace_id, span_id and trace_sampled extracted from the header
             Each field will be None if not found.
     """
-    trace_id = None
-    span_id = None
+    trace_id = span_id = trace_sampled = None
+    # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
     if header:
         try:
-            split_header = header.split("/", 1)
-            trace_id = split_header[0]
-            header_suffix = split_header[1]
-            # the span is the set of alphanumeric characters after the /
-            span_id = re.findall(r"^\w+", header_suffix)[0]
+            regex = '([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?'
+            match = re.match(regex, header)
+            trace_id = match.group(1)
+            span_id = match.group(3)
+            trace_sampled = match.group(5) == '1'
         except IndexError:
             pass
-    return trace_id, span_id
+    return trace_id, span_id, trace_sampled
 
 
 def get_request_data():
@@ -143,10 +141,9 @@ def get_request_data():
     frameworks (currently supported: Flask and Django).
 
     Returns:
-        Tuple[Optional[dict], Optional[str], Optional[str]]:
-            Data related to the current http request, trace_id, and span_id for
-            the request. All fields will be None if a django request isn't
-            found.
+        Tuple[Optional[dict], Optional[str], Optional[str], Optional[bool]]:
+            Data related to the current http request, trace_id, span_id, and trace_sampled 
+            for the request. All fields will be None if a django request isn't found.
     """
     checkers = (
         get_request_data_from_django,
@@ -154,8 +151,8 @@ def get_request_data():
     )
 
     for checker in checkers:
-        http_request, trace_id, span_id = checker()
+        http_request, trace_id, span_id, trace_sampled = checker()
         if http_request is not None:
-            return http_request, trace_id, span_id
+            return http_request, trace_id, span_id, trace_sampled
 
-    return None, None, None
+    return None, None, None, None
