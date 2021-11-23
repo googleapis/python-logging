@@ -69,7 +69,7 @@ def get_request_data_from_flask():
             for the request. All fields will be None if a django request isn't found.
     """
     if flask is None or not flask.request:
-        return None, None, None
+        return None, None, None, None
 
     # build http_request
     http_request = {
@@ -86,7 +86,7 @@ def get_request_data_from_flask():
     else:
         # w3 traceparent header not found. Check XCLOUD_TRACE_CONTEXT
         header = flask.request.headers.get(_FLASK_XCLOUD_TRACE_HEADER)
-        trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
+        trace_id, span_id, trace_sampled = _parse_xcloud_trace(header)
 
     return http_request, trace_id, span_id, trace_sampled
 
@@ -102,7 +102,7 @@ def get_request_data_from_django():
     request = _get_django_request()
 
     if request is None:
-        return None, None, None
+        return None, None, None, None
 
     # build http_request
     http_request = {
@@ -119,7 +119,7 @@ def get_request_data_from_django():
     else:
         # w3 traceparent header not found. Check XCLOUD_TRACE_CONTEXT
         header = flask.request.headers.get(_DJANGO_XCLOUD_TRACE_HEADER)
-        trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
+        trace_id, span_id, trace_sampled = _parse_xcloud_trace(header)
 
     return http_request, trace_id, span_id, trace_sampled
 
