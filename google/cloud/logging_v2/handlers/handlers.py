@@ -82,7 +82,12 @@ class CloudLoggingFilter(logging.Filter):
         """
         user_labels = getattr(record, "labels", {})
         # infer request data from the environment
-        inferred_http, inferred_trace, inferred_span, inferred_sampled = get_request_data()
+        (
+            inferred_http,
+            inferred_trace,
+            inferred_span,
+            inferred_sampled,
+        ) = get_request_data()
         if inferred_trace is not None and self.project is not None:
             # add full path for detected trace
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
@@ -90,7 +95,9 @@ class CloudLoggingFilter(logging.Filter):
         record._resource = getattr(record, "resource", None)
         record._trace = getattr(record, "trace", inferred_trace) or None
         record._span_id = getattr(record, "span_id", inferred_span) or None
-        record._trace_sampled = getattr(record, "trace_sampled", inferred_sampled) or None
+        record._trace_sampled = (
+            getattr(record, "trace_sampled", inferred_sampled) or None
+        )
         record._http_request = getattr(record, "http_request", inferred_http)
         record._source_location = CloudLoggingFilter._infer_source_location(record)
         # add logger name as a label if possible
