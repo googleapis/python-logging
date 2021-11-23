@@ -27,11 +27,13 @@ except ImportError:  # pragma: NO COVER
 from google.cloud.logging_v2.handlers.middleware.request import _get_django_request
 
 _DJANGO_CONTENT_LENGTH = "CONTENT_LENGTH"
-_DJANGO_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
+_DJANGO_XCLOUD_TRACE_HEADER = "HTTP_X_CLOUD_TRACE_CONTEXT"
+_DJANGO_TRACEPARENT = "HTTP_TRACEPARENT"
 _DJANGO_USERAGENT_HEADER = "HTTP_USER_AGENT"
 _DJANGO_REMOTE_ADDR_HEADER = "REMOTE_ADDR"
 _DJANGO_REFERER_HEADER = "HTTP_REFERER"
-_FLASK_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
+_FLASK_XCLOUD_TRACE_HEADER = "X_CLOUD_TRACE_CONTEXT"
+_FLASK_TRACEPARENT = "TRACEPARENT"
 _PROTOCOL_HEADER = "SERVER_PROTOCOL"
 
 
@@ -78,8 +80,13 @@ def get_request_data_from_flask():
     }
 
     # find trace id and span id
-    x_cloud_header = flask.request.headers.get(_FLASK_TRACE_HEADER)
-    trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
+    header =  flask.request.headers.get(_FLASK_TRACEPARENT)
+    if header:
+        trace_id, span_id, trace_sampled = _parse_trace_parent(header)
+    else:
+        # w3 traceparent header not found. Check XCLOUD_TRACE_CONTEXT
+        header = flask.request.headers.get(_FLASK_XCLOUD_TRACE_HEADER)
+        trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
 
     return http_request, trace_id, span_id, trace_sampled
 
@@ -106,8 +113,13 @@ def get_request_data_from_django():
     }
 
     # find trace id and span id
-    x_cloud_header = request.META.get(_DJANGO_TRACE_HEADER)
-    trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
+    header =  flask.request.headers.get(_DJANGO_TRACEPARENT)
+    if header:
+        trace_id, span_id, trace_sampled = _parse_trace_parent(header)
+    else:
+        # w3 traceparent header not found. Check XCLOUD_TRACE_CONTEXT
+        header = flask.request.headers.get(_DJANGO_XCLOUD_TRACE_HEADER)
+        trace_id, span_id, trace_sampled = _parse_xcloud_trace(x_cloud_header)
 
     return http_request, trace_id, span_id, trace_sampled
 
