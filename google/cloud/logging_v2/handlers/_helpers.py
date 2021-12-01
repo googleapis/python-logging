@@ -113,12 +113,12 @@ def get_request_data_from_django():
     }
 
     # find trace id and span id
-    header =  flask.request.headers.get(_DJANGO_TRACEPARENT)
+    header =  request.META.get(_DJANGO_TRACEPARENT)
     if header:
         trace_id, span_id, trace_sampled = _parse_trace_parent(header)
     else:
         # w3 traceparent header not found. Check XCLOUD_TRACE_CONTEXT
-        header = flask.request.headers.get(_DJANGO_XCLOUD_TRACE_HEADER)
+        header = request.META.get(_DJANGO_XCLOUD_TRACE_HEADER)
         trace_id, span_id, trace_sampled = _parse_xcloud_trace(header)
 
     return http_request, trace_id, span_id, trace_sampled
@@ -135,7 +135,8 @@ def _parse_trace_parent(header):
             The trace_id, span_id and trace_sampled extracted from the header
             Each field will be None if not found.
     """
-    trace_id = span_id = trace_sampled = None
+    trace_id = span_id = None
+    trace_sampled = False
     # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
     if header:
         try:
@@ -163,11 +164,12 @@ def _parse_xcloud_trace(header):
             The trace_id, span_id and trace_sampled extracted from the header
             Each field will be None if not found.
     """
-    trace_id = span_id = trace_sampled = None
+    trace_id = span_id = None
+    trace_sampled = False
     # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
     if header:
         try:
-            regex = '([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?'
+            regex = '([\w]+)?(\/?([\w]+))?(;?o=(\d))?'
             match = re.match(regex, header)
             trace_id = match.group(1)
             span_id = match.group(3)
