@@ -80,7 +80,7 @@ def get_request_data_from_flask():
     }
 
     # find trace id and span id
-    header =  flask.request.headers.get(_FLASK_TRACEPARENT)
+    header = flask.request.headers.get(_FLASK_TRACEPARENT)
     if header:
         trace_id, span_id, trace_sampled = _parse_trace_parent(header)
     else:
@@ -178,7 +178,7 @@ def _parse_xcloud_trace(header):
             match = re.match(regex, header)
             trace_id = match.group(1)
             span_id = match.group(3)
-            trace_sampled = (match.group(5) == '1')
+            trace_sampled = match.group(5) == "1"
         except IndexError:
             pass
     return trace_id, span_id, trace_sampled
