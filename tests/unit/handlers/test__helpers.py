@@ -183,7 +183,7 @@ class Test_get_request_data_from_django(unittest.TestCase):
         self.assertEqual(sampled, True)
         self.assertEqual(http_request["requestMethod"], "GET")
 
-    def test_xcloud_header(self):
+    def test_traceparent_header(self):
         from django.test import RequestFactory
         from google.cloud.logging_v2.handlers.middleware import request
 
@@ -192,9 +192,7 @@ class Test_get_request_data_from_django(unittest.TestCase):
         expected_span_id = "00f067aa0ba902b7"
         header = f"00-{expected_trace_id}-{expected_span_id}-01"
 
-        django_request = RequestFactory().get(
-            "/", **{django_trace_header: header}
-        )
+        django_request = RequestFactory().get("/", **{django_trace_header: header})
 
         middleware = request.RequestMiddleware(None)
         middleware.process_request(django_request)
@@ -270,7 +268,12 @@ class Test_get_request_data(unittest.TestCase):
         return django_mock, flask_mock, result
 
     def test_from_django(self):
-        django_expected = (_DJANGO_HTTP_REQUEST, _DJANGO_TRACE_ID, _DJANGO_SPAN_ID, False)
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
         flask_expected = (None, None, None, False)
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
         self.assertEqual(output, django_expected)
@@ -289,7 +292,12 @@ class Test_get_request_data(unittest.TestCase):
         flask_mock.assert_called_once_with()
 
     def test_from_django_and_flask(self):
-        django_expected = (_DJANGO_HTTP_REQUEST, _DJANGO_TRACE_ID, _DJANGO_SPAN_ID, False)
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
         flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
 
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
@@ -401,6 +409,7 @@ class Test__parse_xcloud_trace(unittest.TestCase):
         self.assertEqual(span_id, expected_span)
         self.assertEqual(sampled, True)
 
+
 class Test__parse_trace_parent(unittest.TestCase):
     @staticmethod
     def _call_fut(header):
@@ -441,9 +450,9 @@ class Test__parse_trace_parent(unittest.TestCase):
         invalid_headers = [
             "",
             "test"
-            "ff-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01", # invalid version
-            "00-00000000000000000000000000000000-b7ad6b7169203331-01", # invalid trace
-            "00-0af7651916cd43dd8448eb211c80319c-0000000000000000-01", # invalid span
+            "ff-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01",  # invalid version
+            "00-00000000000000000000000000000000-b7ad6b7169203331-01",  # invalid trace
+            "00-0af7651916cd43dd8448eb211c80319c-0000000000000000-01",  # invalid span
             "00-af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-00",
             "00-0af7651916cd43dd8448eb211c80319c-bad6b7169203331-00",
             "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-0",

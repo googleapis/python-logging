@@ -298,10 +298,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         app = self.create_app()
         with app.test_request_context(
             expected_path,
-            headers={
-                "User-Agent": expected_agent,
-                "TRACEPARENT": trace_header,
-            },
+            headers={"User-Agent": expected_agent, "TRACEPARENT": trace_header},
         ):
             handler.filter(record)
             result = json.loads(handler.format(record))

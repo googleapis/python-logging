@@ -113,7 +113,7 @@ def get_request_data_from_django():
     }
 
     # find trace id and span id
-    header =  request.META.get(_DJANGO_TRACEPARENT)
+    header = request.META.get(_DJANGO_TRACEPARENT)
     if header:
         trace_id, span_id, trace_sampled = _parse_trace_parent(header)
     else:
@@ -141,11 +141,11 @@ def _parse_trace_parent(header):
     # see https://www.w3.org/TR/trace-context/ for W3C traceparent format
     if header:
         try:
-            VERSION_PART = r'(?!ff)[a-f\d]{2}'
-            TRACE_ID_PART = r'(?![0]{32})[a-f\d]{32}'
-            PARENT_ID_PART = r'(?![0]{16})[a-f\d]{16}'
-            FLAGS_PART = r'[a-f\d]{2}'
-            regex = f'^\\s?({VERSION_PART})-({TRACE_ID_PART})-({PARENT_ID_PART})-({FLAGS_PART})(-.*)?\\s?$'
+            VERSION_PART = r"(?!ff)[a-f\d]{2}"
+            TRACE_ID_PART = r"(?![0]{32})[a-f\d]{32}"
+            PARENT_ID_PART = r"(?![0]{16})[a-f\d]{16}"
+            FLAGS_PART = r"[a-f\d]{2}"
+            regex = f"^\\s?({VERSION_PART})-({TRACE_ID_PART})-({PARENT_ID_PART})-({FLAGS_PART})(-.*)?\\s?$"
             match = re.match(regex, header)
             trace_id = match.group(2)
             span_id = match.group(3)
@@ -174,7 +174,7 @@ def _parse_xcloud_trace(header):
     # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
     if header:
         try:
-            regex = '([\w-]+)?(\/?([\w-]+))?(;?o=(\d))?'
+            regex = r"([\w-]+)?(\/?([\w-]+))?(;?o=(\d))?"
             match = re.match(regex, header)
             trace_id = match.group(1)
             span_id = match.group(3)
@@ -190,7 +190,7 @@ def get_request_data():
 
     Returns:
         Tuple[Optional[dict], Optional[str], Optional[str], Optional[bool]]:
-            Data related to the current http request, trace_id, span_id, and trace_sampled 
+            Data related to the current http request, trace_id, span_id, and trace_sampled
             for the request. All fields will be None if a http request isn't found.
     """
     checkers = (

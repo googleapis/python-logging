@@ -188,10 +188,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
         app = self.create_app()
         with app.test_request_context(
             expected_path,
-            headers={
-                "User-Agent": expected_agent,
-                "TRACEPARENT": combined_trace,
-            },
+            headers={"User-Agent": expected_agent, "TRACEPARENT": combined_trace},
         ):
             success = filter_obj.filter(record)
             self.assertTrue(success)
@@ -554,7 +551,17 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, False, None, None,),
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                None,
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
         )
 
 

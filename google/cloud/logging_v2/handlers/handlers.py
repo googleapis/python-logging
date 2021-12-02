@@ -95,7 +95,9 @@ class CloudLoggingFilter(logging.Filter):
         record._resource = getattr(record, "resource", None)
         record._trace = getattr(record, "trace", inferred_trace) or None
         record._span_id = getattr(record, "span_id", inferred_span) or None
-        record._trace_sampled = getattr(record, "trace_sampled", inferred_sampled) or False
+        record._trace_sampled = (
+            getattr(record, "trace_sampled", inferred_sampled) or False
+        )
         record._http_request = getattr(record, "http_request", inferred_http)
         record._source_location = CloudLoggingFilter._infer_source_location(record)
         # add logger name as a label if possible
