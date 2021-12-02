@@ -90,7 +90,7 @@ class CloudLoggingFilter(logging.Filter):
         record._resource = getattr(record, "resource", None)
         record._trace = getattr(record, "trace", inferred_trace) or None
         record._span_id = getattr(record, "span_id", inferred_span) or None
-        record._trace_sampled = getattr(record, "trace_sampled", inferred_sampled) or None
+        record._trace_sampled = getattr(record, "trace_sampled", inferred_sampled) or False
         record._http_request = getattr(record, "http_request", inferred_http)
         record._source_location = CloudLoggingFilter._infer_source_location(record)
         # add logger name as a label if possible
@@ -99,6 +99,7 @@ class CloudLoggingFilter(logging.Filter):
         # create string representations for structured logging
         record._trace_str = record._trace or ""
         record._span_id_str = record._span_id or ""
+        record._trace_sampled_str = "true" if record._trace_sampled else "false"
         record._http_request_str = json.dumps(
             record._http_request or {}, ensure_ascii=False
         )
@@ -206,6 +207,7 @@ class CloudLoggingHandler(logging.StreamHandler):
             labels=labels,
             trace=record._trace,
             span_id=record._span_id,
+            trace_sampled=record._trace_sampled,
             http_request=record._http_request,
             source_location=record._source_location,
         )
