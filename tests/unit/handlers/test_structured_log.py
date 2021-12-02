@@ -66,7 +66,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             "severity": record.levelname,
             "logging.googleapis.com/trace": "",
             "logging.googleapis.com/spanId": "",
-            "logging.googleapis.com/trace_sampled": "false",
+            "logging.googleapis.com/trace_sampled": False,
             "logging.googleapis.com/sourceLocation": {
                 "file": pathname,
                 "line": lineno,
@@ -96,7 +96,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             "severity": "INFO",
             "logging.googleapis.com/trace": "",
             "logging.googleapis.com/spanId": "",
-            "logging.googleapis.com/trace_sampled": "false",
+            "logging.googleapis.com/trace_sampled": False,
             "logging.googleapis.com/sourceLocation": {},
             "httpRequest": {},
             "logging.googleapis.com/labels": {},
@@ -248,7 +248,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_payload = {
             "logging.googleapis.com/trace": expected_trace,
             "logging.googleapis.com/spanId": expected_span,
-            "logging.googleapis.com/trace_sampled": "true",
+            "logging.googleapis.com/trace_sampled": True,
             "httpRequest": {
                 "requestMethod": "GET",
                 "requestUrl": expected_path,
@@ -286,7 +286,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_payload = {
             "logging.googleapis.com/trace": expected_trace,
             "logging.googleapis.com/spanId": expected_span,
-            "logging.googleapis.com/trace_sampled": "true",
+            "logging.googleapis.com/trace_sampled": True,
             "httpRequest": {
                 "requestMethod": "GET",
                 "requestUrl": expected_path,
@@ -339,7 +339,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_payload = {
             "logging.googleapis.com/trace": overwrite_trace,
             "logging.googleapis.com/spanId": overwrite_span,
-            "logging.googleapis.com/trace_sampled": "false",
+            "logging.googleapis.com/trace_sampled": False,
             "logging.googleapis.com/sourceLocation": {"file": overwrite_file},
             "httpRequest": {"requestUrl": overwrite_path},
             "logging.googleapis.com/labels": {
