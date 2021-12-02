@@ -551,7 +551,7 @@ class TestLogging(unittest.TestCase):
         )
         self.assertEqual(entries[0].resource.type, extra["resource"].type)
 
-def test_handlers_w_json_fields(self):
+    def test_handlers_w_json_fields(self):
         LOG_MESSAGE = "Testing with json_field extras."
         LOGGER_NAME = "json_field_extras"
         handler_name = self._logger_name(LOGGER_NAME)
@@ -566,11 +566,7 @@ def test_handlers_w_json_fields(self):
 
         cloud_logger = logging.getLogger(LOGGER_NAME)
         cloud_logger.addHandler(handler)
-        expected_request = {"requestUrl": "localhost"}
-        expected_source = {"file": "test.py"}
-        extra = {
-            "json_fields": {"hello", "world", "two", 2}
-        }
+        extra = {"json_fields": {"hello": "world", "two": 2}}
         cloud_logger.warn(LOG_MESSAGE, extra=extra)
 
         entries = _list_entries(logger)
@@ -579,7 +575,6 @@ def test_handlers_w_json_fields(self):
         self.assertEqual(payload["message"], LOG_MESSAGE)
         self.assertEqual(payload["hello"], "world")
         self.assertEqual(payload["two"], 2)
-
 
     def test_log_root_handler(self):
         LOG_MESSAGE = "It was the best of times."

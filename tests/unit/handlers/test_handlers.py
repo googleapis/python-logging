@@ -447,7 +447,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
             ),
         )
 
-    def test_emit_dict(self):
+    def test_emit_w_json_extras(self):
         """
         User can add json_fields to the record, which should populate the payload
         """
@@ -471,7 +471,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
             handler.transport.send_called_with,
             (
                 record,
-                {"message":"message", "hello":"world"},
+                {"message": "message", "hello": "world"},
                 _GLOBAL_RESOURCE,
                 expected_label,
                 None,
@@ -648,13 +648,13 @@ class TestFormatAndParseMessage(unittest.TestCase):
         """
         from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 
-        message = 'hello'
-        json_fields = {"key":"val"}
+        message = "hello"
+        json_fields = {"key": "val"}
         record = logging.LogRecord("logname", None, None, None, message, None, None)
         setattr(record, "json_fields", json_fields)
         handler = logging.StreamHandler()
         result = _format_and_parse_message(record, handler)
-        self.assertEqual(result, {"message":message, "key":"val"})
+        self.assertEqual(result, {"message": message, "key": "val"})
 
     def test_empty_json_fields(self):
         """
@@ -662,7 +662,7 @@ class TestFormatAndParseMessage(unittest.TestCase):
         """
         from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 
-        message = 'hello'
+        message = "hello"
         record = logging.LogRecord("logname", None, None, None, message, None, None)
         setattr(record, "json_fields", {})
         handler = logging.StreamHandler()
@@ -676,7 +676,7 @@ class TestFormatAndParseMessage(unittest.TestCase):
         from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 
         message = None
-        json_fields = {"key":"val"}
+        json_fields = {"key": "val"}
         record = logging.LogRecord("logname", None, None, None, message, None, None)
         setattr(record, "json_fields", json_fields)
         handler = logging.StreamHandler()
@@ -689,14 +689,14 @@ class TestFormatAndParseMessage(unittest.TestCase):
         """
         from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 
-        message = {"key_m":"val_m"}
-        json_fields = {"key_j":"val_j"}
+        message = {"key_m": "val_m"}
+        json_fields = {"key_j": "val_j"}
         record = logging.LogRecord("logname", None, None, None, message, None, None)
         setattr(record, "json_fields", json_fields)
         handler = logging.StreamHandler()
         result = _format_and_parse_message(record, handler)
-        self.assertEqual(result['key_m'], message["key_m"])
-        self.assertEqual(result['key_j'], json_fields["key_j"])
+        self.assertEqual(result["key_m"], message["key_m"])
+        self.assertEqual(result["key_j"], json_fields["key_j"])
 
 
 class TestSetupLogging(unittest.TestCase):

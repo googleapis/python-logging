@@ -225,7 +225,9 @@ def _format_and_parse_message(record, formatter_handler):
     # if message is a dictionary, return as-is
     if isinstance(record.msg, collections.abc.Mapping):
         payload = record.msg
-        if passed_json_fields and isinstance(passed_json_fields, collections.abc.Mapping):
+        if passed_json_fields and isinstance(
+            passed_json_fields, collections.abc.Mapping
+        ):
             # append any json data in `json_fields`
             payload = {**payload, **passed_json_fields}
         return payload
@@ -242,8 +244,8 @@ def _format_and_parse_message(record, formatter_handler):
         pass
     # if json_fields was set, create a dictionary using that
     if passed_json_fields and isinstance(passed_json_fields, collections.abc.Mapping):
-        if message != 'None':
-            passed_json_fields['message'] = message
+        if message != "None":
+            passed_json_fields["message"] = message
         return passed_json_fields
     # if formatted message contains no content, return None
     return message if message != "None" else None
