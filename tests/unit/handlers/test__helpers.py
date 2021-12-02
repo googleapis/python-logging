@@ -360,4 +360,57 @@ class Test__parse_xcloud_trace(unittest.TestCase):
         self.assertEqual(span_id, expected_span)
         self.assertEqual(sampled, True)
 
+class Test__parse_trace_parent(unittest.TestCase):
+    @staticmethod
+    def _call_fut(header):
+        from google.cloud.logging_v2.handlers import _helpers
 
+        trace, span, sampled = _helpers._parse_trace_parent(header)
+        return trace, span, sampled
+
+    def test_empty_header(self):
+        header = ""
+        trace_id, span_id, sampled = self._call_fut(header)
+        self.assertIsNone(trace_id)
+        self.assertIsNone(span_id)
+        self.assertEqual(sampled, False)
+
+    def test_valid_header(self):
+        header = "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01"
+        trace_id, span_id, sampled = self._call_fut(header)
+        self.assertEqual(trace_id, "0af7651916cd43dd8448eb211c80319c")
+        self.assertEqual(span_id, "b7ad6b7169203331")
+        self.assertEqual(sampled, True)
+
+    def test_not_sampled(self):
+        header = "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-00"
+        trace_id, span_id, sampled = self._call_fut(header)
+        self.assertEqual(trace_id, "0af7651916cd43dd8448eb211c80319c")
+        self.assertEqual(span_id, "b7ad6b7169203331")
+        self.assertEqual(sampled, False)
+
+    def test_sampled_w_other_flags(self):
+        header = "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-09"
+        trace_id, span_id, sampled = self._call_fut(header)
+        self.assertEqual(trace_id, "0af7651916cd43dd8448eb211c80319c")
+        self.assertEqual(span_id, "b7ad6b7169203331")
+        self.assertEqual(sampled, True)
+
+    def test_invalid_headers(self):
+        invalid_headers = [
+            "",
+            "test"
+            "ff-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01", # invalid version
+            "00-00000000000000000000000000000000-b7ad6b7169203331-01", # invalid trace
+            "00-0af7651916cd43dd8448eb211c80319c-0000000000000000-01", # invalid span
+            "00-af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-00",
+            "00-0af7651916cd43dd8448eb211c80319c-bad6b7169203331-00",
+            "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-0",
+            "00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-",
+            "00-0af7651916cd43dd8448eb211c80319c-00",
+        ]
+        for header in invalid_headers:
+            trace_id, span_id, sampled = self._call_fut(header)
+            self.assertIsNone(trace_id)
+            self.assertIsNone(span_id)
+            self.assertEqual(sampled, False)

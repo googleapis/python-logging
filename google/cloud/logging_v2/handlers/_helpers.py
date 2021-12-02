@@ -64,7 +64,7 @@ def get_request_data_from_flask():
     """Get http_request and trace data from flask request headers.
 
     Returns:
-        Tuple[Optional[dict], Optional[str], Optional[str]]:
+        Tuple[Optional[dict], Optional[str], Optional[str], bool]:
             Data related to the current http request, trace_id, span_id and trace_sampled
             for the request. All fields will be None if a django request isn't found.
     """
@@ -95,7 +95,7 @@ def get_request_data_from_django():
     """Get http_request and trace data from django request headers.
 
     Returns:
-        Tuple[Optional[dict], Optional[str], Optional[str], Optional[bool]]:
+        Tuple[Optional[dict], Optional[str], Optional[str], bool]:
             Data related to the current http request, trace_id, span_id, and trace_sampled
             for the request. All fields will be None if a django request isn't found.
     """
@@ -130,26 +130,31 @@ def _parse_trace_parent(header):
 
     Args:
         header (str): the string extracted from the traceparent header
+            example: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
     Returns:
-        Tuple[Optional[dict], Optional[str], Optional[bool]]:
+        Tuple[Optional[dict], Optional[str], bool]:
             The trace_id, span_id and trace_sampled extracted from the header
-            Each field will be None if not found.
+            Each field will be None if header can't be parsed in expected format.
     """
     trace_id = span_id = None
     trace_sampled = False
-    # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
+    # see https://www.w3.org/TR/trace-context/ for W3C traceparent format
     if header:
         try:
-            VERSION_PART = r'(?!ff)[\\da-f]{2}';
-            TRACE_ID_PART = r'(?![0]{32})[\\da-f]{32}';
-            PARENT_ID_PART = r'(?![0]{16})[\\da-f]{16}';
-            FLAGS_PART = r'[\\da-f]{2}';
+            VERSION_PART = r'(?!ff)[a-f\d]{2}'
+            TRACE_ID_PART = r'(?![0]{32})[a-f\d]{32}'
+            PARENT_ID_PART = r'(?![0]{16})[a-f\d]{16}'
+            FLAGS_PART = r'[a-f\d]{2}'
             regex = f'^\\s?({VERSION_PART})-({TRACE_ID_PART})-({PARENT_ID_PART})-({FLAGS_PART})(-.*)?\\s?$'
             match = re.match(regex, header)
             trace_id = match.group(2)
             span_id = match.group(3)
-            trace_sampled = (int(match.group(5), 16) == 1)
-        except IndexError:
+            # trace-flag component is an 8-bit bit field. Read as an int
+            int_flag = int(match.group(4), 16)
+            # trace sampled is set if the right-most bit in flag component is set
+            trace_sampled = bool(int_flag & 1)
+        except (IndexError, AttributeError):
+            # could not parse header as expected. Return None
             pass
     return trace_id, span_id, trace_sampled
 
@@ -160,7 +165,7 @@ def _parse_xcloud_trace(header):
     Args:
         header (str): the string extracted from the X_CLOUD_TRACE header
     Returns:
-        Tuple[Optional[dict], Optional[str], Optional[bool]]:
+        Tuple[Optional[dict], Optional[str], bool]:
             The trace_id, span_id and trace_sampled extracted from the header
             Each field will be None if not found.
     """
@@ -186,7 +191,7 @@ def get_request_data():
     Returns:
         Tuple[Optional[dict], Optional[str], Optional[str], Optional[bool]]:
             Data related to the current http request, trace_id, span_id, and trace_sampled 
-            for the request. All fields will be None if a django request isn't found.
+            for the request. All fields will be None if a http request isn't found.
     """
     checkers = (
         get_request_data_from_django,
