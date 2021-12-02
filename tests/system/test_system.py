@@ -534,6 +534,7 @@ class TestLogging(unittest.TestCase):
         extra = {
             "trace": "123",
             "span_id": "456",
+            "trace_sampled": True,
             "http_request": expected_request,
             "source_location": expected_source,
             "resource": Resource(type="cloudiot_device", labels={}),
@@ -545,6 +546,7 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].trace, extra["trace"])
         self.assertEqual(entries[0].span_id, extra["span_id"])
+        self.assertTrue(entries[0].trace_sampled)
         self.assertEqual(entries[0].http_request, expected_request)
         self.assertEqual(
             entries[0].labels, {**extra["labels"], "python_logger": LOGGER_NAME}
