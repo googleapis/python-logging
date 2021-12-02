@@ -174,7 +174,7 @@ def _parse_xcloud_trace(header):
     # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
     if header:
         try:
-            regex = '([\w]+)?(\/?([\w]+))?(;?o=(\d))?'
+            regex = '([\w-]+)?(\/?([\w-]+))?(;?o=(\d))?'
             match = re.match(regex, header)
             trace_id = match.group(1)
             span_id = match.group(3)
