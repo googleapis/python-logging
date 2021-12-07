@@ -222,13 +222,13 @@ def _format_and_parse_message(record, formatter_handler):
         formatter_handler (logging.Handler): The handler used to format the log
     """
     passed_json_fields = getattr(record, "json_fields", {})
-    # if message is a dictionary, return as-is
+    # if message is a dictionary, use dictionary directly
     if isinstance(record.msg, collections.abc.Mapping):
         payload = record.msg
+        # attach any extra json fields if present
         if passed_json_fields and isinstance(
             passed_json_fields, collections.abc.Mapping
         ):
-            # append any json data in `json_fields`
             payload = {**payload, **passed_json_fields}
         return payload
     # format message string based on superclass
