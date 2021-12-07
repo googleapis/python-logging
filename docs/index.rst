@@ -5,7 +5,16 @@ Documentation
 .. toctree::
    :maxdepth: 3
 
-   v2
+   usage
+   stdlib-usage
+   client
+   logger
+   entries
+   metric
+   resource
+   sink
+   handlers
+   transport
    
 
 Migration Guides
