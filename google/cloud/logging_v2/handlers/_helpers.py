@@ -80,11 +80,11 @@ def get_request_data_from_flask():
     }
 
     # find trace id and span id
+    # first check for w3c traceparent header
     header = flask.request.headers.get(_FLASK_TRACEPARENT)
-    if header:
-        trace_id, span_id, trace_sampled = _parse_trace_parent(header)
-    else:
-        # w3 traceparent header not found. Check XCLOUD_TRACE_CONTEXT
+    trace_id, span_id, trace_sampled = _parse_trace_parent(header)
+    if trace_id is None:
+        # traceparent not found. look for xcloud_trace_context header
         header = flask.request.headers.get(_FLASK_XCLOUD_TRACE_HEADER)
         trace_id, span_id, trace_sampled = _parse_xcloud_trace(header)
 
@@ -113,11 +113,11 @@ def get_request_data_from_django():
     }
 
     # find trace id and span id
+    # first check for w3c traceparent header
     header = request.META.get(_DJANGO_TRACEPARENT)
-    if header:
-        trace_id, span_id, trace_sampled = _parse_trace_parent(header)
-    else:
-        # w3 traceparent header not found. Check XCLOUD_TRACE_CONTEXT
+    trace_id, span_id, trace_sampled = _parse_trace_parent(header)
+    if trace_id is None:
+        # traceparent not found. look for xcloud_trace_context header
         header = request.META.get(_DJANGO_XCLOUD_TRACE_HEADER)
         trace_id, span_id, trace_sampled = _parse_xcloud_trace(header)
 
