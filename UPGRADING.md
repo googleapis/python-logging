@@ -1,3 +1,6 @@
+# 3.0.0 Migration Guide
+
+
 # 2.0.0 Migration Guide
 
 The 2.0 release of the `google-cloud-logging` client is a significant upgrade based on a [next-gen code generator](https://github.com/googleapis/gapic-generator-python), and includes substantial interface changes. Existing code written for earlier versions of this library will likely require updates to use this version. This document describes the changes that have been made, and what you need to do to update your usage.

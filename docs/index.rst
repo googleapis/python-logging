@@ -8,10 +8,10 @@ Documentation
    v2
    
 
-Migration Guide
----------------
+Migration Guides
+----------------
 
-See the guide below for instructions on migrating to the 2.x release of this library.
+See the guide below for instructions on migrating between major releases of this library.
 
 .. toctree::
     :maxdepth: 2
