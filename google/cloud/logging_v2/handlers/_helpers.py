@@ -69,7 +69,7 @@ def get_request_data_from_flask():
             for the request. All fields will be None if a django request isn't found.
     """
     if flask is None or not flask.request:
-        return None, None, None, None
+        return None, None, None, False
 
     # build http_request
     http_request = {
@@ -102,7 +102,7 @@ def get_request_data_from_django():
     request = _get_django_request()
 
     if request is None:
-        return None, None, None, None
+        return None, None, None, False
 
     # build http_request
     http_request = {
@@ -189,7 +189,7 @@ def get_request_data():
     frameworks (currently supported: Flask and Django).
 
     Returns:
-        Tuple[Optional[dict], Optional[str], Optional[str], Optional[bool]]:
+        Tuple[Optional[dict], Optional[str], Optional[str], bool]:
             Data related to the current http request, trace_id, span_id, and trace_sampled
             for the request. All fields will be None if a http request isn't found.
     """
@@ -203,4 +203,4 @@ def get_request_data():
         if http_request is not None:
             return http_request, trace_id, span_id, trace_sampled
 
-    return None, None, None, None
+    return None, None, None, False

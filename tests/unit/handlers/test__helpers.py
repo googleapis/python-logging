@@ -314,7 +314,7 @@ class Test_get_request_data(unittest.TestCase):
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
 
         # function only returns trace if http_request data is present
-        self.assertEqual(output, (None, None, None, None))
+        self.assertEqual(output, (None, None, None, False))
 
         django_mock.assert_called_once_with()
         flask_mock.assert_called_once_with()
@@ -334,14 +334,14 @@ class Test_get_request_data(unittest.TestCase):
         flask_expected = (None, None, None, False)
         django_expected = (None, None, None, False)
         django_mock, flask_mock, output = self._helper(django_expected, flask_expected)
-        self.assertEqual(output, (None, None, None, None))
+        self.assertEqual(output, (None, None, None, False))
 
         django_mock.assert_called_once_with()
         flask_mock.assert_called_once_with()
 
     def test_wo_libraries(self):
         output = self._call_fut()
-        self.assertEqual(output, (None, None, None, None))
+        self.assertEqual(output, (None, None, None, False))
 
 
 class Test__parse_xcloud_trace(unittest.TestCase):

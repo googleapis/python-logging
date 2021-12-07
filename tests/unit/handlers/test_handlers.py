@@ -527,6 +527,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 expected_label,
                 None,
                 None,
+                False,
                 None,
                 None,
             ),
