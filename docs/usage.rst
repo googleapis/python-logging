@@ -250,8 +250,8 @@ Delete a sink:
     :end-before: [END sink_delete]
     :dedent: 4
 
-Integration with Python logging module
---------------------------------------
+Integration with `logging` Standard Library
+===========================================
 
 It's possible to tie the Python :mod:`logging` module directly into Google
 Cloud Logging. There are different handler options to accomplish this.
@@ -286,8 +286,8 @@ You can also exclude certain loggers:
     :end-before: [END setup_logging_excludes]
     :dedent: 4
 
-Cloud Logging Handler
-~~~~~~~~~~~~~~~~~~~~~
+Manual Handler
+---------------------
 
 If you prefer not to use
 :meth:`~google.cloud.logging.client.Client.get_default_handler`, you can
@@ -317,7 +317,7 @@ of the Python logger will be included in the structured log entry under the
     :dedent: 4
 
 Cloud Logging Handler transports
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 The :class:`~google.cloud.logging.handlers.handlers.CloudLoggingHandler`
 logging handler can use different transports. The default is
@@ -334,7 +334,7 @@ logging handler can use different transports. The default is
 .. _Google Kubernetes Engine: https://cloud.google.com/kubernetes-engine
 
 fluentd logging handlers
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 Besides :class:`~google.cloud.logging.handlers.handlers.CloudLoggingHandler`,
 which writes directly to the API, two other handlers are provided.

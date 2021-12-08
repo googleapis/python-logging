@@ -1,12 +1,17 @@
 .. include:: README.rst
 
+Usage Guide
+-------------------
+.. toctree::
+   :maxdepth: 2
+
+   usage
+
 Documentation
 -------------------
 .. toctree::
    :maxdepth: 3
 
-   usage
-   stdlib-usage
    client
    logger
    entries
