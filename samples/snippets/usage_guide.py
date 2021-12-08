@@ -369,6 +369,37 @@ def logging_handler(client):
     handler = CloudLoggingHandler(client, name="mycustomlog")
     # [END create_named_handler]
 
+@snippet
+def logging_json(client):
+    # [START logging_json_dumps]
+    import logging
+    import json
+
+    data_dict = {"hello": "world"}
+    logging.info(json.dumps(data_dict))
+    # [END logging_json_dumps]
+
+    # [START logging_extra_json_fields]
+    import logging
+
+    data_dict = {"hello": "world"}
+    logging.info("message field", extra={"json_fields": data_dict})
+    # [END logging_extra_json_fields]
+
+@snippet
+def using_extras(client):
+    # [START logging_extras]
+    my_labels = {"foo": "bar"}
+    my_http = {"requestUrl": "localhost"}
+    my_trace = "01234"
+
+    logging.info("hello", extra={
+        "labels": my_labels,
+        "http_request": my_http,
+        "trace": my_trace
+    })
+    # [END logging_extras]
+
 
 @snippet
 def setup_logging(client):

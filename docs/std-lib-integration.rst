@@ -28,6 +28,7 @@ standard :mod:`logging` module as normal:
 
 For more information on the library, see the `Google Cloud Logging documentation <https://cloud.google.com/logging/docs/setup/python>`_.
 For more information on the Python :mod:`logging` standard library, see the `logging documentation <https://docs.python.org/3/howto/logging.html#a-simple-example>`_
+
 Manual Handler Configuration
 -----------------------------
 
@@ -50,19 +51,59 @@ There are two supported handler classes to choose from:
       to standard out, to be read and parsed by a GCP logging agent
     - This is the default handler on Kubernetes Engine, Cloud Functions and Cloud Run
 
-logging JSON poayloads
+.. _JSON:
+
+Logging JSON Payloads
 ----------------------
 
-Although the Python :mod:`logging` standard library `expects all logs to be strings <https://docs.python.org/3/library/logging.html#logging.Logger.debug>`_
+Although the Python :mod:`logging` standard library `expects all logs to be strings <https://docs.python.org/3/library/logging.html#logging.Logger.debug>`_,
+Google Cloud Logging allows `JSON payload data <https://cloud.google.com/logging/docs/structured-logging>`_.
+You can write JSON logs using the standard library integration in one of the following ways:
+
+1. Using the `json_fields` `extra` argument:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logging_extra_json_fields]
+    :end-before: [END logging_extra_json_fields]
+    :dedent: 4
+
+2. Logging a JSON-parsable string:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logging_json_dumps]
+    :end-before: [END logging_json_dumps]
+    :dedent: 4
+
+Using the `extra` Argument
+--------------------------
+
+The Python :mod:`logging` standard library accepts `an "extra" argument <https://docs.python.org/3/library/logging.html#logging.Logger.debug>`_ when
+writing logs, which can be used to populate LogRecord objects with user-defined
+key-value pairs. Google Cloud Logging uses the `extra` field as a way to pass in
+metadata to populate `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_.
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logging_extras]
+    :end-before: [END logging_extras]
+    :dedent: 4
 
 
-- *logging dictionaries*
+The following `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
+can be set through the `extra` argument:
+
+- labels
+- trace
+- span_id
+- trace_sampled
+- http_request
+- source_location
+- resource
+- :ref:`json_fields<JSON>`
 
 
-:mod:`google-cloud-logging` will also attempt to parse stringified JSON objects logged using the library.
+Metadata sent explicitly through the `extra` argument will override any :ref:`automatically detected<Autodetection>` fields.
 
-Using `extras`
---------------
+.. _Autodetection:
 
 Automatic Metadata Detection
 ----------------------------
