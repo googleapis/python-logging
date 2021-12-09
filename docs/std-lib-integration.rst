@@ -18,16 +18,7 @@ simply call :meth:`setup_logging` on a :class:`~google.cloud.logging.client.Clie
     :dedent: 4
 
 This function will automatically choose the best configurations for the environment your
-code is running on. After running :meth:`setup_logging`, you can write logs using the
-standard :mod:`logging` module as normal:
-
-.. literalinclude:: ../samples/snippets/handler.py
-    :start-after: [START logging_handler_usage]
-    :end-before: [END logging_handler_usage]
-    :dedent: 4
-
-For more information on the library, see the `Google Cloud Logging documentation <https://cloud.google.com/logging/docs/setup/python>`_.
-For more information on the Python :mod:`logging` standard library, see the `logging documentation <https://docs.python.org/3/howto/logging.html#a-simple-example>`_
+code is running on. For more information, see the `Google Cloud Logging documentation <https://cloud.google.com/logging/docs/setup/python>`_.
 
 Manual Handler Configuration
 -----------------------------
@@ -53,6 +44,19 @@ There are two supported handler classes to choose from:
 
 .. _JSON:
 
+Using the Standard Library
+---------------------------
+
+After the Google Cloug Logging library has been setup with the Python :mod:`logging` standard library,
+you can begin to send logs with the standard logging library as you normally would:
+
+.. literalinclude:: ../samples/snippets/handler.py
+    :start-after: [START logging_handler_usage]
+    :end-before: [END logging_handler_usage]
+    :dedent: 4
+
+For more information on using the Python :mod:`logging` standard library, see the `logging documentation <https://docs.python.org/3/howto/logging.html#a-simple-example>`_
+
 Logging JSON Payloads
 ----------------------
 
@@ -74,12 +78,34 @@ You can write JSON logs using the standard library integration in one of the fol
     :end-before: [END logging_json_dumps]
     :dedent: 4
 
-Using the `extra` Argument
---------------------------
+.. _Autodetection:
+
+Automatic Metadata Detection
+----------------------------
+
+The Google Cloud Logging library will attempt to detect and attach additional
+`LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
+whenever possible. The following fields are currently supported:
+
+- labels
+- trace*
+- span_id*
+- trace_sampled*
+- http_request*
+- source_location
+- resource
+- :ref:`json_fields<JSON>`
+
+.. note::
+    Fields marked with "*" can only be detected when using a supported Python web framework. The Google Cloud Logging
+    library currently supports `flask <https://flask.palletsprojects.com/>`_ and `django <https://www.djangoproject.com/>`_
+
+Manual Metadata Using the `extra` Argument
+------------------------------------------
 
 The Python :mod:`logging` standard library accepts `an "extra" argument <https://docs.python.org/3/library/logging.html#logging.Logger.debug>`_ when
 writing logs, which can be used to populate LogRecord objects with user-defined
-key-value pairs. Google Cloud Logging uses the `extra` field as a way to pass in
+key-value pairs. Google Cloud Logging uses the `extra` field as a way to pass in additional
 metadata to populate `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_.
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
@@ -87,25 +113,8 @@ metadata to populate `LogEntry fields <https://cloud.google.com/logging/docs/ref
     :end-before: [END logging_extras]
     :dedent: 4
 
-
-The following `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
-can be set through the `extra` argument:
-
-- labels
-- trace
-- span_id
-- trace_sampled
-- http_request
-- source_location
-- resource
-- :ref:`json_fields<JSON>`
-
-
-Metadata sent explicitly through the `extra` argument will override any :ref:`automatically detected<Autodetection>` fields.
-
-.. _Autodetection:
-
-Automatic Metadata Detection
-----------------------------
+All of the `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
+that can be :ref:`autodetected<Autodetection>` can also be set manually through the `extra` argument. Fields sent explicitly through the `extra`
+argument will override any :ref:`automatically detected<Autodetection>` fields.
 
 
