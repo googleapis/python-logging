@@ -4,4 +4,5 @@ Usage Guide
    :maxdepth: 2
 
    std-lib-integration
+   direct-lib-usage
 
