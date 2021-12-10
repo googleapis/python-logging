@@ -5,4 +5,5 @@ Usage Guide
 
    std-lib-integration
    direct-lib-usage
+   grpc-vs-http
 

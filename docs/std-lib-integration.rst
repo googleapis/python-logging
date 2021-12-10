@@ -37,7 +37,7 @@ as an argument to :meth:`~google.cloud.logging_v2.client.Client.setup_logging`:
 There are two supported handler classes to choose from:
 
 - :class:`~google.cloud.logging_v2.handlers.handlers.CloudLoggingHandler`: 
-    - Sends logs directly to Cloud Logging over the network (gRPC or HTTP)
+    - Sends logs directly to Cloud Logging over the network (:doc:`gRPC or HTTP</grpc-vs-http>`)
     - Logs are transmitted according to a :ref:`Transport <Transports>` class
     - This is the default handler on most environments, including local development
 - :class:`~google.cloud.logging_v2.handlers.structured_log.StructuredLogHandler`: 
@@ -138,6 +138,8 @@ transports logs over the network to GCP. There are currently two Transport imple
 
 You can set a Transport class by passing it as an argument when 
 :ref:`initializing CloudLoggingHandler manually.<manual handler>`
+
+Both options can be used over either :doc:`gRPC or HTTP</grpc-vs-http>`.
 
 .. note::
     :class:`~google.cloud.logging_v2.handlers.structured_log.StructuredLogHandler`

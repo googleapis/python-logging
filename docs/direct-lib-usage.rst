@@ -15,6 +15,8 @@ Setup
 Creating a Client
 ~~~~~~~~~~~~~~~~~
 
+.. _Creating Client:
+
 Before using the library, you must first set up a :doc:`Client</client>`:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
@@ -22,8 +24,8 @@ Before using the library, you must first set up a :doc:`Client</client>`:
     :end-before: [END usage_client_setup]
     :dedent: 4
 
-When setting up the :doc:`Client</client>`, you can also disable gRPC to put the library
-into HTTP mode:
+When setting up the :doc:`Client</client>`, you can also :doc:`disable gRPC</grpc-vs-http>`
+to put the library into HTTP mode:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START usage_http_client_setup]
@@ -83,16 +85,16 @@ can be set by passing them as keyword arguments:
 based on input type. If you want to be more explicit about the type used, you can use the following
 Logger methods:
 
-- :meth:`Logger.log_text <google.cloud.logging_v2.logger.Logger.log_text>` creates a  :class:`TextEntry <google.cloud.logging_v2.entries.TextEntry>`
-- :meth:`Logger.log_struct <google.cloud.logging_v2.logger.Logger.log_struct>` creates a :class:`StructEntry <google.cloud.logging_v2.entries.StructEntry>`
-- :meth:`Logger.log_proto <google.cloud.logging_v2.logger.Logger.log_proto>` creates a :class:`ProtobufEntry <google.cloud.logging_v2.entries.ProtobufEntry>`
-- :meth:`Logger.log_empty <google.cloud.logging_v2.logger.Logger.log_empty>` creates an empty :class:`LogEntry <google.cloud.logging_v2.entries.LogEntry>`
+- :meth:`Logger.log_text <google.cloud.logging_v2.logger.Logger.log_text>` creates a  :class:`~google.cloud.logging_v2.entries.TextEntry`
+- :meth:`Logger.log_struct <google.cloud.logging_v2.logger.Logger.log_struct>` creates a :class:`~google.cloud.logging_v2.entries.StructEntry`
+- :meth:`Logger.log_proto <google.cloud.logging_v2.logger.Logger.log_proto>` creates a :class:`~google.cloud.logging_v2.entries.ProtobufEntry`
+- :meth:`Logger.log_empty <google.cloud.logging_v2.logger.Logger.log_empty>` creates an empty :class:`~google.cloud.logging_v2.entries.LogEntry`
 
 Batch Writing Logs
 ------------------
 
 By default, each log write will take place in an individual network request, which may be inefficient at scale.
-Instead, you can use a :class:`Batch <google.cloud.logging_v2.logger.Batch>`:
+Instead, you can use a :class:`~google.cloud.logging_v2.logger.Batch`:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_log_batch]
@@ -100,7 +102,7 @@ Instead, you can use a :class:`Batch <google.cloud.logging_v2.logger.Batch>`:
     :dedent: 4
 
 In this case, logs are batched together, and only sent out when :func:`batch.commit <google.cloud.logging_v2.logger.Batch.commit>` is called.
-To simplify things, you can also use :class:`Batch <google.cloud.logging_v2.logger.Batch>` as a context manager:
+To simplify things, you can also use :class:`~google.cloud.logging_v2.logger.Batch` as a context manager:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_log_batch_context]
