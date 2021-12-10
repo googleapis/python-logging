@@ -9,15 +9,63 @@ directly.
 In addition to writing logs, using the library in this way allows you to manage 
 :doc:`logs</entries>`, :doc:`sinks</sink>`, :doc:`metrics</metric>`, and other resources.
 
+Setup
+----------------------------
+
 Creating a Client
------------------
-http vs grpc
-create logger
-loggers will have associated resource
-can attach labels to logger
+~~~~~~~~~~~~~~~~~
+
+Before using the library, you must first set up a :doc:`Client</client>`:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START usage_client_setup]
+    :end-before: [END usage_client_setup]
+    :dedent: 4
+
+When setting up the :doc:`Client</client>`, you can also disable gRPC to put the library
+into HTTP mode:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START usage_http_client_setup]
+    :end-before: [END usage_http_client_setup]
+    :dedent: 4
+
+Creating a Logger
+~~~~~~~~~~~~~~~~~
+
+After creating a :doc:`Client</client>`, you can use it to create a :doc:`Logger</logger>`, which can be used
+to read, write, and delete logs from Google Cloud:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logger_create]
+    :end-before: [END logger_create]
+    :dedent: 4
+
+You can add custom labels initializing a :doc:`Logger</logger>`, which will
+be added on to each :doc:`LogEntry</entries>` created by it:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logger_custom_labels]
+    :end-before: [END logger_custom_labels]
+    :dedent: 4
+
+By default, the library will attempt to add a `Monitored Resource field <https://cloud.google.com/logging/docs/api/v2/resource-list>`_
+associated with the environment the code is run on. For example, code run on
+App Engine will have a `gae_app <https://cloud.google.com/monitoring/api/resources#tag_gae_app>`_
+resource, while code run locally will have a `global <https://cloud.google.com/monitoring/api/resources#tag_global>`_ resource field.
+If you want to manually set the resource field, you can do so when initializing the :doc:`Logger</logger>`:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logger_custom_resource]
+    :end-before: [END logger_custom_resource]
+    :dedent: 4
+
 
 Writing Log Entries
 -------------------
+
+Batch Writing Logs
+------------------
 
 Retriving Log Entries
 ---------------------

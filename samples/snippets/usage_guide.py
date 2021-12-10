@@ -100,14 +100,48 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
 
 
 @snippet
-def logger_usage(client, to_delete):
+def client_setup(client2, to_delete):
+    """Client setup."""
+    log_name = "client_setup_%d" % (_millis())
+
+    # [START usage_client_setup]
+    import google.cloud.logging
+    # if project not given, it will be inferred from the environment
+    client = google.cloud.logging.Client(project="my-project")
+    # [END usage_client_setup]
+    to_delete.append(client)
+
+    # [START usage_http_client_setup]
+    http_client = google.cloud.logging.Client(_use_grpc=False)
+    # [END usage_http_client_setup]
+    to_delete.append(http_client)
+
+@snippet
+def logger_usage(client_true, to_delete):
     """Logger usage."""
-    log_name = "logger_usage_%d" % (_millis())
 
     # [START logger_create]
-    logger = client.logger(log_name)
+    client = google.cloud.logging.Client(project="my-project")
+    logger = client.logger(name="log_id")
+    # logger will bind to logName "projects/my_project/logs/log_id"
     # [END logger_create]
     to_delete.append(logger)
+    log_id = "logger_usage_sd" % (_millis())
+    # [START logger_custom_labels]
+    custom_labels = {"my-key": "my-value"}
+    label_logger = client.logger(log_id, labels=custom_labels)
+    # [END logger_custom_labels]
+    to_delete.append(label_logger)
+    # [START logger_custom_resource]
+    from google.cloud.logging_v2.resource import Resource
+    resource = Resource(type="global", labels={})
+    global_logger = client.logger(log_id, resource=resource)
+    # [END logger_custom_resource]
+    to_delete.append(global_logger)
+
+    logger = client_true.logger(log_id)
+    to_delete.append(logger)
+
 
     # [START logger_log_text]
     logger.log_text("A simple entry")  # API call
