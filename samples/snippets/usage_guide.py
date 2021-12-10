@@ -180,6 +180,20 @@ def logger_usage(client_true, to_delete):
     )
     # [END logger_log_resource_text]
 
+    # [START logger_log_batch]
+    batch = logger.batch()
+    batch.log("first log")
+    batch.log("second log")
+    batch.commit()
+    # [END logger_log_batch]
+
+    # [START logger_log_batch_context]
+    with logger.batch() as batch:
+        batch.log("first log")
+        # do work
+        batch.log("last log")
+    # [END logger_log_batch_context]
+
     # [START logger_list_entries]
     from google.cloud.logging import DESCENDING
 

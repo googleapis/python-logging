@@ -91,6 +91,24 @@ Logger methods:
 Batch Writing Logs
 ------------------
 
+By default, each log write will take place in an individual network request, which may be inefficient at scale.
+Instead, you can use a :class:`Batch <google.cloud.logging_v2.logger.Batch>`:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logger_log_batch]
+    :end-before: [END logger_log_batch]
+    :dedent: 4
+
+In this case, logs are batched together, and only sent out when :func:`batch.commit <google.cloud.logging_v2.logger.Batch.commit>` is called.
+To simplify things, you can also use :class:`Batch <google.cloud.logging_v2.logger.Batch>` as a context manager:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logger_log_batch_context]
+    :end-before: [END logger_log_batch_context]
+    :dedent: 4
+
+Here, the logs will be automatically committed once the code exits the "with" block.
+
 Retriving Log Entries
 ---------------------
 
@@ -102,14 +120,14 @@ Fetch entries for the default project.
     :dedent: 4
 
 Entries returned by
-:meth:`Client.list_entries <google.cloud.logging.client.Client.list_entries>`
+:meth:`Client.list_entries <google.cloud.logging_v2.client.Client.list_entries>`
 or
-:meth:`Logger.list_entries <google.cloud.logging.logger.Logger.list_entries>`
+:meth:`Logger.list_entries <google.cloud.logging_v2.logger.Logger.list_entries>`
 will be instances of one of the following classes:
 
-- :class:`~google.cloud.logging.entries.TextEntry`
-- :class:`~google.cloud.logging.entries.StructEntry`
-- :class:`~google.cloud.logging.entries.ProtobufEntry`
+- :class:`~google.cloud.logging_v2.entries.TextEntry`
+- :class:`~google.cloud.logging_v2.entries.StructEntry`
+- :class:`~google.cloud.logging_v2.entries.ProtobufEntry`
 
 Filter entries retrieved using the `Advanced Logs Filters`_ syntax
 
