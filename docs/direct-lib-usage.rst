@@ -64,6 +64,30 @@ If you want to manually set the resource field, you can do so when initializing 
 Writing Log Entries
 -------------------
 
+You can write logs using :meth:`Logger.log <google.cloud.logging_v2.logging.Logger.log>`:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logger_log_basic]
+    :end-before: [END logger_log_basic]
+    :dedent: 4
+
+Additional `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
+can be set by passing them as keyword arguments:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logger_log_fields]
+    :end-before: [END logger_log_fields]
+    :dedent: 4
+
+:meth:`Logger.log <google.cloud.logging_v2.logger.Logger.log>` will attempt to choose the appropriate :doc:`LogEntry </entries>` type
+based on input type. If you want to be more explicit about the type used, you can use the following
+Logger methods:
+
+- :meth:`Logger.log_text <google.cloud.logging_v2.logger.Logger.log_text>` creates a  :class:`TextEntry <google.cloud.logging_v2.entries.TextEntry>`
+- :meth:`Logger.log_struct <google.cloud.logging_v2.logger.Logger.log_struct>` creates a :class:`StructEntry <google.cloud.logging_v2.entries.StructEntry>`
+- :meth:`Logger.log_proto <google.cloud.logging_v2.logger.Logger.log_proto>` creates a :class:`ProtobufEntry <google.cloud.logging_v2.entries.ProtobufEntry>`
+- :meth:`Logger.log_empty <google.cloud.logging_v2.logger.Logger.log_empty>` creates an empty :class:`LogEntry <google.cloud.logging_v2.entries.LogEntry>`
+
 Batch Writing Logs
 ------------------
 

@@ -142,6 +142,17 @@ def logger_usage(client_true, to_delete):
     logger = client_true.logger(log_id)
     to_delete.append(logger)
 
+    # [START logger_log_basic]
+    logger.log("A simple entry")  # API call
+    # [END logger_log_basic]
+
+    # [START logger_log_fields]
+    logger.log("an entry with fields set",
+        severity="ERROR",
+        insert_id="0123",
+        labels={'my-label':'my-value'}
+    )  # API call
+    # [END logger_log_fields]
 
     # [START logger_log_text]
     logger.log_text("A simple entry")  # API call
