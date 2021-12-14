@@ -1,5 +1,134 @@
 # 3.0.0 Migration Guide
 
+The v3.0.0 release of `google-cloud-logging` is focused on improving usability of the library,
+particularly on newer serverless environments. 
+
+If you experience issues or have questions, please file an [issue](https://github.com/googleapis/python-logging/issues).
+
+## Primary Changes
+
+### Handler deprecations ([#310](https://github.com/googleapis/python-logging/pull/310))
+
+> **WARNING**: Breaking change
+
+Prior to v3.0.0, there were three `Handler` classes used for the Python logging standard library integration:
+
+- [`AppEngineHandler`](https://github.com/googleapis/python-logging/blob/v2.7.0/google/cloud/logging_v2/handlers/app_engine.py)
+- [`ContainerEngineHandler`](https://github.com/googleapis/python-logging/blob/v2.7.0/google/cloud/logging_v2/handlers/container_engine.py)
+- [`CloudLoggingHandler`](https://github.com/googleapis/python-logging/blob/v2.7.0/google/cloud/logging_v2/handlers/handlers.py)
+
+Google Cloud has grown, and adding a new handler class for each new product does not scale.
+Recently, we have changed to support two more generic `Handler` classes instead:
+
+- [`CloudLoggingHandler`](https://github.com/googleapis/python-logging/blob/v2.7.0/google/cloud/logging_v2/handlers/handlers.py)
+  - sends logs over the network (using gRPC or HTTP API calls)
+  - replaces `AppEngineHandler`
+- [`StructuredLogHandler`](https://github.com/googleapis/python-logging/blob/v2.7.0/google/cloud/logging_v2/handlers/structured_log.py)
+  - exports logs in JSON format through standard out, to be parsed by an agent
+  - replaces `ContainerEngineHandler`
+
+As of v3.0.0, `AppEngineHandler` and `ContainerEngineHandler` have been marked as deprecated and will not be updated. 
+They may be removed from the library in a future update.
+
+### Full JSON log support in standard library integration ([#316](https://github.com/googleapis/python-logging/pull/316), [#339](https://github.com/googleapis/python-logging/pull/339), [#447](https://github.com/googleapis/python-logging/pull/447))
+
+You can now log JSON data using the Python `logging` standard library integration. 
+The library supports two different methods:
+
+1. Using the `json_fields` `extra` argument:
+
+```py
+import logging
+
+data_dict = {"hello": "world"}
+logging.info("message field", extra={"json_fields": data_dict})
+```
+
+2. Logging a JSON-parsable string:
+
+```py
+import logging
+import json
+
+data_dict = {"hello": "world"}
+logging.info(json.dumps(data_dict))
+```
+
+### Metadata autodetection ([#315](https://github.com/googleapis/python-logging/pull/315))
+
+> **WARNING**: Breaking change
+
+Logs emitted by the library must be associated with a [montored-resource type](https://cloud.google.com/monitoring/api/resources),
+indicating the compute environment the log originated from. Previously, the logs would default to
+["global"](https://cloud.google.com/monitoring/api/resources#tag_global) when left unspecified. 
+Going forward, the library will attempt to determine the monitored-resource automatically if not explicitly set.
+
+### New `Logger.log` method ([#316](https://github.com/googleapis/python-logging/pull/316))
+
+Previously, the Logger class had four methods for sending logs of different types:
+
+```py
+logger.log_text("hello world")
+logger.log_struct({"hello": "world"})
+logger.log_proto(proto_message)
+logger.log_empty()
+```
+
+In v3.0.0, the library adds a generic `log()` method that will attempt to infer and log any type:
+
+```py
+logger.log("hello world")
+```
+
+### More permissive arguments ([#422](https://github.com/googleapis/python-logging/pull/422))
+
+> **WARNING**: Breaking change
+
+In v3.0.0, the library will be more forgiving if inputs are given in a different format than expected
+
+```py
+# lowercase severity strings will be accepted
+logger.log("hello world", severity="warning")
+```
+
+```py
+# a severity will be pulled out of the JSON payload if not otherwise set
+logger.log({"hello": "world", "severity":"warning"})
+```
+
+```py
+# resource data can be passed as a dict instead of a Resource object
+logger.log("hello world", resource={"type":"global", "labels":[]})
+```
+
+### Allow reading from non-project resources ([#444](https://github.com/googleapis/python-logging/pull/444))
+
+Prior to v3.0.0, there was a crashing bug when attempting to read logs from non-project resources:
+
+- `organizations/[ORGANIZATION_ID]/logs/[LOG_ID]`
+- `billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]`
+- `folders/[FOLDER_ID]/logs/[LOG_ID]`
+
+The v3.0.0 update fixes this issue.
+
+### Internal Gapic and HTTP implementation changes ([#375](https://github.com/googleapis/python-logging/pull/375))
+
+> **WARNING**: Breaking change
+
+The library supports sending logs using two different network protocols: gRPC and HTTP. Previously, there was an \
+inconsistency in the implementations, resulting in unexpected behaviour when in HTTP mode.
+
+As part of these changes, we introduced a new `max_size` argument to `list_entries` calls, which can be used to determine
+how many results should be returned:
+
+```py
+from google.cloud import logging_v2
+
+client = logging_v2.Client()
+client.list_entries(max_size=5)
+```
+
+---
 
 # 2.0.0 Migration Guide
 
