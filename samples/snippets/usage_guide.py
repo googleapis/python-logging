@@ -416,12 +416,10 @@ def logging_handler(client):
 
     # [START create_cloud_handler]
     from google.cloud.logging.handlers import CloudLoggingHandler
+    from google.cloud.logging_v2.handlers import setup_logging
 
     handler = CloudLoggingHandler(client)
-    cloud_logger = logging.getLogger("cloudLogger")
-    cloud_logger.setLevel(logging.INFO)
-    cloud_logger.addHandler(handler)
-    cloud_logger.error("bad news")
+    setup_logging(handler)
     # [END create_cloud_handler]
 
     # [START create_named_handler]

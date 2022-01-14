@@ -27,11 +27,11 @@ Manual Handler Configuration
 
 Automatic Configuration will automatically determine the appropriate handler for the environment.
 If you would rather choose the handler yourself, you can construct an instance manually and pass it in
-as an argument to :meth:`~google.cloud.logging_v2.client.Client.setup_logging`:
+as an argument to :meth:`~google.cloud.logging_v2.handlers.setup_logging`:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
-    :start-after: [START setup_logging]
-    :end-before: [END setup_logging]
+    :start-after: [START create_cloud_handler]
+    :end-before: [END create_cloud_handler]
     :dedent: 4
 
 There are two supported handler classes to choose from:
