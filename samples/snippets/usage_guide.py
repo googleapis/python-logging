@@ -102,10 +102,10 @@ def client_list_entries(client, to_delete):  # pylint: disable=unused-argument
 @snippet
 def client_setup(client2, to_delete):
     """Client setup."""
-    log_name = "client_setup_%d" % (_millis())
 
     # [START usage_client_setup]
     import google.cloud.logging
+
     # if project not given, it will be inferred from the environment
     client = google.cloud.logging.Client(project="my-project")
     # [END usage_client_setup]
@@ -116,9 +116,11 @@ def client_setup(client2, to_delete):
     # [END usage_http_client_setup]
     to_delete.append(http_client)
 
+
 @snippet
 def logger_usage(client_true, to_delete):
     """Logger usage."""
+    import google.cloud.logging
 
     # [START logger_create]
     client = google.cloud.logging.Client(project="my-project")
@@ -134,6 +136,7 @@ def logger_usage(client_true, to_delete):
     to_delete.append(label_logger)
     # [START logger_custom_resource]
     from google.cloud.logging_v2.resource import Resource
+
     resource = Resource(type="global", labels={})
     global_logger = client.logger(log_id, resource=resource)
     # [END logger_custom_resource]
@@ -147,10 +150,11 @@ def logger_usage(client_true, to_delete):
     # [END logger_log_basic]
 
     # [START logger_log_fields]
-    logger.log("an entry with fields set",
+    logger.log(
+        "an entry with fields set",
         severity="ERROR",
         insert_id="0123",
-        labels={'my-label':'my-value'}
+        labels={"my-label": "my-value"},
     )  # API call
     # [END logger_log_fields]
 
@@ -426,6 +430,7 @@ def logging_handler(client):
     handler = CloudLoggingHandler(client, name="mycustomlog")
     # [END create_named_handler]
 
+
 @snippet
 def logging_json(client):
     # [START logging_json_dumps]
@@ -443,18 +448,18 @@ def logging_json(client):
     logging.info("message field", extra={"json_fields": data_dict})
     # [END logging_extra_json_fields]
 
+
 @snippet
 def using_extras(client):
+    import logging
     # [START logging_extras]
     my_labels = {"foo": "bar"}
     my_http = {"requestUrl": "localhost"}
     my_trace = "01234"
 
-    logging.info("hello", extra={
-        "labels": my_labels,
-        "http_request": my_http,
-        "trace": my_trace
-    })
+    logging.info(
+        "hello", extra={"labels": my_labels, "http_request": my_http, "trace": my_trace}
+    )
     # [END logging_extras]
 
 
