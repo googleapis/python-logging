@@ -128,7 +128,7 @@ def logger_usage(client_true, to_delete):
     # logger will bind to logName "projects/my_project/logs/log_id"
     # [END logger_create]
     to_delete.append(logger)
-    log_id = "logger_usage_sd" % (_millis())
+    log_id = "logger_usage_%d" % (_millis())
     # [START logger_custom_labels]
     custom_labels = {"my-key": "my-value"}
     label_logger = client.logger(log_id, labels=custom_labels)
@@ -452,6 +452,7 @@ def logging_json(client):
 @snippet
 def using_extras(client):
     import logging
+
     # [START logging_extras]
     my_labels = {"foo": "bar"}
     my_http = {"requestUrl": "localhost"}
