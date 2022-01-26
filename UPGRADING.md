@@ -54,10 +54,8 @@ logging.info(json.dumps(data_dict))
 
 Logs emitted by the library must be associated with a [montored-resource type](https://cloud.google.com/monitoring/api/resources)
 that indicates the compute environment the log originated from. 
-- Prior to v3.0.0, the logs would default to
-["global"](https://cloud.google.com/monitoring/api/resources#tag_global) when left unspecified. 
-- With v3.0.0, the library will attempt to determine the monitored-resource automatically if not explicitly set,
-and will default to "global" only when the environment can't be determined.
+- Prior to 3.0.0, when a log doesn't specify a monitored resource, that field is set to ["global"](https://cloud.google.com/monitoring/api/resources#tag_global).
+- With 3.0.0,  when a log doesn't specify a monitored resource, the library attempts to identify the resource. If a resource can't be detected, the field will still default to ["global"](https://cloud.google.com/monitoring/api/resources#tag_global).
 
 ### New `Logger.log` method ([#316](https://github.com/googleapis/python-logging/pull/316))
 
