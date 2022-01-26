@@ -1,61 +1,63 @@
 Direct Library Usage
 ====================
 
-Although the recommended way of using the :mod:`google-cloud-logging` library
-is to integrate it with the :doc:`Python logging standard library</std-lib-integration>`,
-you can also use the library to interact with the Googel Cloud Logging API 
+We recommend that you use the :mod:`google-cloud-logging` library
+by integrating it with the :doc:`Python logging standard library</std-lib-integration>`;
+However, you can also use the library to interact with the Google Cloud Logging API 
 directly.
 
-In addition to writing logs, using the library in this way allows you to manage 
+In addition to writing logs, you can use the library to manage 
 :doc:`logs</entries>`, :doc:`sinks</sink>`, :doc:`metrics</metric>`, and other resources.
 
 Setup
 ----------------------------
 
-Creating a Client
+Create a Client
 ~~~~~~~~~~~~~~~~~
 
 .. _Creating Client:
 
-Before using the library, you must first set up a :doc:`Client</client>`:
+You must set up a :doc:`Client</client>` to use the library:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START usage_client_setup]
     :end-before: [END usage_client_setup]
     :dedent: 4
 
-When setting up the :doc:`Client</client>`, you can also :doc:`disable gRPC</grpc-vs-http>`
-to put the library into HTTP mode:
+To use HTTP, :doc:`disable gRPC</grpc-vs-http>` when you set up the :doc:`Client</client>`: 
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START usage_http_client_setup]
     :end-before: [END usage_http_client_setup]
     :dedent: 4
 
-Creating a Logger
+Create a Logger
 ~~~~~~~~~~~~~~~~~
 
-After creating a :doc:`Client</client>`, you can use it to create a :doc:`Logger</logger>`, which can be used
-to read, write, and delete logs from Google Cloud:
+Loggers read, write, and delete logs from Google Cloud. 
+
+You use your :doc:`Client</client>` to create a :doc:`Logger</logger>`.
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_create]
     :end-before: [END logger_create]
     :dedent: 4
 
-You can add custom labels initializing a :doc:`Logger</logger>`, which will
-be added on to each :doc:`LogEntry</entries>` created by it:
+To add custom labels, do so when you initialize a :doc:`Logger</logger>`.
+When you add custom labels, these labels are added to each
+:doc:`LogEntry</entries>` written by the :doc:`Logger</logger>`:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_custom_labels]
     :end-before: [END logger_custom_labels]
     :dedent: 4
 
-By default, the library will attempt to add a `Monitored Resource field <https://cloud.google.com/logging/docs/api/v2/resource-list>`_
+By default, the library adds a `Monitored Resource field <https://cloud.google.com/logging/docs/api/v2/resource-list>`_
 associated with the environment the code is run on. For example, code run on
 App Engine will have a `gae_app <https://cloud.google.com/monitoring/api/resources#tag_gae_app>`_
 resource, while code run locally will have a `global <https://cloud.google.com/monitoring/api/resources#tag_global>`_ resource field.
-If you want to manually set the resource field, you can do so when initializing the :doc:`Logger</logger>`:
+
+To manually set the resource field, do so when you initialize the :doc:`Logger</logger>`:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_custom_resource]
@@ -63,45 +65,45 @@ If you want to manually set the resource field, you can do so when initializing 
     :dedent: 4
 
 
-Writing Log Entries
+Write Log Entries
 -------------------
 
-You can write logs using :meth:`Logger.log <google.cloud.logging_v2.logging.Logger.log>`:
+You write logs by using :meth:`Logger.log <google.cloud.logging_v2.logging.Logger.log>`:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_log_basic]
     :end-before: [END logger_log_basic]
     :dedent: 4
 
-Additional `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
-can be set by passing them as keyword arguments:
+You can add `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
+by passing them as keyword arguments:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_log_fields]
     :end-before: [END logger_log_fields]
     :dedent: 4
 
-:meth:`Logger.log <google.cloud.logging_v2.logger.Logger.log>` will attempt to choose the appropriate :doc:`LogEntry </entries>` type
-based on input type. If you want to be more explicit about the type used, you can use the following
-Logger methods:
+:meth:`Logger.log <google.cloud.logging_v2.logger.Logger.log>` chooses the appropriate :doc:`LogEntry </entries>` type
+based on input type. To specify type, you can use the following Logger methods:
 
 - :meth:`Logger.log_text <google.cloud.logging_v2.logger.Logger.log_text>` creates a  :class:`~google.cloud.logging_v2.entries.TextEntry`
 - :meth:`Logger.log_struct <google.cloud.logging_v2.logger.Logger.log_struct>` creates a :class:`~google.cloud.logging_v2.entries.StructEntry`
 - :meth:`Logger.log_proto <google.cloud.logging_v2.logger.Logger.log_proto>` creates a :class:`~google.cloud.logging_v2.entries.ProtobufEntry`
 - :meth:`Logger.log_empty <google.cloud.logging_v2.logger.Logger.log_empty>` creates an empty :class:`~google.cloud.logging_v2.entries.LogEntry`
 
-Batch Writing Logs
+Batch Write Logs
 ------------------
 
-By default, each log write will take place in an individual network request, which may be inefficient at scale.
-Instead, you can use a :class:`~google.cloud.logging_v2.logger.Batch`:
+By default, each log write takes place in an individual network request, which may be inefficient at scale.
+
+Using the :class:`~google.cloud.logging_v2.logger.Batch` class, logs are batched together, and only sent out 
+when :func:`batch.commit <google.cloud.logging_v2.logger.Batch.commit>` is called.
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_log_batch]
     :end-before: [END logger_log_batch]
     :dedent: 4
 
-In this case, logs are batched together, and only sent out when :func:`batch.commit <google.cloud.logging_v2.logger.Batch.commit>` is called.
 To simplify things, you can also use :class:`~google.cloud.logging_v2.logger.Batch` as a context manager:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
@@ -109,12 +111,14 @@ To simplify things, you can also use :class:`~google.cloud.logging_v2.logger.Bat
     :end-before: [END logger_log_batch_context]
     :dedent: 4
 
-Here, the logs will be automatically committed once the code exits the "with" block.
+In the previous example, the logs are automatically committed when the code exits the "with" block.
 
-Retriving Log Entries
+Retrieve Log Entries
 ---------------------
 
-Fetch entries for the default project.
+You retrieve log entries for the default project using 
+:meth:`list_entries() <google.cloud.logging_v2.client.Client.list_entries>` 
+on a :doc:`Client</client>` or :doc:`Logger</logger>` object:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START client_list_entries_default]
@@ -122,41 +126,41 @@ Fetch entries for the default project.
     :dedent: 4
 
 Entries returned by
-:meth:`Client.list_entries <google.cloud.logging_v2.client.Client.list_entries>`
+:meth:`Client.list_entries() <google.cloud.logging_v2.client.Client.list_entries>`
 or
-:meth:`Logger.list_entries <google.cloud.logging_v2.logger.Logger.list_entries>`
-will be instances of one of the following classes:
+:meth:`Logger.list_entries() <google.cloud.logging_v2.logger.Logger.list_entries>`
+are instances of one of the following classes:
 
 - :class:`~google.cloud.logging_v2.entries.TextEntry`
 - :class:`~google.cloud.logging_v2.entries.StructEntry`
 - :class:`~google.cloud.logging_v2.entries.ProtobufEntry`
 
-Filter entries retrieved using the `Advanced Logs Filters`_ syntax
+To filter entries retrieved using the `Advanced Logs Filters`_ syntax
 
 .. _Advanced Logs Filters: https://cloud.google.com/logging/docs/view/advanced_filters
 
-Fetch entries for the default project.
+To fetch entries for the default project.
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START client_list_entries_filter]
     :end-before: [END client_list_entries_filter]
     :dedent: 4
 
-Sort entries in descending timestamp order.
+To sort entries in descending timestamp order.
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START client_list_entries_order_by]
     :end-before: [END client_list_entries_order_by]
     :dedent: 4
 
-Retrieve entries for a single logger, sorting in descending timestamp order:
+To retrieve entries for a single logger, sorting in descending timestamp order:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_list_entries]
     :end-before: [END logger_list_entries]
     :dedent: 4
 
-And as a practical example, retrieve all `GKE Admin Activity audit logs`_
+For example, to retrieve all `GKE Admin Activity audit logs`_
 from the past 24 hours:
 
 .. _GKE Admin Activity audit logs: https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging#audit_logs_in_your_project
@@ -167,10 +171,10 @@ from the past 24 hours:
     :dedent: 4
 
 
-Deleting Log Entries
+Delete Log Entries
 --------------------
 
-You can delete all logs associated with a logger using the following call:
+To delete all logs associated with a logger, use the following call:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logger_delete]
@@ -178,70 +182,70 @@ You can delete all logs associated with a logger using the following call:
     :dedent: 8
 
 
-Managing Log Metrics
+Manage Log Metrics
 --------------------
 
-Metrics are counters of entries which match a given filter.  They can be
-used within Cloud Monitoring to create charts and alerts.
+Logs-based metrics are counters of entries which match a given filter.
+They can be used within Cloud Monitoring to create charts and alerts.
 
-List all metrics for a project:
+To list all logs-based metrics for a project:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START client_list_metrics]
     :end-before: [END client_list_metrics]
     :dedent: 4
 
-Create a metric:
+To create a logs-based metric:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START metric_create]
     :end-before: [END metric_create]
     :dedent: 4
 
-Refresh local information about a metric:
+To refresh local information about a logs-based metric:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START metric_reload]
     :end-before: [END metric_reload]
     :dedent: 4
 
-Update a metric:
+To update a logs-based metric:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START metric_update]
     :end-before: [END metric_update]
     :dedent: 4
 
-Delete a metric:
+To delete a logs-based metric:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START metric_delete]
     :end-before: [END metric_delete]
     :dedent: 4
 
-Using Log Sinks
+Log Sinks
 ---------------
 
-Sinks allow exporting entries which match a given filter to Cloud Storage
-buckets, BigQuery datasets, or Cloud Pub/Sub topics.
+Sinks allow exporting of log entries which match a given filter to
+Cloud Storage buckets, BigQuery datasets, or Cloud Pub/Sub topics.
 
 Cloud Storage Sink
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Make sure that the storage bucket you want to export logs to has
+Ensure the storage bucket that you want to export logs to has
 ``cloud-logs@google.com`` as an owner. See
 `Setting permissions for Cloud Storage`_.
 
 .. _Setting permissions for Cloud Storage: https://cloud.google.com/logging/docs/export/configure_export_v2#errors_exporting_to_cloud_storage
 
-Add ``cloud-logs@google.com`` as an owner of the bucket:
+Ensure that ``cloud-logs@google.com`` is an owner of the bucket:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START sink_bucket_permissions]
     :end-before: [END sink_bucket_permissions]
     :dedent: 4
 
-Create a Cloud Storage sink:
+To create a Cloud Storage sink:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START sink_storage_create]
@@ -252,7 +256,7 @@ Create a Cloud Storage sink:
 BigQuery Sink
 ~~~~~~~~~~~~~~~~~~
 
-To export logs to BigQuery you must log into the Cloud Platform Console
+To export logs to BigQuery, you must log into the Cloud Console
 and add ``cloud-logs@google.com`` to a dataset.
 
 See: `Setting permissions for BigQuery`_
@@ -264,7 +268,7 @@ See: `Setting permissions for BigQuery`_
     :end-before: [END sink_dataset_permissions]
     :dedent: 4
 
-Create a BigQuery sink:
+To create a BigQuery sink:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START sink_bigquery_create]
@@ -275,7 +279,7 @@ Create a BigQuery sink:
 Pub/Sub Sink
 ~~~~~~~~~~~~~~~~~
 
-To export logs to BigQuery you must log into the Cloud Platform Console
+To export logs to BigQuery you must log into the Cloud Console
 and add ``cloud-logs@google.com`` to a topic.
 
 See: `Setting permissions for Pub/Sub`_
@@ -287,42 +291,40 @@ See: `Setting permissions for Pub/Sub`_
     :end-before: [END sink_topic_permissions]
     :dedent: 4
 
-Create a Cloud Pub/Sub sink:
+To create a Cloud Pub/Sub sink:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START sink_pubsub_create]
     :end-before: [END sink_pubsub_create]
     :dedent: 4
 
-Managing Sinks
+Manage Sinks
 ~~~~~~~~~~~~~~
 
-List all sinks for a project:
+To list all sinks for a project:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START client_list_sinks]
     :end-before: [END client_list_sinks]
     :dedent: 4
 
-Refresh local information about a sink:
+To refresh local information about a sink:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START sink_reload]
     :end-before: [END sink_reload]
     :dedent: 4
 
-Update a sink:
+To update a sink:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START sink_update]
     :end-before: [END sink_update]
     :dedent: 4
 
-Delete a sink:
+To delete a sink:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START sink_delete]
     :end-before: [END sink_delete]
     :dedent: 4
-
-
