@@ -109,10 +109,12 @@ def client_setup(client2, to_delete):
     # if project not given, it will be inferred from the environment
     client = google.cloud.logging.Client(project="my-project")
     # [END usage_client_setup]
+    to_delete.append(client)
 
     # [START usage_http_client_setup]
     http_client = google.cloud.logging.Client(_use_grpc=False)
     # [END usage_http_client_setup]
+    to_delete.append(http_client)
 
 
 @snippet
@@ -125,7 +127,8 @@ def logger_usage(client_true, to_delete):
     logger = client.logger(name="log_id")
     # logger will bind to logName "projects/my_project/logs/log_id"
     # [END logger_create]
-    to_delete.append(logger)
+    client = client_true
+
     log_id = "logger_usage_%d" % (_millis())
     # [START logger_custom_labels]
     custom_labels = {"my-key": "my-value"}
