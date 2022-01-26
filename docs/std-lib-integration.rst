@@ -1,23 +1,22 @@
 Integration with `logging` Standard Library
 ===========================================
 
-The recommended way to use :mod:`google-cloud-logging` is to allow it to integrate with
+We recommend that you use :mod:`google-cloud-logging` to integrate with
 the Python :mod:`logging` standard library. This way, you can write logs using Python
-standards, and still have your logs appear in Google Cloud Logging using custom handlers
-behind the scenes.
+standards, and still have your logs appear in Google Cloud Logging.
 
 Automatic Configuration
 -----------------------
 
 To integrate :mod:`google-cloud-logging` with the standard :mod:`logging` module,
-simply call :meth:`~google.cloud.logging_v2.client.Client.setup_logging` on a :class:`~google.cloud.logging_v2.client.Client` instance.
+call :meth:`~google.cloud.logging_v2.client.Client.setup_logging` on a :class:`~google.cloud.logging_v2.client.Client` instance.
 
 .. literalinclude:: ../samples/snippets/handler.py
     :start-after: [START logging_handler_setup]
     :end-before: [END logging_handler_setup]
     :dedent: 4
 
-This function will automatically choose the best configurations for the environment your
+This :meth:`~google.cloud.logging_v2.client.Client.setup_logging` function chooses the best configurations for the environment your
 code is running on. For more information, see the `Google Cloud Logging documentation <https://cloud.google.com/logging/docs/setup/python>`_.
 
 Manual Handler Configuration
@@ -25,8 +24,8 @@ Manual Handler Configuration
 
 .. _Manual Handler:
 
-Automatic Configuration will automatically determine the appropriate handler for the environment.
-If you would rather choose the handler yourself, you can construct an instance manually and pass it in
+Automatic Configuration automatically determines the appropriate handler for the environment.
+To specify the handler yourself, construct an instance manually and pass it in
 as an argument to :meth:`~google.cloud.logging_v2.handlers.setup_logging`:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
@@ -45,11 +44,11 @@ There are two supported handler classes to choose from:
       to standard out, to be read and parsed by a GCP logging agent
     - This is the default handler on Kubernetes Engine, Cloud Functions and Cloud Run
 
-Using the Standard Library
+Standard Library
 ---------------------------
 
-After the Google Cloug Logging library has been setup with the Python :mod:`logging` standard library,
-you can begin to send logs with the standard logging library as you normally would:
+After you setup the Google Cloud Logging library with the Python :mod:`logging` standard library,
+you can send logs with the standard logging library as you normally would:
 
 .. literalinclude:: ../samples/snippets/handler.py
     :start-after: [START logging_handler_usage]
@@ -65,16 +64,17 @@ Logging JSON Payloads
 
 Although the Python :mod:`logging` standard library `expects all logs to be strings <https://docs.python.org/3/library/logging.html#logging.Logger.debug>`_,
 Google Cloud Logging allows `JSON payload data <https://cloud.google.com/logging/docs/structured-logging>`_.
-You can write JSON logs using the standard library integration in one of the following ways:
 
-1. Using the `json_fields` `extra` argument:
+To write JSON logs using the standard library integration, do one of the following:
+
+1. Use the `json_fields` `extra` argument:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logging_extra_json_fields]
     :end-before: [END logging_extra_json_fields]
     :dedent: 4
 
-2. Logging a JSON-parsable string:
+2. Log a JSON-parsable string:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logging_json_dumps]
@@ -87,9 +87,9 @@ Automatic Metadata Detection
 
 .. _Autodetection:
 
-The Google Cloud Logging library will attempt to detect and attach additional
-`LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
-whenever possible. The following fields are currently supported:
+The Google Cloud Logging library attempts to detect and attach additional
+`LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_ .
+The following fields are currently supported:
 
 - labels
 - trace*
@@ -101,14 +101,14 @@ whenever possible. The following fields are currently supported:
 - :ref:`json_fields<JSON>`
 
 .. note::
-    Fields marked with "*" can only be detected when using a supported Python web framework. The Google Cloud Logging
+    Fields marked with "*" require a supported Python web framework. The Google Cloud Logging
     library currently supports `flask <https://flask.palletsprojects.com/>`_ and `django <https://www.djangoproject.com/>`_
 
 Manual Metadata Using the `extra` Argument
-------------------------------------------
+--------------------------------------------
 
 The Python :mod:`logging` standard library accepts `an "extra" argument <https://docs.python.org/3/library/logging.html#logging.Logger.debug>`_ when
-writing logs, which can be used to populate LogRecord objects with user-defined
+writing logs. You can use this argument to populate LogRecord objects with user-defined
 key-value pairs. Google Cloud Logging uses the `extra` field as a way to pass in additional
 metadata to populate `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_.
 
@@ -119,7 +119,7 @@ metadata to populate `LogEntry fields <https://cloud.google.com/logging/docs/ref
 
 All of the `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
 that can be :ref:`autodetected<Autodetection>` can also be set manually through the `extra` argument. Fields sent explicitly through the `extra`
-argument will override any :ref:`automatically detected<Autodetection>` fields.
+argument override any :ref:`automatically detected<Autodetection>` fields.
 
 CloudLoggingHandler Transports
 ------------------------------
@@ -127,7 +127,7 @@ CloudLoggingHandler Transports
 .. _Transports:
 
 :doc:`Transport</transport>` classes define how the :class:`~google.cloud.logging_v2.handlers.handlers.CloudLoggingHandler`
-transports logs over the network to GCP. There are currently two Transport implementations
+transports logs over the network to Google Cloud. There are two Transport implementations
 (defined as subclasses of :class:`transports.base.Transport <google.cloud.logging_v2.handlers.transports.base.Transport>`):
 
 - :class:`~google.cloud.logging_v2.handlers.transports.background_thread.BackgroundThreadTransport`:
@@ -139,7 +139,7 @@ transports logs over the network to GCP. There are currently two Transport imple
 You can set a Transport class by passing it as an argument when 
 :ref:`initializing CloudLoggingHandler manually.<manual handler>`
 
-Both options can be used over either :doc:`gRPC or HTTP</grpc-vs-http>`.
+You can use both transport options over :doc:`gRPC or HTTP</grpc-vs-http>`.
 
 .. note::
     :class:`~google.cloud.logging_v2.handlers.structured_log.StructuredLogHandler`
