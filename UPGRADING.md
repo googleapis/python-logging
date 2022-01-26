@@ -115,7 +115,7 @@ inconsistency in the implementations, resulting in unexpected behavior when in H
 ### Max_size argument when listing entries ([#375](https://github.com/googleapis/python-logging/pull/375))
 
 v3.0.0 introduces a new `max_size` argument to `list_entries` calls, which can be used to specify an upper bound
-on how many logs should be returned on the call:
+on how many logs should be returned:
 
 ```py
 from google.cloud import logging_v2
