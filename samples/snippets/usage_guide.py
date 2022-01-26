@@ -109,12 +109,10 @@ def client_setup(client2, to_delete):
     # if project not given, it will be inferred from the environment
     client = google.cloud.logging.Client(project="my-project")
     # [END usage_client_setup]
-    to_delete.append(client)
 
     # [START usage_http_client_setup]
     http_client = google.cloud.logging.Client(_use_grpc=False)
     # [END usage_http_client_setup]
-    to_delete.append(http_client)
 
 
 @snippet
