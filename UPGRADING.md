@@ -53,10 +53,11 @@ logging.info(json.dumps(data_dict))
 > **WARNING**: Breaking change
 
 Logs emitted by the library must be associated with a [montored-resource type](https://cloud.google.com/monitoring/api/resources)
-that indicates the compute environment the log originated from. Prior to v3.0.0, the logs would default to
+that indicates the compute environment the log originated from. 
+- Prior to v3.0.0, the logs would default to
 ["global"](https://cloud.google.com/monitoring/api/resources#tag_global) when left unspecified. 
-With v3.0.0, the library will attempt to determine the monitored-resource automatically if not explicitly set,
-and only default to "global" when the environment can't be determined.
+- With v3.0.0, the library will attempt to determine the monitored-resource automatically if not explicitly set,
+and will default to "global" only when the environment can't be determined.
 
 ### New `Logger.log` method ([#316](https://github.com/googleapis/python-logging/pull/316))
 
