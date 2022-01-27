@@ -18,13 +18,6 @@ import logging
 import os
 import sys
 
-try:
-    from google.cloud.logging_v2 import _gapic
-except ImportError:  # pragma: NO COVER
-    _HAVE_GRPC = False
-    _gapic = None
-else:
-    _HAVE_GRPC = True
 
 import google.api_core.client_options
 from google.cloud.client import ClientWithProject
@@ -35,8 +28,6 @@ from google.cloud.logging_v2._http import _LoggingAPI as JSONLoggingAPI
 from google.cloud.logging_v2._http import _MetricsAPI as JSONMetricsAPI
 from google.cloud.logging_v2._http import _SinksAPI as JSONSinksAPI
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
-from google.cloud.logging_v2.handlers import AppEngineHandler
-from google.cloud.logging_v2.handlers import ContainerEngineHandler
 from google.cloud.logging_v2.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
@@ -50,6 +41,19 @@ from google.cloud.logging_v2.sink import Sink
 
 
 _DISABLE_GRPC = os.getenv(DISABLE_GRPC, False)
+_HAVE_GRPC = False
+
+try:
+    if not _DISABLE_GRPC:
+        # only import if DISABLE_GRPC is not set
+        from google.cloud.logging_v2 import _gapic
+
+        _HAVE_GRPC = True
+except ImportError:  # pragma: NO COVER
+    # could not import gapic library. Fall back to HTTP mode
+    _HAVE_GRPC = False
+    _gapic = None
+
 _USE_GRPC = _HAVE_GRPC and not _DISABLE_GRPC
 
 _GAE_RESOURCE_TYPE = "gae_app"
@@ -184,16 +188,21 @@ class Client(ClientWithProject):
                 self._metrics_api = JSONMetricsAPI(self)
         return self._metrics_api
 
-    def logger(self, name):
+    def logger(self, name, *, labels=None, resource=None):
         """Creates a logger bound to the current client.
 
         Args:
             name (str): The name of the logger to be constructed.
+            resource (Optional[~logging_v2.Resource]): a monitored resource object
+                representing the resource the code was run on. If not given, will
+                be inferred from the environment.
+            labels (Optional[dict]): Mapping of default labels for entries written
+                via this logger.
 
         Returns:
             ~logging_v2.logger.Logger: Logger created with the current client.
         """
-        return Logger(name, client=self)
+        return Logger(name, client=self, labels=labels, resource=resource)
 
     def list_entries(
         self,
@@ -201,10 +210,11 @@ class Client(ClientWithProject):
         resource_names=None,
         filter_=None,
         order_by=None,
+        max_results=None,
         page_size=None,
         page_token=None,
     ):
-        """Return a page of log entry resources.
+        """Return a generator of log entry resources.
 
         Args:
             resource_names (Sequence[str]): Names of one or more parent resources
@@ -223,14 +233,17 @@ class Client(ClientWithProject):
                 https://cloud.google.com/logging/docs/view/advanced_filters
             order_by (str) One of :data:`~logging_v2.ASCENDING`
                 or :data:`~logging_v2.DESCENDING`.
-            page_size (int): maximum number of entries to return, If not passed,
-                defaults to a value set by the API.
-            page_token (str): opaque marker for the next "page" of entries. If not
-                passed, the API will return the first page of
-                entries.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[~logging_v2.LogEntry]
+            Generator[~logging_v2.LogEntry]
         """
         if resource_names is None:
             resource_names = [f"projects/{self.project}"]
@@ -240,6 +253,7 @@ class Client(ClientWithProject):
             resource_names=resource_names,
             filter_=filter_,
             order_by=order_by,
+            max_results=max_results,
             page_size=page_size,
             page_token=page_token,
         )
@@ -263,7 +277,9 @@ class Client(ClientWithProject):
         """
         return Sink(name, filter_=filter_, destination=destination, client=self)
 
-    def list_sinks(self, *, parent=None, page_size=None, page_token=None):
+    def list_sinks(
+        self, *, parent=None, max_results=None, page_size=None, page_token=None
+    ):
         """List sinks for the a parent resource.
 
         See
@@ -280,22 +296,25 @@ class Client(ClientWithProject):
                     "folders/[FOLDER_ID]".
 
                 If not passed, defaults to the project bound to the API's client.
-            page_size (Optional[int]): The maximum number of sinks in each
-                page of results from this request. Non-positive values are ignored. Defaults to a
-                sensible value set by the API.
-            page_token (Optional[str]): If present, return the next batch of sinks, using the
-                value, which must correspond to the ``nextPageToken`` value
-                returned in the previous response.  Deprecated: use the ``pages``
-                property ofthe returned iterator instead of manually passing the
-                token.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[~logging_v2.sink.Sink]
+            Generator[~logging_v2.Sink]
         """
         if parent is None:
             parent = f"projects/{self.project}"
         return self.sinks_api.list_sinks(
-            parent=parent, page_size=page_size, page_token=page_token
+            parent=parent,
+            max_results=max_results,
+            page_size=page_size,
+            page_token=page_token,
         )
 
     def metric(self, name, *, filter_=None, description=""):
@@ -316,27 +335,30 @@ class Client(ClientWithProject):
         """
         return Metric(name, filter_=filter_, client=self, description=description)
 
-    def list_metrics(self, *, page_size=None, page_token=None):
+    def list_metrics(self, *, max_results=None, page_size=None, page_token=None):
         """List metrics for the project associated with this client.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics/list
 
         Args:
-            page_size (Optional[int]): The maximum number of sinks in each
-                page of results from this request. Non-positive values are ignored. Defaults to a
-                sensible value set by the API.
-            page_token (Optional[str]): If present, return the next batch of sinks, using the
-                value, which must correspond to the ``nextPageToken`` value
-                returned in the previous response.  Deprecated: use the ``pages``
-                property ofthe returned iterator instead of manually passing the
-                token.
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
 
         Returns:
-            Iterator[~logging_v2.metric.Metric]
+            Generator[logging_v2.Metric]
         """
         return self.metrics_api.list_metrics(
-            self.project, page_size=page_size, page_token=page_token
+            self.project,
+            max_results=max_results,
+            page_size=page_size,
+            page_token=page_token,
         )
 
     def get_default_handler(self, **kw):
@@ -352,9 +374,9 @@ class Client(ClientWithProject):
 
         if isinstance(monitored_resource, Resource):
             if monitored_resource.type == _GAE_RESOURCE_TYPE:
-                return AppEngineHandler(self, **kw)
+                return CloudLoggingHandler(self, resource=monitored_resource, **kw)
             elif monitored_resource.type == _GKE_RESOURCE_TYPE:
-                return ContainerEngineHandler(**kw)
+                return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _GCF_RESOURCE_TYPE:
                 # __stdout__ stream required to support structured logging on Python 3.7
                 kw["stream"] = kw.get("stream", sys.__stdout__)

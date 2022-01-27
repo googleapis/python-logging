@@ -14,10 +14,10 @@
 
 """Python :mod:`logging` handlers for Cloud Logging."""
 
+import collections
 import json
 import logging
 
-from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
 from google.cloud.logging_v2.handlers._helpers import get_request_data
@@ -33,7 +33,14 @@ EXCLUDED_LOGGER_DEFAULTS = (
     "werkzeug",
 )
 
+"""These environments require us to remove extra handlers on setup"""
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
+
+"""Extra trace label to be added on App Engine environments"""
+_GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
+
+"""Resource name for App Engine environments"""
+_GAE_RESOURCE_TYPE = "gae_app"
 
 
 class CloudLoggingFilter(logging.Filter):
@@ -44,10 +51,6 @@ class CloudLoggingFilter(logging.Filter):
     to include new Cloud Logging relevant data. This data can be manually
     overwritten using the `extras` argument when writing logs.
     """
-
-    # The subset of http_request fields have been tested to work consistently across GCP environments
-    # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#httprequest
-    _supported_http_fields = ("requestMethod", "requestUrl", "userAgent", "protocol")
 
     def __init__(self, project=None, default_labels=None):
         self.project = project
@@ -79,14 +82,12 @@ class CloudLoggingFilter(logging.Filter):
         """
         user_labels = getattr(record, "labels", {})
         # infer request data from the environment
-        inferred_http, inferred_trace, inferred_span = get_request_data()
-        if inferred_http is not None:
-            # filter inferred_http to include only well-supported fields
-            inferred_http = {
-                k: v
-                for (k, v) in inferred_http.items()
-                if k in self._supported_http_fields and v is not None
-            }
+        (
+            inferred_http,
+            inferred_trace,
+            inferred_span,
+            inferred_sampled,
+        ) = get_request_data()
         if inferred_trace is not None and self.project is not None:
             # add full path for detected trace
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"
@@ -94,17 +95,23 @@ class CloudLoggingFilter(logging.Filter):
         record._resource = getattr(record, "resource", None)
         record._trace = getattr(record, "trace", inferred_trace) or None
         record._span_id = getattr(record, "span_id", inferred_span) or None
+        record._trace_sampled = bool(getattr(record, "trace_sampled", inferred_sampled))
         record._http_request = getattr(record, "http_request", inferred_http)
         record._source_location = CloudLoggingFilter._infer_source_location(record)
-        record._labels = {**self.default_labels, **user_labels} or None
+        # add logger name as a label if possible
+        logger_label = {"python_logger": record.name} if record.name else {}
+        record._labels = {**logger_label, **self.default_labels, **user_labels} or None
         # create string representations for structured logging
         record._trace_str = record._trace or ""
         record._span_id_str = record._span_id or ""
-        record._http_request_str = json.dumps(record._http_request or {})
-        record._source_location_str = json.dumps(record._source_location or {})
-        record._labels_str = json.dumps(record._labels or {})
-        # break quotes for parsing through structured logging
-        record._msg_str = str(record.msg).replace('"', '\\"') if record.msg else ""
+        record._trace_sampled_str = "true" if record._trace_sampled else "false"
+        record._http_request_str = json.dumps(
+            record._http_request or {}, ensure_ascii=False
+        )
+        record._source_location_str = json.dumps(
+            record._source_location or {}, ensure_ascii=False
+        )
+        record._labels_str = json.dumps(record._labels or {}, ensure_ascii=False)
         return True
 
 
@@ -143,7 +150,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         *,
         name=DEFAULT_LOGGER_NAME,
         transport=BackgroundThreadTransport,
-        resource=_GLOBAL_RESOURCE,
+        resource=None,
         labels=None,
         stream=None,
     ):
@@ -162,11 +169,14 @@ class CloudLoggingHandler(logging.StreamHandler):
                 :class:`.BackgroundThreadTransport`. The other
                 option is :class:`.SyncTransport`.
             resource (~logging_v2.resource.Resource):
-                Resource for this Handler. Defaults to ``global``.
+                Resource for this Handler. If not given, will be inferred from the environment.
             labels (Optional[dict]): Additional labels to attach to logs.
             stream (Optional[IO]): Stream to be used by the handler.
         """
         super(CloudLoggingHandler, self).__init__(stream)
+        if not resource:
+            # infer the correct monitored resource from the local environment
+            resource = detect_resource(client.project)
         self.name = name
         self.client = client
         self.transport = transport(client, name)
@@ -187,18 +197,66 @@ class CloudLoggingHandler(logging.StreamHandler):
         Args:
             record (logging.LogRecord): The record to be logged.
         """
-        message = super(CloudLoggingHandler, self).format(record)
+        resource = record._resource or self.resource
+        labels = record._labels
+        message = _format_and_parse_message(record, self)
+
+        if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
+            # add GAE-specific label
+            labels = {_GAE_TRACE_ID_LABEL: record._trace, **(labels or {})}
         # send off request
         self.transport.send(
             record,
             message,
-            resource=(record._resource or self.resource),
-            labels=record._labels,
+            resource=resource,
+            labels=labels,
             trace=record._trace,
             span_id=record._span_id,
+            trace_sampled=record._trace_sampled,
             http_request=record._http_request,
             source_location=record._source_location,
         )
+
+
+def _format_and_parse_message(record, formatter_handler):
+    """
+    Helper function to apply formatting to a LogRecord message,
+    and attempt to parse encoded JSON into a dictionary object.
+
+    Resulting output will be of type (str | dict | None)
+
+    Args:
+        record (logging.LogRecord): The record object representing the log
+        formatter_handler (logging.Handler): The handler used to format the log
+    """
+    passed_json_fields = getattr(record, "json_fields", {})
+    # if message is a dictionary, use dictionary directly
+    if isinstance(record.msg, collections.abc.Mapping):
+        payload = record.msg
+        # attach any extra json fields if present
+        if passed_json_fields and isinstance(
+            passed_json_fields, collections.abc.Mapping
+        ):
+            payload = {**payload, **passed_json_fields}
+        return payload
+    # format message string based on superclass
+    message = formatter_handler.format(record)
+    try:
+        # attempt to parse encoded json into dictionary
+        if message[0] == "{":
+            json_message = json.loads(message)
+            if isinstance(json_message, collections.abc.Mapping):
+                message = json_message
+    except (json.decoder.JSONDecodeError, IndexError):
+        # log string is not valid json
+        pass
+    # if json_fields was set, create a dictionary using that
+    if passed_json_fields and isinstance(passed_json_fields, collections.abc.Mapping):
+        if message != "None":
+            passed_json_fields["message"] = message
+        return passed_json_fields
+    # if formatted message contains no content, return None
+    return message if message != "None" else None
 
 
 def setup_logging(

@@ -14,13 +14,17 @@
 
 """Define API Loggers."""
 
+import collections
+
 from google.cloud.logging_v2._helpers import _add_defaults_to_filter
 from google.cloud.logging_v2.entries import LogEntry
 from google.cloud.logging_v2.entries import ProtobufEntry
 from google.cloud.logging_v2.entries import StructEntry
 from google.cloud.logging_v2.entries import TextEntry
 from google.cloud.logging_v2.resource import Resource
+from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
 
+import google.protobuf.message
 
 _GLOBAL_RESOURCE = Resource(type="global", labels={})
 
@@ -41,6 +45,8 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
     ("source_location", None),
 )
 
+_STRUCT_EXTRACTABLE_FIELDS = ["severity", "trace", "span_id"]
+
 
 class Logger(object):
     """Loggers represent named targets for log entries.
@@ -48,19 +54,23 @@ class Logger(object):
     See https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs
     """
 
-    def __init__(self, name, client, *, labels=None, resource=_GLOBAL_RESOURCE):
+    def __init__(self, name, client, *, labels=None, resource=None):
         """
         Args:
             name (str): The name of the logger.
             client (~logging_v2.client.Client):
                 A client which holds credentials and project configuration
                 for the logger (which requires a project).
-            resource (~logging_v2.Resource): a monitored resource object
-                representing the resource the code was run on.
+            resource (Optional[~logging_v2.Resource]): a monitored resource object
+                representing the resource the code was run on. If not given, will
+                be inferred from the environment.
             labels (Optional[dict]): Mapping of default labels for entries written
                 via this logger.
 
         """
+        if not resource:
+            # infer the correct monitored resource from the local environment
+            resource = detect_resource(client.project)
         self.name = name
         self._client = client
         self.labels = labels
@@ -125,6 +135,20 @@ class Logger(object):
         kw["labels"] = kw.pop("labels", self.labels)
         kw["resource"] = kw.pop("resource", self.default_resource)
 
+        severity = kw.get("severity", None)
+        if isinstance(severity, str) and not severity.isupper():
+            # convert severity to upper case, as expected by enum definition
+            kw["severity"] = severity.upper()
+
+        if isinstance(kw["resource"], collections.abc.Mapping):
+            # if resource was passed as a dict, attempt to parse it into a
+            # Resource object
+            try:
+                kw["resource"] = Resource(**kw["resource"])
+            except TypeError as e:
+                # dict couldn't be parsed as a Resource
+                raise TypeError("invalid resource dict") from e
+
         if payload is not None:
             entry = _entry_class(payload=payload, **kw)
         else:
@@ -134,7 +158,7 @@ class Logger(object):
         client.logging_api.write_entries([api_repr])
 
     def log_empty(self, *, client=None, **kw):
-        """Log an empty message via a POST request
+        """Log an empty message
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
@@ -149,7 +173,7 @@ class Logger(object):
         self._do_log(client, LogEntry, **kw)
 
     def log_text(self, text, *, client=None, **kw):
-        """Log a text message via a POST request
+        """Log a text message
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
@@ -165,7 +189,7 @@ class Logger(object):
         self._do_log(client, TextEntry, text, **kw)
 
     def log_struct(self, info, *, client=None, **kw):
-        """Log a structured message via a POST request
+        """Log a dictionary message
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
@@ -178,10 +202,14 @@ class Logger(object):
             kw (Optional[dict]): additional keyword arguments for the entry.
                 See :class:`~logging_v2.entries.LogEntry`.
         """
+        for field in _STRUCT_EXTRACTABLE_FIELDS:
+            # attempt to copy relevant fields from the payload into the LogEntry body
+            if field in info and field not in kw:
+                kw[field] = info[field]
         self._do_log(client, StructEntry, info, **kw)
 
     def log_proto(self, message, *, client=None, **kw):
-        """Log a protobuf message via a POST request
+        """Log a protobuf message
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list
@@ -196,6 +224,29 @@ class Logger(object):
                 See :class:`~logging_v2.entries.LogEntry`.
         """
         self._do_log(client, ProtobufEntry, message, **kw)
+
+    def log(self, message=None, *, client=None, **kw):
+        """Log an arbitrary message. Type will be inferred based on the input.
+
+        See
+        https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list
+
+        Args:
+            message (Optional[str or dict or google.protobuf.Message]): The message. to log
+            client (Optional[~logging_v2.client.Client]):
+                The client to use.  If not passed, falls back to the
+                ``client`` stored on the current sink.
+            kw (Optional[dict]): additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
+        """
+        if isinstance(message, google.protobuf.message.Message):
+            self.log_proto(message, client=client, **kw)
+        elif isinstance(message, collections.abc.Mapping):
+            self.log_struct(message, client=client, **kw)
+        elif isinstance(message, str):
+            self.log_text(message, client=client, **kw)
+        else:
+            self._do_log(client, LogEntry, message, **kw)
 
     def delete(self, logger_name=None, *, client=None):
         """Delete all entries in a logger via a DELETE request
@@ -232,10 +283,11 @@ class Logger(object):
         resource_names=None,
         filter_=None,
         order_by=None,
+        max_results=None,
         page_size=None,
         page_token=None,
     ):
-        """Return a page of log entries.
+        """Return a generator of log entry resources.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list
@@ -257,19 +309,16 @@ class Logger(object):
                 By default, a 24 hour filter is applied.
             order_by (Optional[str]): One of :data:`~logging_v2.ASCENDING`
                 or :data:`~logging_v2.DESCENDING`.
-            page_size (Optional[int]):
-                Optional. The maximum number of entries in each page of results
-                from this request. Non-positive values are ignored. Defaults
-                to a sensible value set by the API.
-            page_token (Optional[str]):
-                Optional. If present, return the next batch of entries, using
-                the value, which must correspond to the ``nextPageToken`` value
-                returned in the previous response.  Deprecated: use the ``pages``
-                property of the returned iterator instead of manually passing
-                the token.
-
+            max_results (Optional[int]):
+                Optional. The maximum number of entries to return.
+                Non-positive values are treated as 0. If None, uses API defaults.
+            page_size (int): number of entries to fetch in each API call. Although
+                requests are paged internally, logs are returned by the generator
+                one at a time. If not passed, defaults to a value set by the API.
+            page_token (str): opaque marker for the starting "page" of entries. If not
+                passed, the API will return the first page of entries.
         Returns:
-            Iterator[~logging_v2.entries.LogEntry]
+            Generator[~logging_v2.LogEntry]
         """
 
         if resource_names is None:
@@ -285,6 +334,7 @@ class Logger(object):
             resource_names=resource_names,
             filter_=filter_,
             order_by=order_by,
+            max_results=max_results,
             page_size=page_size,
             page_token=page_token,
         )
@@ -360,6 +410,24 @@ class Batch(object):
                 See :class:`~logging_v2.entries.LogEntry`.
         """
         self.entries.append(ProtobufEntry(payload=message, **kw))
+
+    def log(self, message=None, **kw):
+        """Add an arbitrary message to be logged during :meth:`commit`.
+        Type will be inferred based on the input message.
+
+        Args:
+            message (Optional[str or dict or google.protobuf.Message]): The message. to log
+            kw (Optional[dict]): Additional keyword arguments for the entry.
+                See :class:`~logging_v2.entries.LogEntry`.
+        """
+        entry_type = LogEntry
+        if isinstance(message, google.protobuf.message.Message):
+            entry_type = ProtobufEntry
+        elif isinstance(message, collections.abc.Mapping):
+            entry_type = StructEntry
+        elif isinstance(message, str):
+            entry_type = TextEntry
+        self.entries.append(entry_type(payload=message, **kw))
 
     def commit(self, *, client=None):
         """Send saved log entries as a single API call.

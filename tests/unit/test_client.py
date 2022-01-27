@@ -239,21 +239,26 @@ class TestClient(unittest.TestCase):
 
     def test_logger(self):
         from google.cloud.logging import Logger
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 
         creds = _make_credentials()
         client = self._make_one(project=self.PROJECT, credentials=creds)
-        logger = client.logger(self.LOGGER_NAME)
+        labels = {"test": "true"}
+        logger = client.logger(
+            self.LOGGER_NAME, resource=_GLOBAL_RESOURCE, labels=labels
+        )
         self.assertIsInstance(logger, Logger)
         self.assertEqual(logger.name, self.LOGGER_NAME)
         self.assertIs(logger.client, client)
         self.assertEqual(logger.project, self.PROJECT)
+        self.assertEqual(logger.default_resource, _GLOBAL_RESOURCE)
+        self.assertEqual(logger.labels, labels)
 
     def test_list_entries_defaults(self):
         from google.cloud.logging import TextEntry
 
         IID = "IID"
         TEXT = "TEXT"
-        TOKEN = "TOKEN"
         ENTRIES = [
             {
                 "textPayload": TEXT,
@@ -266,13 +271,11 @@ class TestClient(unittest.TestCase):
         client = self._make_one(
             project=self.PROJECT, credentials=creds, _use_grpc=False
         )
-        returned = {"entries": ENTRIES, "nextPageToken": TOKEN}
+        returned = {"entries": ENTRIES}
         client._connection = _Connection(returned)
 
         iterator = client.list_entries()
-        page = next(iterator.pages)
-        entries = list(page)
-        token = iterator.next_page_token
+        entries = list(iterator)
 
         self.assertEqual(len(entries), 1)
         entry = entries[0]
@@ -283,7 +286,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual(logger.name, self.LOGGER_NAME)
         self.assertIs(logger.client, client)
         self.assertEqual(logger.project, self.PROJECT)
-        self.assertEqual(token, TOKEN)
 
         # check call payload
         call_payload_no_filter = deepcopy(client._connection._called_with)
@@ -336,6 +338,12 @@ class TestClient(unittest.TestCase):
                 "resource": {"type": "global"},
                 "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
             },
+            {
+                "protoPayload": "ignored",
+                "insertId": "ignored",
+                "resource": {"type": "global"},
+                "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
+            },
         ]
         client = self._make_one(
             project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
@@ -349,13 +357,10 @@ class TestClient(unittest.TestCase):
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
             page_token=TOKEN,
+            max_results=2,
         )
         entries = list(iterator)
-        token = iterator.next_page_token
-
-        # First, check the token.
-        self.assertIsNone(token)
-        # Then check the entries.
+        # Check the entries.
         self.assertEqual(len(entries), 2)
         entry = entries[0]
         self.assertIsInstance(entry, StructEntry)
@@ -417,7 +422,6 @@ class TestClient(unittest.TestCase):
         PAYLOAD = {"message": "MESSAGE", "weather": "partly cloudy"}
         PROTO_PAYLOAD = PAYLOAD.copy()
         PROTO_PAYLOAD["@type"] = "type.googleapis.com/testing.example"
-        TOKEN = "TOKEN"
         PAGE_SIZE = 42
         ENTRIES = [
             {
@@ -444,14 +448,9 @@ class TestClient(unittest.TestCase):
             filter_=INPUT_FILTER,
             order_by=DESCENDING,
             page_size=PAGE_SIZE,
-            page_token=TOKEN,
         )
         entries = list(iterator)
-        token = iterator.next_page_token
-
-        # First, check the token.
-        self.assertIsNone(token)
-        # Then check the entries.
+        # Check the entries.
         self.assertEqual(len(entries), 2)
         entry = entries[0]
         self.assertIsInstance(entry, StructEntry)
@@ -485,7 +484,6 @@ class TestClient(unittest.TestCase):
                     "filter": INPUT_FILTER,
                     "orderBy": DESCENDING,
                     "pageSize": PAGE_SIZE,
-                    "pageToken": TOKEN,
                     "resourceNames": [f"projects/{PROJECT1}", f"projects/{PROJECT2}"],
                 },
             },
@@ -523,7 +521,6 @@ class TestClient(unittest.TestCase):
         from google.cloud.logging import Sink
 
         PROJECT = "PROJECT"
-        TOKEN = "TOKEN"
         SINK_NAME = "sink_name"
         FILTER = "logName:syslog AND severity>=ERROR"
         SINKS = [
@@ -532,17 +529,13 @@ class TestClient(unittest.TestCase):
         client = self._make_one(
             project=PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
-        returned = {"sinks": SINKS, "nextPageToken": TOKEN}
+        returned = {"sinks": SINKS}
         client._connection = _Connection(returned)
 
         iterator = client.list_sinks()
-        page = next(iterator.pages)
-        sinks = list(page)
-        token = iterator.next_page_token
+        sinks = list(iterator)
 
-        # First check the token.
-        self.assertEqual(token, TOKEN)
-        # Then check the sinks returned.
+        # Check the sinks returned.
         self.assertEqual(len(sinks), 1)
         sink = sinks[0]
         self.assertIsInstance(sink, Sink)
@@ -567,7 +560,8 @@ class TestClient(unittest.TestCase):
         TOKEN = "TOKEN"
         PAGE_SIZE = 42
         SINKS = [
-            {"name": SINK_NAME, "filter": FILTER, "destination": self.DESTINATION_URI}
+            {"name": SINK_NAME, "filter": FILTER, "destination": self.DESTINATION_URI},
+            {"name": "test", "filter": "test", "destination": "test"},
         ]
         client = self._make_one(
             project=PROJECT, credentials=_make_credentials(), _use_grpc=False
@@ -575,13 +569,11 @@ class TestClient(unittest.TestCase):
         returned = {"sinks": SINKS}
         client._connection = _Connection(returned)
 
-        iterator = client.list_sinks(page_size=PAGE_SIZE, page_token=TOKEN)
+        iterator = client.list_sinks(
+            page_size=PAGE_SIZE, page_token=TOKEN, max_results=1
+        )
         sinks = list(iterator)
-        token = iterator.next_page_token
-
-        # First check the token.
-        self.assertIsNone(token)
-        # Then check the sinks returned.
+        # Check the sinks returned.
         self.assertEqual(len(sinks), 1)
         sink = sinks[0]
         self.assertIsInstance(sink, Sink)
@@ -672,29 +664,27 @@ class TestClient(unittest.TestCase):
         from google.cloud.logging import Metric
 
         token = "TOKEN"
-        next_token = "T00KEN"
         page_size = 42
         metrics = [
             {
                 "name": self.METRIC_NAME,
                 "filter": self.FILTER,
                 "description": self.DESCRIPTION,
-            }
+            },
+            {"name": "test", "filter": "test", "description": "test"},
         ]
         client = self._make_one(
             project=self.PROJECT, credentials=_make_credentials(), _use_grpc=False
         )
-        returned = {"metrics": metrics, "nextPageToken": next_token}
+        returned = {"metrics": metrics}
         client._connection = _Connection(returned)
 
         # Execute request.
-        iterator = client.list_metrics(page_size=page_size, page_token=token)
-        page = next(iterator.pages)
-        metrics = list(page)
-
-        # First check the token.
-        self.assertEqual(iterator.next_page_token, next_token)
-        # Then check the metrics returned.
+        iterator = client.list_metrics(
+            page_size=page_size, page_token=token, max_results=1
+        )
+        metrics = list(iterator)
+        # Check the metrics returned.
         self.assertEqual(len(metrics), 1)
         metric = metrics[0]
         self.assertIsInstance(metric, Metric)
@@ -719,7 +709,7 @@ class TestClient(unittest.TestCase):
         import os
         from google.cloud._testing import _Monkey
         from google.cloud.logging_v2.handlers._monitored_resources import _GAE_ENV_VARS
-        from google.cloud.logging.handlers import AppEngineHandler
+        from google.cloud.logging.handlers import CloudLoggingHandler
 
         credentials = _make_credentials()
         client = self._make_one(
@@ -733,10 +723,10 @@ class TestClient(unittest.TestCase):
 
         handler.transport.worker.stop()
 
-        self.assertIsInstance(handler, AppEngineHandler)
+        self.assertIsInstance(handler, CloudLoggingHandler)
 
     def test_get_default_handler_container_engine(self):
-        from google.cloud.logging.handlers import ContainerEngineHandler
+        from google.cloud.logging.handlers import StructuredLogHandler
 
         credentials = _make_credentials()
         client = self._make_one(
@@ -751,7 +741,7 @@ class TestClient(unittest.TestCase):
         with patch:
             handler = client.get_default_handler()
 
-        self.assertIsInstance(handler, ContainerEngineHandler)
+        self.assertIsInstance(handler, StructuredLogHandler)
 
     def test_get_default_handler_general(self):
         import io

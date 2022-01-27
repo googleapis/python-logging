@@ -60,18 +60,20 @@ class TestStructuredLogHandler(unittest.TestCase):
         record = logging.LogRecord(
             logname, logging.INFO, pathname, lineno, message, None, None, func=func
         )
+        expected_labels = {**labels, "python_logger": logname}
         expected_payload = {
             "message": message,
             "severity": record.levelname,
             "logging.googleapis.com/trace": "",
             "logging.googleapis.com/spanId": "",
+            "logging.googleapis.com/trace_sampled": False,
             "logging.googleapis.com/sourceLocation": {
                 "file": pathname,
                 "line": lineno,
                 "function": func,
             },
             "httpRequest": {},
-            "logging.googleapis.com/labels": labels,
+            "logging.googleapis.com/labels": expected_labels,
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
@@ -91,14 +93,17 @@ class TestStructuredLogHandler(unittest.TestCase):
         record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
         record.created = None
         expected_payload = {
-            "message": "",
+            "severity": "INFO",
             "logging.googleapis.com/trace": "",
+            "logging.googleapis.com/spanId": "",
+            "logging.googleapis.com/trace_sampled": False,
             "logging.googleapis.com/sourceLocation": {},
             "httpRequest": {},
             "logging.googleapis.com/labels": {},
         }
         handler.filter(record)
         result = json.loads(handler.format(record))
+        self.assertEqual(set(expected_payload.keys()), set(result.keys()))
         for (key, value) in expected_payload.items():
             self.assertEqual(
                 value, result[key], f"expected_payload[{key}] != result[{key}]"
@@ -170,6 +175,44 @@ class TestStructuredLogHandler(unittest.TestCase):
         handler.filter(record)
         result = handler.format(record)
         self.assertIn(expected_result, result)
+        self.assertIn("message", result)
+
+    def test_dict(self):
+        """
+        Handler should parse json encoded as a string
+        """
+        import logging
+
+        handler = self._make_one()
+        message = {"x": "test"}
+        expected_result = '"x": "test"'
+        record = logging.LogRecord(
+            "logname", logging.INFO, None, None, message, None, None,
+        )
+        record.created = None
+        handler.filter(record)
+        result = handler.format(record)
+        self.assertIn(expected_result, result)
+        self.assertNotIn("message", result)
+
+    def test_encoded_json(self):
+        """
+        Handler should parse json encoded as a string
+        """
+        import logging
+
+        handler = self._make_one()
+        logFormatter = logging.Formatter(fmt='{ "name" : "%(name)s" }')
+        handler.setFormatter(logFormatter)
+        expected_result = '"name": "logname"'
+        record = logging.LogRecord(
+            "logname", logging.INFO, None, None, None, None, None,
+        )
+        record.created = None
+        handler.filter(record)
+        result = handler.format(record)
+        self.assertIn(expected_result, result)
+        self.assertNotIn("message", result)
 
     def test_format_with_arguments(self):
         """
@@ -201,10 +244,11 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_agent = "Mozilla/5.0"
         expected_trace = "123"
         expected_span = "456"
-        trace_header = f"{expected_trace}/{expected_span};o=0"
+        trace_header = f"{expected_trace}/{expected_span};o=1"
         expected_payload = {
             "logging.googleapis.com/trace": expected_trace,
             "logging.googleapis.com/spanId": expected_span,
+            "logging.googleapis.com/trace_sampled": True,
             "httpRequest": {
                 "requestMethod": "GET",
                 "requestUrl": expected_path,
@@ -220,6 +264,41 @@ class TestStructuredLogHandler(unittest.TestCase):
                 "User-Agent": expected_agent,
                 "X_CLOUD_TRACE_CONTEXT": trace_header,
             },
+        ):
+            handler.filter(record)
+            result = json.loads(handler.format(record))
+            for (key, value) in expected_payload.items():
+                self.assertEqual(value, result[key])
+
+    def test_format_with_traceparent(self):
+        import logging
+        import json
+
+        handler = self._make_one()
+        logname = "loggername"
+        message = "hello world，嗨 世界"
+        record = logging.LogRecord(logname, logging.INFO, "", 0, message, None, None)
+        expected_path = "http://testserver/123"
+        expected_agent = "Mozilla/5.0"
+        expected_trace = "4bf92f3577b34da6a3ce929d0e0e4736"
+        expected_span = "00f067aa0ba902b7"
+        trace_header = f"00-{expected_trace}-{expected_span}-09"
+        expected_payload = {
+            "logging.googleapis.com/trace": expected_trace,
+            "logging.googleapis.com/spanId": expected_span,
+            "logging.googleapis.com/trace_sampled": True,
+            "httpRequest": {
+                "requestMethod": "GET",
+                "requestUrl": expected_path,
+                "userAgent": expected_agent,
+                "protocol": "HTTP/1.1",
+            },
+        }
+
+        app = self.create_app()
+        with app.test_request_context(
+            expected_path,
+            headers={"User-Agent": expected_agent, "TRACEPARENT": trace_header},
         ):
             handler.filter(record)
             result = json.loads(handler.format(record))
@@ -248,23 +327,26 @@ class TestStructuredLogHandler(unittest.TestCase):
         inferred_path = "http://testserver/123"
         overwrite_trace = "abc"
         overwrite_span = "def"
-        inferred_trace_span = "123/456;"
+        inferred_trace_span = "123/456;o=1"
         overwrite_file = "test-file"
         record.http_request = {"requestUrl": overwrite_path}
         record.source_location = {"file": overwrite_file}
         record.trace = overwrite_trace
         record.span_id = overwrite_span
+        record.trace_sampled = False
         added_labels = {"added_key": "added_value", "overwritten_key": "new_value"}
         record.labels = added_labels
         expected_payload = {
             "logging.googleapis.com/trace": overwrite_trace,
             "logging.googleapis.com/spanId": overwrite_span,
+            "logging.googleapis.com/trace_sampled": False,
             "logging.googleapis.com/sourceLocation": {"file": overwrite_file},
             "httpRequest": {"requestUrl": overwrite_path},
             "logging.googleapis.com/labels": {
                 "default_key": "default-value",
                 "overwritten_key": "new_value",
                 "added_key": "added_value",
+                "python_logger": logname,
             },
         }
 
@@ -279,3 +361,26 @@ class TestStructuredLogHandler(unittest.TestCase):
             result = json.loads(handler.format(record))
             for (key, value) in expected_payload.items():
                 self.assertEqual(value, result[key])
+
+    def test_format_with_json_fields(self):
+        """
+        User can add json_fields to the record, which should populate the payload
+        """
+        import logging
+        import json
+
+        handler = self._make_one()
+        message = "name: %s"
+        name_arg = "Daniel"
+        expected_result = "name: Daniel"
+        json_fields = {"hello": "world", "number": 12}
+        record = logging.LogRecord(
+            None, logging.INFO, None, None, message, name_arg, None,
+        )
+        record.created = None
+        setattr(record, "json_fields", json_fields)
+        handler.filter(record)
+        result = json.loads(handler.format(record))
+        self.assertEqual(result["message"], expected_result)
+        self.assertEqual(result["hello"], "world")
+        self.assertEqual(result["number"], 12)

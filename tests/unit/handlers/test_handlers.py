@@ -63,6 +63,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
             "file": "testpath",
             "function": "test-function",
         }
+        expected_label = {"python_logger": logname}
         record = logging.LogRecord(
             logname,
             logging.INFO,
@@ -78,18 +79,19 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertTrue(success)
 
         self.assertEqual(record.msg, message)
-        self.assertEqual(record._msg_str, message)
         self.assertEqual(record._source_location, expected_location)
         self.assertEqual(record._source_location_str, json.dumps(expected_location))
         self.assertIsNone(record._resource)
         self.assertIsNone(record._trace)
         self.assertEqual(record._trace_str, "")
+        self.assertFalse(record._trace_sampled)
+        self.assertEqual(record._trace_sampled_str, "false")
         self.assertIsNone(record._span_id)
         self.assertEqual(record._span_id_str, "")
         self.assertIsNone(record._http_request)
         self.assertEqual(record._http_request_str, "{}")
-        self.assertIsNone(record._labels)
-        self.assertEqual(record._labels_str, "{}")
+        self.assertEqual(record._labels, expected_label)
+        self.assertEqual(record._labels_str, json.dumps(expected_label))
 
     def test_minimal_record(self):
         """
@@ -105,7 +107,6 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertTrue(success)
 
         self.assertIsNone(record.msg)
-        self.assertEqual(record._msg_str, "")
         self.assertIsNone(record._source_location)
         self.assertEqual(record._source_location_str, "{}")
         self.assertIsNone(record._resource)
@@ -113,6 +114,8 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertEqual(record._trace_str, "")
         self.assertIsNone(record._span_id)
         self.assertEqual(record._span_id_str, "")
+        self.assertFalse(record._trace_sampled)
+        self.assertEqual(record._trace_sampled_str, "false")
         self.assertIsNone(record._http_request)
         self.assertEqual(record._http_request_str, "{}")
         self.assertIsNone(record._labels)
@@ -132,7 +135,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
         expected_agent = "Mozilla/5.0"
         expected_trace = "123"
         expected_span = "456"
-        combined_trace = f"{expected_trace}/{expected_span}"
+        combined_trace = f"{expected_trace}/{expected_span};o=1"
         expected_request = {
             "requestMethod": "GET",
             "requestUrl": expected_path,
@@ -155,6 +158,47 @@ class TestCloudLoggingFilter(unittest.TestCase):
             self.assertEqual(record._trace_str, expected_trace)
             self.assertEqual(record._span_id, expected_span)
             self.assertEqual(record._span_id_str, expected_span)
+            self.assertTrue(record._trace_sampled)
+            self.assertEqual(record._trace_sampled_str, "true")
+            self.assertEqual(record._http_request, expected_request)
+            self.assertEqual(record._http_request_str, json.dumps(expected_request))
+
+    def test_record_with_traceparent_request(self):
+        """
+        test filter adds http request data when available
+        """
+        import logging
+
+        filter_obj = self._make_one()
+        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
+        record.created = None
+
+        expected_path = "http://testserver/123"
+        expected_agent = "Mozilla/5.0"
+        expected_trace = "4bf92f3577b34da6a3ce929d0e0e4736"
+        expected_span = "00f067aa0ba902b7"
+        combined_trace = f"00-{expected_trace}-{expected_span}-03"
+        expected_request = {
+            "requestMethod": "GET",
+            "requestUrl": expected_path,
+            "userAgent": expected_agent,
+            "protocol": "HTTP/1.1",
+        }
+
+        app = self.create_app()
+        with app.test_request_context(
+            expected_path,
+            headers={"User-Agent": expected_agent, "TRACEPARENT": combined_trace},
+        ):
+            success = filter_obj.filter(record)
+            self.assertTrue(success)
+
+            self.assertEqual(record._trace, expected_trace)
+            self.assertEqual(record._trace_str, expected_trace)
+            self.assertEqual(record._span_id, expected_span)
+            self.assertEqual(record._span_id_str, expected_span)
+            self.assertTrue(record._trace_sampled)
+            self.assertEqual(record._trace_sampled_str, "true")
             self.assertEqual(record._http_request, expected_request)
             self.assertEqual(record._http_request_str, json.dumps(expected_request))
 
@@ -237,7 +281,9 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
     def test_ctor_defaults(self):
         import sys
-        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            _create_global_resource,
+        )
         from google.cloud.logging_v2.handlers.handlers import DEFAULT_LOGGER_NAME
 
         patch = mock.patch(
@@ -252,7 +298,8 @@ class TestCloudLoggingHandler(unittest.TestCase):
             self.assertIsInstance(handler.transport, _Transport)
             self.assertIs(handler.transport.client, client)
             self.assertEqual(handler.transport.name, DEFAULT_LOGGER_NAME)
-            self.assertEqual(handler.resource, _GLOBAL_RESOURCE)
+            global_resource = _create_global_resource(self.PROJECT)
+            self.assertEqual(handler.resource, global_resource)
             self.assertIsNone(handler.labels)
             self.assertIs(handler.stream, sys.stderr)
 
@@ -297,7 +344,31 @@ class TestCloudLoggingHandler(unittest.TestCase):
         handler.handle(record)
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, message, _GLOBAL_RESOURCE, None, None, None, None, None),
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                {"python_logger": logname},
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
+
+    def test_emit_minimal(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE
+        )
+        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None)
+        handler.handle(record)
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (record, None, _GLOBAL_RESOURCE, None, None, None, False, None, None,),
         )
 
     def test_emit_manual_field_override(self):
@@ -325,6 +396,8 @@ class TestCloudLoggingHandler(unittest.TestCase):
         setattr(record, "trace", expected_trace)
         expected_span = "456"
         setattr(record, "span_id", expected_span)
+        expected_sampled = True
+        setattr(record, "trace_sampled", expected_sampled)
         expected_http = {"reuqest_url": "manual"}
         setattr(record, "http_request", expected_http)
         expected_source = {"file": "test-file"}
@@ -336,6 +409,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
             "default_key": "default-value",
             "overwritten_key": "new_value",
             "added_key": "added_value",
+            "python_logger": logname,
         }
         setattr(record, "labels", added_labels)
         handler.handle(record)
@@ -349,6 +423,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 expected_labels,
                 expected_trace,
                 expected_span,
+                expected_sampled,
                 expected_http,
                 expected_source,
             ),
@@ -368,14 +443,127 @@ class TestCloudLoggingHandler(unittest.TestCase):
         handler.setFormatter(logFormatter)
         message = "test"
         expected_result = "logname :: INFO :: test"
+        logname = "logname"
+        expected_label = {"python_logger": logname}
         record = logging.LogRecord(
-            "logname", logging.INFO, None, None, message, None, None
+            logname, logging.INFO, None, None, message, None, None
         )
         handler.handle(record)
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, None, None,),
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                expected_label,
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
+
+    def test_emit_dict(self):
+        """
+        Handler should support logging dictionaries
+        """
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
+        )
+        message = {"x": "test"}
+        logname = "logname"
+        expected_label = {"python_logger": logname}
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, message, None, None
+        )
+        handler.handle(record)
+
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                expected_label,
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
+
+    def test_emit_w_json_extras(self):
+        """
+        User can add json_fields to the record, which should populate the payload
+        """
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
+        )
+        message = "message"
+        json_fields = {"hello": "world"}
+        logname = "logname"
+        expected_label = {"python_logger": logname}
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, message, None, None
+        )
+        setattr(record, "json_fields", json_fields)
+        handler.handle(record)
+
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                {"message": "message", "hello": "world"},
+                _GLOBAL_RESOURCE,
+                expected_label,
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
+
+    def test_emit_with_encoded_json(self):
+        """
+        Handler should parse json encoded as a string
+        """
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
+        )
+        logFormatter = logging.Formatter(fmt='{ "x" : "%(name)s" }')
+        handler.setFormatter(logFormatter)
+        logname = "logname"
+        expected_result = {"x": logname}
+        expected_label = {"python_logger": logname}
+        record = logging.LogRecord(logname, logging.INFO, None, None, None, None, None)
+        handler.handle(record)
+
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                expected_label,
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
         )
 
     def test_format_with_arguments(self):
@@ -398,8 +586,180 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, None, None,),
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                None,
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
         )
+
+
+class TestFormatAndParseMessage(unittest.TestCase):
+    def test_none(self):
+        """
+        None messages with no special formatting should return
+        None after formatting
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = None
+        record = logging.LogRecord(None, None, None, None, message, None, None)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, None)
+
+    def test_none_formatted(self):
+        """
+        None messages with formatting rules should return formatted string
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = None
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter("name: %(name)s")
+        handler.setFormatter(formatter)
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, "name: logname")
+
+    def test_unformatted_string(self):
+        """
+        Unformated strings should be returned unchanged
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = '"test"'
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_empty_string(self):
+        """
+        Empty strings should be returned unchanged
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = ""
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_string_formatted_with_args(self):
+        """
+        string messages should properly apply formatting and arguments
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = "argument: %s"
+        arg = "test"
+        record = logging.LogRecord("logname", None, None, None, message, arg, None)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter("name: %(name)s :: message: %(message)s")
+        handler.setFormatter(formatter)
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, "name: logname :: message: argument: test")
+
+    def test_dict(self):
+        """
+        dict messages should be unchanged
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = {"a": "b"}
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter("name: %(name)s")
+        handler.setFormatter(formatter)
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_string_encoded_dict(self):
+        """
+        dicts should be extracted from string messages
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = '{ "x": { "y" : "z"  } }'
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, {"x": {"y": "z"}})
+
+    def test_broken_encoded_dict(self):
+        """
+        unparseable encoded dicts should be kept as strings
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = '{ "x": { "y" : '
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_json_fields(self):
+        """
+        record.json_fields should populate the json payload
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = "hello"
+        json_fields = {"key": "val"}
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        setattr(record, "json_fields", json_fields)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, {"message": message, "key": "val"})
+
+    def test_empty_json_fields(self):
+        """
+        empty jsond_field dictionaries should result in a string output
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = "hello"
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        setattr(record, "json_fields", {})
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, message)
+
+    def test_json_fields_empty_message(self):
+        """
+        empty message fields should not be added to json_fields dictionaries
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = None
+        json_fields = {"key": "val"}
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        setattr(record, "json_fields", json_fields)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result, json_fields)
+
+    def test_json_fields_with_json_message(self):
+        """
+        if json_fields and message are both dicts, they should be combined
+        """
+        from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
+
+        message = {"key_m": "val_m"}
+        json_fields = {"key_j": "val_j"}
+        record = logging.LogRecord("logname", None, None, None, message, None, None)
+        setattr(record, "json_fields", json_fields)
+        handler = logging.StreamHandler()
+        result = _format_and_parse_message(record, handler)
+        self.assertEqual(result["key_m"], message["key_m"])
+        self.assertEqual(result["key_j"], json_fields["key_j"])
 
 
 class TestSetupLogging(unittest.TestCase):
@@ -512,6 +872,7 @@ class _Transport(object):
         labels=None,
         trace=None,
         span_id=None,
+        trace_sampled=None,
         http_request=None,
         source_location=None,
     ):
@@ -522,6 +883,7 @@ class _Transport(object):
             labels,
             trace,
             span_id,
+            trace_sampled,
             http_request,
             source_location,
         )

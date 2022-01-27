@@ -20,6 +20,7 @@ and labels for App Engine logs.
 
 import logging
 import os
+import warnings
 
 from google.cloud.logging_v2.handlers._helpers import get_request_data
 from google.cloud.logging_v2.handlers._monitored_resources import (
@@ -36,9 +37,14 @@ _GAE_VERSION_ENV = "GAE_VERSION"
 
 _TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
 
+_DEPRECATION_MSG = "AppEngineHandler is deprecated. Use CloudLoggingHandler instead."
+
 
 class AppEngineHandler(logging.StreamHandler):
-    """A logging handler that sends App Engine-formatted logs to Stackdriver."""
+    """A logging handler that sends App Engine-formatted logs to Stackdriver.
+
+    DEPRECATED:  use CloudLoggingHandler instead.
+    """
 
     def __init__(
         self,
@@ -71,6 +77,8 @@ class AppEngineHandler(logging.StreamHandler):
         self.version_id = os.environ.get(_GAE_VERSION_ENV, "")
         self.resource = self.get_gae_resource()
 
+        warnings.warn(_DEPRECATION_MSG, DeprecationWarning)
+
     def get_gae_resource(self):
         """Return the GAE resource using the environment variables.
 
@@ -90,7 +98,7 @@ class AppEngineHandler(logging.StreamHandler):
         """
         gae_labels = {}
 
-        _, trace_id, _ = get_request_data()
+        _, trace_id, _, _ = get_request_data()
         if trace_id is not None:
             gae_labels[_TRACE_ID_LABEL] = trace_id
 
@@ -107,7 +115,7 @@ class AppEngineHandler(logging.StreamHandler):
             record (logging.LogRecord): The record to be logged.
         """
         message = super(AppEngineHandler, self).format(record)
-        inferred_http, inferred_trace, _ = get_request_data()
+        inferred_http, inferred_trace, _, _ = get_request_data()
         if inferred_trace is not None:
             inferred_trace = f"projects/{self.project_id}/traces/{inferred_trace}"
         # allow user overrides
