@@ -16,6 +16,7 @@
 
 from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 
+
 class Transport(object):
     """Base class for Google Cloud Logging handler transports.
 
