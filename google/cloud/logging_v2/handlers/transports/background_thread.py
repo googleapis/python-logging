@@ -261,7 +261,7 @@ class BackgroundThreadTransport(Transport):
         grace_period=_DEFAULT_GRACE_PERIOD,
         batch_size=_DEFAULT_MAX_BATCH_SIZE,
         max_latency=_DEFAULT_MAX_LATENCY,
-        resource=_GLOBAL_RESOURCE
+        resource=_GLOBAL_RESOURCE,
         **kwargs,
     ):
         """
