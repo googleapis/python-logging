@@ -99,6 +99,7 @@ def retrieve_metadata_server(metadata_key, timeout=5):
             Key of the metadata which will form the url. You can
             also supply query parameters after the metadata key.
             e.g. "tags?alt=json"
+        timeout (number): number of seconds to wait for the HTTP request
 
     Returns:
         str: The value of the metadata key returned by the metadata server.
