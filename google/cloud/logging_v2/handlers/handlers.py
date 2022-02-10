@@ -17,6 +17,7 @@
 import collections
 import json
 import logging
+import inspect
 
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
@@ -163,7 +164,8 @@ class CloudLoggingHandler(logging.StreamHandler):
                 Defaults to 'python'. The name of the Python logger will be represented
                 in the ``python_logger`` field.
             transport (~logging_v2.transports.Transport):
-                Class for creating new transport objects. It should
+                Either a Transport instance, or a Class for 
+                creating new transport objects. The class should
                 extend from the base :class:`.Transport` type and
                 implement :meth`.Transport.send`. Defaults to
                 :class:`.BackgroundThreadTransport`. The other
@@ -179,7 +181,18 @@ class CloudLoggingHandler(logging.StreamHandler):
             resource = detect_resource(client.project)
         self.name = name
         self.client = client
+<<<<<<< Updated upstream
         self.transport = transport(client, name)
+=======
+        if isinstance(transport, Transport):
+            # use passed in transport
+            self.transport = transport
+        elif inspect.isclass(transport) and issubclass(transport, Transport):
+            # create an instance using passed in transport class
+            self.transport = transport(client, name, resource=resource)
+        else:
+            raise RuntimeError(f"invalid transport: {transport}")
+>>>>>>> Stashed changes
         self.project_id = client.project
         self.resource = resource
         self.labels = labels
