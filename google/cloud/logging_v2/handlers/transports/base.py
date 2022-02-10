@@ -33,7 +33,7 @@ class Transport(object):
             resource (Optional[Resource|dict]): The default monitored resource to associate 
                 with logs when not specified
         """
-        raise NotImplementedError
+        super().__init__()
 
     def send(self, record, message, **kwargs):
         """Transport send to be implemented by subclasses.
