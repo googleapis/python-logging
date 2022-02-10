@@ -278,7 +278,7 @@ class BackgroundThreadTransport(Transport):
                 than the grace_period. This means this is effectively the longest
                 amount of time the background thread will hold onto log entries
                 before sending them to the server.
-            resource (Optional[Resource|dict]): The default monitored resource to associate 
+            resource (Optional[Resource|dict]): The default monitored resource to associate
                 with logs when not specified
         """
         self.client = client

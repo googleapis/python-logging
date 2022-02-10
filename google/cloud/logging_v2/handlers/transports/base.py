@@ -30,7 +30,7 @@ class Transport(object):
             client (~logging_v2.client.Client):
                 The Logging client.
             name (str): The name of the lgoger.
-            resource (Optional[Resource|dict]): The default monitored resource to associate 
+            resource (Optional[Resource|dict]): The default monitored resource to associate
                 with logs when not specified
         """
         super().__init__()
