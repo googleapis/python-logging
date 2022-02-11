@@ -181,9 +181,6 @@ class CloudLoggingHandler(logging.StreamHandler):
             resource = detect_resource(client.project)
         self.name = name
         self.client = client
-<<<<<<< Updated upstream
-        self.transport = transport(client, name)
-=======
         if isinstance(transport, Transport):
             # use passed in transport
             self.transport = transport
@@ -192,7 +189,6 @@ class CloudLoggingHandler(logging.StreamHandler):
             self.transport = transport(client, name, resource=resource)
         else:
             raise RuntimeError(f"invalid transport: {transport}")
->>>>>>> Stashed changes
         self.project_id = client.project
         self.resource = resource
         self.labels = labels
