@@ -31,6 +31,8 @@ try:
 except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.Retry, object]  # type: ignore
 
+from google.api_core import operation  # type: ignore
+from google.api_core import operation_async  # type: ignore
 from google.cloud.logging_v2.services.config_service_v2 import pagers
 from google.cloud.logging_v2.types import logging_config
 from google.protobuf import field_mask_pb2  # type: ignore
@@ -62,6 +64,8 @@ class ConfigServiceV2AsyncClient:
     parse_log_sink_path = staticmethod(ConfigServiceV2Client.parse_log_sink_path)
     log_view_path = staticmethod(ConfigServiceV2Client.log_view_path)
     parse_log_view_path = staticmethod(ConfigServiceV2Client.parse_log_view_path)
+    settings_path = staticmethod(ConfigServiceV2Client.settings_path)
+    parse_settings_path = staticmethod(ConfigServiceV2Client.parse_settings_path)
     common_billing_account_path = staticmethod(
         ConfigServiceV2Client.common_billing_account_path
     )
@@ -225,7 +229,7 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListBucketsAsyncPager:
-        r"""Lists buckets.
+        r"""Lists log buckets.
 
         .. code-block::
 
@@ -333,7 +337,7 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogBucket:
-        r"""Gets a bucket.
+        r"""Gets a log bucket.
 
         .. code-block::
 
@@ -365,7 +369,9 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogBucket:
-                Describes a repository of logs.
+                Describes a repository in which log
+                entries are stored.
+
         """
         # Create or coerce a protobuf request object.
         request = logging_config.GetBucketRequest(request)
@@ -398,9 +404,9 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogBucket:
-        r"""Creates a bucket that can be used to store log
-        entries. Once a bucket has been created, the region
-        cannot be changed.
+        r"""Creates a log bucket that can be used to store log
+        entries. After a bucket has been created, the bucket's
+        location cannot be changed.
 
 
         .. code-block::
@@ -434,7 +440,9 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogBucket:
-                Describes a repository of logs.
+                Describes a repository in which log
+                entries are stored.
+
         """
         # Create or coerce a protobuf request object.
         request = logging_config.CreateBucketRequest(request)
@@ -467,17 +475,18 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogBucket:
-        r"""Updates a bucket. This method replaces the following fields in
-        the existing bucket with values from the new bucket:
+        r"""Updates a log bucket. This method replaces the following fields
+        in the existing bucket with values from the new bucket:
         ``retention_period``
 
         If the retention period is decreased and the bucket is locked,
-        FAILED_PRECONDITION will be returned.
+        ``FAILED_PRECONDITION`` will be returned.
 
-        If the bucket has a LifecycleState of DELETE_REQUESTED,
-        FAILED_PRECONDITION will be returned.
+        If the bucket has a ``lifecycle_state`` of ``DELETE_REQUESTED``,
+        then ``FAILED_PRECONDITION`` will be returned.
 
-        A buckets region may not be modified after it is created.
+        After a bucket has been created, the bucket's location cannot be
+        changed.
 
 
         .. code-block::
@@ -510,7 +519,9 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogBucket:
-                Describes a repository of logs.
+                Describes a repository in which log
+                entries are stored.
+
         """
         # Create or coerce a protobuf request object.
         request = logging_config.UpdateBucketRequest(request)
@@ -543,9 +554,12 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
-        r"""Deletes a bucket. Moves the bucket to the DELETE_REQUESTED
-        state. After 7 days, the bucket will be purged and all logs in
-        the bucket will be permanently deleted.
+        r"""Deletes a log bucket.
+
+        Changes the bucket's ``lifecycle_state`` to the
+        ``DELETE_REQUESTED`` state. After 7 days, the bucket will be
+        purged and all log entries in the bucket will be permanently
+        deleted.
 
 
         .. code-block::
@@ -603,8 +617,9 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
-        r"""Undeletes a bucket. A bucket that has been deleted
-        may be undeleted within the grace period of 7 days.
+        r"""Undeletes a log bucket. A bucket that has been
+        deleted can be undeleted within the grace period of 7
+        days.
 
 
         .. code-block::
@@ -663,7 +678,7 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListViewsAsyncPager:
-        r"""Lists views on a bucket.
+        r"""Lists views on a log bucket.
 
         .. code-block::
 
@@ -763,7 +778,7 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogView:
-        r"""Gets a view.
+        r"""Gets a view on a log bucket..
 
         .. code-block::
 
@@ -795,8 +810,8 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogView:
-                Describes a view over logs in a
-                bucket.
+                Describes a view over log entries in
+                a bucket.
 
         """
         # Create or coerce a protobuf request object.
@@ -830,8 +845,8 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogView:
-        r"""Creates a view over logs in a bucket. A bucket may
-        contain a maximum of 50 views.
+        r"""Creates a view over log entries in a log bucket. A
+        bucket may contain a maximum of 30 views.
 
 
         .. code-block::
@@ -865,8 +880,8 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogView:
-                Describes a view over logs in a
-                bucket.
+                Describes a view over log entries in
+                a bucket.
 
         """
         # Create or coerce a protobuf request object.
@@ -900,8 +915,11 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogView:
-        r"""Updates a view. This method replaces the following fields in the
-        existing view with values from the new view: ``filter``.
+        r"""Updates a view on a log bucket. This method replaces the
+        following fields in the existing view with values from the new
+        view: ``filter``. If an ``UNAVAILABLE`` error is returned, this
+        indicates that system is not in a state where it can update the
+        view. If this occurs, please try again in a few minutes.
 
 
         .. code-block::
@@ -934,8 +952,8 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogView:
-                Describes a view over logs in a
-                bucket.
+                Describes a view over log entries in
+                a bucket.
 
         """
         # Create or coerce a protobuf request object.
@@ -969,7 +987,11 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
-        r"""Deletes a view from a bucket.
+        r"""Deletes a view on a log bucket. If an ``UNAVAILABLE`` error is
+        returned, this indicates that system is not in a state where it
+        can delete the view. If this occurs, please try again in a few
+        minutes.
+
 
         .. code-block::
 
@@ -1177,7 +1199,9 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
 
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
+                For example:
+
+                ``"projects/my-project/sinks/my-sink"``
 
                 This corresponds to the ``sink_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1193,12 +1217,12 @@ class ConfigServiceV2AsyncClient:
                 Describes a sink used to export log
                 entries to one of the following
                 destinations in any project: a Cloud
-                Storage bucket, a BigQuery dataset, or a
-                Cloud Pub/Sub topic. A logs filter
-                controls which log entries are exported.
-                The sink must be created within a
-                project, organization, billing account,
-                or folder.
+                Storage bucket, a BigQuery dataset, a
+                Pub/Sub topic or a Cloud Logging log
+                bucket. A logs filter controls which log
+                entries are exported. The sink must be
+                created within a project, organization,
+                billing account, or folder.
 
         """
         # Create or coerce a protobuf request object.
@@ -1305,8 +1329,9 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]"
                     "folders/[FOLDER_ID]"
 
-                Examples: ``"projects/my-logging-project"``,
-                ``"organizations/123456789"``.
+                For examples:
+
+                ``"projects/my-project"`` ``"organizations/123456789"``
 
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1329,12 +1354,12 @@ class ConfigServiceV2AsyncClient:
                 Describes a sink used to export log
                 entries to one of the following
                 destinations in any project: a Cloud
-                Storage bucket, a BigQuery dataset, or a
-                Cloud Pub/Sub topic. A logs filter
-                controls which log entries are exported.
-                The sink must be created within a
-                project, organization, billing account,
-                or folder.
+                Storage bucket, a BigQuery dataset, a
+                Pub/Sub topic or a Cloud Logging log
+                bucket. A logs filter controls which log
+                entries are exported. The sink must be
+                created within a project, organization,
+                billing account, or folder.
 
         """
         # Create or coerce a protobuf request object.
@@ -1433,7 +1458,9 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
 
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
+                For example:
+
+                ``"projects/my-project/sinks/my-sink"``
 
                 This corresponds to the ``sink_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1451,16 +1478,18 @@ class ConfigServiceV2AsyncClient:
                 overwritten if, and only if, it is in the update mask.
                 ``name`` and output only fields cannot be updated.
 
-                An empty updateMask is temporarily treated as using the
-                following mask for backwards compatibility purposes:
-                destination,filter,includeChildren At some point in the
-                future, behavior will be removed and specifying an empty
-                updateMask will be an error.
+                An empty ``updateMask`` is temporarily treated as using
+                the following mask for backwards compatibility purposes:
+
+                ``destination,filter,includeChildren``
+
+                At some point in the future, behavior will be removed
+                and specifying an empty ``updateMask`` will be an error.
 
                 For a detailed ``FieldMask`` definition, see
                 https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
 
-                Example: ``updateMask=filter``.
+                For example: ``updateMask=filter``
 
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1476,12 +1505,12 @@ class ConfigServiceV2AsyncClient:
                 Describes a sink used to export log
                 entries to one of the following
                 destinations in any project: a Cloud
-                Storage bucket, a BigQuery dataset, or a
-                Cloud Pub/Sub topic. A logs filter
-                controls which log entries are exported.
-                The sink must be created within a
-                project, organization, billing account,
-                or folder.
+                Storage bucket, a BigQuery dataset, a
+                Pub/Sub topic or a Cloud Logging log
+                bucket. A logs filter controls which log
+                entries are exported. The sink must be
+                created within a project, organization,
+                billing account, or folder.
 
         """
         # Create or coerce a protobuf request object.
@@ -1581,7 +1610,9 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
                     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
 
-                Example: ``"projects/my-project-id/sinks/my-sink-id"``.
+                For example:
+
+                ``"projects/my-project/sinks/my-sink"``
 
                 This corresponds to the ``sink_name`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1650,7 +1681,9 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListExclusionsAsyncPager:
-        r"""Lists all the exclusions in a parent resource.
+        r"""Lists all the exclusions on the \_Default sink in a parent
+        resource.
+
 
         .. code-block::
 
@@ -1766,7 +1799,7 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogExclusion:
-        r"""Gets the description of an exclusion.
+        r"""Gets the description of an exclusion in the \_Default sink.
 
         .. code-block::
 
@@ -1800,8 +1833,9 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
 
-                Example:
-                ``"projects/my-project-id/exclusions/my-exclusion-id"``.
+                For example:
+
+                ``"projects/my-project/exclusions/my-exclusion"``
 
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1814,17 +1848,13 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogExclusion:
-                Specifies a set of log entries that
-                are not to be stored in Logging. If your
-                GCP resource receives a large volume of
-                logs, you can use exclusions to reduce
-                your chargeable logs. Exclusions are
-                processed after log sinks, so you can
-                export log entries before they are
-                excluded. Note that organization-level
-                and folder-level exclusions don't apply
-                to child resources, and that you can't
-                exclude audit log entries.
+                Specifies a set of log entries that are filtered out by a sink. If
+                   your Google Cloud resource receives a large volume of
+                   log entries, you can use exclusions to reduce your
+                   chargeable logs. Note that exclusions on
+                   organization-level and folder-level sinks don't apply
+                   to child resources. Note also that you cannot modify
+                   the \_Required sink or exclude logs from it.
 
         """
         # Create or coerce a protobuf request object.
@@ -1885,10 +1915,9 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogExclusion:
-        r"""Creates a new exclusion in a specified parent
-        resource. Only log entries belonging to that resource
-        can be excluded. You can have up to 10 exclusions in a
-        resource.
+        r"""Creates a new exclusion in the \_Default sink in a specified
+        parent resource. Only log entries belonging to that resource can
+        be excluded. You can have up to 10 exclusions in a resource.
 
 
         .. code-block::
@@ -1929,8 +1958,10 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]"
                     "folders/[FOLDER_ID]"
 
-                Examples: ``"projects/my-logging-project"``,
-                ``"organizations/123456789"``.
+                For examples:
+
+                ``"projects/my-logging-project"``
+                ``"organizations/123456789"``
 
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1951,17 +1982,13 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogExclusion:
-                Specifies a set of log entries that
-                are not to be stored in Logging. If your
-                GCP resource receives a large volume of
-                logs, you can use exclusions to reduce
-                your chargeable logs. Exclusions are
-                processed after log sinks, so you can
-                export log entries before they are
-                excluded. Note that organization-level
-                and folder-level exclusions don't apply
-                to child resources, and that you can't
-                exclude audit log entries.
+                Specifies a set of log entries that are filtered out by a sink. If
+                   your Google Cloud resource receives a large volume of
+                   log entries, you can use exclusions to reduce your
+                   chargeable logs. Note that exclusions on
+                   organization-level and folder-level sinks don't apply
+                   to child resources. Note also that you cannot modify
+                   the \_Required sink or exclude logs from it.
 
         """
         # Create or coerce a protobuf request object.
@@ -2014,8 +2041,8 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogExclusion:
-        r"""Changes one or more properties of an existing
-        exclusion.
+        r"""Changes one or more properties of an existing exclusion in the
+        \_Default sink.
 
 
         .. code-block::
@@ -2055,8 +2082,9 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
 
-                Example:
-                ``"projects/my-project-id/exclusions/my-exclusion-id"``.
+                For example:
+
+                ``"projects/my-project/exclusions/my-exclusion"``
 
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -2091,17 +2119,13 @@ class ConfigServiceV2AsyncClient:
 
         Returns:
             google.cloud.logging_v2.types.LogExclusion:
-                Specifies a set of log entries that
-                are not to be stored in Logging. If your
-                GCP resource receives a large volume of
-                logs, you can use exclusions to reduce
-                your chargeable logs. Exclusions are
-                processed after log sinks, so you can
-                export log entries before they are
-                excluded. Note that organization-level
-                and folder-level exclusions don't apply
-                to child resources, and that you can't
-                exclude audit log entries.
+                Specifies a set of log entries that are filtered out by a sink. If
+                   your Google Cloud resource receives a large volume of
+                   log entries, you can use exclusions to reduce your
+                   chargeable logs. Note that exclusions on
+                   organization-level and folder-level sinks don't apply
+                   to child resources. Note also that you cannot modify
+                   the \_Required sink or exclude logs from it.
 
         """
         # Create or coerce a protobuf request object.
@@ -2154,7 +2178,7 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
-        r"""Deletes an exclusion.
+        r"""Deletes an exclusion in the \_Default sink.
 
         .. code-block::
 
@@ -2186,8 +2210,9 @@ class ConfigServiceV2AsyncClient:
                     "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
                     "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
 
-                Example:
-                ``"projects/my-project-id/exclusions/my-exclusion-id"``.
+                For example:
+
+                ``"projects/my-project/exclusions/my-exclusion"``
 
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -2253,13 +2278,14 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.CmekSettings:
-        r"""Gets the Logs Router CMEK settings for the given resource.
+        r"""Gets the Logging CMEK settings for the given resource.
 
-        Note: CMEK for the Logs Router can currently only be configured
-        for GCP organizations. Once configured, it applies to all
-        projects and folders in the GCP organization.
+        Note: CMEK for the Log Router can be configured for Google Cloud
+        projects, folders, organizations and billing accounts. Once
+        configured for an organization, it applies to all projects and
+        folders in the Google Cloud organization.
 
-        See `Enabling CMEK for Logs
+        See `Enabling CMEK for Log
         Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
         for more information.
 
@@ -2287,7 +2313,7 @@ class ConfigServiceV2AsyncClient:
             request (Union[google.cloud.logging_v2.types.GetCmekSettingsRequest, dict]):
                 The request object. The parameters to
                 [GetCmekSettings][google.logging.v2.ConfigServiceV2.GetCmekSettings].
-                See [Enabling CMEK for Logs
+                See [Enabling CMEK for Log
                 Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
                 for more information.
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
@@ -2302,12 +2328,12 @@ class ConfigServiceV2AsyncClient:
                    a project, folder, organization, billing account, or
                    flexible resource.
 
-                   Note: CMEK for the Logs Router can currently only be
-                   configured for GCP organizations. Once configured, it
-                   applies to all projects and folders in the GCP
-                   organization.
+                   Note: CMEK for the Log Router can currently only be
+                   configured for Google Cloud organizations. Once
+                   configured, it applies to all projects and folders in
+                   the Google Cloud organization.
 
-                   See [Enabling CMEK for Logs
+                   See [Enabling CMEK for Log
                    Router](\ https://cloud.google.com/logging/docs/routing/managed-encryption)
                    for more information.
 
@@ -2343,11 +2369,11 @@ class ConfigServiceV2AsyncClient:
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.CmekSettings:
-        r"""Updates the Logs Router CMEK settings for the given resource.
+        r"""Updates the Log Router CMEK settings for the given resource.
 
-        Note: CMEK for the Logs Router can currently only be configured
-        for GCP organizations. Once configured, it applies to all
-        projects and folders in the GCP organization.
+        Note: CMEK for the Log Router can currently only be configured
+        for Google Cloud organizations. Once configured, it applies to
+        all projects and folders in the Google Cloud organization.
 
         [UpdateCmekSettings][google.logging.v2.ConfigServiceV2.UpdateCmekSettings]
         will fail if 1) ``kms_key_name`` is invalid, or 2) the
@@ -2355,7 +2381,7 @@ class ConfigServiceV2AsyncClient:
         ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for
         the key, or 3) access to the key is disabled.
 
-        See `Enabling CMEK for Logs
+        See `Enabling CMEK for Log
         Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
         for more information.
 
@@ -2383,7 +2409,7 @@ class ConfigServiceV2AsyncClient:
             request (Union[google.cloud.logging_v2.types.UpdateCmekSettingsRequest, dict]):
                 The request object. The parameters to
                 [UpdateCmekSettings][google.logging.v2.ConfigServiceV2.UpdateCmekSettings].
-                See [Enabling CMEK for Logs
+                See [Enabling CMEK for Log
                 Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
                 for more information.
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
@@ -2398,12 +2424,12 @@ class ConfigServiceV2AsyncClient:
                    a project, folder, organization, billing account, or
                    flexible resource.
 
-                   Note: CMEK for the Logs Router can currently only be
-                   configured for GCP organizations. Once configured, it
-                   applies to all projects and folders in the GCP
-                   organization.
+                   Note: CMEK for the Log Router can currently only be
+                   configured for Google Cloud organizations. Once
+                   configured, it applies to all projects and folders in
+                   the Google Cloud organization.
 
-                   See [Enabling CMEK for Logs
+                   See [Enabling CMEK for Log
                    Router](\ https://cloud.google.com/logging/docs/routing/managed-encryption)
                    for more information.
 
@@ -2427,6 +2453,340 @@ class ConfigServiceV2AsyncClient:
 
         # Send the request.
         response = await rpc(request, retry=retry, timeout=timeout, metadata=metadata,)
+
+        # Done; return the response.
+        return response
+
+    async def get_settings(
+        self,
+        request: Union[logging_config.GetSettingsRequest, dict] = None,
+        *,
+        name: str = None,
+        retry: OptionalRetry = gapic_v1.method.DEFAULT,
+        timeout: float = None,
+        metadata: Sequence[Tuple[str, str]] = (),
+    ) -> logging_config.Settings:
+        r"""Gets the Log Router settings for the given resource.
+
+        Note: Settings for the Log Router can be get for Google Cloud
+        projects, folders, organizations and billing accounts. Currently
+        it can only be configured for organizations. Once configured for
+        an organization, it applies to all projects and folders in the
+        Google Cloud organization.
+
+        See `Enabling CMEK for Log
+        Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+        for more information.
+
+
+        .. code-block::
+
+            from google.cloud import logging_v2
+
+            def sample_get_settings():
+                # Create a client
+                client = logging_v2.ConfigServiceV2Client()
+
+                # Initialize request argument(s)
+                request = logging_v2.GetSettingsRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                response = client.get_settings(request=request)
+
+                # Handle the response
+                print(response)
+
+        Args:
+            request (Union[google.cloud.logging_v2.types.GetSettingsRequest, dict]):
+                The request object. The parameters to
+                [GetSettings][google.logging.v2.ConfigServiceV2.GetSettings].
+                See [Enabling CMEK for Log
+                Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+                for more information.
+            name (:class:`str`):
+                Required. The resource for which to retrieve settings.
+
+                ::
+
+                    "projects/[PROJECT_ID]/settings"
+                    "organizations/[ORGANIZATION_ID]/settings"
+                    "billingAccounts/[BILLING_ACCOUNT_ID]/settings"
+                    "folders/[FOLDER_ID]/settings"
+
+                For example:
+
+                ``"organizations/12345/settings"``
+
+                Note: Settings for the Log Router can be get for Google
+                Cloud projects, folders, organizations and billing
+                accounts. Currently it can only be configured for
+                organizations. Once configured for an organization, it
+                applies to all projects and folders in the Google Cloud
+                organization.
+
+                This corresponds to the ``name`` field
+                on the ``request`` instance; if ``request`` is provided, this
+                should not be set.
+            retry (google.api_core.retry.Retry): Designation of what errors, if any,
+                should be retried.
+            timeout (float): The timeout for this request.
+            metadata (Sequence[Tuple[str, str]]): Strings which should be
+                sent along with the request as metadata.
+
+        Returns:
+            google.cloud.logging_v2.types.Settings:
+                Describes the settings associated
+                with a project, folder, organization,
+                billing account, or flexible resource.
+
+        """
+        # Create or coerce a protobuf request object.
+        # Quick check: If we got a request object, we should *not* have
+        # gotten any keyword arguments that map to the request.
+        has_flattened_params = any([name])
+        if request is not None and has_flattened_params:
+            raise ValueError(
+                "If the `request` argument is set, then none of "
+                "the individual field arguments should be set."
+            )
+
+        request = logging_config.GetSettingsRequest(request)
+
+        # If we have keyword arguments corresponding to fields on the
+        # request, apply these.
+        if name is not None:
+            request.name = name
+
+        # Wrap the RPC method; this adds retry and timeout information,
+        # and friendly error handling.
+        rpc = gapic_v1.method_async.wrap_method(
+            self._client._transport.get_settings,
+            default_timeout=None,
+            client_info=DEFAULT_CLIENT_INFO,
+        )
+
+        # Certain fields should be provided within the metadata header;
+        # add these here.
+        metadata = tuple(metadata) + (
+            gapic_v1.routing_header.to_grpc_metadata((("name", request.name),)),
+        )
+
+        # Send the request.
+        response = await rpc(request, retry=retry, timeout=timeout, metadata=metadata,)
+
+        # Done; return the response.
+        return response
+
+    async def update_settings(
+        self,
+        request: Union[logging_config.UpdateSettingsRequest, dict] = None,
+        *,
+        settings: logging_config.Settings = None,
+        update_mask: field_mask_pb2.FieldMask = None,
+        retry: OptionalRetry = gapic_v1.method.DEFAULT,
+        timeout: float = None,
+        metadata: Sequence[Tuple[str, str]] = (),
+    ) -> logging_config.Settings:
+        r"""Updates the Log Router settings for the given resource.
+
+        Note: Settings for the Log Router can currently only be
+        configured for Google Cloud organizations. Once configured, it
+        applies to all projects and folders in the Google Cloud
+        organization.
+
+        [UpdateSettings][google.logging.v2.ConfigServiceV2.UpdateSettings]
+        will fail if 1) ``kms_key_name`` is invalid, or 2) the
+        associated service account does not have the required
+        ``roles/cloudkms.cryptoKeyEncrypterDecrypter`` role assigned for
+        the key, or 3) access to the key is disabled. 4) ``location_id``
+        is not supported by Logging. 5) ``location_id`` violate
+        OrgPolicy.
+
+        See `Enabling CMEK for Log
+        Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+        for more information.
+
+
+        .. code-block::
+
+            from google.cloud import logging_v2
+
+            def sample_update_settings():
+                # Create a client
+                client = logging_v2.ConfigServiceV2Client()
+
+                # Initialize request argument(s)
+                request = logging_v2.UpdateSettingsRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                response = client.update_settings(request=request)
+
+                # Handle the response
+                print(response)
+
+        Args:
+            request (Union[google.cloud.logging_v2.types.UpdateSettingsRequest, dict]):
+                The request object. The parameters to
+                [UpdateSettings][google.logging.v2.ConfigServiceV2.UpdateSettings].
+                See [Enabling CMEK for Log
+                Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+                for more information.
+            settings (:class:`google.cloud.logging_v2.types.Settings`):
+                Required. The settings to update.
+
+                See `Enabling CMEK for Log
+                Router <https://cloud.google.com/logging/docs/routing/managed-encryption>`__
+                for more information.
+
+                This corresponds to the ``settings`` field
+                on the ``request`` instance; if ``request`` is provided, this
+                should not be set.
+            update_mask (:class:`google.protobuf.field_mask_pb2.FieldMask`):
+                Optional. Field mask identifying which fields from
+                ``settings`` should be updated. A field will be
+                overwritten if and only if it is in the update mask.
+                Output only fields cannot be updated.
+
+                See [FieldMask][google.protobuf.FieldMask] for more
+                information.
+
+                For example: ``"updateMask=kmsKeyName"``
+
+                This corresponds to the ``update_mask`` field
+                on the ``request`` instance; if ``request`` is provided, this
+                should not be set.
+            retry (google.api_core.retry.Retry): Designation of what errors, if any,
+                should be retried.
+            timeout (float): The timeout for this request.
+            metadata (Sequence[Tuple[str, str]]): Strings which should be
+                sent along with the request as metadata.
+
+        Returns:
+            google.cloud.logging_v2.types.Settings:
+                Describes the settings associated
+                with a project, folder, organization,
+                billing account, or flexible resource.
+
+        """
+        # Create or coerce a protobuf request object.
+        # Quick check: If we got a request object, we should *not* have
+        # gotten any keyword arguments that map to the request.
+        has_flattened_params = any([settings, update_mask])
+        if request is not None and has_flattened_params:
+            raise ValueError(
+                "If the `request` argument is set, then none of "
+                "the individual field arguments should be set."
+            )
+
+        request = logging_config.UpdateSettingsRequest(request)
+
+        # If we have keyword arguments corresponding to fields on the
+        # request, apply these.
+        if settings is not None:
+            request.settings = settings
+        if update_mask is not None:
+            request.update_mask = update_mask
+
+        # Wrap the RPC method; this adds retry and timeout information,
+        # and friendly error handling.
+        rpc = gapic_v1.method_async.wrap_method(
+            self._client._transport.update_settings,
+            default_timeout=None,
+            client_info=DEFAULT_CLIENT_INFO,
+        )
+
+        # Certain fields should be provided within the metadata header;
+        # add these here.
+        metadata = tuple(metadata) + (
+            gapic_v1.routing_header.to_grpc_metadata((("name", request.name),)),
+        )
+
+        # Send the request.
+        response = await rpc(request, retry=retry, timeout=timeout, metadata=metadata,)
+
+        # Done; return the response.
+        return response
+
+    async def copy_log_entries(
+        self,
+        request: Union[logging_config.CopyLogEntriesRequest, dict] = None,
+        *,
+        retry: OptionalRetry = gapic_v1.method.DEFAULT,
+        timeout: float = None,
+        metadata: Sequence[Tuple[str, str]] = (),
+    ) -> operation_async.AsyncOperation:
+        r"""Copies a set of log entries from a log bucket to a
+        Cloud Storage bucket.
+
+
+        .. code-block::
+
+            from google.cloud import logging_v2
+
+            def sample_copy_log_entries():
+                # Create a client
+                client = logging_v2.ConfigServiceV2Client()
+
+                # Initialize request argument(s)
+                request = logging_v2.CopyLogEntriesRequest(
+                    name="name_value",
+                    destination="destination_value",
+                )
+
+                # Make the request
+                operation = client.copy_log_entries(request=request)
+
+                print("Waiting for operation to complete...")
+
+                response = operation.result()
+
+                # Handle the response
+                print(response)
+
+        Args:
+            request (Union[google.cloud.logging_v2.types.CopyLogEntriesRequest, dict]):
+                The request object. The parameters to CopyLogEntries.
+            retry (google.api_core.retry.Retry): Designation of what errors, if any,
+                should be retried.
+            timeout (float): The timeout for this request.
+            metadata (Sequence[Tuple[str, str]]): Strings which should be
+                sent along with the request as metadata.
+
+        Returns:
+            google.api_core.operation_async.AsyncOperation:
+                An object representing a long-running operation.
+
+                The result type for the operation will be
+                :class:`google.cloud.logging_v2.types.CopyLogEntriesResponse`
+                Response type for CopyLogEntries long running
+                operations.
+
+        """
+        # Create or coerce a protobuf request object.
+        request = logging_config.CopyLogEntriesRequest(request)
+
+        # Wrap the RPC method; this adds retry and timeout information,
+        # and friendly error handling.
+        rpc = gapic_v1.method_async.wrap_method(
+            self._client._transport.copy_log_entries,
+            default_timeout=None,
+            client_info=DEFAULT_CLIENT_INFO,
+        )
+
+        # Send the request.
+        response = await rpc(request, retry=retry, timeout=timeout, metadata=metadata,)
+
+        # Wrap the response in an operation future.
+        response = operation_async.from_gapic(
+            response,
+            self._client._transport.operations_client,
+            logging_config.CopyLogEntriesResponse,
+            metadata_type=logging_config.CopyLogEntriesMetadata,
+        )
 
         # Done; return the response.
         return response
