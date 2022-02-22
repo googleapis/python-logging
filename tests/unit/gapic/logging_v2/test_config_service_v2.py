@@ -5465,6 +5465,8 @@ def test_get_settings(request_type, transport: str = "grpc"):
         # Designate an appropriate return value for the call.
         call.return_value = logging_config.Settings(
             name="name_value",
+            kms_key_name="kms_key_name_value",
+            kms_service_account_id="kms_service_account_id_value",
             storage_location="storage_location_value",
             disable_default_sink=True,
         )
@@ -5478,6 +5480,8 @@ def test_get_settings(request_type, transport: str = "grpc"):
     # Establish that the response is the type that we expect.
     assert isinstance(response, logging_config.Settings)
     assert response.name == "name_value"
+    assert response.kms_key_name == "kms_key_name_value"
+    assert response.kms_service_account_id == "kms_service_account_id_value"
     assert response.storage_location == "storage_location_value"
     assert response.disable_default_sink is True
 
@@ -5515,6 +5519,8 @@ async def test_get_settings_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             logging_config.Settings(
                 name="name_value",
+                kms_key_name="kms_key_name_value",
+                kms_service_account_id="kms_service_account_id_value",
                 storage_location="storage_location_value",
                 disable_default_sink=True,
             )
@@ -5529,6 +5535,8 @@ async def test_get_settings_async(
     # Establish that the response is the type that we expect.
     assert isinstance(response, logging_config.Settings)
     assert response.name == "name_value"
+    assert response.kms_key_name == "kms_key_name_value"
+    assert response.kms_service_account_id == "kms_service_account_id_value"
     assert response.storage_location == "storage_location_value"
     assert response.disable_default_sink is True
 
@@ -5678,6 +5686,8 @@ def test_update_settings(request_type, transport: str = "grpc"):
         # Designate an appropriate return value for the call.
         call.return_value = logging_config.Settings(
             name="name_value",
+            kms_key_name="kms_key_name_value",
+            kms_service_account_id="kms_service_account_id_value",
             storage_location="storage_location_value",
             disable_default_sink=True,
         )
@@ -5691,6 +5701,8 @@ def test_update_settings(request_type, transport: str = "grpc"):
     # Establish that the response is the type that we expect.
     assert isinstance(response, logging_config.Settings)
     assert response.name == "name_value"
+    assert response.kms_key_name == "kms_key_name_value"
+    assert response.kms_service_account_id == "kms_service_account_id_value"
     assert response.storage_location == "storage_location_value"
     assert response.disable_default_sink is True
 
@@ -5728,6 +5740,8 @@ async def test_update_settings_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             logging_config.Settings(
                 name="name_value",
+                kms_key_name="kms_key_name_value",
+                kms_service_account_id="kms_service_account_id_value",
                 storage_location="storage_location_value",
                 disable_default_sink=True,
             )
@@ -5742,6 +5756,8 @@ async def test_update_settings_async(
     # Establish that the response is the type that we expect.
     assert isinstance(response, logging_config.Settings)
     assert response.name == "name_value"
+    assert response.kms_key_name == "kms_key_name_value"
+    assert response.kms_service_account_id == "kms_service_account_id_value"
     assert response.storage_location == "storage_location_value"
     assert response.disable_default_sink is True
 
