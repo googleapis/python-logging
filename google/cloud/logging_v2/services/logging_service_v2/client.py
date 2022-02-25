@@ -412,8 +412,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         timestamp before the operation will be deleted.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -513,8 +512,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         organizations, billing accounts or folders)
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -689,8 +687,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         Logs <https://cloud.google.com/logging/docs/export>`__.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -829,8 +826,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         used by Logging.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -908,8 +904,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         listed.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1013,8 +1008,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         logs.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 

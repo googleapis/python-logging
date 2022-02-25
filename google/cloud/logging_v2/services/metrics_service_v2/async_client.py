@@ -216,7 +216,7 @@ class MetricsServiceV2AsyncClient:
     ) -> pagers.ListLogMetricsAsyncPager:
         r"""Lists logs-based metrics.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -329,7 +329,7 @@ class MetricsServiceV2AsyncClient:
     ) -> logging_metrics.LogMetric:
         r"""Gets a logs-based metric.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -444,7 +444,7 @@ class MetricsServiceV2AsyncClient:
     ) -> logging_metrics.LogMetric:
         r"""Creates a logs-based metric.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -564,7 +564,7 @@ class MetricsServiceV2AsyncClient:
     ) -> logging_metrics.LogMetric:
         r"""Creates or updates a logs-based metric.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -695,7 +695,7 @@ class MetricsServiceV2AsyncClient:
     ) -> None:
         r"""Deletes a logs-based metric.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 

@@ -410,8 +410,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
     ) -> pagers.ListLogMetricsPager:
         r"""Lists logs-based metrics.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -513,8 +512,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
     ) -> logging_metrics.LogMetric:
         r"""Gets a logs-based metric.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -618,8 +616,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
     ) -> logging_metrics.LogMetric:
         r"""Creates a logs-based metric.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -739,8 +736,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
     ) -> logging_metrics.LogMetric:
         r"""Creates or updates a logs-based metric.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -860,8 +856,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
     ) -> None:
         r"""Deletes a logs-based metric.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 

@@ -10,8 +10,8 @@
           "shortName": "CopyLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_copy_log_entries_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CopyLogEntries_async",
+      "file": "logging_v2_generated_config_service_v2_copy_log_entries_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CopyLogEntries_async",
       "segments": [
         {
           "end": 49,
@@ -54,8 +54,8 @@
           "shortName": "CopyLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_copy_log_entries_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CopyLogEntries_sync",
+      "file": "logging_v2_generated_config_service_v2_copy_log_entries_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CopyLogEntries_sync",
       "segments": [
         {
           "end": 49,
@@ -99,8 +99,8 @@
           "shortName": "CreateBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_bucket_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateBucket_async",
+      "file": "logging_v2_generated_config_service_v2_create_bucket_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateBucket_async",
       "segments": [
         {
           "end": 45,
@@ -143,8 +143,8 @@
           "shortName": "CreateBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_bucket_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateBucket_sync",
+      "file": "logging_v2_generated_config_service_v2_create_bucket_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateBucket_sync",
       "segments": [
         {
           "end": 45,
@@ -188,8 +188,8 @@
           "shortName": "CreateExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_exclusion_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateExclusion_async",
+      "file": "logging_v2_generated_config_service_v2_create_exclusion_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateExclusion_async",
       "segments": [
         {
           "end": 49,
@@ -232,8 +232,8 @@
           "shortName": "CreateExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_exclusion_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateExclusion_sync",
+      "file": "logging_v2_generated_config_service_v2_create_exclusion_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateExclusion_sync",
       "segments": [
         {
           "end": 49,
@@ -277,8 +277,8 @@
           "shortName": "CreateSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_sink_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateSink_async",
+      "file": "logging_v2_generated_config_service_v2_create_sink_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateSink_async",
       "segments": [
         {
           "end": 49,
@@ -321,8 +321,8 @@
           "shortName": "CreateSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_sink_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateSink_sync",
+      "file": "logging_v2_generated_config_service_v2_create_sink_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateSink_sync",
       "segments": [
         {
           "end": 49,
@@ -366,8 +366,8 @@
           "shortName": "CreateView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_view_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateView_async",
+      "file": "logging_v2_generated_config_service_v2_create_view_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateView_async",
       "segments": [
         {
           "end": 45,
@@ -410,8 +410,8 @@
           "shortName": "CreateView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_create_view_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_CreateView_sync",
+      "file": "logging_v2_generated_config_service_v2_create_view_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_CreateView_sync",
       "segments": [
         {
           "end": 45,
@@ -455,8 +455,8 @@
           "shortName": "DeleteBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_bucket_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteBucket_async",
+      "file": "logging_v2_generated_config_service_v2_delete_bucket_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteBucket_async",
       "segments": [
         {
           "end": 42,
@@ -497,8 +497,8 @@
           "shortName": "DeleteBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_bucket_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteBucket_sync",
+      "file": "logging_v2_generated_config_service_v2_delete_bucket_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteBucket_sync",
       "segments": [
         {
           "end": 42,
@@ -540,8 +540,8 @@
           "shortName": "DeleteExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_exclusion_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteExclusion_async",
+      "file": "logging_v2_generated_config_service_v2_delete_exclusion_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteExclusion_async",
       "segments": [
         {
           "end": 42,
@@ -582,8 +582,8 @@
           "shortName": "DeleteExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_exclusion_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteExclusion_sync",
+      "file": "logging_v2_generated_config_service_v2_delete_exclusion_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteExclusion_sync",
       "segments": [
         {
           "end": 42,
@@ -625,8 +625,8 @@
           "shortName": "DeleteSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_sink_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteSink_async",
+      "file": "logging_v2_generated_config_service_v2_delete_sink_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteSink_async",
       "segments": [
         {
           "end": 42,
@@ -667,8 +667,8 @@
           "shortName": "DeleteSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_sink_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteSink_sync",
+      "file": "logging_v2_generated_config_service_v2_delete_sink_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteSink_sync",
       "segments": [
         {
           "end": 42,
@@ -710,8 +710,8 @@
           "shortName": "DeleteView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_view_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteView_async",
+      "file": "logging_v2_generated_config_service_v2_delete_view_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteView_async",
       "segments": [
         {
           "end": 42,
@@ -752,8 +752,8 @@
           "shortName": "DeleteView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_delete_view_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_DeleteView_sync",
+      "file": "logging_v2_generated_config_service_v2_delete_view_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_DeleteView_sync",
       "segments": [
         {
           "end": 42,
@@ -795,8 +795,8 @@
           "shortName": "GetBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_bucket_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetBucket_async",
+      "file": "logging_v2_generated_config_service_v2_get_bucket_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetBucket_async",
       "segments": [
         {
           "end": 44,
@@ -839,8 +839,8 @@
           "shortName": "GetBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_bucket_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetBucket_sync",
+      "file": "logging_v2_generated_config_service_v2_get_bucket_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetBucket_sync",
       "segments": [
         {
           "end": 44,
@@ -884,8 +884,8 @@
           "shortName": "GetCmekSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_cmek_settings_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetCmekSettings_async",
+      "file": "logging_v2_generated_config_service_v2_get_cmek_settings_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetCmekSettings_async",
       "segments": [
         {
           "end": 44,
@@ -928,8 +928,8 @@
           "shortName": "GetCmekSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_cmek_settings_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetCmekSettings_sync",
+      "file": "logging_v2_generated_config_service_v2_get_cmek_settings_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetCmekSettings_sync",
       "segments": [
         {
           "end": 44,
@@ -973,8 +973,8 @@
           "shortName": "GetExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_exclusion_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetExclusion_async",
+      "file": "logging_v2_generated_config_service_v2_get_exclusion_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetExclusion_async",
       "segments": [
         {
           "end": 44,
@@ -1017,8 +1017,8 @@
           "shortName": "GetExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_exclusion_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetExclusion_sync",
+      "file": "logging_v2_generated_config_service_v2_get_exclusion_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetExclusion_sync",
       "segments": [
         {
           "end": 44,
@@ -1062,8 +1062,8 @@
           "shortName": "GetSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_settings_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetSettings_async",
+      "file": "logging_v2_generated_config_service_v2_get_settings_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetSettings_async",
       "segments": [
         {
           "end": 44,
@@ -1106,8 +1106,8 @@
           "shortName": "GetSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_settings_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetSettings_sync",
+      "file": "logging_v2_generated_config_service_v2_get_settings_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetSettings_sync",
       "segments": [
         {
           "end": 44,
@@ -1151,8 +1151,8 @@
           "shortName": "GetSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_sink_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetSink_async",
+      "file": "logging_v2_generated_config_service_v2_get_sink_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetSink_async",
       "segments": [
         {
           "end": 44,
@@ -1195,8 +1195,8 @@
           "shortName": "GetSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_sink_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetSink_sync",
+      "file": "logging_v2_generated_config_service_v2_get_sink_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetSink_sync",
       "segments": [
         {
           "end": 44,
@@ -1240,8 +1240,8 @@
           "shortName": "GetView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_view_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetView_async",
+      "file": "logging_v2_generated_config_service_v2_get_view_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetView_async",
       "segments": [
         {
           "end": 44,
@@ -1284,8 +1284,8 @@
           "shortName": "GetView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_get_view_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_GetView_sync",
+      "file": "logging_v2_generated_config_service_v2_get_view_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_GetView_sync",
       "segments": [
         {
           "end": 44,
@@ -1329,8 +1329,8 @@
           "shortName": "ListBuckets"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_buckets_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListBuckets_async",
+      "file": "logging_v2_generated_config_service_v2_list_buckets_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListBuckets_async",
       "segments": [
         {
           "end": 45,
@@ -1373,8 +1373,8 @@
           "shortName": "ListBuckets"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_buckets_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListBuckets_sync",
+      "file": "logging_v2_generated_config_service_v2_list_buckets_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListBuckets_sync",
       "segments": [
         {
           "end": 45,
@@ -1418,8 +1418,8 @@
           "shortName": "ListExclusions"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_exclusions_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListExclusions_async",
+      "file": "logging_v2_generated_config_service_v2_list_exclusions_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListExclusions_async",
       "segments": [
         {
           "end": 45,
@@ -1462,8 +1462,8 @@
           "shortName": "ListExclusions"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_exclusions_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListExclusions_sync",
+      "file": "logging_v2_generated_config_service_v2_list_exclusions_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListExclusions_sync",
       "segments": [
         {
           "end": 45,
@@ -1507,8 +1507,8 @@
           "shortName": "ListSinks"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_sinks_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListSinks_async",
+      "file": "logging_v2_generated_config_service_v2_list_sinks_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListSinks_async",
       "segments": [
         {
           "end": 45,
@@ -1551,8 +1551,8 @@
           "shortName": "ListSinks"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_sinks_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListSinks_sync",
+      "file": "logging_v2_generated_config_service_v2_list_sinks_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListSinks_sync",
       "segments": [
         {
           "end": 45,
@@ -1596,8 +1596,8 @@
           "shortName": "ListViews"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_views_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListViews_async",
+      "file": "logging_v2_generated_config_service_v2_list_views_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListViews_async",
       "segments": [
         {
           "end": 45,
@@ -1640,8 +1640,8 @@
           "shortName": "ListViews"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_list_views_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_ListViews_sync",
+      "file": "logging_v2_generated_config_service_v2_list_views_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_ListViews_sync",
       "segments": [
         {
           "end": 45,
@@ -1685,8 +1685,8 @@
           "shortName": "UndeleteBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_undelete_bucket_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UndeleteBucket_async",
+      "file": "logging_v2_generated_config_service_v2_undelete_bucket_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UndeleteBucket_async",
       "segments": [
         {
           "end": 42,
@@ -1727,8 +1727,8 @@
           "shortName": "UndeleteBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_undelete_bucket_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UndeleteBucket_sync",
+      "file": "logging_v2_generated_config_service_v2_undelete_bucket_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UndeleteBucket_sync",
       "segments": [
         {
           "end": 42,
@@ -1770,8 +1770,8 @@
           "shortName": "UpdateBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_bucket_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateBucket_async",
+      "file": "logging_v2_generated_config_service_v2_update_bucket_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateBucket_async",
       "segments": [
         {
           "end": 44,
@@ -1814,8 +1814,8 @@
           "shortName": "UpdateBucket"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_bucket_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateBucket_sync",
+      "file": "logging_v2_generated_config_service_v2_update_bucket_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateBucket_sync",
       "segments": [
         {
           "end": 44,
@@ -1859,8 +1859,8 @@
           "shortName": "UpdateCmekSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_cmek_settings_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateCmekSettings_async",
+      "file": "logging_v2_generated_config_service_v2_update_cmek_settings_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateCmekSettings_async",
       "segments": [
         {
           "end": 44,
@@ -1903,8 +1903,8 @@
           "shortName": "UpdateCmekSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_cmek_settings_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateCmekSettings_sync",
+      "file": "logging_v2_generated_config_service_v2_update_cmek_settings_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateCmekSettings_sync",
       "segments": [
         {
           "end": 44,
@@ -1948,8 +1948,8 @@
           "shortName": "UpdateExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_exclusion_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateExclusion_async",
+      "file": "logging_v2_generated_config_service_v2_update_exclusion_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateExclusion_async",
       "segments": [
         {
           "end": 49,
@@ -1992,8 +1992,8 @@
           "shortName": "UpdateExclusion"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_exclusion_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateExclusion_sync",
+      "file": "logging_v2_generated_config_service_v2_update_exclusion_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateExclusion_sync",
       "segments": [
         {
           "end": 49,
@@ -2037,8 +2037,8 @@
           "shortName": "UpdateSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_settings_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateSettings_async",
+      "file": "logging_v2_generated_config_service_v2_update_settings_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateSettings_async",
       "segments": [
         {
           "end": 44,
@@ -2081,8 +2081,8 @@
           "shortName": "UpdateSettings"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_settings_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateSettings_sync",
+      "file": "logging_v2_generated_config_service_v2_update_settings_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateSettings_sync",
       "segments": [
         {
           "end": 44,
@@ -2126,8 +2126,8 @@
           "shortName": "UpdateSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_sink_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateSink_async",
+      "file": "logging_v2_generated_config_service_v2_update_sink_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateSink_async",
       "segments": [
         {
           "end": 49,
@@ -2170,8 +2170,8 @@
           "shortName": "UpdateSink"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_sink_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateSink_sync",
+      "file": "logging_v2_generated_config_service_v2_update_sink_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateSink_sync",
       "segments": [
         {
           "end": 49,
@@ -2215,8 +2215,8 @@
           "shortName": "UpdateView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_view_async.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateView_async",
+      "file": "logging_v2_generated_config_service_v2_update_view_async.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateView_async",
       "segments": [
         {
           "end": 44,
@@ -2259,8 +2259,8 @@
           "shortName": "UpdateView"
         }
       },
-      "file": "logging_generated_logging_v2_config_service_v2_update_view_sync.py",
-      "regionTag": "logging_generated_logging_v2_ConfigServiceV2_UpdateView_sync",
+      "file": "logging_v2_generated_config_service_v2_update_view_sync.py",
+      "regionTag": "logging_v2_generated_ConfigServiceV2_UpdateView_sync",
       "segments": [
         {
           "end": 44,
@@ -2304,8 +2304,8 @@
           "shortName": "DeleteLog"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_delete_log_async.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_DeleteLog_async",
+      "file": "logging_v2_generated_logging_service_v2_delete_log_async.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_DeleteLog_async",
       "segments": [
         {
           "end": 42,
@@ -2346,8 +2346,8 @@
           "shortName": "DeleteLog"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_delete_log_sync.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_DeleteLog_sync",
+      "file": "logging_v2_generated_logging_service_v2_delete_log_sync.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_DeleteLog_sync",
       "segments": [
         {
           "end": 42,
@@ -2389,8 +2389,8 @@
           "shortName": "ListLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_list_log_entries_async.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_ListLogEntries_async",
+      "file": "logging_v2_generated_logging_service_v2_list_log_entries_async.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_ListLogEntries_async",
       "segments": [
         {
           "end": 45,
@@ -2433,8 +2433,8 @@
           "shortName": "ListLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_list_log_entries_sync.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_ListLogEntries_sync",
+      "file": "logging_v2_generated_logging_service_v2_list_log_entries_sync.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_ListLogEntries_sync",
       "segments": [
         {
           "end": 45,
@@ -2478,8 +2478,8 @@
           "shortName": "ListLogs"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_list_logs_async.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_ListLogs_async",
+      "file": "logging_v2_generated_logging_service_v2_list_logs_async.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_ListLogs_async",
       "segments": [
         {
           "end": 45,
@@ -2522,8 +2522,8 @@
           "shortName": "ListLogs"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_list_logs_sync.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_ListLogs_sync",
+      "file": "logging_v2_generated_logging_service_v2_list_logs_sync.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_ListLogs_sync",
       "segments": [
         {
           "end": 45,
@@ -2567,8 +2567,8 @@
           "shortName": "ListMonitoredResourceDescriptors"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_list_monitored_resource_descriptors_async.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_ListMonitoredResourceDescriptors_async",
+      "file": "logging_v2_generated_logging_service_v2_list_monitored_resource_descriptors_async.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_ListMonitoredResourceDescriptors_async",
       "segments": [
         {
           "end": 44,
@@ -2611,8 +2611,8 @@
           "shortName": "ListMonitoredResourceDescriptors"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_list_monitored_resource_descriptors_sync.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_ListMonitoredResourceDescriptors_sync",
+      "file": "logging_v2_generated_logging_service_v2_list_monitored_resource_descriptors_sync.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_ListMonitoredResourceDescriptors_sync",
       "segments": [
         {
           "end": 44,
@@ -2656,8 +2656,8 @@
           "shortName": "TailLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_tail_log_entries_async.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_TailLogEntries_async",
+      "file": "logging_v2_generated_logging_service_v2_tail_log_entries_async.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_TailLogEntries_async",
       "segments": [
         {
           "end": 55,
@@ -2700,8 +2700,8 @@
           "shortName": "TailLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_tail_log_entries_sync.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_TailLogEntries_sync",
+      "file": "logging_v2_generated_logging_service_v2_tail_log_entries_sync.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_TailLogEntries_sync",
       "segments": [
         {
           "end": 55,
@@ -2745,8 +2745,8 @@
           "shortName": "WriteLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_write_log_entries_async.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_WriteLogEntries_async",
+      "file": "logging_v2_generated_logging_service_v2_write_log_entries_async.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_WriteLogEntries_async",
       "segments": [
         {
           "end": 47,
@@ -2789,8 +2789,8 @@
           "shortName": "WriteLogEntries"
         }
       },
-      "file": "logging_generated_logging_v2_logging_service_v2_write_log_entries_sync.py",
-      "regionTag": "logging_generated_logging_v2_LoggingServiceV2_WriteLogEntries_sync",
+      "file": "logging_v2_generated_logging_service_v2_write_log_entries_sync.py",
+      "regionTag": "logging_v2_generated_LoggingServiceV2_WriteLogEntries_sync",
       "segments": [
         {
           "end": 47,
@@ -2834,8 +2834,8 @@
           "shortName": "CreateLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_create_log_metric_async.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_CreateLogMetric_async",
+      "file": "logging_v2_generated_metrics_service_v2_create_log_metric_async.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_CreateLogMetric_async",
       "segments": [
         {
           "end": 49,
@@ -2878,8 +2878,8 @@
           "shortName": "CreateLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_create_log_metric_sync.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_CreateLogMetric_sync",
+      "file": "logging_v2_generated_metrics_service_v2_create_log_metric_sync.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_CreateLogMetric_sync",
       "segments": [
         {
           "end": 49,
@@ -2923,8 +2923,8 @@
           "shortName": "DeleteLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_delete_log_metric_async.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_DeleteLogMetric_async",
+      "file": "logging_v2_generated_metrics_service_v2_delete_log_metric_async.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_DeleteLogMetric_async",
       "segments": [
         {
           "end": 42,
@@ -2965,8 +2965,8 @@
           "shortName": "DeleteLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_delete_log_metric_sync.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_DeleteLogMetric_sync",
+      "file": "logging_v2_generated_metrics_service_v2_delete_log_metric_sync.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_DeleteLogMetric_sync",
       "segments": [
         {
           "end": 42,
@@ -3008,8 +3008,8 @@
           "shortName": "GetLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_get_log_metric_async.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_GetLogMetric_async",
+      "file": "logging_v2_generated_metrics_service_v2_get_log_metric_async.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_GetLogMetric_async",
       "segments": [
         {
           "end": 44,
@@ -3052,8 +3052,8 @@
           "shortName": "GetLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_get_log_metric_sync.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_GetLogMetric_sync",
+      "file": "logging_v2_generated_metrics_service_v2_get_log_metric_sync.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_GetLogMetric_sync",
       "segments": [
         {
           "end": 44,
@@ -3097,8 +3097,8 @@
           "shortName": "ListLogMetrics"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_list_log_metrics_async.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_ListLogMetrics_async",
+      "file": "logging_v2_generated_metrics_service_v2_list_log_metrics_async.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_ListLogMetrics_async",
       "segments": [
         {
           "end": 45,
@@ -3141,8 +3141,8 @@
           "shortName": "ListLogMetrics"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_list_log_metrics_sync.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_ListLogMetrics_sync",
+      "file": "logging_v2_generated_metrics_service_v2_list_log_metrics_sync.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_ListLogMetrics_sync",
       "segments": [
         {
           "end": 45,
@@ -3186,8 +3186,8 @@
           "shortName": "UpdateLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_update_log_metric_async.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_UpdateLogMetric_async",
+      "file": "logging_v2_generated_metrics_service_v2_update_log_metric_async.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_UpdateLogMetric_async",
       "segments": [
         {
           "end": 49,
@@ -3230,8 +3230,8 @@
           "shortName": "UpdateLogMetric"
         }
       },
-      "file": "logging_generated_logging_v2_metrics_service_v2_update_log_metric_sync.py",
-      "regionTag": "logging_generated_logging_v2_MetricsServiceV2_UpdateLogMetric_sync",
+      "file": "logging_v2_generated_metrics_service_v2_update_log_metric_sync.py",
+      "regionTag": "logging_v2_generated_MetricsServiceV2_UpdateLogMetric_sync",
       "segments": [
         {
           "end": 49,
