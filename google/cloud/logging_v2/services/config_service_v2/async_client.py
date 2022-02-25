@@ -231,7 +231,7 @@ class ConfigServiceV2AsyncClient:
     ) -> pagers.ListBucketsAsyncPager:
         r"""Lists log buckets.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -339,7 +339,7 @@ class ConfigServiceV2AsyncClient:
     ) -> logging_config.LogBucket:
         r"""Gets a log bucket.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -409,7 +409,7 @@ class ConfigServiceV2AsyncClient:
         location cannot be changed.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -489,7 +489,7 @@ class ConfigServiceV2AsyncClient:
         changed.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -562,7 +562,7 @@ class ConfigServiceV2AsyncClient:
         deleted.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -622,7 +622,7 @@ class ConfigServiceV2AsyncClient:
         days.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -680,7 +680,7 @@ class ConfigServiceV2AsyncClient:
     ) -> pagers.ListViewsAsyncPager:
         r"""Lists views on a log bucket.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -780,7 +780,7 @@ class ConfigServiceV2AsyncClient:
     ) -> logging_config.LogView:
         r"""Gets a view on a log bucket..
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -849,7 +849,7 @@ class ConfigServiceV2AsyncClient:
         bucket may contain a maximum of 30 views.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -922,7 +922,7 @@ class ConfigServiceV2AsyncClient:
         view. If this occurs, please try again in a few minutes.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -993,7 +993,7 @@ class ConfigServiceV2AsyncClient:
         minutes.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1051,7 +1051,7 @@ class ConfigServiceV2AsyncClient:
     ) -> pagers.ListSinksAsyncPager:
         r"""Lists sinks.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1167,7 +1167,7 @@ class ConfigServiceV2AsyncClient:
     ) -> logging_config.LogSink:
         r"""Gets a sink.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1292,7 +1292,7 @@ class ConfigServiceV2AsyncClient:
         entries only from the resource owning the sink.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1420,7 +1420,7 @@ class ConfigServiceV2AsyncClient:
         the ``unique_writer_identity`` field.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1580,7 +1580,7 @@ class ConfigServiceV2AsyncClient:
         then that service account is also deleted.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1685,7 +1685,7 @@ class ConfigServiceV2AsyncClient:
         resource.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1801,7 +1801,7 @@ class ConfigServiceV2AsyncClient:
     ) -> logging_config.LogExclusion:
         r"""Gets the description of an exclusion in the \_Default sink.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1920,7 +1920,7 @@ class ConfigServiceV2AsyncClient:
         be excluded. You can have up to 10 exclusions in a resource.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2045,7 +2045,7 @@ class ConfigServiceV2AsyncClient:
         \_Default sink.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2180,7 +2180,7 @@ class ConfigServiceV2AsyncClient:
     ) -> None:
         r"""Deletes an exclusion in the \_Default sink.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2290,7 +2290,7 @@ class ConfigServiceV2AsyncClient:
         for more information.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2386,7 +2386,7 @@ class ConfigServiceV2AsyncClient:
         for more information.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2479,7 +2479,7 @@ class ConfigServiceV2AsyncClient:
         for more information.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2609,7 +2609,7 @@ class ConfigServiceV2AsyncClient:
         for more information.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2723,7 +2723,7 @@ class ConfigServiceV2AsyncClient:
         Cloud Storage bucket.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 

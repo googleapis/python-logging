@@ -230,7 +230,7 @@ class LoggingServiceV2AsyncClient:
         timestamp before the operation will be deleted.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -341,7 +341,7 @@ class LoggingServiceV2AsyncClient:
         organizations, billing accounts or folders)
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -528,7 +528,7 @@ class LoggingServiceV2AsyncClient:
         Logs <https://cloud.google.com/logging/docs/export>`__.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -678,7 +678,7 @@ class LoggingServiceV2AsyncClient:
         used by Logging.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -764,7 +764,7 @@ class LoggingServiceV2AsyncClient:
         listed.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -879,7 +879,7 @@ class LoggingServiceV2AsyncClient:
         logs.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 

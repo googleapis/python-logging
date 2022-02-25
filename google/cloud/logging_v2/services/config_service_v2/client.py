@@ -476,8 +476,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> pagers.ListBucketsPager:
         r"""Lists log buckets.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -585,8 +584,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> logging_config.LogBucket:
         r"""Gets a log bucket.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -657,8 +655,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         location cannot be changed.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -739,8 +736,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         changed.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -814,8 +810,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         deleted.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -876,8 +871,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         days.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -936,8 +930,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> pagers.ListViewsPager:
         r"""Lists views on a log bucket.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1037,8 +1030,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> logging_config.LogView:
         r"""Gets a view on a log bucket..
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1108,8 +1100,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         bucket may contain a maximum of 30 views.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1183,8 +1174,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         view. If this occurs, please try again in a few minutes.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1256,8 +1246,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         minutes.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1316,8 +1305,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> pagers.ListSinksPager:
         r"""Lists sinks.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1422,8 +1410,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> logging_config.LogSink:
         r"""Gets a sink.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1537,8 +1524,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         entries only from the resource owning the sink.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1666,8 +1652,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         the ``unique_writer_identity`` field.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1816,8 +1801,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         then that service account is also deleted.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -1911,8 +1895,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         resource.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2017,8 +2000,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> logging_config.LogExclusion:
         r"""Gets the description of an exclusion in the \_Default sink.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2126,8 +2108,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         be excluded. You can have up to 10 exclusions in a resource.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2252,8 +2233,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         \_Default sink.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2388,8 +2368,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
     ) -> None:
         r"""Deletes an exclusion in the \_Default sink.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2488,8 +2467,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         for more information.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2586,8 +2564,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         for more information.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2681,8 +2658,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         for more information.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2812,8 +2788,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         for more information.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
@@ -2927,8 +2902,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
         Cloud Storage bucket.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import logging_v2
 
