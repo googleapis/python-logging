@@ -29,6 +29,7 @@ BLACK_PATHS = ["docs", "google", "tests", "noxfile.py", "setup.py"]
 
 DEFAULT_PYTHON_VERSION = "3.8"
 SYSTEM_TEST_PYTHON_VERSIONS = ["3.8"]
+PERFORMANCE_TEST_PYTHON_VERSIONS = ["3.8"]
 UNIT_TEST_PYTHON_VERSIONS = ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
 CURRENT_DIRECTORY = pathlib.Path(__file__).parent.absolute()
@@ -176,6 +177,61 @@ def system(session):
             "--quiet",
             f"--junitxml=system_{session.python}_sponge_log.xml",
             system_test_folder_path,
+            *session.posargs,
+        )
+
+@nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
+def performance(session):
+    """Run the performance test suite."""
+    constraints_path = str(
+        CURRENT_DIRECTORY / "testing" / f"constraints-{session.python}.txt"
+    )
+    perf_test_path = os.path.join("tests", "performance.py")
+    perf_test_folder_path = os.path.join("tests", "performance")
+
+    # Check the value of `RUN_SYSTEM_TESTS` env var. It defaults to true.
+    if os.environ.get("RUN_PERFORMANCE_TESTS", "true") == "false":
+        session.skip("RUN_PERFORMANCE_TESTS is set to false, skipping")
+
+    perf_test_exists = os.path.exists(perf_test_path)
+    perf_test_folder_exists = os.path.exists(perf_test_folder_path)
+    # Sanity check: only run tests if found.
+    if not perf_test_exists and not perf_test_folder_exists:
+        session.skip("Performance tests were not found")
+
+    # Use pre-release gRPC for performance tests.
+    session.install("--pre", "grpcio")
+
+    # Install all test dependencies, then install this package into the
+    # virtualenv's dist-packages.
+    session.install(
+        "mock",
+        "pytest",
+        "google-cloud-testutils",
+        "google-cloud-bigquery",
+        "google-cloud-pubsub",
+        "google-cloud-storage",
+        "google-cloud-testutils",
+        "-c",
+        constraints_path,
+    )
+    session.install("-e", ".", "-c", constraints_path)
+
+    # Run py.test against the performance tests.
+    if perf_test_exists:
+        session.run(
+            "py.test",
+            "--quiet",
+            f"--junitxml=perf_{session.python}_sponge_log.xml",
+            perf_test_path,
+            *session.posargs,
+        )
+    if perf_test_folder_exists:
+        session.run(
+            "py.test",
+            "--quiet",
+            f"--junitxml=perf_{session.python}_sponge_log.xml",
+            perf_test_folder_path,
             *session.posargs,
         )
 
