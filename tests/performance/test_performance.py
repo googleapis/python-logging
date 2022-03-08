@@ -17,36 +17,51 @@ import pytest
 import unittest
 import math
 import mock
+import time
 
 import google.cloud.logging
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
+from google.cloud.logging_v2.services.logging_service_v2.transports import LoggingServiceV2Transport
 import google.auth.credentials
 from google.cloud.logging_v2 import _gapic
 
 
-def _make_client():
-    creds = mock.Mock(spec=google.auth.credentials.Credentials)
-    gapic_client = LoggingServiceV2Client(credentials=creds)
-    handwritten_client = mock.Mock()
-    api = _gapic._LoggingAPI(gapic_client, handwritten_client)
-    client = google.cloud.logging.Client(project="my-project",  credentials=creds)
-    client._logging_api = api
-    return client
+class MockGRPCTransport(LoggingServiceV2Transport):
+    def __init__(self, latency=0, **kwargs):
+        self.latency = latency
+        self._wrapped_methods = {self.write_log_entries: self.write_log_entries}
+
+    def write_log_entries(self, *args, **kwargs):
+        time.sleep(self.latency)
+
+def _make_client(mock_network=True, use_grpc=True):
+    if not mock_network:
+        # use a real client
+        client = google.cloud.logging.Client(_use_grpc=use_grpc)
+        return client
+    elif use_grpc:
+        # create a mock grpc client
+        mock_transport = MockGRPCTransport(latency=0)
+        gapic_client = LoggingServiceV2Client(transport=mock_transport)
+        handwritten_client = mock.Mock()
+        api = _gapic._LoggingAPI(gapic_client, handwritten_client)
+        creds = mock.Mock(spec=google.auth.credentials.Credentials)
+        client = google.cloud.logging.Client(project="my-project",  credentials=creds)
+        client._logging_api = api
+        return client
+    else:
+        # create mock http client
+        return None
 
 def logger_log(num_logs=100, log_chars=10, use_grpc=True):
-    # client = google.cloud.logging.Client(project="my-project",  credentials=_make_credentials(), _use_grpc=use_grpc)
-    client = _make_client()
+    client = _make_client(mock_network=True, use_grpc=use_grpc)
     logger = client.logger(name="test_logger")
     log_message = "message "
     log_message = log_message * math.ceil(log_chars / len(log_message))
     log_message = log_message[:log_chars]
-    with mock.patch.object(
-        type(client._logging_api._gapic_api.transport.write_log_entries), "__call__"
-    ) as call:
-        call.return_value = None
-        for i in range(num_logs):
-            logger.log(log_message)
-            print(log_message)
+    for i in range(num_logs):
+        logger.log(log_message)
+        print(log_message)
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
