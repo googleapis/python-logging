@@ -217,19 +217,10 @@ def performance(session):
     )
     session.install("-e", ".", "-c", constraints_path)
 
-    # Run py.test against the performance tests.
-    if perf_test_exists:
-        session.run(
-            "py.test",
-            "--quiet",
-            f"--junitxml=perf_{session.python}_sponge_log.xml",
-            perf_test_path,
-            *session.posargs,
-        )
     if perf_test_folder_exists:
         session.run(
             "py.test",
-            "--quiet",
+            "-s",
             f"--junitxml=perf_{session.python}_sponge_log.xml",
             perf_test_folder_path,
             *session.posargs,

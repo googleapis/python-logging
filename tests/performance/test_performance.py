@@ -90,7 +90,7 @@ class TestPerformance(unittest.TestCase):
         pass
 
     def tearDown(self):
-        pass
+        print("Done")
 
     def test_test(self):
         logger_log()
