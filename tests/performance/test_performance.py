@@ -28,6 +28,10 @@ from google.cloud.logging_v2 import _gapic
 
 
 class MockGRPCTransport(LoggingServiceV2Transport):
+    """
+    Mock for grpc transport.
+    Instead of sending logs to server, introduce artificial delay
+    """
     def __init__(self, latency=0, **kwargs):
         self.latency = latency
         self._wrapped_methods = {self.write_log_entries: self.write_log_entries}
@@ -36,11 +40,20 @@ class MockGRPCTransport(LoggingServiceV2Transport):
         time.sleep(self.latency)
 
 class MockHttpAPI(_LoggingAPI):
+    """
+    Mock for http API implementation.
+    Instead of sending logs to server, introduce artificial delay
+    """
     def __init__(self, client, latency=0):
         self._client = client
         self.api_request = lambda **kwargs: time.sleep(latency)
 
 def _make_client(mock_network=True, use_grpc=True, mock_latency=0):
+    """
+    Create and return a new test client to manage writing logs
+    Can optionally create a real GCP client, or a mock client with artificial network calls
+    Can choose between grpc and http client implementations
+    """
     if not mock_network:
         # use a real client
         client = google.cloud.logging.Client(_use_grpc=use_grpc)
@@ -56,6 +69,7 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0):
         client._logging_api = api
         return client
     else:
+        # create a mock http client
         creds = mock.Mock(spec=google.auth.credentials.Credentials)
         client = google.cloud.logging.Client(project="my-project",  credentials=creds)
         mock_http = MockHttpAPI(client, latency=mock_latency)
@@ -70,7 +84,6 @@ def logger_log(num_logs=100, log_chars=10, use_grpc=True, mock_network=True, moc
     log_message = log_message[:log_chars]
     for i in range(num_logs):
         logger.log(log_message)
-        print(log_message)
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
@@ -80,6 +93,5 @@ class TestPerformance(unittest.TestCase):
         pass
 
     def test_test(self):
-        logger_log(use_grpc=False)
-        self.assertIsNone(None)
+        logger_log()
 
