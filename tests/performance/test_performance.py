@@ -18,6 +18,7 @@ import unittest
 import math
 import mock
 import time
+import itertools
 
 import google.cloud.logging
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
@@ -76,14 +77,20 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0):
         client._logging_api = mock_http
         return client
 
-def logger_log(num_logs=100, log_chars=10, use_grpc=True, mock_network=True, mock_latency=0):
-    client = _make_client(mock_network=mock_network, use_grpc=use_grpc, mock_latency=mock_latency)
+def logger_log(client, num_logs=100, log_chars=10):
     logger = client.logger(name="test_logger")
     log_message = "message "
     log_message = log_message * math.ceil(log_chars / len(log_message))
     log_message = log_message[:log_chars]
     for i in range(num_logs):
         logger.log(log_message)
+
+
+def benchmark():
+    for use_grpc, mock_latency, payload_size in itertools.product([True, False], [0, 0.1], [10, 100]):
+        print(use_grpc, mock_latency, payload_size)
+        client = _make_client(mock_network=True, use_grpc=use_grpc, mock_latency=mock_latency)
+        logger_log(client, log_chars=payload_size)
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
@@ -92,6 +99,12 @@ class TestPerformance(unittest.TestCase):
     def tearDown(self):
         print("Done")
 
-    def test_test(self):
-        logger_log()
+
+    def test_benchmark(self):
+        benchmark()
+
+    # def test_test(self):
+
+    #     client = _make_client(mock_network=True, use_grpc=False, mock_latency=0)
+    #     logger_log(client)
 
