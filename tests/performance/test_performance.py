@@ -82,15 +82,18 @@ def logger_log(client, num_logs=100, log_chars=10):
     log_message = "message "
     log_message = log_message * math.ceil(log_chars / len(log_message))
     log_message = log_message[:log_chars]
+    start = time.perf_counter()
     for i in range(num_logs):
         logger.log(log_message)
+    end = time.perf_counter()
+    return end - start
 
 
 def benchmark():
     for use_grpc, mock_latency, payload_size in itertools.product([True, False], [0, 0.1], [10, 100]):
-        print(use_grpc, mock_latency, payload_size)
         client = _make_client(mock_network=True, use_grpc=use_grpc, mock_latency=mock_latency)
-        logger_log(client, log_chars=payload_size)
+        time = logger_log(client, log_chars=payload_size)
+        print(use_grpc, mock_latency, payload_size, time)
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
