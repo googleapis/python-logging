@@ -128,6 +128,8 @@ def benchmark():
     # print results dataframe
     benchmark_df = pd.DataFrame(results)
     print(benchmark_df)
+    total_time = benchmark_df['exec_time'].sum()
+    print(f"Total Benchmark Time: {total_time:.1f}s")
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
