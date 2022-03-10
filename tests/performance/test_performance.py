@@ -20,6 +20,8 @@ import mock
 import time
 import itertools
 
+import pandas as pd
+
 import google.cloud.logging
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 from google.cloud.logging_v2.services.logging_service_v2.transports import LoggingServiceV2Transport
@@ -92,10 +94,19 @@ def logger_log(client, num_logs=100, payload_size=10, json_payload=False):
 
 
 def benchmark():
+    results = []
     for use_grpc, json_payload, payload_size in itertools.product([True, False], [True, False], [10, 10000]):
+        num_logs = 100
         client = _make_client(mock_network=True, use_grpc=use_grpc)
-        time = logger_log(client, payload_size=payload_size, json_payload=json_payload)
+        time = logger_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
         print(use_grpc, json_payload, payload_size, time)
+        network_str = "grpc" if use_grpc else "http"
+        payload_str = "json" if json_payload else "text"
+        size_str = "small" if payload_size < 100 else "large"
+        result = {"API": "logger.log", "network": network_str, "payload_type": payload_str, "payload_size": size_str, "exec_time":time}
+        results.append(result)
+    benchmark_df = pd.DataFrame(results)
+    print(benchmark_df.to_string(index=False))
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
