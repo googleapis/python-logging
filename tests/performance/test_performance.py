@@ -58,6 +58,7 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
     Can optionally create a real GCP client, or a mock client with artificial network calls
     Can choose between grpc and http client implementations
     """
+    start = time.perf_counter()
     if not mock_network:
         # use a real client
         client = google.cloud.logging.Client(_use_grpc=use_grpc)
@@ -77,7 +78,8 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
         mock_http = MockHttpAPI(client, latency=mock_latency)
         client._logging_api = mock_http
     logger = client.logger(name="test_logger")
-    return client, logger
+    end = time.perf_counter()
+    return client, logger, end-start
 
 def logger_log(logger, num_logs=100, payload_size=10, json_payload=False):
     # build pay load
@@ -112,9 +114,11 @@ def batch_log(logger, num_logs=100, payload_size=10, json_payload=False):
 
 def benchmark():
     results = []
-    grpc_client, grpc_logger = _make_client(mock_network=True, use_grpc=True)
-    http_client, http_logger = _make_client(mock_network=True, use_grpc=False)
-    with tqdm(total=2*2*2, leave=False) as pbar:
+    with tqdm(total=(2*2*2)+2, leave=False) as pbar:
+        grpc_client, grpc_logger, time = _make_client(mock_network=True, use_grpc=True)
+        results.append({"description": f"grpc client setup", "exec_time": time})
+        http_client, http_logger, time = _make_client(mock_network=True, use_grpc=False)
+        results.append({"description": f"http client setup", "exec_time": time})
         for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
             for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
                 for payload_str, payload_val in [('json', True), ('text', False)]:
