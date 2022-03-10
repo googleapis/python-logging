@@ -36,7 +36,7 @@ class MockGRPCTransport(LoggingServiceV2Transport):
     Mock for grpc transport.
     Instead of sending logs to server, introduce artificial delay
     """
-    def __init__(self, latency=0, **kwargs):
+    def __init__(self, latency=0.1, **kwargs):
         self.latency = latency
         self._wrapped_methods = {self.write_log_entries: self.write_log_entries}
 
@@ -48,7 +48,7 @@ class MockHttpAPI(_LoggingAPI):
     Mock for http API implementation.
     Instead of sending logs to server, introduce artificial delay
     """
-    def __init__(self, client, latency=0):
+    def __init__(self, client, latency=0.1):
         self._client = client
         self.api_request = lambda **kwargs: time.sleep(latency)
 
@@ -61,7 +61,6 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
     if not mock_network:
         # use a real client
         client = google.cloud.logging.Client(_use_grpc=use_grpc)
-        return client
     elif use_grpc:
         # create a mock grpc client
         mock_transport = MockGRPCTransport(latency=mock_latency)
@@ -71,16 +70,16 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
         creds = mock.Mock(spec=google.auth.credentials.Credentials)
         client = google.cloud.logging.Client(project="my-project",  credentials=creds)
         client._logging_api = api
-        return client
     else:
         # create a mock http client
         creds = mock.Mock(spec=google.auth.credentials.Credentials)
         client = google.cloud.logging.Client(project="my-project",  credentials=creds)
         mock_http = MockHttpAPI(client, latency=mock_latency)
         client._logging_api = mock_http
-        return client
+    logger = client.logger(name="test_logger")
+    return client, logger
 
-def logger_log(client, num_logs=100, payload_size=10, json_payload=False):
+def logger_log(logger, num_logs=100, payload_size=10, json_payload=False):
     # build pay load
     log_payload = "message "
     log_payload = log_payload * math.ceil(payload_size / len(log_payload))
@@ -89,15 +88,13 @@ def logger_log(client, num_logs=100, payload_size=10, json_payload=False):
         log_payload = {"key": log_payload}
     # start code under test
     start = time.perf_counter()
-    # build logger
-    logger = client.logger(name="test_logger")
     # create logs
     for i in range(num_logs):
         logger.log(log_payload)
     end = time.perf_counter()
     return end - start
 
-def batch_log(client, num_logs=100, payload_size=10, json_payload=False):
+def batch_log(logger, num_logs=100, payload_size=10, json_payload=False):
     # build pay load
     log_payload = "message "
     log_payload = log_payload * math.ceil(payload_size / len(log_payload))
@@ -106,8 +103,6 @@ def batch_log(client, num_logs=100, payload_size=10, json_payload=False):
         log_payload = {"key": log_payload}
     # start code under test
     start = time.perf_counter()
-    # build logger
-    logger = client.logger(name="test_logger")
     # create logs
     with logger.batch() as batch:
         for i in range(num_logs):
@@ -117,25 +112,18 @@ def batch_log(client, num_logs=100, payload_size=10, json_payload=False):
 
 def benchmark():
     results = []
-    # api, use_grpc, json_payload, payload_size
-    tests = list(itertools.product(['logger.log', 'batch.log'], [True, False], [True, False], [10, 10000]))
-    with tqdm(total=len(tests)) as pbar:
-        for api, use_grpc, json_payload, payload_size in tests:
-            num_logs = 100
-            client = _make_client(mock_network=True, use_grpc=use_grpc)
-            if api == 'logger.log':
-                time = logger_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
-            elif api == 'batch.log':
-                time = batch_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
-            else:
-                raise RuntimeError(f"Unknownapi: {api}")
-            network_str = "grpc" if use_grpc else "http"
-            payload_str = "json" if json_payload else "text"
-            size_str = "small" if payload_size < 100 else "large"
-            result = {"API": api, "network": network_str, "payload_type": payload_str, "payload_size": size_str, "exec_time":time}
-            results.append(result)
-            pbar.update()
+    grpc_client, grpc_logger = _make_client(mock_network=True, use_grpc=True)
+    http_client, http_logger = _make_client(mock_network=True, use_grpc=False)
+
+    for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
+        for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
+            for payload_str, payload_val in [('json', True), ('text', False)]:
+                time = fn_val(network_val, payload_size=1000000, json_payload=payload_val)
+                results.append({"description": f"{fn_str} over {network_str} with {payload_str} payload", "exec_time": time})
+
+    # print results dataframe
     benchmark_df = pd.DataFrame(results)
+    print()
     print(benchmark_df.to_string(index=False))
 
 class TestPerformance(unittest.TestCase):
