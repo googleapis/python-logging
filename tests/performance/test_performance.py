@@ -80,13 +80,17 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
         return client
 
 def logger_log(client, num_logs=100, payload_size=10, json_payload=False):
-    logger = client.logger(name="test_logger")
+    # build pay load
     log_payload = "message "
     log_payload = log_payload * math.ceil(payload_size / len(log_payload))
     log_payload = log_payload[:payload_size]
     if json_payload:
         log_payload = {"key": log_payload}
+    # start code under test
     start = time.perf_counter()
+    # build logger
+    logger = client.logger(name="test_logger")
+    # create logs
     for i in range(num_logs):
         logger.log(log_payload)
     end = time.perf_counter()
@@ -99,13 +103,13 @@ def benchmark():
         num_logs = 100
         client = _make_client(mock_network=True, use_grpc=use_grpc)
         time = logger_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
-        print(use_grpc, json_payload, payload_size, time)
         network_str = "grpc" if use_grpc else "http"
         payload_str = "json" if json_payload else "text"
         size_str = "small" if payload_size < 100 else "large"
         result = {"API": "logger.log", "network": network_str, "payload_type": payload_str, "payload_size": size_str, "exec_time":time}
         results.append(result)
     benchmark_df = pd.DataFrame(results)
+    print()
     print(benchmark_df.to_string(index=False))
 
 class TestPerformance(unittest.TestCase):
