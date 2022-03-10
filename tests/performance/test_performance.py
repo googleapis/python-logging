@@ -21,6 +21,7 @@ import time
 import itertools
 
 import pandas as pd
+from tqdm import tqdm
 
 import google.cloud.logging
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
@@ -116,22 +117,25 @@ def batch_log(client, num_logs=100, payload_size=10, json_payload=False):
 
 def benchmark():
     results = []
-    for api, use_grpc, json_payload, payload_size in itertools.product(['logger.log', 'batch.log'], [True, False], [True, False], [10, 10000]):
-        num_logs = 100
-        client = _make_client(mock_network=True, use_grpc=use_grpc)
-        if api == 'logger.log':
-            time = logger_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
-        elif api == 'batch.log':
-            time = batch_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
-        else:
-            raise RuntimeError(f"Unknownapi: {api}")
-        network_str = "grpc" if use_grpc else "http"
-        payload_str = "json" if json_payload else "text"
-        size_str = "small" if payload_size < 100 else "large"
-        result = {"API": api, "network": network_str, "payload_type": payload_str, "payload_size": size_str, "exec_time":time}
-        results.append(result)
+    # api, use_grpc, json_payload, payload_size
+    tests = list(itertools.product(['logger.log', 'batch.log'], [True, False], [True, False], [10, 10000]))
+    with tqdm(total=len(tests)) as pbar:
+        for api, use_grpc, json_payload, payload_size in tests:
+            num_logs = 100
+            client = _make_client(mock_network=True, use_grpc=use_grpc)
+            if api == 'logger.log':
+                time = logger_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
+            elif api == 'batch.log':
+                time = batch_log(client, num_logs=num_logs, payload_size=payload_size, json_payload=json_payload)
+            else:
+                raise RuntimeError(f"Unknownapi: {api}")
+            network_str = "grpc" if use_grpc else "http"
+            payload_str = "json" if json_payload else "text"
+            size_str = "small" if payload_size < 100 else "large"
+            result = {"API": api, "network": network_str, "payload_type": payload_str, "payload_size": size_str, "exec_time":time}
+            results.append(result)
+            pbar.update()
     benchmark_df = pd.DataFrame(results)
-    print()
     print(benchmark_df.to_string(index=False))
 
 class TestPerformance(unittest.TestCase):
