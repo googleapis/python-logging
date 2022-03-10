@@ -117,14 +117,16 @@ def benchmark():
     with tqdm(total=(2*2*2)+2, leave=False) as pbar:
         grpc_client, grpc_logger, time = _make_client(mock_network=True, use_grpc=True)
         results.append({"description": f"grpc client setup", "exec_time": time})
+        pbar.update()
         http_client, http_logger, time = _make_client(mock_network=True, use_grpc=False)
         results.append({"description": f"http client setup", "exec_time": time})
+        pbar.update()
         for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
             for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
                 for payload_str, payload_val in [('json', True), ('text', False)]:
                     time = fn_val(network_val, payload_size=1000000, json_payload=payload_val)
                     results.append({"description": f"{fn_str} over {network_str} with {payload_str} payload", "exec_time": time})
-                    pbar.update(1)
+                    pbar.update()
     # print results dataframe
     benchmark_df = pd.DataFrame(results)
     print(benchmark_df)
