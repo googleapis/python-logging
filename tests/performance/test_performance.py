@@ -114,17 +114,16 @@ def benchmark():
     results = []
     grpc_client, grpc_logger = _make_client(mock_network=True, use_grpc=True)
     http_client, http_logger = _make_client(mock_network=True, use_grpc=False)
-
-    for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-        for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
-            for payload_str, payload_val in [('json', True), ('text', False)]:
-                time = fn_val(network_val, payload_size=1000000, json_payload=payload_val)
-                results.append({"description": f"{fn_str} over {network_str} with {payload_str} payload", "exec_time": time})
-
+    with tqdm(total=2*2*2, leave=False) as pbar:
+        for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
+            for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
+                for payload_str, payload_val in [('json', True), ('text', False)]:
+                    time = fn_val(network_val, payload_size=1000000, json_payload=payload_val)
+                    results.append({"description": f"{fn_str} over {network_str} with {payload_str} payload", "exec_time": time})
+                    pbar.update(1)
     # print results dataframe
     benchmark_df = pd.DataFrame(results)
-    print()
-    print(benchmark_df.to_string(index=False))
+    print(benchmark_df)
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
