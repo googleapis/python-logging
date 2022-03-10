@@ -49,7 +49,7 @@ class MockHttpAPI(_LoggingAPI):
         self._client = client
         self.api_request = lambda **kwargs: time.sleep(latency)
 
-def _make_client(mock_network=True, use_grpc=True, mock_latency=0):
+def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
     """
     Create and return a new test client to manage writing logs
     Can optionally create a real GCP client, or a mock client with artificial network calls
@@ -77,23 +77,25 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0):
         client._logging_api = mock_http
         return client
 
-def logger_log(client, num_logs=100, log_chars=10):
+def logger_log(client, num_logs=100, payload_size=10, json_payload=False):
     logger = client.logger(name="test_logger")
-    log_message = "message "
-    log_message = log_message * math.ceil(log_chars / len(log_message))
-    log_message = log_message[:log_chars]
+    log_payload = "message "
+    log_payload = log_payload * math.ceil(payload_size / len(log_payload))
+    log_payload = log_payload[:payload_size]
+    if json_payload:
+        log_payload = {"key": log_payload}
     start = time.perf_counter()
     for i in range(num_logs):
-        logger.log(log_message)
+        logger.log(log_payload)
     end = time.perf_counter()
     return end - start
 
 
 def benchmark():
-    for use_grpc, mock_latency, payload_size in itertools.product([True, False], [0, 0.1], [10, 100]):
-        client = _make_client(mock_network=True, use_grpc=use_grpc, mock_latency=mock_latency)
-        time = logger_log(client, log_chars=payload_size)
-        print(use_grpc, mock_latency, payload_size, time)
+    for use_grpc, json_payload, payload_size in itertools.product([True, False], [True, False], [10, 10000]):
+        client = _make_client(mock_network=True, use_grpc=use_grpc)
+        time = logger_log(client, payload_size=payload_size, json_payload=json_payload)
+        print(use_grpc, json_payload, payload_size, time)
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
