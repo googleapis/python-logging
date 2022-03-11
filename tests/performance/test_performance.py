@@ -150,13 +150,13 @@ def _profile_to_dataframe(pr, keep_n_rows=20):
     pd.set_option('display.max_colwidth', None)
 
     result = io.StringIO()
-    pstats.Stats(pr,stream=result).print_stats()
+    pstats.Stats(pr,stream=result).sort_stats("cumtime").print_stats()
     result=result.getvalue()
     result='ncalls'+result.split('ncalls')[-1]
     df = pd.DataFrame([x.split(maxsplit=5) for x in result.split('\n')])
     df = df.drop(columns=[1, 2])
     df = df.rename(columns=df.iloc[0]).drop(df.index[0])
-    df = df.sort_values('cumtime', ascending=False)[:keep_n_rows]
+    df = df[:keep_n_rows]
     return df
 
 
