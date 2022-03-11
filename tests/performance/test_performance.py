@@ -57,12 +57,16 @@ class MockHttpAPI(_LoggingAPI):
         self.api_request = lambda **kwargs: time.sleep(latency)
 
 
-def instrument_function(description, profiler, fn, *fn_args, **fn_kwargs):
+def instrument_function(description, profiler, prev_benchmark, fn, *fn_args, **fn_kwargs):
     profiler.enable()
     start = time.perf_counter()
     fn_out = fn(*fn_args, **fn_kwargs)
     end = time.perf_counter()
-    result_dict  = {"description": description, "exec_time": end-start}
+    exec_time = end-start
+    prev_results = prev_benchmark[prev_benchmark['description'] == description]
+    prev_time = prev_results['exec_time'].iloc[0]
+    pass_symbol = "🗸" if exec_time <= (prev_time  *1.1) else "❌"
+    result_dict  = {"description": description, "exec_time": exec_time, "prev_time": prev_time, "diff": exec_time-prev_time, "pass": pass_symbol}
     return result_dict, fn_out
 
 
@@ -122,26 +126,15 @@ def benchmark():
     results = []
     pr = cProfile.Profile()
     with tqdm(total=(2*2*2)+2, leave=False) as pbar:
-        description = "grpc client setup"
-        result, (grpc_client, grpc_logger) = instrument_function(description, pr, _make_client, mock_network=True, use_grpc=True)
-        results.append(result)
-        pbar.update()
-        description = "http client setup"
-        result, (http_client, http_logger) = instrument_function(description, pr, _make_client, mock_network=True, use_grpc=False)
-        results.append(result)
-        pbar.update()
-        for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-            for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
+        for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
+            description = f"{network_str} client setup"
+            result, (client, logger) = instrument_function(description, pr, prev_benchmark, _make_client, mock_network=True, use_grpc=use_grpc)
+            results.append(result)
+            pbar.update()
+            for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
                 for payload_str, payload_val in [('json', True), ('text', False)]:
                     description = f"{fn_str} over {network_str} with {payload_str} payload"
-                    result, _ = instrument_function(description, pr, fn_val, network_val, payload_size=1000000, json_payload=payload_val)
-                    prev_results = prev_benchmark[prev_benchmark['description'] == description]
-                    prev_time = prev_results['exec_time'].iloc[0]
-                    time = result['exec_time']
-                    pass_symbol = "🗸" if time <= (prev_time  *1.1) else "❌"
-                    result['prev_time'] = prev_time
-                    result['diff'] = time-prev_time
-                    result['pass'] = pass_symbol
+                    result, _ = instrument_function(description, pr, prev_benchmark, fn_val, logger, payload_size=1000000, json_payload=payload_val)
                     results.append(result)
                     pbar.update()
     # print results dataframe
