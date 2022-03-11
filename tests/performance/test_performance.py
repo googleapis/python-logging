@@ -20,6 +20,7 @@ import mock
 import time
 import itertools
 import io
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -30,6 +31,9 @@ import pstats
 import google.cloud.logging
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 from google.cloud.logging_v2.services.logging_service_v2.transports import LoggingServiceV2Transport
+from google.cloud.logging.handlers import CloudLoggingHandler
+from google.cloud.logging.handlers import StructuredLogHandler
+from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2._http import _LoggingAPI
 import google.auth.credentials
 from google.cloud.logging_v2 import _gapic
@@ -114,11 +118,29 @@ def batch_log(logger, payload, num_logs=100):
         for i in range(num_logs):
             batch.log(payload)
 
+def structured_log_handler(payload, num_logs=100):
+    stream = io.StringIO()
+    handler = StructuredLogHandler(stream=stream)
+    logger = logging.getLogger("test")
+    logger.addHandler(handler)
+    logger.propagate = False
+    for i in range(num_logs):
+        logger.error(payload)
+
+def _create_payload(payload_size=1000000, json=False):
+    log_payload = "message "
+    log_payload = log_payload * math.ceil(payload_size / len(log_payload))
+    log_payload = log_payload[:payload_size]
+    if json:
+        log_payload = {"key": log_payload}
+    return log_payload
+
+
 def benchmark():
     prev_benchmark, prev_profile = _load_prev_results()
     results = []
     pr = cProfile.Profile()
-    with tqdm(total=(2*2*2)+2, leave=False) as pbar:
+    with tqdm(total=(2*2*2)+2+2, leave=False) as pbar:
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
             description = f"{network_str} client setup"
@@ -130,15 +152,17 @@ def benchmark():
                 for payload_str, is_json_payload in [('json', True), ('text', False)]:
                     description = f"{fn_str} over {network_str} with {payload_str} payload"
                     # build pay load
-                    payload_size = 1000000
-                    log_payload = "message "
-                    log_payload = log_payload * math.ceil(payload_size / len(log_payload))
-                    log_payload = log_payload[:payload_size]
-                    if is_json_payload:
-                        log_payload = {"key": log_payload}
+                    log_payload = _create_payload(is_json_payload)
                     result, _ = instrument_function(description, pr, prev_benchmark, fn_val, logger, log_payload)
                     results.append(result)
                     pbar.update()
+        # test structured logging
+        for payload_str, is_json_payload in [('json', True), ('text', False)]:
+            description = f"StructuredLogHandler with {payload_str} payload"
+            log_payload = _create_payload(json=is_json_payload)
+            result, _ = instrument_function(description, pr, prev_benchmark, structured_log_handler, log_payload)
+            results.append(result)
+            pbar.update()
     # print results dataframe
     benchmark_df = pd.DataFrame(results)
     print(benchmark_df)
