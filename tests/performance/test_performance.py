@@ -56,14 +56,22 @@ class MockHttpAPI(_LoggingAPI):
         self._client = client
         self.api_request = lambda **kwargs: time.sleep(latency)
 
-def _make_client(profile, mock_network=True, use_grpc=True, mock_latency=0.01):
+
+def instrument_function(description, profiler, fn, *fn_args, **fn_kwargs):
+    profiler.enable()
+    start = time.perf_counter()
+    fn_out = fn(*fn_args, **fn_kwargs)
+    end = time.perf_counter()
+    result_dict  = {"description": description, "exec_time": end-start}
+    return result_dict, fn_out
+
+
+def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
     """
     Create and return a new test client to manage writing logs
     Can optionally create a real GCP client, or a mock client with artificial network calls
     Can choose between grpc and http client implementations
     """
-    profile.enable()
-    start = time.perf_counter()
     if not mock_network:
         # use a real client
         client = google.cloud.logging.Client(_use_grpc=use_grpc)
@@ -84,64 +92,57 @@ def _make_client(profile, mock_network=True, use_grpc=True, mock_latency=0.01):
         client._logging_api = mock_http
     logger = client.logger(name="test_logger")
     end = time.perf_counter()
-    profile.disable()
-    return client, logger, end-start
+    return client, logger
 
-def logger_log(logger, profile, num_logs=100, payload_size=10, json_payload=False):
+def logger_log(logger, num_logs=100, payload_size=10, json_payload=False):
     # build pay load
     log_payload = "message "
     log_payload = log_payload * math.ceil(payload_size / len(log_payload))
     log_payload = log_payload[:payload_size]
     if json_payload:
         log_payload = {"key": log_payload}
-    # start code under test
-    profile.enable()
-    start = time.perf_counter()
     # create logs
     for i in range(num_logs):
         logger.log(log_payload)
-    end = time.perf_counter()
-    profile.disable()
-    return end - start
 
-def batch_log(logger, profile, num_logs=100, payload_size=10, json_payload=False):
+def batch_log(logger, num_logs=100, payload_size=10, json_payload=False):
     # build pay load
     log_payload = "message "
     log_payload = log_payload * math.ceil(payload_size / len(log_payload))
     log_payload = log_payload[:payload_size]
     if json_payload:
         log_payload = {"key": log_payload}
-    # start code under test
-    profile.enable()
-    start = time.perf_counter()
     # create logs
     with logger.batch() as batch:
         for i in range(num_logs):
             batch.log(log_payload)
-    end = time.perf_counter()
-    profile.disable()
-    return end - start
 
 def benchmark():
     prev_benchmark, prev_profile = _load_prev_results()
     results = []
     pr = cProfile.Profile()
     with tqdm(total=(2*2*2)+2, leave=False) as pbar:
-        grpc_client, grpc_logger, time = _make_client(pr, mock_network=True, use_grpc=True)
-        results.append({"description": f"grpc client setup", "exec_time": time})
+        description = "grpc client setup"
+        result, (grpc_client, grpc_logger) = instrument_function(description, pr, _make_client, mock_network=True, use_grpc=True)
+        results.append(result)
         pbar.update()
-        http_client, http_logger, time = _make_client(pr, mock_network=True, use_grpc=False)
-        results.append({"description": f"http client setup", "exec_time": time})
+        description = "http client setup"
+        result, (http_client, http_logger) = instrument_function(description, pr, _make_client, mock_network=True, use_grpc=False)
+        results.append(result)
         pbar.update()
         for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
             for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
                 for payload_str, payload_val in [('json', True), ('text', False)]:
-                    time = fn_val(network_val, pr, payload_size=1000000, json_payload=payload_val)
                     description = f"{fn_str} over {network_str} with {payload_str} payload"
+                    result, _ = instrument_function(description, pr, fn_val, network_val, payload_size=1000000, json_payload=payload_val)
                     prev_results = prev_benchmark[prev_benchmark['description'] == description]
                     prev_time = prev_results['exec_time'].iloc[0]
+                    time = result['exec_time']
                     pass_symbol = "🗸" if time <= (prev_time  *1.1) else "❌"
-                    results.append({"description": description, "exec_time": time, "prev_time": prev_time, 'diff': time-prev_time, "pass": pass_symbol})
+                    result['prev_time'] = prev_time
+                    result['diff'] = time-prev_time
+                    result['pass'] = pass_symbol
+                    results.append(result)
                     pbar.update()
     # print results dataframe
     benchmark_df = pd.DataFrame(results)
