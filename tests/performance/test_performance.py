@@ -69,7 +69,7 @@ def instrument_function(description, profiler, prev_benchmark, fn, *fn_args, **f
     exec_time = end-start
     prev_results = prev_benchmark[prev_benchmark['description'] == description]
     prev_time = prev_results['exec_time'].iloc[0]
-    pass_symbol = "🗸" if exec_time <= (prev_time  *1.1) else "❌"
+    pass_symbol = "\u2713" if exec_time <= (prev_time * 1.1) else "\u274c"
     result_dict  = {"description": description, "exec_time": exec_time, "prev_time": prev_time, "diff": exec_time-prev_time, "pass": pass_symbol}
     return result_dict, fn_out
 
@@ -152,6 +152,7 @@ def benchmark():
     print()
     print(profile_df)
     _save_results(benchmark_df, profile_df)
+    return "\u274c" not in benchmark_df['pass'].to_list()
 
 def _profile_to_dataframe(pr, keep_n_rows=25):
     pd.set_option('display.max_colwidth', None)
@@ -185,7 +186,8 @@ class TestPerformance(unittest.TestCase):
 
 
     def test_benchmark(self):
-        benchmark()
+        success = benchmark()
+        self.assertTrue(success, "benchmark failed")
 
     # def test_test(self):
 
