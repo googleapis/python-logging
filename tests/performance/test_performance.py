@@ -66,6 +66,7 @@ def instrument_function(description, profiler, prev_benchmark, fn, *fn_args, **f
     start = time.perf_counter()
     fn_out = fn(*fn_args, **fn_kwargs)
     end = time.perf_counter()
+    profiler.disable()
     exec_time = end-start
     prev_results = prev_benchmark[prev_benchmark['description'] == description]
     prev_time = prev_results['exec_time'].iloc[0]
