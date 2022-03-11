@@ -58,6 +58,10 @@ class MockHttpAPI(_LoggingAPI):
 
 
 def instrument_function(description, profiler, prev_benchmark, fn, *fn_args, **fn_kwargs):
+    """
+    Takes in a function and related data, runs it, and returns a dictionary
+    filled with instrumentation data
+    """
     profiler.enable()
     start = time.perf_counter()
     fn_out = fn(*fn_args, **fn_kwargs)
@@ -127,10 +131,12 @@ def benchmark():
     pr = cProfile.Profile()
     with tqdm(total=(2*2*2)+2, leave=False) as pbar:
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
+            # create clients
             description = f"{network_str} client setup"
             result, (client, logger) = instrument_function(description, pr, prev_benchmark, _make_client, mock_network=True, use_grpc=use_grpc)
             results.append(result)
             pbar.update()
+            # test logger.log and batch.log APIs
             for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
                 for payload_str, payload_val in [('json', True), ('text', False)]:
                     description = f"{fn_str} over {network_str} with {payload_str} payload"
