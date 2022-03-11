@@ -20,6 +20,7 @@ import mock
 import time
 import itertools
 import io
+from pathlib import Path
 
 import pandas as pd
 from tqdm import tqdm
@@ -122,6 +123,7 @@ def batch_log(logger, profile, num_logs=100, payload_size=10, json_payload=False
     return end - start
 
 def benchmark():
+    prev_benchmark, prev_profile = _load_prev_results()
     results = []
     pr = cProfile.Profile()
     with tqdm(total=(2*2*2)+2, leave=False) as pbar:
@@ -135,7 +137,11 @@ def benchmark():
             for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
                 for payload_str, payload_val in [('json', True), ('text', False)]:
                     time = fn_val(network_val, pr, payload_size=1000000, json_payload=payload_val)
-                    results.append({"description": f"{fn_str} over {network_str} with {payload_str} payload", "exec_time": time})
+                    description = f"{fn_str} over {network_str} with {payload_str} payload"
+                    prev_results = prev_benchmark[prev_benchmark['description'] == description]
+                    prev_time = prev_results['exec_time'].iloc[0]
+                    pass_symbol = "🗸" if time <= (prev_time  *1.1) else "❌"
+                    results.append({"description": description, "exec_time": time, "prev_time": prev_time, 'diff': time-prev_time, "pass": pass_symbol})
                     pbar.update()
     # print results dataframe
     benchmark_df = pd.DataFrame(results)
@@ -145,8 +151,9 @@ def benchmark():
     profile_df = _profile_to_dataframe(pr)
     print()
     print(profile_df)
+    _save_results(benchmark_df, profile_df)
 
-def _profile_to_dataframe(pr, keep_n_rows=20):
+def _profile_to_dataframe(pr, keep_n_rows=25):
     pd.set_option('display.max_colwidth', None)
 
     result = io.StringIO()
@@ -159,8 +166,15 @@ def _profile_to_dataframe(pr, keep_n_rows=20):
     df = df[:keep_n_rows]
     return df
 
+def _save_results(benchmark_df, profile_df, save_dir="./performance_test_output"):
+    Path(save_dir).mkdir(parents=True, exist_ok=True)
+    benchmark_df.to_csv(f"{save_dir}/latest_benchmark.csv", index=False)
+    profile_df.to_csv(f"{save_dir}/latest_profile.csv", index=False)
 
-
+def _load_prev_results(load_dir='./performance_test_output'):
+    benchmark_df = pd.read_csv(f"{load_dir}/latest_benchmark.csv")
+    profile_df = pd.read_csv(f"{load_dir}/latest_profile.csv")
+    return benchmark_df, profile_df
 
 class TestPerformance(unittest.TestCase):
     def setUp(self):
