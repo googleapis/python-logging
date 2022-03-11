@@ -55,12 +55,13 @@ class MockHttpAPI(_LoggingAPI):
         self._client = client
         self.api_request = lambda **kwargs: time.sleep(latency)
 
-def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
+def _make_client(profile, mock_network=True, use_grpc=True, mock_latency=0.01):
     """
     Create and return a new test client to manage writing logs
     Can optionally create a real GCP client, or a mock client with artificial network calls
     Can choose between grpc and http client implementations
     """
+    profile.enable()
     start = time.perf_counter()
     if not mock_network:
         # use a real client
@@ -82,9 +83,10 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
         client._logging_api = mock_http
     logger = client.logger(name="test_logger")
     end = time.perf_counter()
+    profile.disable()
     return client, logger, end-start
 
-def logger_log(logger, num_logs=100, payload_size=10, json_payload=False):
+def logger_log(logger, profile, num_logs=100, payload_size=10, json_payload=False):
     # build pay load
     log_payload = "message "
     log_payload = log_payload * math.ceil(payload_size / len(log_payload))
@@ -92,14 +94,16 @@ def logger_log(logger, num_logs=100, payload_size=10, json_payload=False):
     if json_payload:
         log_payload = {"key": log_payload}
     # start code under test
+    profile.enable()
     start = time.perf_counter()
     # create logs
     for i in range(num_logs):
         logger.log(log_payload)
     end = time.perf_counter()
+    profile.disable()
     return end - start
 
-def batch_log(logger, num_logs=100, payload_size=10, json_payload=False):
+def batch_log(logger, profile, num_logs=100, payload_size=10, json_payload=False):
     # build pay load
     log_payload = "message "
     log_payload = log_payload * math.ceil(payload_size / len(log_payload))
@@ -107,34 +111,30 @@ def batch_log(logger, num_logs=100, payload_size=10, json_payload=False):
     if json_payload:
         log_payload = {"key": log_payload}
     # start code under test
+    profile.enable()
     start = time.perf_counter()
     # create logs
     with logger.batch() as batch:
         for i in range(num_logs):
             batch.log(log_payload)
     end = time.perf_counter()
+    profile.disable()
     return end - start
 
 def benchmark():
     results = []
     pr = cProfile.Profile()
     with tqdm(total=(2*2*2)+2, leave=False) as pbar:
-        pr.enable()
-        grpc_client, grpc_logger, time = _make_client(mock_network=True, use_grpc=True)
-        pr.disable()
+        grpc_client, grpc_logger, time = _make_client(pr, mock_network=True, use_grpc=True)
         results.append({"description": f"grpc client setup", "exec_time": time})
         pbar.update()
-        pr.enable()
-        http_client, http_logger, time = _make_client(mock_network=True, use_grpc=False)
-        pr.disable()
+        http_client, http_logger, time = _make_client(pr, mock_network=True, use_grpc=False)
         results.append({"description": f"http client setup", "exec_time": time})
         pbar.update()
         for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
             for network_str, network_val in [('grpc', grpc_logger), ('http', http_logger)]:
                 for payload_str, payload_val in [('json', True), ('text', False)]:
-                    pr.enable()
-                    time = fn_val(network_val, payload_size=1000000, json_payload=payload_val)
-                    pr.disable()
+                    time = fn_val(network_val, pr, payload_size=1000000, json_payload=payload_val)
                     results.append({"description": f"{fn_str} over {network_str} with {payload_str} payload", "exec_time": time})
                     pbar.update()
     # print results dataframe
