@@ -102,28 +102,16 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
     end = time.perf_counter()
     return client, logger
 
-def logger_log(logger, num_logs=100, payload_size=10, json_payload=False):
-    # build pay load
-    log_payload = "message "
-    log_payload = log_payload * math.ceil(payload_size / len(log_payload))
-    log_payload = log_payload[:payload_size]
-    if json_payload:
-        log_payload = {"key": log_payload}
+def logger_log(logger, payload, num_logs=100):
     # create logs
     for i in range(num_logs):
-        logger.log(log_payload)
+        logger.log(payload)
 
-def batch_log(logger, num_logs=100, payload_size=10, json_payload=False):
-    # build pay load
-    log_payload = "message "
-    log_payload = log_payload * math.ceil(payload_size / len(log_payload))
-    log_payload = log_payload[:payload_size]
-    if json_payload:
-        log_payload = {"key": log_payload}
+def batch_log(logger, payload, num_logs=100):
     # create logs
     with logger.batch() as batch:
         for i in range(num_logs):
-            batch.log(log_payload)
+            batch.log(payload)
 
 def benchmark():
     prev_benchmark, prev_profile = _load_prev_results()
@@ -138,9 +126,16 @@ def benchmark():
             pbar.update()
             # test logger.log and batch.log APIs
             for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-                for payload_str, payload_val in [('json', True), ('text', False)]:
+                for payload_str, is_json_payload in [('json', True), ('text', False)]:
                     description = f"{fn_str} over {network_str} with {payload_str} payload"
-                    result, _ = instrument_function(description, pr, prev_benchmark, fn_val, logger, payload_size=1000000, json_payload=payload_val)
+                    # build pay load
+                    payload_size = 1000000
+                    log_payload = "message "
+                    log_payload = log_payload * math.ceil(payload_size / len(log_payload))
+                    log_payload = log_payload[:payload_size]
+                    if is_json_payload:
+                        log_payload = {"key": log_payload}
+                    result, _ = instrument_function(description, pr, prev_benchmark, fn_val, logger, log_payload)
                     results.append(result)
                     pbar.update()
     # print results dataframe
