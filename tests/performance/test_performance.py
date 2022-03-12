@@ -31,6 +31,8 @@ import pstats
 import google.cloud.logging
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
 from google.cloud.logging_v2.services.logging_service_v2.transports import LoggingServiceV2Transport
+from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
+from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging.handlers import CloudLoggingHandler
 from google.cloud.logging.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
@@ -121,7 +123,18 @@ def batch_log(logger, payload, num_logs=100):
 def structured_log_handler(payload, num_logs=100):
     stream = io.StringIO()
     handler = StructuredLogHandler(stream=stream)
-    logger = logging.getLogger("test")
+    logger = logging.getLogger("struct")
+    logger.handlers.clear()
+    logger.addHandler(handler)
+    logger.propagate = False
+    for i in range(num_logs):
+        logger.error(payload)
+
+
+def cloud_log_handler(client, transport, payload, num_logs=100):
+    handler = CloudLoggingHandler(client, transport=transport)
+    logger = logging.getLogger("cloud")
+    logger.handlers.clear()
     logger.addHandler(handler)
     logger.propagate = False
     for i in range(num_logs):
@@ -137,23 +150,29 @@ def _create_payload(payload_size=1000000, json=False):
 
 
 def benchmark():
+    pd.set_option('display.max_colwidth', None)
     prev_benchmark, prev_profile = _load_prev_results()
     results = []
     pr = cProfile.Profile()
-    with tqdm(total=(2*2*2)+2+2, leave=False) as pbar:
+    with tqdm(total=(2*2*2)+2+2+8, leave=False) as pbar:
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
             description = f"{network_str} client setup"
             result, (client, logger) = instrument_function(description, pr, prev_benchmark, _make_client, mock_network=True, use_grpc=use_grpc)
             results.append(result)
             pbar.update()
-            # test logger.log and batch.log APIs
-            for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-                for payload_str, is_json_payload in [('json', True), ('text', False)]:
+            for payload_str, is_json_payload in [('json', True), ('text', False)]:
+                log_payload = _create_payload(is_json_payload)
+                # test logger.log and batch.log APIs
+                for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
                     description = f"{fn_str} over {network_str} with {payload_str} payload"
-                    # build pay load
-                    log_payload = _create_payload(is_json_payload)
                     result, _ = instrument_function(description, pr, prev_benchmark, fn_val, logger, log_payload)
+                    results.append(result)
+                    pbar.update()
+                # test cloud logging handler
+                for transport_str, transport in [('background', BackgroundThreadTransport), ('sync', SyncTransport)]:
+                    description = f"CloudLoggingHandler over {network_str} with {transport_str} transport and {payload_str} payload"
+                    result, _ = instrument_function(description, pr, prev_benchmark, cloud_log_handler, client, transport, log_payload)
                     results.append(result)
                     pbar.update()
         # test structured logging
@@ -175,8 +194,6 @@ def benchmark():
     return "\u274c" not in benchmark_df['pass'].to_list()
 
 def _profile_to_dataframe(pr, keep_n_rows=25):
-    pd.set_option('display.max_colwidth', None)
-
     result = io.StringIO()
     pstats.Stats(pr,stream=result).sort_stats("cumtime").print_stats()
     result=result.getvalue()
