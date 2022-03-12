@@ -183,7 +183,7 @@ def benchmark():
             results.append(result)
             pbar.update()
     # print results dataframe
-    benchmark_df = pd.DataFrame(results)
+    benchmark_df = pd.DataFrame(results).sort_values(by='exec_time', ascending=False)
     print(benchmark_df)
     total_time = benchmark_df['exec_time'].sum()
     print(f"Total Benchmark Time: {total_time:.1f}s")
