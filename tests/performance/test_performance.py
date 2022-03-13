@@ -118,20 +118,6 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
     end = time.perf_counter()
     return client, logger
 
-def logger_log(logger, payload, num_logs=100):
-    # create logs
-    for i in range(num_logs):
-        logger.log(payload)
-
-def batch_log(logger, payload, num_logs=100):
-    # create logs
-    with logger.batch() as batch:
-        for i in range(num_logs):
-            batch.log(payload)
-
-def log_handler(logger, payload, num_logs=100):
-    for i in range(num_logs):
-        logger.error(payload)
 
 def _profile_to_dataframe(pr, keep_n_rows=10):
     result = io.StringIO()
@@ -143,16 +129,6 @@ def _profile_to_dataframe(pr, keep_n_rows=10):
     df = df.rename(columns=df.iloc[0]).drop(df.index[0])
     df = df[:keep_n_rows]
     return df
-
-def _save_results(benchmark_df, profile_df, save_dir="./performance_test_output"):
-    Path(save_dir).mkdir(parents=True, exist_ok=True)
-    benchmark_df.to_csv(f"{save_dir}/latest_benchmark.csv", index=False)
-    profile_df.to_csv(f"{save_dir}/latest_profile.csv", index=False)
-
-def _load_prev_results(load_dir='./performance_test_output'):
-    benchmark_df = pd.read_csv(f"{load_dir}/latest_benchmark.csv")
-    profile_df = pd.read_csv(f"{load_dir}/latest_profile.csv")
-    return benchmark_df, profile_df
 
 class TestPerformance(unittest.TestCase):
 
@@ -201,11 +177,15 @@ class TestPerformance(unittest.TestCase):
         results = []
         pr = cProfile.Profile()
 
+        def profiled_code(logger, payload, num_logs=100):
+            for i in range(num_logs):
+                logger.error(payload)
+
         stream = io.StringIO()
         handler = StructuredLogHandler(stream=stream)
         logger = self._get_logger("struct", handler)
         for payload_size, payload_type, payload in _payloads:
-            exec_time, _ = instrument_function(logger, payload, profiler=pr)(log_handler)
+            exec_time, _ = instrument_function(logger, payload, profiler=pr)(profiled_code)
             result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "exec_time": exec_time}
             results.append(result_dict)
         # print results dataframe
@@ -214,6 +194,11 @@ class TestPerformance(unittest.TestCase):
     def test_cloud_logging_handler_performance(self):
         results = []
         pr = cProfile.Profile()
+
+
+        def profiled_code(logger, payload, num_logs=100):
+            for i in range(num_logs):
+                logger.error(payload)
 
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
@@ -224,7 +209,7 @@ class TestPerformance(unittest.TestCase):
                     handler = CloudLoggingHandler(client, transport=transport)
                     logger = self._get_logger("cloud", handler)
 
-                    exec_time, _ = instrument_function(logger, payload, profiler=pr)(log_handler)
+                    exec_time, _ = instrument_function(logger, payload, profiler=pr)(profiled_code)
                     result_dict  = {"payload_type":payload_type, "payload_size": payload_size, "transport_type":transport_str, "protocol":network_str,  "exec_time": exec_time}
                     results.append(result_dict)
         # print results dataframe
@@ -234,11 +219,15 @@ class TestPerformance(unittest.TestCase):
         results = []
         pr = cProfile.Profile()
 
+        def profiled_code(logger, payload, num_logs=100):
+            for i in range(num_logs):
+                logger.log(payload)
+
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
             client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
             for payload_size, payload_type, payload in _payloads:
-                exec_time, _ = instrument_function(logger, payload, profiler=pr)(logger_log)
+                exec_time, _ = instrument_function(logger, payload, profiler=pr)(profiled_code)
                 result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
                 results.append(result_dict)
         # print results dataframe
@@ -248,11 +237,16 @@ class TestPerformance(unittest.TestCase):
         results = []
         pr = cProfile.Profile()
 
+        def profiled_code(logger, payload, num_logs=100):
+            with logger.batch() as batch:
+                for i in range(num_logs):
+                    batch.log(payload)
+
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
             client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
             for payload_size, payload_type, payload in _payloads:
-                exec_time, _ = instrument_function(logger, payload, profiler=pr)(batch_log)
+                exec_time, _ = instrument_function(logger, payload, profiler=pr)(profiled_code)
                 result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
                 results.append(result_dict)
         # print results dataframe
