@@ -63,7 +63,7 @@ class MockHttpAPI(_LoggingAPI):
         self.api_request = lambda **kwargs: time.sleep(latency)
 
 
-def instrument_function(description, profiler, prev_benchmark, fn, *fn_args, **fn_kwargs):
+def instrument_function(description, profiler, fn, *fn_args, **fn_kwargs):
     """
     Takes in a function and related data, runs it, and returns a dictionary
     filled with instrumentation data
@@ -74,10 +74,7 @@ def instrument_function(description, profiler, prev_benchmark, fn, *fn_args, **f
     end = time.perf_counter()
     profiler.disable()
     exec_time = end-start
-    prev_results = prev_benchmark[prev_benchmark['description'] == description]
-    prev_time = prev_results['exec_time'].iloc[0]
-    pass_symbol = "\u2713" if exec_time <= (prev_time * 1.1) else "\u274c"
-    result_dict  = {"description": description, "exec_time": exec_time, "prev_time": prev_time, "diff": exec_time-prev_time, "pass": pass_symbol}
+    result_dict  = {"description": description, "exec_time": exec_time}
     return result_dict, fn_out
 
 
@@ -149,51 +146,7 @@ def _create_payload(payload_size=1000000, json=False):
     return log_payload
 
 
-def benchmark():
-    pd.set_option('display.max_colwidth', None)
-    prev_benchmark, prev_profile = _load_prev_results()
-    results = []
-    pr = cProfile.Profile()
-    with tqdm(total=(2*2*2)+2+2+8, leave=False) as pbar:
-        for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
-            # create clients
-            description = f"{network_str} client setup"
-            result, (client, logger) = instrument_function(description, pr, prev_benchmark, _make_client, mock_network=True, use_grpc=use_grpc)
-            results.append(result)
-            pbar.update()
-            for payload_str, is_json_payload in [('json', True), ('text', False)]:
-                log_payload = _create_payload(is_json_payload)
-                # test logger.log and batch.log APIs
-                for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-                    description = f"{fn_str} over {network_str} with {payload_str} payload"
-                    result, _ = instrument_function(description, pr, prev_benchmark, fn_val, logger, log_payload)
-                    results.append(result)
-                    pbar.update()
-                # test cloud logging handler
-                for transport_str, transport in [('background', BackgroundThreadTransport), ('sync', SyncTransport)]:
-                    description = f"CloudLoggingHandler over {network_str} with {transport_str} transport and {payload_str} payload"
-                    result, _ = instrument_function(description, pr, prev_benchmark, cloud_log_handler, client, transport, log_payload)
-                    results.append(result)
-                    pbar.update()
-        # test structured logging
-        for payload_str, is_json_payload in [('json', True), ('text', False)]:
-            description = f"StructuredLogHandler with {payload_str} payload"
-            log_payload = _create_payload(json=is_json_payload)
-            result, _ = instrument_function(description, pr, prev_benchmark, structured_log_handler, log_payload)
-            results.append(result)
-            pbar.update()
-    # print results dataframe
-    benchmark_df = pd.DataFrame(results).sort_values(by='exec_time', ascending=False)
-    print(benchmark_df)
-    total_time = benchmark_df['exec_time'].sum()
-    print(f"Total Benchmark Time: {total_time:.1f}s")
-    profile_df = _profile_to_dataframe(pr)
-    print()
-    print(profile_df)
-    _save_results(benchmark_df, profile_df)
-    return "\u274c" not in benchmark_df['pass'].to_list()
-
-def _profile_to_dataframe(pr, keep_n_rows=25):
+def _profile_to_dataframe(pr, keep_n_rows=10):
     result = io.StringIO()
     pstats.Stats(pr,stream=result).sort_stats("cumtime").print_stats()
     result=result.getvalue()
@@ -215,19 +168,80 @@ def _load_prev_results(load_dir='./performance_test_output'):
     return benchmark_df, profile_df
 
 class TestPerformance(unittest.TestCase):
+
     def setUp(self):
-        pass
+        pd.set_option('display.max_colwidth', None)
 
-    def tearDown(self):
-        print("Done")
+    def _print_title(self, title):
+        print()
+        print("="*80)
+        print(f"📈 {title} Performance Tests")
+        print()
+
+    def _print_results(self, profile, results, title):
+        self._print_title(title)
+        benchmark_df = pd.DataFrame(results).sort_values(by='exec_time', ascending=False)
+        print(benchmark_df)
+        total_time = benchmark_df['exec_time'].sum()
+        print(f"Total Benchmark Time: {total_time:.1f}s")
+        profile_df = _profile_to_dataframe(profile)
+        print()
+        print(profile_df)
+
+    def test_client_init_performance(self):
+        results = []
+        pr = cProfile.Profile()
+        for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
+            # create clients
+            description = f"{network_str} client setup"
+            result, (client, logger) = instrument_function(description, pr, _make_client, mock_network=True, use_grpc=use_grpc)
+            results.append(result)
+        # print results dataframe
+        self._print_results(pr, results, "Client Init")
 
 
-    def test_benchmark(self):
-        success = benchmark()
-        self.assertTrue(success, "benchmark failed")
+    def test_structured_logging_performance(self):
+        results = []
+        pr = cProfile.Profile()
+        for payload_str, is_json_payload in [('json', True), ('text', False)]:
+            description = f"StructuredLogHandler with {payload_str} payload"
+            log_payload = _create_payload(json=is_json_payload)
+            result, _ = instrument_function(description, pr, structured_log_handler, log_payload)
+            results.append(result)
+        # print results dataframe
+        self._print_results(pr, results, "StructuredLogHandler")
 
-    # def test_test(self):
+    def test_cloud_logging_handler_performance(self):
+        results = []
+        pr = cProfile.Profile()
 
-    #     client = _make_client(mock_network=True, use_grpc=False, mock_latency=0)
-    #     logger_log(client)
+        for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
+            # create clients
+            client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
+            for payload_str, is_json_payload in [('json', True), ('text', False)]:
+                log_payload = _create_payload(is_json_payload)
+                # test cloud logging handler
+                for transport_str, transport in [('background', BackgroundThreadTransport), ('sync', SyncTransport)]:
+                    description = f"CloudLoggingHandler over {network_str} with {transport_str} transport and {payload_str} payload"
+                    result, _ = instrument_function(description, pr, cloud_log_handler, client, transport, log_payload)
+                    results.append(result)
+        # print results dataframe
+        self._print_results(pr, results, "CloudLoggingHandler")
+
+    def test_logging_performance(self):
+        results = []
+        pr = cProfile.Profile()
+
+        for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
+            # create clients
+            client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
+            for payload_str, is_json_payload in [('json', True), ('text', False)]:
+                log_payload = _create_payload(is_json_payload)
+                # test logger.log and batch.log APIs
+                for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
+                    description = f"{fn_str} over {network_str} with {payload_str} payload"
+                    result, _ = instrument_function(description, pr, fn_val, logger, log_payload)
+                    results.append(result)
+        # print results dataframe
+        self._print_results(pr, results, "Logger.Log")
 
