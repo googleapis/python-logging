@@ -195,10 +195,11 @@ class TestPerformance(unittest.TestCase):
         results = []
         pr = cProfile.Profile()
 
-
-        def profiled_code(logger, payload, num_logs=100):
+        def profiled_code(logger, payload, num_logs=100, flush=False):
             for i in range(num_logs):
                 logger.error(payload)
+            if flush:
+                logger.handlers[0].transport.worker.stop()
 
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
@@ -208,9 +209,8 @@ class TestPerformance(unittest.TestCase):
                 for transport_str, transport in [('background', BackgroundThreadTransport), ('sync', SyncTransport)]:
                     handler = CloudLoggingHandler(client, transport=transport)
                     logger = self._get_logger("cloud", handler)
-
-                    exec_time, _ = instrument_function(logger, payload, profiler=pr)(profiled_code)
-                    result_dict  = {"payload_type":payload_type, "payload_size": payload_size, "transport_type":transport_str, "protocol":network_str,  "exec_time": exec_time}
+                    exec_time, _ = instrument_function(logger, payload, flush=(transport_str=="background"), profiler=pr)(profiled_code)
+                    result_dict  = {"payload_type":payload_type, "payload_size": payload_size, "transport_type":transport_str, "protocol":network_str, "exec_time": exec_time}
                     results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "CloudLoggingHandler")
