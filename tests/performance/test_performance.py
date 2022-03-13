@@ -73,24 +73,21 @@ class MockHttpAPI(_LoggingAPI):
         self._client = client
         self.api_request = lambda **kwargs: time.sleep(latency)
 
-
-def instrument_function(profiler, fn, *fn_args, **fn_kwargs):
+def instrument_function(*args, **kwargs):
     """
-    Takes in a function and related data, runs it, and returns a dictionary
-    filled with instrumentation data
+    Decorator that takes in a function and returns timing data, 
+    along with the functions outpu
     """
-    profiler.enable()
-    start = time.perf_counter()
-    fn_out = fn(*fn_args, **fn_kwargs)
-    end = time.perf_counter()
-    profiler.disable()
-    exec_time = end-start
-    # prev_results = prev_benchmark[prev_benchmark['description'] == description]
-    # prev_time = prev_results['exec_time'].iloc[0]
-    # pass_symbol = 100#"\u2713" if exec_time <= (prev_time * 1.1) else "\u274c"
-    # result_dict  = {"description": description, "exec_time": exec_time, "prev_time": prev_time, "diff": exec_time-prev_time, "pass": pass_symbol}
-    # result_dict  = {"description": description, "exec_time": exec_time}
-    return exec_time, fn_out
+    def inner(func):
+        profiler = kwargs.pop('profiler')
+        profiler.enable()
+        start = time.perf_counter()
+        func_output = func(*args, **kwargs)
+        end = time.perf_counter()
+        profiler.disable()
+        exec_time = end-start
+        return exec_time, func_output
+    return inner
 
 
 def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
@@ -193,7 +190,7 @@ class TestPerformance(unittest.TestCase):
         pr = cProfile.Profile()
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
-            exec_time, (client, logger) = instrument_function(pr, _make_client, mock_network=True, use_grpc=use_grpc)
+            exec_time, (client, logger) = instrument_function(mock_network=True, use_grpc=use_grpc, profiler=pr)(_make_client)
             result_dict  = {"protocol":network_str, "exec_time": exec_time}
             results.append(result_dict)
         # print results dataframe
@@ -208,7 +205,7 @@ class TestPerformance(unittest.TestCase):
         handler = StructuredLogHandler(stream=stream)
         logger = self._get_logger("struct", handler)
         for payload_size, payload_type, payload in _payloads:
-            exec_time, _ = instrument_function(pr, log_handler, logger, payload)
+            exec_time, _ = instrument_function(logger, payload, profiler=pr)(log_handler)
             result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "exec_time": exec_time}
             results.append(result_dict)
         # print results dataframe
@@ -227,7 +224,7 @@ class TestPerformance(unittest.TestCase):
                     handler = CloudLoggingHandler(client, transport=transport)
                     logger = self._get_logger("cloud", handler)
 
-                    exec_time, _ = instrument_function(pr, log_handler, logger, payload)
+                    exec_time, _ = instrument_function(logger, payload, profiler=pr)(log_handler)
                     result_dict  = {"payload_type":payload_type, "payload_size": payload_size, "transport_type":transport_str, "protocol":network_str,  "exec_time": exec_time}
                     results.append(result_dict)
         # print results dataframe
@@ -241,7 +238,7 @@ class TestPerformance(unittest.TestCase):
             # create clients
             client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
             for payload_size, payload_type, payload in _payloads:
-                exec_time, _ = instrument_function(pr, logger_log, logger, payload)
+                exec_time, _ = instrument_function(logger, payload, profiler=pr)(logger_log)
                 result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
                 results.append(result_dict)
         # print results dataframe
@@ -255,7 +252,7 @@ class TestPerformance(unittest.TestCase):
             # create clients
             client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
             for payload_size, payload_type, payload in _payloads:
-                exec_time, _ = instrument_function(pr, batch_log, logger, payload)
+                exec_time, _ = instrument_function(logger, payload, profiler=pr)(batch_log)
                 result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
                 results.append(result_dict)
         # print results dataframe
