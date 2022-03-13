@@ -27,6 +27,10 @@ import pandas as pd
 from tqdm import tqdm
 import cProfile
 import pstats
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+import rich
 
 import google.cloud.logging
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
@@ -172,20 +176,22 @@ class TestPerformance(unittest.TestCase):
     def setUp(self):
         pd.set_option('display.max_colwidth', None)
 
-    def _print_title(self, title):
-        print()
-        print("="*80)
-        print(f"📈 {title} Performance Tests")
-        print()
 
     def _print_results(self, profile, results, title):
-        self._print_title(title)
+        console = Console()
+        # print header
+        print()
+        rich.print(Panel(f"[blue]{title} Performance Tests"))
+        # print bnchmark results
+        rich.print("[cyan]Benchmark")
         benchmark_df = pd.DataFrame(results).sort_values(by='exec_time', ascending=False)
         print(benchmark_df)
         total_time = benchmark_df['exec_time'].sum()
         print(f"Total Benchmark Time: {total_time:.1f}s")
-        profile_df = _profile_to_dataframe(profile)
+        # print profile information
         print()
+        rich.print("[cyan]Breakdown by Function")
+        profile_df = _profile_to_dataframe(profile)
         print(profile_df)
 
     def test_client_init_performance(self):
