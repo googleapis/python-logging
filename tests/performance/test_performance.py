@@ -44,6 +44,13 @@ from google.cloud.logging_v2._http import _LoggingAPI
 import google.auth.credentials
 from google.cloud.logging_v2 import _gapic
 
+_small_text_payload = "hello world"
+_large_text_payload = "abcfefghi " * 1000000
+_small_json_payload = {'json_key': "hello world"}
+_large_json_payload = {f'key_{str(key)}':val for key,val in zip(range(100), ["abcdefghij"*10000 for i in range(100)])}
+_payloads = [('small', 'text', _small_text_payload), ('large', 'text', _large_text_payload), ('small', 'json', _small_json_payload), ('large', 'json', _large_json_payload)]
+
+
 
 class MockGRPCTransport(LoggingServiceV2Transport):
     """
@@ -120,34 +127,9 @@ def batch_log(logger, payload, num_logs=100):
         for i in range(num_logs):
             batch.log(payload)
 
-def structured_log_handler(payload, num_logs=100):
-    stream = io.StringIO()
-    handler = StructuredLogHandler(stream=stream)
-    logger = logging.getLogger("struct")
-    logger.handlers.clear()
-    logger.addHandler(handler)
-    logger.propagate = False
+def log_handler(logger, payload, num_logs=100):
     for i in range(num_logs):
         logger.error(payload)
-
-
-def cloud_log_handler(client, transport, payload, num_logs=100):
-    handler = CloudLoggingHandler(client, transport=transport)
-    logger = logging.getLogger("cloud")
-    logger.handlers.clear()
-    logger.addHandler(handler)
-    logger.propagate = False
-    for i in range(num_logs):
-        logger.error(payload)
-
-def _create_payload(payload_size=1000000, json=False):
-    log_payload = "message "
-    log_payload = log_payload * math.ceil(payload_size / len(log_payload))
-    log_payload = log_payload[:payload_size]
-    if json:
-        log_payload = {"key": log_payload}
-    return log_payload
-
 
 def _profile_to_dataframe(pr, keep_n_rows=10):
     result = io.StringIO()
@@ -193,6 +175,14 @@ class TestPerformance(unittest.TestCase):
         profile_df = _profile_to_dataframe(profile)
         print(profile_df)
 
+    def _get_logger(self, name, handler):
+        logger = logging.getLogger(name)
+        logger.handlers.clear()
+        logger.addHandler(handler)
+        logger.propagate = False
+        return logger
+
+
     def test_client_init_performance(self):
         results = []
         pr = cProfile.Profile()
@@ -208,10 +198,13 @@ class TestPerformance(unittest.TestCase):
     def test_structured_logging_performance(self):
         results = []
         pr = cProfile.Profile()
-        for payload_str, is_json_payload in [('json', True), ('text', False)]:
-            log_payload = _create_payload(json=is_json_payload)
-            exec_time, _ = instrument_function(pr, structured_log_handler, log_payload)
-            result_dict  = {"payload_type":payload_str, "exec_time": exec_time}
+
+        stream = io.StringIO()
+        handler = StructuredLogHandler(stream=stream)
+        logger = self._get_logger("struct", handler)
+        for payload_size, payload_type, payload in _payloads:
+            exec_time, _ = instrument_function(pr, log_handler, logger, payload)
+            result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "exec_time": exec_time}
             results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "StructuredLogHandler")
@@ -223,12 +216,14 @@ class TestPerformance(unittest.TestCase):
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
             client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
-            for payload_str, is_json_payload in [('json', True), ('text', False)]:
-                log_payload = _create_payload(is_json_payload)
+            for payload_size, payload_type, payload in _payloads:
                 # test cloud logging handler
                 for transport_str, transport in [('background', BackgroundThreadTransport), ('sync', SyncTransport)]:
-                    exec_time, _ = instrument_function(pr, cloud_log_handler, client, transport, log_payload)
-                    result_dict  = {"payload_type":payload_str, "transport_type":transport_str, "protocol":network_str,  "exec_time": exec_time}
+                    handler = CloudLoggingHandler(client, transport=transport)
+                    logger = self._get_logger("cloud", handler)
+
+                    exec_time, _ = instrument_function(pr, log_handler, logger, payload)
+                    result_dict  = {"payload_type":payload_type, "payload_size": payload_size, "transport_type":transport_str, "protocol":network_str,  "exec_time": exec_time}
                     results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "CloudLoggingHandler")
@@ -240,12 +235,11 @@ class TestPerformance(unittest.TestCase):
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
             client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
-            for payload_str, is_json_payload in [('json', True), ('text', False)]:
-                log_payload = _create_payload(is_json_payload)
+            for payload_size, payload_type, payload in _payloads:
                 # test logger.log and batch.log APIs
                 for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-                    exec_time, _ = instrument_function(pr, fn_val, logger, log_payload)
-                    result_dict  = {"API":fn_str, "payload_type":payload_str, "protocol":network_str,  "exec_time": exec_time}
+                    exec_time, _ = instrument_function(pr, fn_val, logger, payload)
+                    result_dict  = {"API":fn_str, "payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
                     results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "Logger.Log")
