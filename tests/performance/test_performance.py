@@ -24,7 +24,6 @@ import logging
 from pathlib import Path
 
 import pandas as pd
-from tqdm import tqdm
 import cProfile
 import pstats
 from rich.console import Console

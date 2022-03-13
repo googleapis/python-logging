@@ -206,11 +206,9 @@ def performance(session):
     # virtualenv's dist-packages.
     session.install(
         "mock",
+        "pandas",
+        "rich",
         "pytest",
-        "google-cloud-testutils",
-        "google-cloud-bigquery",
-        "google-cloud-pubsub",
-        "google-cloud-storage",
         "google-cloud-testutils",
         "-c",
         constraints_path,
