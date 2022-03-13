@@ -85,6 +85,11 @@ def instrument_function(profiler, fn, *fn_args, **fn_kwargs):
     end = time.perf_counter()
     profiler.disable()
     exec_time = end-start
+    # prev_results = prev_benchmark[prev_benchmark['description'] == description]
+    # prev_time = prev_results['exec_time'].iloc[0]
+    # pass_symbol = 100#"\u2713" if exec_time <= (prev_time * 1.1) else "\u274c"
+    # result_dict  = {"description": description, "exec_time": exec_time, "prev_time": prev_time, "diff": exec_time-prev_time, "pass": pass_symbol}
+    # result_dict  = {"description": description, "exec_time": exec_time}
     return exec_time, fn_out
 
 
@@ -236,11 +241,24 @@ class TestPerformance(unittest.TestCase):
             # create clients
             client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
             for payload_size, payload_type, payload in _payloads:
-                # test logger.log and batch.log APIs
-                for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-                    exec_time, _ = instrument_function(pr, fn_val, logger, payload)
-                    result_dict  = {"API":fn_str, "payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
-                    results.append(result_dict)
+                exec_time, _ = instrument_function(pr, logger_log, logger, payload)
+                result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
+                results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "Logger.Log")
+
+    def test_batch_performance(self):
+        results = []
+        pr = cProfile.Profile()
+
+        for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
+            # create clients
+            client, logger = _make_client(mock_network=True, use_grpc=use_grpc)
+            for payload_size, payload_type, payload in _payloads:
+                exec_time, _ = instrument_function(pr, batch_log, logger, payload)
+                result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
+                results.append(result_dict)
+        # print results dataframe
+        self._print_results(pr, results, "Batch.Log")
+
 
