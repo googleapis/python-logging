@@ -126,9 +126,10 @@ class TestPerformance(unittest.TestCase):
         pd.set_option('display.max_colwidth', None)
 
 
-    def _print_results(self, profile, results, title, profile_rows=10):
+    def _print_results(self, profile, results, time_limit, title, profile_rows=10):
         """
         Print profile and benchmark results ater completing performance tests
+        Returns the combined time for all tests
         """
         console = Console()
         # print header
@@ -139,7 +140,10 @@ class TestPerformance(unittest.TestCase):
         benchmark_df = pd.DataFrame(results).sort_values(by='exec_time', ascending=False)
         print(benchmark_df)
         total_time = benchmark_df['exec_time'].sum()
-        print(f"Total Benchmark Time: {total_time:.1f}s")
+        if total_time <= time_limit:
+            rich.print(f"Total Benchmark Time:[green] {total_time:.2f}s (limit: {time_limit:.1f}s) \u2705")
+        else:
+            rich.print(f"Total Benchmark Time:[red] {total_time:.2f}s (limit: {time_limit:.1f}s) \u274c")
         # print profile information
         print()
         rich.print("[cyan]Breakdown by Function")
@@ -152,6 +156,7 @@ class TestPerformance(unittest.TestCase):
         df = df.rename(columns=df.iloc[0]).drop(df.index[0])
         profile_df = df[:profile_rows]
         print(profile_df)
+        return total_time
 
     def _get_logger(self, name, handler):
         """
@@ -164,7 +169,7 @@ class TestPerformance(unittest.TestCase):
         return logger
 
 
-    def test_client_init_performance(self):
+    def test_client_init_performance(self, time_limit=0.25):
         """
         Test the performance of initializing a new client
 
@@ -179,10 +184,11 @@ class TestPerformance(unittest.TestCase):
             result_dict  = {"protocol":network_str, "exec_time": exec_time}
             results.append(result_dict)
         # print results dataframe
-        self._print_results(pr, results, "Client Init")
+        total_time = self._print_results(pr, results, time_limit, "Client Init")
+        self.assertLessEqual(total_time, time_limit)
 
 
-    def test_structured_logging_performance(self):
+    def test_structured_logging_performance(self, time_limit=1):
         """
         Test the performance of StructuredLoggingHandler
 
@@ -205,9 +211,10 @@ class TestPerformance(unittest.TestCase):
             result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "exec_time": exec_time}
             results.append(result_dict)
         # print results dataframe
-        self._print_results(pr, results, "StructuredLogHandler")
+        total_time = self._print_results(pr, results, time_limit, "StructuredLogHandler")
+        self.assertLessEqual(total_time, time_limit)
 
-    def test_cloud_logging_handler_performance(self):
+    def test_cloud_logging_handler_performance(self, time_limit=10):
         """
         Test the performance of CloudLoggingHandler
 
@@ -238,9 +245,10 @@ class TestPerformance(unittest.TestCase):
                     result_dict  = {"payload_type":payload_type, "payload_size": payload_size, "transport_type":transport_str, "protocol":network_str, "exec_time": exec_time}
                     results.append(result_dict)
         # print results dataframe
-        self._print_results(pr, results, "CloudLoggingHandler")
+        total_time = self._print_results(pr, results, time_limit, "CloudLoggingHandler")
+        self.assertLessEqual(total_time, time_limit)
 
-    def test_logging_performance(self):
+    def test_logging_performance(self, time_limit=10):
         """
         Test the performance of logger
 
@@ -264,9 +272,10 @@ class TestPerformance(unittest.TestCase):
                 result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
                 results.append(result_dict)
         # print results dataframe
-        self._print_results(pr, results, "Logger.Log")
+        total_time = self._print_results(pr, results, time_limit, "Logger.Log")
+        self.assertLessEqual(total_time, time_limit)
 
-    def test_batch_performance(self):
+    def test_batch_performance(self, time_limit=1):
         """
         Test the performance of logger
 
@@ -291,6 +300,7 @@ class TestPerformance(unittest.TestCase):
                 result_dict  = {"payload_type":payload_type, "payload_size":payload_size, "protocol":network_str,  "exec_time": exec_time}
                 results.append(result_dict)
         # print results dataframe
-        self._print_results(pr, results, "Batch.Log")
+        total_time = self._print_results(pr, results, time_limit, "Batch.Log")
+        self.assertLessEqual(total_time, time_limit)
 
 
