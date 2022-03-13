@@ -67,7 +67,7 @@ class MockHttpAPI(_LoggingAPI):
         self.api_request = lambda **kwargs: time.sleep(latency)
 
 
-def instrument_function(description, profiler, fn, *fn_args, **fn_kwargs):
+def instrument_function(profiler, fn, *fn_args, **fn_kwargs):
     """
     Takes in a function and related data, runs it, and returns a dictionary
     filled with instrumentation data
@@ -78,8 +78,7 @@ def instrument_function(description, profiler, fn, *fn_args, **fn_kwargs):
     end = time.perf_counter()
     profiler.disable()
     exec_time = end-start
-    result_dict  = {"description": description, "exec_time": exec_time}
-    return result_dict, fn_out
+    return exec_time, fn_out
 
 
 def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
@@ -199,9 +198,9 @@ class TestPerformance(unittest.TestCase):
         pr = cProfile.Profile()
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
             # create clients
-            description = f"{network_str} client setup"
-            result, (client, logger) = instrument_function(description, pr, _make_client, mock_network=True, use_grpc=use_grpc)
-            results.append(result)
+            exec_time, (client, logger) = instrument_function(pr, _make_client, mock_network=True, use_grpc=use_grpc)
+            result_dict  = {"protocol":network_str, "exec_time": exec_time}
+            results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "Client Init")
 
@@ -210,10 +209,10 @@ class TestPerformance(unittest.TestCase):
         results = []
         pr = cProfile.Profile()
         for payload_str, is_json_payload in [('json', True), ('text', False)]:
-            description = f"StructuredLogHandler with {payload_str} payload"
             log_payload = _create_payload(json=is_json_payload)
-            result, _ = instrument_function(description, pr, structured_log_handler, log_payload)
-            results.append(result)
+            exec_time, _ = instrument_function(pr, structured_log_handler, log_payload)
+            result_dict  = {"payload_type":payload_str, "exec_time": exec_time}
+            results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "StructuredLogHandler")
 
@@ -228,9 +227,9 @@ class TestPerformance(unittest.TestCase):
                 log_payload = _create_payload(is_json_payload)
                 # test cloud logging handler
                 for transport_str, transport in [('background', BackgroundThreadTransport), ('sync', SyncTransport)]:
-                    description = f"CloudLoggingHandler over {network_str} with {transport_str} transport and {payload_str} payload"
-                    result, _ = instrument_function(description, pr, cloud_log_handler, client, transport, log_payload)
-                    results.append(result)
+                    exec_time, _ = instrument_function(pr, cloud_log_handler, client, transport, log_payload)
+                    result_dict  = {"payload_type":payload_str, "transport_type":transport_str, "protocol":network_str,  "exec_time": exec_time}
+                    results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "CloudLoggingHandler")
 
@@ -245,9 +244,9 @@ class TestPerformance(unittest.TestCase):
                 log_payload = _create_payload(is_json_payload)
                 # test logger.log and batch.log APIs
                 for fn_str, fn_val in [('logger.log', logger_log), ('batch.log', batch_log)]:
-                    description = f"{fn_str} over {network_str} with {payload_str} payload"
-                    result, _ = instrument_function(description, pr, fn_val, logger, log_payload)
-                    results.append(result)
+                    exec_time, _ = instrument_function(pr, fn_val, logger, log_payload)
+                    result_dict  = {"API":fn_str, "payload_type":payload_str, "protocol":network_str,  "exec_time": exec_time}
+                    results.append(result_dict)
         # print results dataframe
         self._print_results(pr, results, "Logger.Log")
 
