@@ -119,24 +119,17 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
     return client, logger
 
 
-def _profile_to_dataframe(pr, keep_n_rows=10):
-    result = io.StringIO()
-    pstats.Stats(pr,stream=result).sort_stats("cumtime").print_stats()
-    result=result.getvalue()
-    result='ncalls'+result.split('ncalls')[-1]
-    df = pd.DataFrame([x.split(maxsplit=5) for x in result.split('\n')])
-    df = df.drop(columns=[1, 2])
-    df = df.rename(columns=df.iloc[0]).drop(df.index[0])
-    df = df[:keep_n_rows]
-    return df
-
 class TestPerformance(unittest.TestCase):
 
     def setUp(self):
+        # show entire table when printing pandas dataframes
         pd.set_option('display.max_colwidth', None)
 
 
-    def _print_results(self, profile, results, title):
+    def _print_results(self, profile, results, title, profile_rows=10):
+        """
+        Print profile and benchmark results ater completing performance tests
+        """
         console = Console()
         # print header
         print()
@@ -150,10 +143,20 @@ class TestPerformance(unittest.TestCase):
         # print profile information
         print()
         rich.print("[cyan]Breakdown by Function")
-        profile_df = _profile_to_dataframe(profile)
+        result = io.StringIO()
+        pstats.Stats(profile, stream=result).sort_stats("cumtime").print_stats()
+        result=result.getvalue()
+        result='ncalls'+result.split('ncalls')[-1]
+        df = pd.DataFrame([x.split(maxsplit=5) for x in result.split('\n')])
+        df = df.drop(columns=[1, 2])
+        df = df.rename(columns=df.iloc[0]).drop(df.index[0])
+        profile_df = df[:profile_rows]
         print(profile_df)
 
     def _get_logger(self, name, handler):
+        """
+        Create a fresh logger class with a specified handler
+        """
         logger = logging.getLogger(name)
         logger.handlers.clear()
         logger.addHandler(handler)
@@ -162,6 +165,12 @@ class TestPerformance(unittest.TestCase):
 
 
     def test_client_init_performance(self):
+        """
+        Test the performance of initializing a new client
+
+        tested variations:
+        - grpc vs http network protocols
+        """
         results = []
         pr = cProfile.Profile()
         for use_grpc, network_str in [(True, 'grpc'), (False, 'http')]:
@@ -174,6 +183,13 @@ class TestPerformance(unittest.TestCase):
 
 
     def test_structured_logging_performance(self):
+        """
+        Test the performance of StructuredLoggingHandler
+
+        tested variations:
+        - text vs json payloads
+        - small vs large payloads
+        """
         results = []
         pr = cProfile.Profile()
 
@@ -192,6 +208,15 @@ class TestPerformance(unittest.TestCase):
         self._print_results(pr, results, "StructuredLogHandler")
 
     def test_cloud_logging_handler_performance(self):
+        """
+        Test the performance of CloudLoggingHandler
+
+        tested variations:
+        - grpc vs http network protocols
+        - background vs synchronous transport
+        - text vs json payloads
+        - small vs large payloads
+        """
         results = []
         pr = cProfile.Profile()
 
@@ -216,6 +241,14 @@ class TestPerformance(unittest.TestCase):
         self._print_results(pr, results, "CloudLoggingHandler")
 
     def test_logging_performance(self):
+        """
+        Test the performance of logger
+
+        tested variations:
+        - grpc vs http network protocols
+        - text vs json payloads
+        - small vs large payloads
+        """
         results = []
         pr = cProfile.Profile()
 
@@ -234,6 +267,14 @@ class TestPerformance(unittest.TestCase):
         self._print_results(pr, results, "Logger.Log")
 
     def test_batch_performance(self):
+        """
+        Test the performance of logger
+
+        tested variations:
+        - grpc vs http network protocols
+        - text vs json payloads
+        - small vs large payloads
+        """
         results = []
         pr = cProfile.Profile()
 
