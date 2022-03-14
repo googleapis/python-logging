@@ -44,7 +44,7 @@ import google.auth.credentials
 from google.cloud.logging_v2 import _gapic
 
 _small_text_payload = "hello world"
-_large_text_payload = "abcfefghi " * 1000000
+_large_text_payload = "abcfefghi " * 100000
 _small_json_payload = {'json_key': "hello world"}
 _large_json_payload = {f'key_{str(key)}':val for key,val in zip(range(100), ["abcdefghij"*10000 for i in range(100)])}
 _payloads = [('small', 'text', _small_text_payload), ('large', 'text', _large_text_payload), ('small', 'json', _small_json_payload), ('large', 'json', _large_json_payload)]
@@ -125,7 +125,7 @@ class TestPerformance(unittest.TestCase):
         pd.set_option('display.max_colwidth', None)
 
 
-    def _print_results(self, profile, results, time_limit, title, profile_rows=10):
+    def _print_results(self, profile, results, time_limit, title, profile_rows=25):
         """
         Print profile and benchmark results ater completing performance tests
         Returns the combined time for all tests
@@ -187,7 +187,7 @@ class TestPerformance(unittest.TestCase):
         self.assertLessEqual(total_time, time_limit)
 
 
-    def test_structured_logging_performance(self, time_limit=1):
+    def test_structured_logging_performance(self, time_limit=10):
         """
         Test the performance of StructuredLoggingHandler
 
@@ -213,7 +213,7 @@ class TestPerformance(unittest.TestCase):
         total_time = self._print_results(pr, results, time_limit, "StructuredLogHandler")
         self.assertLessEqual(total_time, time_limit)
 
-    def test_cloud_logging_handler_performance(self, time_limit=10):
+    def test_cloud_logging_handler_performance(self, time_limit=30):
         """
         Test the performance of CloudLoggingHandler
 
@@ -247,7 +247,7 @@ class TestPerformance(unittest.TestCase):
         total_time = self._print_results(pr, results, time_limit, "CloudLoggingHandler")
         self.assertLessEqual(total_time, time_limit)
 
-    def test_logging_performance(self, time_limit=10):
+    def test_logging_performance(self, time_limit=15):
         """
         Test the performance of logger
 
@@ -274,7 +274,7 @@ class TestPerformance(unittest.TestCase):
         total_time = self._print_results(pr, results, time_limit, "Logger.Log")
         self.assertLessEqual(total_time, time_limit)
 
-    def test_batch_performance(self, time_limit=1):
+    def test_batch_performance(self, time_limit=10):
         """
         Test the performance of logger
 
