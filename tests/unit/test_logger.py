@@ -181,7 +181,7 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
 
     def test_log_text_w_unicode_and_default_labels(self):
-        TEXT = u"TEXT"
+        TEXT = "TEXT"
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
             {

@@ -450,7 +450,7 @@ class Test__parse_log_entry(unittest.TestCase):
     def test_simple(self):
         from google.cloud.logging_v2.proto.log_entry_pb2 import LogEntry
 
-        entry_pb = LogEntry(log_name=u"lol-jk", text_payload=u"bah humbug")
+        entry_pb = LogEntry(log_name="lol-jk", text_payload="bah humbug")
         result = self._call_fut(entry_pb)
         expected = {"logName": entry_pb.log_name, "textPayload": entry_pb.text_payload}
         self.assertEqual(result, expected)
@@ -506,11 +506,11 @@ class Test__parse_log_entry(unittest.TestCase):
 
         type_url = "type.googleapis.com/" + type_name
         field_name = "foo"
-        field_value = u"Bar"
+        field_value = "Bar"
         struct_pb = Struct(fields={field_name: Value(string_value=field_value)})
         any_pb = any_pb2.Any(type_url=type_url, value=struct_pb.SerializeToString())
 
-        entry_pb = LogEntry(proto_payload=any_pb, log_name=u"all-good")
+        entry_pb = LogEntry(proto_payload=any_pb, log_name="all-good")
         result = self._call_fut(entry_pb)
         expected_proto = {
             "logName": entry_pb.log_name,
@@ -566,9 +566,9 @@ class Test__log_entry_mapping_to_pb(unittest.TestCase):
 
         type_url = "type.googleapis.com/" + type_name
         field_name = "foo"
-        field_value = u"Bar"
+        field_value = "Bar"
         json_mapping = {
-            "logName": u"hi-everybody",
+            "logName": "hi-everybody",
             "protoPayload": {"@type": type_url, "value": {field_name: field_value}},
         }
         # Convert to a valid LogEntry.

@@ -15,6 +15,7 @@
 import datetime
 import logging
 import unittest
+import sys
 
 from google.api_core.exceptions import BadGateway
 from google.api_core.exceptions import Conflict
@@ -425,11 +426,19 @@ class TestLogging(unittest.TestCase):
         publisher = pubsub_v1.PublisherClient()
         topic_path = publisher.topic_path(Config.CLIENT.project, TOPIC_NAME)
         self.to_delete.append(_DeleteWrapper(publisher, topic_path))
-        publisher.create_topic(topic_path)
+        if sys.version_info.major == 2:
+            publisher.create_topic(topic_path)
+            policy = publisher.get_iam_policy(topic_path)
+        else:
+            publisher.create_topic(request={"name": topic_path})
+            policy = publisher.get_iam_policy(request={"resource": topic_path})
 
-        policy = publisher.get_iam_policy(topic_path)
         policy.bindings.add(role="roles/owner", members=["group:cloud-logs@google.com"])
-        publisher.set_iam_policy(topic_path, policy)
+
+        if sys.version_info.major == 2:
+            publisher.set_iam_policy(topic_path, policy)
+        else:
+            publisher.set_iam_policy(request={"resource": topic_path, "policy": policy})
 
         TOPIC_URI = "pubsub.googleapis.com/%s" % (topic_path,)
 
@@ -536,4 +545,7 @@ class _DeleteWrapper(object):
         self.topic_path = topic_path
 
     def delete(self):
-        self.publisher.delete_topic(self.topic_path)
+        if sys.version_info.major == 2:
+            self.publisher.delete_topic(self.topic_path)
+        else:
+            self.publisher.delete_topic(request={"topic": self.topic_path})
