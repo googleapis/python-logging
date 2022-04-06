@@ -278,7 +278,12 @@ class _SinksAPI(object):
         )
 
     def sink_update(
-        self, sink_name, filter_, destination, *, unique_writer_identity=False,
+        self,
+        sink_name,
+        filter_,
+        destination,
+        *,
+        unique_writer_identity=False,
     ):
         """Update a sink resource.
 
@@ -305,7 +310,11 @@ class _SinksAPI(object):
                   protobuf to a dictionary).
         """
         name = sink_name.split("/")[-1]  # parse name out of full resoure name
-        sink_pb = LogSink(name=name, filter=filter_, destination=destination,)
+        sink_pb = LogSink(
+            name=name,
+            filter=filter_,
+            destination=destination,
+        )
 
         request = UpdateSinkRequest(
             sink_name=sink_name,
@@ -341,7 +350,7 @@ class _SinksAPI(object):
 
 
 class _MetricsAPI(object):
-    """Helper mapping sink-related APIs. """
+    """Helper mapping sink-related APIs."""
 
     def __init__(self, gapic_api, client):
         self._gapic_api = gapic_api
@@ -363,7 +372,9 @@ class _MetricsAPI(object):
         """
         path = f"projects/{project}"
         request = ListLogMetricsRequest(
-            parent=path, page_size=page_size, page_token=page_token,
+            parent=path,
+            page_size=page_size,
+            page_token=page_token,
         )
         response = self._gapic_api.list_log_metrics(request=request)
         page_iter = iter(response)
@@ -414,7 +425,11 @@ class _MetricsAPI(object):
         )
 
     def metric_update(
-        self, project, metric_name, filter_, description,
+        self,
+        project,
+        metric_name,
+        filter_,
+        description,
     ):
         """Update a metric resource.
 
@@ -430,7 +445,11 @@ class _MetricsAPI(object):
                   protobuf to a dictionary).
         """
         path = f"projects/{project}/metrics/{metric_name}"
-        metric_pb = LogMetric(name=path, filter=filter_, description=description,)
+        metric_pb = LogMetric(
+            name=path,
+            filter=filter_,
+            description=description,
+        )
         metric_pb = self._gapic_api.update_log_metric(
             metric_name=path, metric=metric_pb
         )

@@ -42,5 +42,7 @@ class SyncTransport(Transport):
         """
         info = {"message": message, "python_logger": record.name}
         self.logger.log_struct(
-            info, severity=_helpers._normalize_severity(record.levelno), **kwargs,
+            info,
+            severity=_helpers._normalize_severity(record.levelno),
+            **kwargs,
         )

@@ -88,7 +88,15 @@ class TestStructuredLogHandler(unittest.TestCase):
         import json
 
         handler = self._make_one()
-        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
         record.created = None
         expected_payload = {
             "message": "",
@@ -113,7 +121,15 @@ class TestStructuredLogHandler(unittest.TestCase):
         handler = self._make_one()
         message = '"test"'
         expected_result = '\\"test\\"'
-        record = logging.LogRecord(None, logging.INFO, None, None, message, None, None,)
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            message,
+            None,
+            None,
+        )
         record.created = None
         handler.filter(record)
         result = handler.format(record)
@@ -146,7 +162,15 @@ class TestStructuredLogHandler(unittest.TestCase):
         handler = self._make_one()
         message = "test\ntest"
         expected_result = "test\\ntest"
-        record = logging.LogRecord(None, logging.INFO, None, None, message, None, None,)
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            message,
+            None,
+            None,
+        )
         record.created = None
         handler.filter(record)
         result = handler.format(record)
@@ -164,7 +188,13 @@ class TestStructuredLogHandler(unittest.TestCase):
         message = "test"
         expected_result = "logname :: INFO :: test"
         record = logging.LogRecord(
-            "logname", logging.INFO, None, None, message, None, None,
+            "logname",
+            logging.INFO,
+            None,
+            None,
+            message,
+            None,
+            None,
         )
         record.created = None
         handler.filter(record)
@@ -182,7 +212,13 @@ class TestStructuredLogHandler(unittest.TestCase):
         name_arg = "Daniel"
         expected_result = "name: Daniel"
         record = logging.LogRecord(
-            None, logging.INFO, None, None, message, name_arg, None,
+            None,
+            logging.INFO,
+            None,
+            None,
+            message,
+            name_arg,
+            None,
         )
         record.created = None
         handler.filter(record)
