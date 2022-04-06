@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+### [1.15.2](https://github.com/googleapis/python-logging/compare/v1.15.1...v1.15.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* **deps:** require google-api-core >= 1.31.5, >= 2.3.2 on v1 release ([#500](https://github.com/googleapis/python-logging/issues/500)) ([7809d80](https://github.com/googleapis/python-logging/commit/7809d806dac776c385339dc71844d45245f0ce9a))
+
 ### [1.15.1](https://www.github.com/googleapis/python-logging/compare/v1.15.0...v1.15.1) (2020-07-01)
 
 
