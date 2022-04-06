@@ -38,13 +38,17 @@ class Test_LoggingAPI(object):
 
     @staticmethod
     def make_logging_api():
-        gapic_client = LoggingServiceV2Client()
+        gapic_client = LoggingServiceV2Client(
+            credentials=google.auth.credentials.AnonymousCredentials()
+        )
         handwritten_client = mock.Mock()
         api = _gapic._LoggingAPI(gapic_client, handwritten_client)
         return api
 
     def test_ctor(self):
-        gapic_client = LoggingServiceV2Client()
+        gapic_client = LoggingServiceV2Client(
+            credentials=google.auth.credentials.AnonymousCredentials()
+        )
         api = _gapic._LoggingAPI(gapic_client, mock.sentinel.client)
         assert api._gapic_api is gapic_client
         assert api._client is mock.sentinel.client
@@ -150,13 +154,17 @@ class Test_SinksAPI(object):
 
     @staticmethod
     def make_sinks_api():
-        gapic_client = ConfigServiceV2Client()
+        gapic_client = ConfigServiceV2Client(
+            credentials=google.auth.credentials.AnonymousCredentials()
+        )
         handwritten_client = mock.Mock()
         api = _gapic._SinksAPI(gapic_client, handwritten_client)
         return api
 
     def test_ctor(self):
-        gapic_client = ConfigServiceV2Client()
+        gapic_client = ConfigServiceV2Client(
+            credentials=google.auth.credentials.AnonymousCredentials()
+        )
         api = _gapic._SinksAPI(gapic_client, mock.sentinel.client)
         assert api._gapic_api is gapic_client
         assert api._client is mock.sentinel.client
@@ -172,7 +180,9 @@ class Test_SinksAPI(object):
         ) as call:
             call.return_value = logging_v2.types.ListSinksResponse(sinks=[sink_msg])
 
-            result = client.list_sinks(self.PARENT_PATH,)
+            result = client.list_sinks(
+                self.PARENT_PATH,
+            )
 
         sinks = list(result)
 
@@ -322,13 +332,17 @@ class Test_MetricsAPI(object):
 
     @staticmethod
     def make_metrics_api():
-        gapic_client = MetricsServiceV2Client()
+        gapic_client = MetricsServiceV2Client(
+            credentials=google.auth.credentials.AnonymousCredentials()
+        )
         handwritten_client = mock.Mock()
         api = _gapic._MetricsAPI(gapic_client, handwritten_client)
         return api
 
     def test_ctor(self):
-        gapic_client = MetricsServiceV2Client()
+        gapic_client = MetricsServiceV2Client(
+            credentials=google.auth.credentials.AnonymousCredentials()
+        )
         api = _gapic._MetricsAPI(gapic_client, mock.sentinel.client)
         assert api._gapic_api is gapic_client
         assert api._client is mock.sentinel.client

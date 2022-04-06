@@ -98,7 +98,15 @@ class TestCloudLoggingFilter(unittest.TestCase):
         import logging
 
         filter_obj = self._make_one()
-        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
         record.created = None
 
         success = filter_obj.filter(record)
@@ -125,7 +133,15 @@ class TestCloudLoggingFilter(unittest.TestCase):
         import logging
 
         filter_obj = self._make_one()
-        record = logging.LogRecord(None, logging.INFO, None, None, None, None, None,)
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
         record.created = None
 
         expected_path = "http://testserver/123"
@@ -362,7 +378,9 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         client = _Client(self.PROJECT)
         handler = self._make_one(
-            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
+            client,
+            transport=_Transport,
+            resource=_GLOBAL_RESOURCE,
         )
         logFormatter = logging.Formatter(fmt="%(name)s :: %(levelname)s :: %(message)s")
         handler.setFormatter(logFormatter)
@@ -375,7 +393,16 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, None, None,),
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ),
         )
 
     def test_format_with_arguments(self):
@@ -386,7 +413,9 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         client = _Client(self.PROJECT)
         handler = self._make_one(
-            client, transport=_Transport, resource=_GLOBAL_RESOURCE,
+            client,
+            transport=_Transport,
+            resource=_GLOBAL_RESOURCE,
         )
         message = "name: %s"
         name_arg = "Daniel"
@@ -398,7 +427,16 @@ class TestCloudLoggingHandler(unittest.TestCase):
 
         self.assertEqual(
             handler.transport.send_called_with,
-            (record, expected_result, _GLOBAL_RESOURCE, None, None, None, None, None,),
+            (
+                record,
+                expected_result,
+                _GLOBAL_RESOURCE,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ),
         )
 
 
