@@ -16,7 +16,17 @@
 from collections import OrderedDict
 import os
 import re
-from typing import Dict, Optional, Iterable, Iterator, Sequence, Tuple, Type, Union
+from typing import (
+    Dict,
+    Mapping,
+    Optional,
+    Iterable,
+    Iterator,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 import pkg_resources
 
 from google.api_core import client_options as client_options_lib
@@ -441,7 +451,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_delete_log():
                 # Create a client
@@ -527,7 +537,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
         *,
         log_name: str = None,
         resource: monitored_resource_pb2.MonitoredResource = None,
-        labels: Sequence[logging.WriteLogEntriesRequest.LabelsEntry] = None,
+        labels: Mapping[str, str] = None,
         entries: Sequence[log_entry.LogEntry] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
         timeout: float = None,
@@ -544,7 +554,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_write_log_entries():
                 # Create a client
@@ -609,7 +619,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            labels (Sequence[google.cloud.logging_v2.types.WriteLogEntriesRequest.LabelsEntry]):
+            labels (Mapping[str, str]):
                 Optional. Default labels that are added to the
                 ``labels`` field of all log entries in ``entries``. If a
                 log entry already has a label with the same key as a
@@ -724,7 +734,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_list_log_entries():
                 # Create a client
@@ -871,7 +881,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_list_monitored_resource_descriptors():
                 # Create a client
@@ -957,7 +967,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_list_logs():
                 # Create a client
@@ -1069,7 +1079,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_tail_log_entries():
                 # Create a client

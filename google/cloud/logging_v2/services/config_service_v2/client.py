@@ -16,7 +16,7 @@
 from collections import OrderedDict
 import os
 import re
-from typing import Dict, Optional, Sequence, Tuple, Type, Union
+from typing import Dict, Mapping, Optional, Sequence, Tuple, Type, Union
 import pkg_resources
 
 from google.api_core import client_options as client_options_lib
@@ -531,7 +531,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_list_buckets():
                 # Create a client
@@ -647,7 +647,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_get_bucket():
                 # Create a client
@@ -723,7 +723,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_create_bucket():
                 # Create a client
@@ -809,7 +809,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_update_bucket():
                 # Create a client
@@ -888,7 +888,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_delete_bucket():
                 # Create a client
@@ -952,7 +952,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_undelete_bucket():
                 # Create a client
@@ -1014,7 +1014,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_list_views():
                 # Create a client
@@ -1122,7 +1122,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_get_view():
                 # Create a client
@@ -1197,7 +1197,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_create_view():
                 # Create a client
@@ -1276,7 +1276,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_update_view():
                 # Create a client
@@ -1353,7 +1353,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_delete_view():
                 # Create a client
@@ -1415,7 +1415,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_list_sinks():
                 # Create a client
@@ -1528,7 +1528,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_get_sink():
                 # Create a client
@@ -1647,7 +1647,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_create_sink():
                 # Create a client
@@ -1780,7 +1780,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_update_sink():
                 # Create a client
@@ -1934,7 +1934,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_delete_sink():
                 # Create a client
@@ -2031,7 +2031,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_list_exclusions():
                 # Create a client
@@ -2144,7 +2144,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_get_exclusion():
                 # Create a client
@@ -2257,7 +2257,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_create_exclusion():
                 # Create a client
@@ -2387,7 +2387,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_update_exclusion():
                 # Create a client
@@ -2527,7 +2527,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_delete_exclusion():
                 # Create a client
@@ -2629,7 +2629,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_get_cmek_settings():
                 # Create a client
@@ -2731,7 +2731,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_update_cmek_settings():
                 # Create a client
@@ -2830,7 +2830,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_get_settings():
                 # Create a client
@@ -2965,7 +2965,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_update_settings():
                 # Create a client
@@ -3084,7 +3084,7 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
 
         .. code-block:: python
 
-            from google.cloud import logging_v2
+                    from google.cloud import logging_v2
 
             def sample_copy_log_entries():
                 # Create a client
