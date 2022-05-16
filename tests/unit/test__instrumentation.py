@@ -13,12 +13,37 @@
 # limitations under the License.
 
 import unittest
+import google.cloud.logging_v2._instrumentation as i
 
 class TestInstrumentation(unittest.TestCase):
+    
+    TEST_NAME = "python"
+    # LONG_NAME > 14 characters
+    LONG_NAME = TEST_NAME + "789ABCDEF"
+
+    TEST_VERSION = "1.0.0"
+    # LONG_VERSION > 16 characters
+    LONG_VERSION = TEST_VERSION + "6789ABCDEF12"
+
+    def _get_diagonstic_value(self, entry, key):
+        return entry.payload[i._DIAGNOSTIC_INFO_KEY][i._INSTRUMENTATION_SOURCE_KEY][key]
 
     def test_default_diagnostic_info(self):
-        import google.cloud.logging_v2._instrumentation as i
-
         entry = i.create_diagnostic_entry()
-        self.assertEqual(entry.payload[i._DIAGNOSTIC_INFO_KEY][i._INSTRUMENTATION_SOURCE_KEY]["name"], i._PYTHON_LIBRARY_NAME)
-        self.assertEqual(entry.payload[i._DIAGNOSTIC_INFO_KEY][i._INSTRUMENTATION_SOURCE_KEY]["version"], i._LIBRARY_VERSION)
+        self.assertEqual(i._PYTHON_LIBRARY_NAME, self._get_diagonstic_value(entry, "name"),)
+        self.assertEqual(i._LIBRARY_VERSION, self._get_diagonstic_value(entry, "version"))
+
+    def test_custom_diagnostic_info(self):
+        entry = i.create_diagnostic_entry(name = self.TEST_NAME, version = self.TEST_VERSION)
+        self.assertEqual(self.TEST_NAME, self._get_diagonstic_value(entry, "name"),)
+        self.assertEqual(self.TEST_VERSION, self._get_diagonstic_value(entry, "version"))
+
+    def test_truncate_long_values(self):
+        entry = i.create_diagnostic_entry(name = self.LONG_NAME, version = self.LONG_VERSION)
+        
+        expected_name = self.LONG_NAME[:i._MAX_NAME_LENGTH -1] + "*"
+        expected_version = self.LONG_VERSION[:i._MAX_VERSION_LENGTH - 1] + "*"
+
+        self.assertEqual(expected_name, self._get_diagonstic_value(entry, "name"))
+        self.assertEqual(expected_version, self._get_diagonstic_value(entry, "version"))
+

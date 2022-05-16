@@ -38,13 +38,15 @@ def create_diagnostic_entry(name=None, version=None):
     """
     name = name if name != None else _PYTHON_LIBRARY_NAME
     version = version if version != None else _LIBRARY_VERSION
-    payload = {_DIAGNOSTIC_INFO_KEY: {
-        _INSTRUMENTATION_SOURCE_KEY: {
-            "name": truncate_string(name, _MAX_NAME_LENGTH),
-            "version": truncate_string(version, 16),
+    payload = {
+        _DIAGNOSTIC_INFO_KEY: {
+            _INSTRUMENTATION_SOURCE_KEY: {
+                "name": truncate_string(name, _MAX_NAME_LENGTH),
+                "version": truncate_string(version, _MAX_VERSION_LENGTH),
+            }
         }
-    }}
-    entry = StructEntry(payload=payload)
+    }
+    entry = StructEntry(payload=payload, severity="INFO")
     return entry
 
 def truncate_string(str, max_length):
