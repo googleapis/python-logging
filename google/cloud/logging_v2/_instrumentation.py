@@ -26,13 +26,14 @@ _LIBRARY_VERSION = __version__
 _MAX_NAME_LENGTH = 14
 _MAX_VERSION_LENGTH = 16
 
+
 def create_diagnostic_entry(name=None, version=None):
     """Create a diagnostic log entry describing this library
 
     Args:
         name(str): The name of this library (e.g. 'python')
         version(str) The version of this library (e.g. '3.0.0')
-    
+
     Returns:
         google.cloud.logging.entries.LogEntry: Log entry with library information
     """
@@ -49,6 +50,7 @@ def create_diagnostic_entry(name=None, version=None):
     entry = StructEntry(payload=payload, severity="INFO")
     return entry
 
+
 def truncate_string(str, max_length):
     """Truncate a string to a maximum length
 
@@ -57,9 +59,10 @@ def truncate_string(str, max_length):
         max_length(int): The maximum length
 
     Returns:
-        A string containing either 'str' or a truncated version of 
+        A string containing either 'str' or a truncated version of
         'str' with an asterisk at the end
     """
     if len(str) > max_length:
-        return str[:max_length-1] + "*"
-    else: return str
+        return str[: max_length - 1] + "*"
+    else:
+        return str
