@@ -37,14 +37,9 @@ def create_diagnostic_entry(name=None, version=None):
     Returns:
         google.cloud.logging.entries.LogEntry: Log entry with library information
     """
-    name = name if name != None else _PYTHON_LIBRARY_NAME
-    version = version if version != None else _LIBRARY_VERSION
     payload = {
         _DIAGNOSTIC_INFO_KEY: {
-            _INSTRUMENTATION_SOURCE_KEY: {
-                "name": truncate_string(name, _MAX_NAME_LENGTH),
-                "version": truncate_string(version, _MAX_VERSION_LENGTH),
-            }
+            _INSTRUMENTATION_SOURCE_KEY: [_get_instrumentation_source(name, version)]
         }
     }
     entry = StructEntry(payload=payload, severity="INFO")
@@ -66,3 +61,58 @@ def truncate_string(str, max_length):
         return str[: max_length - 1] + "*"
     else:
         return str
+
+
+def validate_and_update_instrumentation(existing_info=None):
+    """Validate existing instrumentation info and append the final entry
+
+    Args:
+        existing_info: A list of instrumentation_source objects already on an etnry
+
+    Returns:
+        A validated list of instrumentation_source objects with the current
+        library entry at the end
+    """
+    info_stack = []
+    info_stack.append(_get_instrumentation_source())
+    if existing_info:
+        for info in existing_info[::-1]:
+            if len(info_stack) == 3:
+                break
+            if _is_valid(info):
+                info_stack.append(_get_instrumentation_source(info["name"], info["version"]))
+    
+    info_stack.reverse()
+    return info_stack
+
+def _get_instrumentation_source(name=None, version=None):
+    """Gets a JSON representation of the instrumentation_source
+
+    Args:
+        name(str): The name of this library (e.g. 'python')
+        version(str) The version of this library (e.g. '3.0.0')
+    Returns:
+       obj: JSON object with library information 
+    """
+    name = name if name != None else _PYTHON_LIBRARY_NAME
+    version = version if version != None else _LIBRARY_VERSION
+    return {
+                "name": truncate_string(name, _MAX_NAME_LENGTH),
+                "version": truncate_string(version, _MAX_VERSION_LENGTH),
+    }
+
+def _is_valid(info):
+    """Validates an existing instrumentation_source entry
+
+    Args:
+        info(dict): A dictionary representing the instrumentation_source entry
+    Returns:
+        bool: Whether the object is a valid instrumentation_source_entry
+    """
+    if "name" not in info:
+        return False
+    if "version" not in info:
+        return False
+    if info["name"][:len(_PYTHON_LIBRARY_NAME)] != _PYTHON_LIBRARY_NAME:
+        return False
+    return True
