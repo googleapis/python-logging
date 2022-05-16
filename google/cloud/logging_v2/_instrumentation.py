@@ -80,10 +80,13 @@ def validate_and_update_instrumentation(existing_info=None):
             if len(info_stack) == 3:
                 break
             if _is_valid(info):
-                info_stack.append(_get_instrumentation_source(info["name"], info["version"]))
-    
+                info_stack.append(
+                    _get_instrumentation_source(info["name"], info["version"])
+                )
+
     info_stack.reverse()
     return info_stack
+
 
 def _get_instrumentation_source(name=None, version=None):
     """Gets a JSON representation of the instrumentation_source
@@ -92,14 +95,15 @@ def _get_instrumentation_source(name=None, version=None):
         name(str): The name of this library (e.g. 'python')
         version(str) The version of this library (e.g. '3.0.0')
     Returns:
-       obj: JSON object with library information 
+       obj: JSON object with library information
     """
     name = name if name != None else _PYTHON_LIBRARY_NAME
     version = version if version != None else _LIBRARY_VERSION
     return {
-                "name": truncate_string(name, _MAX_NAME_LENGTH),
-                "version": truncate_string(version, _MAX_VERSION_LENGTH),
+        "name": truncate_string(name, _MAX_NAME_LENGTH),
+        "version": truncate_string(version, _MAX_VERSION_LENGTH),
     }
+
 
 def _is_valid(info):
     """Validates an existing instrumentation_source entry
@@ -113,6 +117,6 @@ def _is_valid(info):
         return False
     if "version" not in info:
         return False
-    if info["name"][:len(_PYTHON_LIBRARY_NAME)] != _PYTHON_LIBRARY_NAME:
+    if info["name"][: len(_PYTHON_LIBRARY_NAME)] != _PYTHON_LIBRARY_NAME:
         return False
     return True
