@@ -27,7 +27,35 @@ _MAX_NAME_LENGTH = 14
 _MAX_VERSION_LENGTH = 16
 
 
-def create_diagnostic_entry(name=None, version=None):
+def add_instrumentation(entries, **kw):
+    """Validate or add instrumentation information to a list of entries
+
+    Args:
+        entries: A list of logging_v2.LogEntry
+    
+    Returns:
+        list of logging_v2.LogEntry with instrumentation info validated if present
+        otherwise added to beginning of list.
+    """
+    is_written = False
+    for entry in entries:
+        if (is_written == False and
+            hasattr(entry, 'payload') and
+            entry.payload is dict and
+            entry.payload.has_key(_DIAGNOSTIC_INFO_KEY) and
+            entry.payload[_DIAGNOSTIC_INFO_KEY].has_key(_INSTRUMENTATION_SOURCE_KEY)
+        ):
+            current_info = entry.payload[_DIAGNOSTIC_INFO_KEY][_INSTRUMENTATION_SOURCE_KEY]
+            entry.payload[_DIAGNOSTIC_INFO_KEY][_INSTRUMENTATION_SOURCE_KEY] = \
+                 validate_and_update_instrumentation(current_info)
+            is_written = True
+        else:
+            diagnostic_entry = create_diagnostic_entry(**kw)
+            entries.insert(0, diagnostic_entry.to_api_repr())
+        return entries
+
+
+def create_diagnostic_entry(name=None, version=None, **kw):
     """Create a diagnostic log entry describing this library
 
     Args:
@@ -35,14 +63,15 @@ def create_diagnostic_entry(name=None, version=None):
         version(str) The version of this library (e.g. '3.0.0')
 
     Returns:
-        google.cloud.logging.entries.LogEntry: Log entry with library information
+        google.cloud.logging_v2.LogEntry: Log entry with library information
     """
     payload = {
         _DIAGNOSTIC_INFO_KEY: {
             _INSTRUMENTATION_SOURCE_KEY: [_get_instrumentation_source(name, version)]
         }
     }
-    entry = StructEntry(payload=payload, severity="INFO")
+    kw["severity"] = "INFO"
+    entry = StructEntry(payload=payload, **kw)
     return entry
 
 
