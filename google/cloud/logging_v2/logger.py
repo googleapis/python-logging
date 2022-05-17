@@ -162,7 +162,7 @@ class Logger(object):
             partial_success = True
             entries = add_instrumentation(entries, **kw)
             google.cloud.logging_v2.instrumentation_emitted = True
-            
+
         client.logging_api.write_entries(entries, partial_success=partial_success)
 
     def log_empty(self, *, client=None, **kw):
