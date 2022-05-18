@@ -47,7 +47,6 @@ instrumentation_emitted = False
 
 __all__ = (
     "__version__",
-    "instrumentation_emitted",
     "ASCENDING",
     "Batch",
     "Client",

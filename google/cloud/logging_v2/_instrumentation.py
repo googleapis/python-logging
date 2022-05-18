@@ -31,10 +31,11 @@ def add_instrumentation(entries, **kw):
     """Validate or add instrumentation information to a list of entries
 
     Args:
-        entries: A list of logging_v2.LogEntry
-
+       entries (Sequence[Mapping[str, ...]]): sequence of mappings representing
+            the log entry resources to log. 
+    
     Returns:
-        list of logging_v2.LogEntry with instrumentation info validated if present
+        Sequence[Mapping[str, ...]]: entries with instrumentation info validated if present
         otherwise added to beginning of list.
     """
     is_written = False
