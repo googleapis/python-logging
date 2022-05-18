@@ -32,8 +32,8 @@ def add_instrumentation(entries, **kw):
 
     Args:
        entries (Sequence[Mapping[str, ...]]): sequence of mappings representing
-            the log entry resources to log. 
-    
+            the log entry resources to log.
+
     Returns:
         Sequence[Mapping[str, ...]]: entries with instrumentation info validated if present
         otherwise added to beginning of list.

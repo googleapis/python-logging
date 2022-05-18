@@ -36,6 +36,7 @@ class TestLogger(unittest.TestCase):
 
     def setUp(self):
         import google.cloud.logging_v2
+
         # Test instrumentation behavior in only one test
         google.cloud.logging_v2.instrumentation_emitted = True
 
@@ -986,21 +987,25 @@ class TestLogger(unittest.TestCase):
         )
         from google.cloud.logging_v2._instrumentation import create_diagnostic_entry
         import google.cloud.logging_v2
+
         google.cloud.logging_v2.instrumentation_emitted = False
         DEFAULT_LABELS = {"foo": "spam"}
         resource = detect_resource(self.PROJECT)
         instrumentation_entry = create_diagnostic_entry(
-                resource = resource,
-                labels = DEFAULT_LABELS,
-            ).to_api_repr()
-        instrumentation_entry["logName"] = "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME)
+            resource=resource,
+            labels=DEFAULT_LABELS,
+        ).to_api_repr()
+        instrumentation_entry["logName"] = "projects/%s/logs/%s" % (
+            self.PROJECT,
+            self.LOGGER_NAME,
+        )
         ENTRIES = [
             instrumentation_entry,
             {
                 "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
                 "resource": resource._to_dict(),
                 "labels": DEFAULT_LABELS,
-            }
+            },
         ]
         client = _Client(self.PROJECT)
         api = client.logging_api = _DummyLoggingAPI()
@@ -1012,6 +1017,7 @@ class TestLogger(unittest.TestCase):
         api = client.logging_api = _DummyLoggingAPI()
         logger.log_empty()
         self.assertEqual(api._write_entries_called_with, (ENTRIES, None, None, None))
+
 
 class TestBatch(unittest.TestCase):
 
@@ -1682,7 +1688,15 @@ class _DummyLoggingAPI(object):
 
     _write_entries_called_with = None
 
-    def write_entries(self, entries, *, logger_name=None, resource=None, labels=None, partial_success=False):
+    def write_entries(
+        self,
+        entries,
+        *,
+        logger_name=None,
+        resource=None,
+        labels=None,
+        partial_success=False,
+    ):
         self._write_entries_called_with = (entries, logger_name, resource, labels)
 
     def logger_delete(self, logger_name):
