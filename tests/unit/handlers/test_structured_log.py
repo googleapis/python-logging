@@ -438,3 +438,19 @@ class TestStructuredLogHandler(unittest.TestCase):
         self.assertEqual(result["message"], expected_result)
         self.assertEqual(result["hello"], "world")
         self.assertEqual(result["number"], 12)
+
+    def test_emits_instrumentation_info(self):
+        import logging
+        import mock
+        import google.cloud.logging_v2
+        
+        handler = self._make_one()
+        logname = "loggername"
+        message = "Hello world!"
+        
+        record = logging.LogRecord(logname, logging.INFO, "", 0, message, None, None)
+
+        with mock.patch.object(handler, "emit_instrumentation_info") as emit_info:
+            google.cloud.logging_v2.instrumentation_emitted = False
+            handler.emit(record)
+            emit_info.assert_called()
