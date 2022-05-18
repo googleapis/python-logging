@@ -451,6 +451,12 @@ class TestStructuredLogHandler(unittest.TestCase):
         record = logging.LogRecord(logname, logging.INFO, "", 0, message, None, None)
 
         with mock.patch.object(handler, "emit_instrumentation_info") as emit_info:
+            def side_effect():
+                google.cloud.logging_v2.instrumentation_emitted = True
+            emit_info.side_effect = side_effect
             google.cloud.logging_v2.instrumentation_emitted = False
             handler.emit(record)
-            emit_info.assert_called()
+            handler.emit(record)
+
+            # emit_instrumentation_info should be called once
+            emit_info.assert_called_once()
