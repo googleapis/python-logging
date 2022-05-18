@@ -93,7 +93,7 @@ class StructuredLogHandler(logging.StreamHandler):
             self.emit_instrumentation_info()
         super().emit(record)
 
-    def emit_instrumentation_info(self): 
+    def emit_instrumentation_info(self):
         google.cloud.logging_v2.instrumentation_emitted = True
         diagnostic_object = create_diagnostic_entry().to_api_repr()
         logging.info(diagnostic_object)
