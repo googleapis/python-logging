@@ -41,11 +41,11 @@ def add_instrumentation(entries, **kw):
     is_written = False
     for entry in entries:
         if (
-            is_written == False
+            is_written is False
             and hasattr(entry, "payload")
             and entry.payload is dict
-            and entry.payload.has_key(_DIAGNOSTIC_INFO_KEY)
-            and entry.payload[_DIAGNOSTIC_INFO_KEY].has_key(_INSTRUMENTATION_SOURCE_KEY)
+            and _DIAGNOSTIC_INFO_KEY in entry.payload
+            and _INSTRUMENTATION_SOURCE_KEY in entry.payload[_DIAGNOSTIC_INFO_KEY]
         ):
             current_info = entry.payload[_DIAGNOSTIC_INFO_KEY][
                 _INSTRUMENTATION_SOURCE_KEY
@@ -131,8 +131,8 @@ def _get_instrumentation_source(name=None, version=None):
     Returns:
        obj: JSON object with library information
     """
-    name = name if name != None else _PYTHON_LIBRARY_NAME
-    version = version if version != None else _LIBRARY_VERSION
+    name = name if name is not None else _PYTHON_LIBRARY_NAME
+    version = version if version is not None else _LIBRARY_VERSION
     return {
         "name": truncate_string(name, _MAX_NAME_LENGTH),
         "version": truncate_string(version, _MAX_VERSION_LENGTH),
