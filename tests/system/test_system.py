@@ -889,9 +889,10 @@ class TestLogging(unittest.TestCase):
     @skip_for_mtls
     def test_api_equality_list_logs(self):
         import google.cloud.logging_v2
+
         # Skip diagnostic log for this system test
         google.cloud.logging_v2.instrumentation_emitted = True
-        
+
         unique_id = uuid.uuid1()
         gapic_logger = Config.CLIENT.logger(f"api-list-{unique_id}")
         http_logger = Config.HTTP_CLIENT.logger(f"api-list-{unique_id}")
