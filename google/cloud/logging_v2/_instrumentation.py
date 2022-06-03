@@ -58,9 +58,9 @@ def add_instrumentation(entries, **kw):
                 _INSTRUMENTATION_SOURCE_KEY
             ] = validate_and_update_instrumentation(current_info)
             is_written = True
-        except KeyError: # Entry does not have instrumentation info
+        except KeyError:  # Entry does not have instrumentation info
             pass
-        except AttributeError: # Entry does not have instrumentation info
+        except AttributeError:  # Entry does not have instrumentation info
             pass
         new_entries.append(entry)
 
