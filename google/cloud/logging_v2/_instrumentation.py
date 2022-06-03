@@ -30,6 +30,12 @@ _MAX_VERSION_LENGTH = 14
 def add_instrumentation(entries, **kw):
     """Validate or add instrumentation information to a list of entries
 
+        Ensures that a single log entry with valid instrumentation info
+        is in `entries`.  If instrumentation info was manually added,
+        it is validated to ensure it matches this library's information.
+        Otherwise, a new diagnostic entry is prepended to the list of
+        entries.
+
     Args:
        entries (Sequence[Mapping[str, ...]]): sequence of mappings representing
             the log entry resources to log.
@@ -102,6 +108,10 @@ def truncate_string(str, max_length):
 
 def validate_and_update_instrumentation(existing_info=None):
     """Validate existing instrumentation info and append the final entry
+
+        Validates that existing instrumentation info matches this
+        library's info, and ensures that there are at most 3 entries
+        in the instrumentation_source array (to avoid malicious log inflation).
 
     Args:
         existing_info: A list of instrumentation_source objects already on an etnry
