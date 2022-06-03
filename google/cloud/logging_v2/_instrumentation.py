@@ -60,7 +60,7 @@ def add_instrumentation(entries, **kw):
         return entries
 
 
-def create_diagnostic_entry(name=None, version=None, **kw):
+def create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION, **kw):
     """Create a diagnostic log entry describing this library
 
     Args:
@@ -122,7 +122,7 @@ def validate_and_update_instrumentation(existing_info=None):
     return info_stack
 
 
-def _get_instrumentation_source(name=None, version=None):
+def _get_instrumentation_source(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION):
     """Gets a JSON representation of the instrumentation_source
 
     Args:
@@ -131,8 +131,6 @@ def _get_instrumentation_source(name=None, version=None):
     Returns:
        obj: JSON object with library information
     """
-    name = name if name is not None else _PYTHON_LIBRARY_NAME
-    version = version if version is not None else _LIBRARY_VERSION
     return {
         "name": truncate_string(name, _MAX_NAME_LENGTH),
         "version": truncate_string(version, _MAX_VERSION_LENGTH),
