@@ -39,6 +39,7 @@ def add_instrumentation(entries, **kw):
         otherwise added to beginning of list.
     """
     is_written = False
+    new_entries = []
     for entry in entries:
         if (
             is_written is False
@@ -54,10 +55,12 @@ def add_instrumentation(entries, **kw):
                 _INSTRUMENTATION_SOURCE_KEY
             ] = validate_and_update_instrumentation(current_info)
             is_written = True
-        else:
-            diagnostic_entry = create_diagnostic_entry(**kw)
-            entries.insert(0, diagnostic_entry.to_api_repr())
-        return entries
+        new_entries.append(entry)
+
+    if not is_written:
+        diagnostic_entry = create_diagnostic_entry(**kw)
+        new_entries.insert(0, diagnostic_entry.to_api_repr())
+    return new_entries
 
 
 def create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION, **kw):
