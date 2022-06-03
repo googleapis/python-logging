@@ -83,7 +83,7 @@ class TestInstrumentation(unittest.TestCase):
         self.assertEqual(self.TEST_NAME, info[0]["name"])
         expected_version = self.LONG_VERSION[: i._MAX_VERSION_LENGTH] + "*"
         self.assertEqual(expected_version, info[1]["version"])
-        expected_name = self.LONG_NAME[: i._MAX_NAME_LENGTH ] + "*"
+        expected_name = self.LONG_NAME[: i._MAX_NAME_LENGTH] + "*"
         self.assertEqual(expected_name, info[1]["name"])
         self.assertEqual(i._LIBRARY_VERSION, info[2]["version"])
         self.assertEqual(i._PYTHON_LIBRARY_NAME, info[2]["name"])
