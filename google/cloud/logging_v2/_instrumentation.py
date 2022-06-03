@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Add diagnostic instrumentation source information to logs"""
+import collections
 
 from google.cloud.logging_v2.entries import StructEntry
 from google.cloud.logging_v2 import __version__
@@ -47,13 +48,9 @@ def add_instrumentation(entries, **kw):
     is_written = False
     new_entries = []
     for entry in entries:
-        if (
-            is_written is False
-            and hasattr(entry, "payload")
-            and entry.payload is dict
-            and _DIAGNOSTIC_INFO_KEY in entry.payload
-            and _INSTRUMENTATION_SOURCE_KEY in entry.payload[_DIAGNOSTIC_INFO_KEY]
-        ):
+        if is_written:
+            break
+        try:
             current_info = entry.payload[_DIAGNOSTIC_INFO_KEY][
                 _INSTRUMENTATION_SOURCE_KEY
             ]
@@ -61,6 +58,10 @@ def add_instrumentation(entries, **kw):
                 _INSTRUMENTATION_SOURCE_KEY
             ] = validate_and_update_instrumentation(current_info)
             is_written = True
+        except KeyError: # Entry does not have instrumentation info
+            pass
+        except AttributeError: # Entry does not have instrumentation info
+            pass
         new_entries.append(entry)
 
     if not is_written:
