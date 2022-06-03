@@ -24,7 +24,7 @@ _PYTHON_LIBRARY_NAME = "python"
 _LIBRARY_VERSION = __version__
 
 _MAX_NAME_LENGTH = 14
-_MAX_VERSION_LENGTH = 16
+_MAX_VERSION_LENGTH = 14
 
 
 def add_instrumentation(entries, **kw):
@@ -92,7 +92,7 @@ def truncate_string(str, max_length):
         'str' with an asterisk at the end
     """
     if len(str) > max_length:
-        return str[: max_length - 1] + "*"
+        return str[: max_length ] + "*"
     else:
         return str
 
