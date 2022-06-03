@@ -58,8 +58,8 @@ class TestInstrumentation(unittest.TestCase):
             name=self.LONG_NAME, version=self.LONG_VERSION
         )
 
-        expected_name = self.LONG_NAME[: i._MAX_NAME_LENGTH ] + "*"
-        expected_version = self.LONG_VERSION[: i._MAX_VERSION_LENGTH ] + "*"
+        expected_name = self.LONG_NAME[: i._MAX_NAME_LENGTH] + "*"
+        expected_version = self.LONG_VERSION[: i._MAX_VERSION_LENGTH] + "*"
 
         self.assertEqual(expected_name, self._get_diagonstic_value(entry, "name"))
         self.assertEqual(expected_version, self._get_diagonstic_value(entry, "version"))
