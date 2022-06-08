@@ -22,7 +22,7 @@ import logging.handlers
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
 from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 import google.cloud.logging_v2
-from google.cloud.logging_v2._instrumentation import create_diagnostic_entry
+from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
 
 GCP_FORMAT = (
     "{%(_payload_str)s"
@@ -95,5 +95,5 @@ class StructuredLogHandler(logging.StreamHandler):
 
     def emit_instrumentation_info(self):
         google.cloud.logging_v2.instrumentation_emitted = True
-        diagnostic_object = create_diagnostic_entry().to_api_repr()
+        diagnostic_object = _create_diagnostic_entry().to_api_repr()
         logging.info(diagnostic_object)

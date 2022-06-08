@@ -28,7 +28,7 @@ _MAX_NAME_LENGTH = 14
 _MAX_VERSION_LENGTH = 14
 
 
-def add_instrumentation(entries, **kw):
+def _add_instrumentation(entries, **kw):
     """Validate or add instrumentation information to a list of entries
 
         Ensures that a single log entry with valid instrumentation info
@@ -65,12 +65,12 @@ def add_instrumentation(entries, **kw):
         new_entries.append(entry)
 
     if not is_written:
-        diagnostic_entry = create_diagnostic_entry(**kw)
+        diagnostic_entry = _create_diagnostic_entry(**kw)
         new_entries.insert(0, diagnostic_entry.to_api_repr())
     return new_entries
 
 
-def create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION, **kw):
+def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION, **kw):
     """Create a diagnostic log entry describing this library
 
         The diagnostic log consists of a list of library name and version objects
@@ -95,7 +95,7 @@ def create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION,
     return entry
 
 
-def truncate_string(str, max_length):
+def _truncate_string(str, max_length):
     """Truncate a string to a maximum length
 
     Args:
@@ -112,7 +112,7 @@ def truncate_string(str, max_length):
         return str
 
 
-def validate_and_update_instrumentation(existing_info=None):
+def _validate_and_update_instrumentation(existing_info=None):
     """Validate existing instrumentation info and append the final entry
 
         Validates that existing instrumentation info matches this
@@ -151,8 +151,8 @@ def _get_instrumentation_source(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERS
        obj: JSON object with library information
     """
     return {
-        "name": truncate_string(name, _MAX_NAME_LENGTH),
-        "version": truncate_string(version, _MAX_VERSION_LENGTH),
+        "name": _truncate_string(name, _MAX_NAME_LENGTH),
+        "version": _truncate_string(version, _MAX_VERSION_LENGTH),
     }
 
 

@@ -23,7 +23,7 @@ from google.cloud.logging_v2.entries import StructEntry
 from google.cloud.logging_v2.entries import TextEntry
 from google.cloud.logging_v2.resource import Resource
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
-from google.cloud.logging_v2._instrumentation import add_instrumentation
+from google.cloud.logging_v2._instrumentation import _add_instrumentation
 
 import google.protobuf.message
 
@@ -160,7 +160,7 @@ class Logger(object):
         entries = [api_repr]
         if google.cloud.logging_v2.instrumentation_emitted is False:
             partial_success = True
-            entries = add_instrumentation(entries, **kw)
+            entries = _add_instrumentation(entries, **kw)
             google.cloud.logging_v2.instrumentation_emitted = True
 
         client.logging_api.write_entries(entries, partial_success=partial_success)

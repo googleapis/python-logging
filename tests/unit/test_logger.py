@@ -985,13 +985,13 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
         )
-        from google.cloud.logging_v2._instrumentation import create_diagnostic_entry
+        from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
         import google.cloud.logging_v2
 
         google.cloud.logging_v2.instrumentation_emitted = False
         DEFAULT_LABELS = {"foo": "spam"}
         resource = detect_resource(self.PROJECT)
-        instrumentation_entry = create_diagnostic_entry(
+        instrumentation_entry = _create_diagnostic_entry(
             resource=resource,
             labels=DEFAULT_LABELS,
         ).to_api_repr()

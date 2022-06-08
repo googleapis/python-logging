@@ -32,7 +32,7 @@ class TestInstrumentation(unittest.TestCase):
         ]
 
     def test_default_diagnostic_info(self):
-        entry = i.create_diagnostic_entry()
+        entry = i._create_diagnostic_entry()
         self.assertEqual(
             i._PYTHON_LIBRARY_NAME,
             self._get_diagonstic_value(entry, "name"),
@@ -42,7 +42,7 @@ class TestInstrumentation(unittest.TestCase):
         )
 
     def test_custom_diagnostic_info(self):
-        entry = i.create_diagnostic_entry(
+        entry = i._create_diagnostic_entry(
             name=self.TEST_NAME, version=self.TEST_VERSION
         )
         self.assertEqual(
@@ -54,7 +54,7 @@ class TestInstrumentation(unittest.TestCase):
         )
 
     def test_truncate_long_values(self):
-        entry = i.create_diagnostic_entry(
+        entry = i._create_diagnostic_entry(
             name=self.LONG_NAME, version=self.LONG_VERSION
         )
 
@@ -65,7 +65,7 @@ class TestInstrumentation(unittest.TestCase):
         self.assertEqual(expected_version, self._get_diagonstic_value(entry, "version"))
 
     def test_validate_and_update_instrumentation_adds_info(self):
-        info = i.validate_and_update_instrumentation()
+        info = i._validate_and_update_instrumentation()
         self.assertEqual(1, len(info))
         self.assertEqual(i._PYTHON_LIBRARY_NAME, info[-1]["name"])
         self.assertEqual(i._LIBRARY_VERSION, info[-1]["version"])
@@ -76,7 +76,7 @@ class TestInstrumentation(unittest.TestCase):
             {"name": self.LONG_NAME, "version": self.LONG_VERSION},
         ]
 
-        info = i.validate_and_update_instrumentation(existing_info)
+        info = i._validate_and_update_instrumentation(existing_info)
 
         self.assertEqual(3, len(info))
         self.assertEqual("0.0.0", info[0]["version"])
