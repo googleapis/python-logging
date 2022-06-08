@@ -162,7 +162,7 @@ def _is_valid(info):
     try:
         if info["name"][: len(_PYTHON_LIBRARY_NAME)] != _PYTHON_LIBRARY_NAME:
             return False
-    except KeyError: 
+    except KeyError:
         return False
 
     return True
