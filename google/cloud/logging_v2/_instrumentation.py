@@ -74,7 +74,7 @@ def create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION,
     """Create a diagnostic log entry describing this library
 
         The diagnostic log consists of a list of library name and version objects
-        that have handled a given log entry.  If this library is the originator 
+        that have handled a given log entry.  If this library is the originator
         of the log entry, it will look like:
         {logging.googleapis.com/diagnostic: {instrumentation_source: [{name: "python", version: "3.0.0"}]}}
 
