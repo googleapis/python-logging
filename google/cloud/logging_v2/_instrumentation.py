@@ -159,10 +159,10 @@ def _is_valid(info):
     Returns:
         bool: Whether the object is a valid instrumentation_source_entry
     """
-    if "name" not in info:
+    try:
+        if info["name"][: len(_PYTHON_LIBRARY_NAME)] != _PYTHON_LIBRARY_NAME:
+            return False
+    except KeyError: 
         return False
-    if "version" not in info:
-        return False
-    if info["name"][: len(_PYTHON_LIBRARY_NAME)] != _PYTHON_LIBRARY_NAME:
-        return False
+
     return True
