@@ -22,7 +22,7 @@ import setuptools
 
 name = "google-cloud-logging"
 description = "Stackdriver Logging API client library"
-version = "3.1.1"
+version = "3.1.2"
 # Should be one of:
 # 'Development Status :: 3 - Alpha'
 # 'Development Status :: 4 - Beta'
@@ -39,8 +39,9 @@ dependencies = [
     # Until this issue is closed
     # https://github.com/googleapis/google-cloud-python/issues/10566
     "google-cloud-core >= 1.4.1, <3.0.0dev",
-    "grpc-google-iam-v1 >= 0.12.3, < 0.13dev",
-    "proto-plus >= 1.15.0",
+    "grpc-google-iam-v1 >=0.12.4, <1.0.0dev",
+    "proto-plus >= 1.15.0, <2.0.0dev",
+    "protobuf >= 3.19.0, <4.0.0dev",
 ]
 extras = {}
 
