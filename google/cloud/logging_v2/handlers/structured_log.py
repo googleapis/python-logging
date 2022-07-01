@@ -89,11 +89,11 @@ class StructuredLogHandler(logging.StreamHandler):
         return gcp_payload
 
     def emit(self, record):
-        if google.cloud.logging_v2.instrumentation_emitted is False:
+        if google.cloud.logging_v2._instrumentation_emitted is False:
             self.emit_instrumentation_info()
         super().emit(record)
 
     def emit_instrumentation_info(self):
-        google.cloud.logging_v2.instrumentation_emitted = True
+        google.cloud.logging_v2._instrumentation_emitted = True
         diagnostic_object = _create_diagnostic_entry().to_api_repr()
         logging.info(diagnostic_object)

@@ -56,7 +56,7 @@ def _add_instrumentation(entries, **kw):
             ]
             entry.payload[_DIAGNOSTIC_INFO_KEY][
                 _INSTRUMENTATION_SOURCE_KEY
-            ] = validate_and_update_instrumentation(current_info)
+            ] = _validate_and_update_instrumentation(current_info)
             is_written = True
         except KeyError:  # Entry does not have instrumentation info
             pass

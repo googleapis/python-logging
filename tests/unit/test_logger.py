@@ -38,7 +38,7 @@ class TestLogger(unittest.TestCase):
         import google.cloud.logging_v2
 
         # Test instrumentation behavior in only one test
-        google.cloud.logging_v2.instrumentation_emitted = True
+        google.cloud.logging_v2._instrumentation_emitted = True
 
     @staticmethod
     def _get_target_class():
@@ -988,7 +988,7 @@ class TestLogger(unittest.TestCase):
         from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
         import google.cloud.logging_v2
 
-        google.cloud.logging_v2.instrumentation_emitted = False
+        google.cloud.logging_v2._instrumentation_emitted = False
         DEFAULT_LABELS = {"foo": "spam"}
         resource = detect_resource(self.PROJECT)
         instrumentation_entry = _create_diagnostic_entry(

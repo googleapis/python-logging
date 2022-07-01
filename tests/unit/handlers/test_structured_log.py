@@ -453,10 +453,10 @@ class TestStructuredLogHandler(unittest.TestCase):
         with mock.patch.object(handler, "emit_instrumentation_info") as emit_info:
 
             def side_effect():
-                google.cloud.logging_v2.instrumentation_emitted = True
+                google.cloud.logging_v2._instrumentation_emitted = True
 
             emit_info.side_effect = side_effect
-            google.cloud.logging_v2.instrumentation_emitted = False
+            google.cloud.logging_v2._instrumentation_emitted = False
             handler.emit(record)
             handler.emit(record)
 
