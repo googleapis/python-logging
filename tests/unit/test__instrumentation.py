@@ -88,6 +88,20 @@ class TestInstrumentation(unittest.TestCase):
         self.assertEqual(i._LIBRARY_VERSION, info[2]["version"])
         self.assertEqual(i._PYTHON_LIBRARY_NAME, info[2]["name"])
 
+    def test_validate_and_update_instrumentation_truncates_entries(self):
+        existing_info = [
+            {"name": self.TEST_NAME, "version": "0.0.1"},
+            {"name": self.TEST_NAME, "version": "0.0.2"},
+            {"name": self.TEST_NAME, "version": "0.0.3"},
+            {"name": self.TEST_NAME, "version": "0.0.4"},
+        ] 
+        info = i._validate_and_update_instrumentation(existing_info) 
+
+        self.assertEqual(3, len(info))
+        self.assertEqual(i._LIBRARY_VERSION, info[2]["version"])
+        self.assertEqual(i._PYTHON_LIBRARY_NAME, info[2]["name"])
+
+
     def test_is_valid(self):
         invalid_name = {"name": "foo-logging", "version": "3.0.0"}
         no_name = {"version": "3.0.0"}

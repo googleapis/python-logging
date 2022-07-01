@@ -26,6 +26,7 @@ _LIBRARY_VERSION = __version__
 
 _MAX_NAME_LENGTH = 14
 _MAX_VERSION_LENGTH = 14
+_MAX_INSTRUMENTATION_ENTRIES = 3
 
 
 def _add_instrumentation(entries, **kw):
@@ -130,7 +131,7 @@ def _validate_and_update_instrumentation(existing_info=None):
     info_stack.append(_get_instrumentation_source())
     if existing_info:
         for info in existing_info[::-1]:
-            if len(info_stack) == 3:
+            if len(info_stack) == _MAX_INSTRUMENTATION_ENTRIES:
                 break
             if _is_valid(info):
                 info_stack.append(
