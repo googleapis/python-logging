@@ -93,6 +93,7 @@ def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
     entry = StructEntry(payload=payload, **kw)
     return entry
 
+
 def _validate_and_update_instrumentation(existing_info=None):
     """Validate existing instrumentation info and append the final entry
 
@@ -134,14 +135,16 @@ def _get_instrumentation_source(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERS
     source = {"name": name, "version": version}
     # truncate strings to no more than _MAX_NAME_LENGTH characters
     for key, val in source.items():
-      source[key] = val if len(val) <= _MAX_NAME_LENGTH else f"{val[:_MAX_NAME_LENGTH]}*"
+        source[key] = (
+            val if len(val) <= _MAX_NAME_LENGTH else f"{val[:_MAX_NAME_LENGTH]}*"
+        )
     return source
 
 
 def _is_valid(info):
     """Validates an existing instrumentation_source entry
 
-        An entry is currently considered valid for this library if it starts 
+        An entry is currently considered valid for this library if it starts
         with the string 'python'
 
     Args:
