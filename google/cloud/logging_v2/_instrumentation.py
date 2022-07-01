@@ -49,8 +49,6 @@ def _add_instrumentation(entries, **kw):
     is_written = False
     new_entries = []
     for entry in entries:
-        if is_written:
-            break
         try:
             current_info = entry.payload[_DIAGNOSTIC_INFO_KEY][
                 _INSTRUMENTATION_SOURCE_KEY
