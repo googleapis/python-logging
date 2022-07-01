@@ -93,24 +93,6 @@ def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
     entry = StructEntry(payload=payload, **kw)
     return entry
 
-
-def _truncate_string(str, max_length):
-    """Truncate a string to a maximum length
-
-    Args:
-        str(str): The string to truncate
-        max_length(int): The maximum length
-
-    Returns:
-        A string containing either 'str' or a truncated version of
-        'str' with an asterisk at the end
-    """
-    if len(str) > max_length:
-        return str[:max_length] + "*"
-    else:
-        return str
-
-
 def _validate_and_update_instrumentation(existing_info=None):
     """Validate existing instrumentation info and append the final entry
 
@@ -149,14 +131,18 @@ def _get_instrumentation_source(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERS
     Returns:
        obj: JSON object with library information
     """
-    return {
-        "name": _truncate_string(name, _MAX_NAME_LENGTH),
-        "version": _truncate_string(version, _MAX_VERSION_LENGTH),
-    }
+    source = {"name": name, "version": version}
+    # truncate strings to no more than _MAX_NAME_LENGTH characters
+    for key, val in source.items():
+      source[key] = val if len(val) <= _MAX_NAME_LENGTH else f"{val[:_MAX_NAME_LENGTH]}*"
+    return source
 
 
 def _is_valid(info):
     """Validates an existing instrumentation_source entry
+
+        An entry is currently considered valid for this library if it starts 
+        with the string 'python'
 
     Args:
         info(dict): A dictionary representing the instrumentation_source entry
