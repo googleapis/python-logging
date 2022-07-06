@@ -13,8 +13,6 @@
 # limitations under the License.
 
 """Add diagnostic instrumentation source information to logs"""
-import collections
-
 from google.cloud.logging_v2.entries import StructEntry
 from google.cloud.logging_v2 import __version__
 
