@@ -63,14 +63,3 @@ class TestInstrumentation(unittest.TestCase):
 
         self.assertEqual(expected_name, self._get_diagonstic_value(entry, "name"))
         self.assertEqual(expected_version, self._get_diagonstic_value(entry, "version"))
-
-    def test_is_valid(self):
-        invalid_name = {"name": "foo-logging", "version": "3.0.0"}
-        no_name = {"version": "3.0.0"}
-
-        valid = {"name": i._PYTHON_LIBRARY_NAME, "version": i._LIBRARY_VERSION}
-
-        self.assertFalse(i._is_valid(invalid_name))
-        self.assertFalse(i._is_valid(no_name))
-
-        self.assertTrue(i._is_valid(valid))
