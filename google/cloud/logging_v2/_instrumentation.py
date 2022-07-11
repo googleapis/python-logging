@@ -88,23 +88,3 @@ def _get_instrumentation_source(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERS
             val if len(val) <= _MAX_NAME_LENGTH else f"{val[:_MAX_NAME_LENGTH]}*"
         )
     return source
-
-
-def _is_valid(info):
-    """Validates an existing instrumentation_source entry
-
-        An entry is currently considered valid for this library if it starts
-        with the string 'python'
-
-    Args:
-        info(dict): A dictionary representing the instrumentation_source entry
-    Returns:
-        bool: Whether the object is a valid instrumentation_source_entry
-    """
-    try:
-        if info["name"][: len(_PYTHON_LIBRARY_NAME)] != _PYTHON_LIBRARY_NAME:
-            return False
-    except KeyError:
-        return False
-
-    return True
