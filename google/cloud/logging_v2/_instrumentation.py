@@ -28,12 +28,9 @@ _MAX_INSTRUMENTATION_ENTRIES = 3
 
 
 def _add_instrumentation(entries, **kw):
-    """Validate or add instrumentation information to a list of entries
+    """Add instrumentation information to a list of entries
 
-        Ensures that a single log entry with valid instrumentation info
-        is in `entries`.  If instrumentation info was manually added,
-        it is validated to ensure it matches this library's information.
-        Otherwise, a new diagnostic entry is prepended to the list of
+        A new diagnostic entry is prepended to the list of
         entries.
 
     Args:
@@ -41,30 +38,13 @@ def _add_instrumentation(entries, **kw):
             the log entry resources to log.
 
     Returns:
-        Sequence[Mapping[str, ...]]: entries with instrumentation info validated if present
-        otherwise added to beginning of list.
+        Sequence[Mapping[str, ...]]: entries with instrumentation info added to
+        the beginning of list.
     """
-    is_written = False
-    new_entries = []
-    for entry in entries:
-        try:
-            current_info = entry.payload[_DIAGNOSTIC_INFO_KEY][
-                _INSTRUMENTATION_SOURCE_KEY
-            ]
-            entry.payload[_DIAGNOSTIC_INFO_KEY][
-                _INSTRUMENTATION_SOURCE_KEY
-            ] = _validate_and_update_instrumentation(current_info)
-            is_written = True
-        except KeyError:  # Entry does not have instrumentation info
-            pass
-        except AttributeError:  # Entry does not have instrumentation info
-            pass
-        new_entries.append(entry)
-
-    if not is_written:
-        diagnostic_entry = _create_diagnostic_entry(**kw)
-        new_entries.insert(0, diagnostic_entry.to_api_repr())
-    return new_entries
+    
+    diagnostic_entry = _create_diagnostic_entry(**kw)
+    entries.insert(0, diagnostic_entry.to_api_repr())
+    return entries
 
 
 def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION, **kw):
@@ -90,36 +70,6 @@ def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
     kw["severity"] = "INFO"
     entry = StructEntry(payload=payload, **kw)
     return entry
-
-
-def _validate_and_update_instrumentation(existing_info=None):
-    """Validate existing instrumentation info and append the final entry
-
-        Validates that existing instrumentation info matches this
-        library's info, and ensures that there are at most 3 entries
-        in the instrumentation_source array (to avoid malicious log inflation).
-
-    Args:
-        existing_info: A list of instrumentation_source objects already on an etnry
-
-    Returns:
-        A validated list of instrumentation_source objects with the current
-        library entry at the end
-    """
-    info_stack = []
-    info_stack.append(_get_instrumentation_source())
-    if existing_info:
-        for info in existing_info[::-1]:
-            if len(info_stack) == _MAX_INSTRUMENTATION_ENTRIES:
-                break
-            if _is_valid(info):
-                info_stack.append(
-                    _get_instrumentation_source(info["name"], info["version"])
-                )
-
-    info_stack.reverse()
-    return info_stack
-
 
 def _get_instrumentation_source(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION):
     """Gets a JSON representation of the instrumentation_source
