@@ -41,7 +41,7 @@ def _add_instrumentation(entries, **kw):
         Sequence[Mapping[str, ...]]: entries with instrumentation info added to
         the beginning of list.
     """
-    
+
     diagnostic_entry = _create_diagnostic_entry(**kw)
     entries.insert(0, diagnostic_entry.to_api_repr())
     return entries
@@ -70,6 +70,7 @@ def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
     kw["severity"] = "INFO"
     entry = StructEntry(payload=payload, **kw)
     return entry
+
 
 def _get_instrumentation_source(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION):
     """Gets a JSON representation of the instrumentation_source
