@@ -310,6 +310,8 @@ def performance(session):
             perf_test_folder_path,
             *session.posargs,
         )
+    else:
+        session.error(f"Performance tests not found at {perf_test_folder_path}")
 
 
 @nox.session(python=DEFAULT_PYTHON_VERSION)
