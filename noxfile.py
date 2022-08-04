@@ -311,6 +311,17 @@ def performance(session):
             perf_test_folder_path,
             *session.posargs,
         )
+        # print quick summary of results from junitxml file
+        print("junitxml results:")
+        with open(f"perf_{session.python}_sponge_log.xml", "r") as file:
+            data = file.read().replace('\n', '')
+            total = 0
+            for entry in data.split("testcase classname")[1:]:
+                name = re.search('name="+(\w+)', entry)[1]
+                time =  re.search('time="+([0-9\.]+)', entry)[1]
+                total += float(time)
+                print(f"\t{name}: {time}s")
+            print(f"\tTotal: {total:.3f}s")
     else:
         session.error(f"Performance tests not found at {perf_test_folder_path}")
 
