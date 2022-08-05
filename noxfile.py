@@ -66,15 +66,12 @@ SYSTEM_TEST_DEPENDENCIES = []
 SYSTEM_TEST_EXTRAS = []
 SYSTEM_TEST_EXTRAS_BY_PYTHON = {}
 
-PERFORMANCE_TEST_PYTHON_VERSIONS = ["3.8"]
-
 CURRENT_DIRECTORY = pathlib.Path(__file__).parent.absolute()
 
 # 'docfx' is excluded since it only needs to run in 'docs-presubmit'
 nox.options.sessions = [
     "unit",
     "system",
-    "performance",
     "cover",
     "lint",
     "lint_setup_py",
@@ -267,63 +264,6 @@ def system(session):
             system_test_folder_path,
             *session.posargs,
         )
-
-@nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
-def performance(session):
-    """Run the performance test suite."""
-    constraints_path = str(
-        CURRENT_DIRECTORY / "testing" / f"constraints-{session.python}.txt"
-    )
-    perf_test_path = os.path.join("tests", "performance.py")
-    perf_test_folder_path = os.path.join("tests", "performance")
-
-    # Check the value of `RUN_SYSTEM_TESTS` env var. It defaults to true.
-    if os.environ.get("RUN_PERFORMANCE_TESTS", "true") == "false":
-        session.skip("RUN_PERFORMANCE_TESTS is set to false, skipping")
-
-    perf_test_exists = os.path.exists(perf_test_path)
-    perf_test_folder_exists = os.path.exists(perf_test_folder_path)
-    # Sanity check: only run tests if found.
-    if not perf_test_exists and not perf_test_folder_exists:
-        session.skip("Performance tests were not found")
-
-    # Use pre-release gRPC for performance tests.
-    session.install("--pre", "grpcio")
-
-    # Install all test dependencies, then install this package into the
-    # virtualenv's dist-packages.
-    session.install(
-        "mock",
-        "pandas",
-        "rich",
-        "pytest",
-        "google-cloud-testutils",
-        "-c",
-        constraints_path,
-    )
-    session.install("-e", ".", "-c", constraints_path)
-
-    if perf_test_folder_exists:
-        session.run(
-            "py.test",
-            "-s",
-            f"--junitxml=perf_{session.python}_sponge_log.xml",
-            perf_test_folder_path,
-            *session.posargs,
-        )
-        # print quick summary of results from junitxml file
-        print("junitxml results:")
-        with open(f"perf_{session.python}_sponge_log.xml", "r") as file:
-            data = file.read().replace('\n', '')
-            total = 0
-            for entry in data.split("testcase classname")[1:]:
-                name = re.search('name="+(\w+)', entry)[1]
-                time =  re.search('time="+([0-9\.]+)', entry)[1]
-                total += float(time)
-                print(f"\t{name}: {time}s")
-            print(f"\tTotal: {total:.3f}s")
-    else:
-        session.error(f"Performance tests not found at {perf_test_folder_path}")
 
 
 @nox.session(python=DEFAULT_PYTHON_VERSION)
