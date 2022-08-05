@@ -33,6 +33,9 @@ PERFORMANCE_TEST_PYTHON_VERSIONS = ["3.8"]
 CURRENT_DIRECTORY = pathlib.Path(__file__).parent.absolute()
 REPO_ROOT_DIRECTORY = CURRENT_DIRECTORY.parent.parent
 
+REPO_URL = "https://github.com/googleapis/python-logging.git"
+CLONE_REPO_DIR = "python-logging-main"
+
 # 'docfx' is excluded since it only needs to run in 'docs-presubmit'
 nox.options.sessions = [
     "performance",
@@ -62,6 +65,7 @@ def performance(session):
 
     session.run(
         "py.test",
+        f"--ignore={CLONE_REPO_DIR}",
         "-s",
         f"--junitxml=perf_{session.python}_sponge_log.xml",
         str(CURRENT_DIRECTORY),
@@ -85,3 +89,37 @@ def print_results(session):
             print(f"\tTotal: {total:.3f}s")
     else:
         print(f"error: {junitxml_file_path} not found")
+
+@nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
+def performance_regression(session):
+    """Check performance against repo main."""
+
+
+    clone_dir = os.path.join(CURRENT_DIRECTORY, CLONE_REPO_DIR)
+
+    if  not os.path.exists(clone_dir):
+        print("downloading copy of repo at `main`")
+        session.run("git", "clone", repo_url, CLONE_REPO_DIR)
+
+    # Use pre-release gRPC for performance tests.
+    session.install("--pre", "grpcio")
+
+    # Install all test dependencies, then install this package into the
+    # virtualenv's dist-packages.
+    session.install(
+        "mock",
+        "pandas",
+        "rich",
+        "pytest",
+        "google-cloud-testutils",
+    )
+    session.install("-e", str(clone_dir))
+
+    session.run(
+        "py.test",
+        f"--ignore={CLONE_REPO_DIR}",
+        "-s",
+        f"--junitxml=main_perf_{session.python}_sponge_log.xml",
+        str(CURRENT_DIRECTORY),
+        *session.posargs,
+    )
