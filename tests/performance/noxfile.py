@@ -39,7 +39,6 @@ CLONE_REPO_DIR = "python-logging-main"
 # 'docfx' is excluded since it only needs to run in 'docs-presubmit'
 nox.options.sessions = [
     "performance",
-    "print_junitxml_results",
 ]
 
 # Error if a python version is missing
@@ -62,23 +61,28 @@ def performance(session):
     )
     session.install("-e", str(REPO_ROOT_DIRECTORY))
 
-
+    file_path = f"perf_{session.python}_sponge_log.xml"
     session.run(
         "py.test",
         f"--ignore={CLONE_REPO_DIR}",
         "-s",
-        f"--junitxml=perf_{session.python}_sponge_log.xml",
+        f"--junitxml={file_path}",
         str(CURRENT_DIRECTORY),
         *session.posargs,
     )
+    print_junitxml_results(file_path)
 
 @nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
 def print_results(session):
     """Print results from last performance test session."""
+    file_path = f"perf_{session.python}_sponge_log.xml"
+    print_junitxml_results(file_path)
 
-    junitxml_file_path = f"perf_{session.python}_sponge_log.xml"
-    if os.path.exists(junitxml_file_path):
-        with open(f"perf_{session.python}_sponge_log.xml", "r") as file:
+def print_junitxml_results(file_path):
+    """Print results from specified results file."""
+
+    if os.path.exists(file_path):
+        with open(file_path, "r") as file:
             data = file.read().replace('\n', '')
             total = 0
             for entry in data.split("testcase classname")[1:]:
@@ -88,12 +92,11 @@ def print_results(session):
                 print(f"\t{name}: {time}s")
             print(f"\tTotal: {total:.3f}s")
     else:
-        print(f"error: {junitxml_file_path} not found")
+        print(f"error: {file_path} not found")
 
 @nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
 def performance_regression(session):
     """Check performance against repo main."""
-
 
     clone_dir = os.path.join(CURRENT_DIRECTORY, CLONE_REPO_DIR)
 
@@ -113,13 +116,29 @@ def performance_regression(session):
         "pytest",
         "google-cloud-testutils",
     )
-    session.install("-e", str(clone_dir))
 
+    main_file_name = "main_perf_{session.python}_sponge_log.xml"
+    head_file_name = "head_perf_{session.python}_sponge_log.xml"
+    # test against main
+    session.install("-e", str(clone_dir))
     session.run(
         "py.test",
         f"--ignore={CLONE_REPO_DIR}",
         "-s",
-        f"--junitxml=main_perf_{session.python}_sponge_log.xml",
+        f"--junitxml={main_file_name}",
         str(CURRENT_DIRECTORY),
         *session.posargs,
     )
+    # test head
+    session.install("-e", str(REPO_ROOT_DIRECTORY))
+    session.run(
+        "py.test",
+        f"--ignore={CLONE_REPO_DIR}",
+        "-s",
+        f"--junitxml={head_file_name}",
+        str(CURRENT_DIRECTORY),
+        *session.posargs,
+    )
+    # print results
+    print_junitxml_results(main_file_name)
+    print_junitxml_results(head_file_name)
