@@ -36,6 +36,7 @@ REPO_ROOT_DIRECTORY = CURRENT_DIRECTORY.parent.parent
 # 'docfx' is excluded since it only needs to run in 'docs-presubmit'
 nox.options.sessions = [
     "performance",
+    "print_junitxml_results",
 ]
 
 # Error if a python version is missing
@@ -66,15 +67,21 @@ def performance(session):
         str(CURRENT_DIRECTORY),
         *session.posargs,
     )
-    # print quick summary of results from junitxml file
-    print("junitxml results:")
-    with open(f"perf_{session.python}_sponge_log.xml", "r") as file:
-        data = file.read().replace('\n', '')
-        total = 0
-        for entry in data.split("testcase classname")[1:]:
-            name = re.search('name="+(\w+)', entry)[1]
-            time =  re.search('time="+([0-9\.]+)', entry)[1]
-            total += float(time)
-            print(f"\t{name}: {time}s")
-        print(f"\tTotal: {total:.3f}s")
 
+@nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
+def print_results(session):
+    """Print results from last performance test session."""
+
+    junitxml_file_path = f"perf_{session.python}_sponge_log.xml"
+    if os.path.exists(junitxml_file_path):
+        with open(f"perf_{session.python}_sponge_log.xml", "r") as file:
+            data = file.read().replace('\n', '')
+            total = 0
+            for entry in data.split("testcase classname")[1:]:
+                name = re.search('name="+(\w+)', entry)[1]
+                time =  re.search('time="+([0-9\.]+)', entry)[1]
+                total += float(time)
+                print(f"\t{name}: {time}s")
+            print(f"\tTotal: {total:.3f}s")
+    else:
+        print(f"error: {junitxml_file_path} not found")
