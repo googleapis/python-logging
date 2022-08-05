@@ -40,6 +40,8 @@ CLONE_REPO_DIR = "python-logging-main"
 # 'docfx' is excluded since it only needs to run in 'docs-presubmit'
 nox.options.sessions = [
     "performance",
+    "performance_regression",
+    "print_last_results"
 ]
 
 # Error if a python version is missing
