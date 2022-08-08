@@ -127,9 +127,10 @@ def performance_regression(session, percent_threshold=10):
         "google-cloud-testutils",
     )
 
-    main_file_name = "main_perf_{session.python}_sponge_log.xml"
-    head_file_name = "head_perf_{session.python}_sponge_log.xml"
+    main_file_name = f"main_perf_{session.python}_sponge_log.xml"
+    head_file_name = f"head_perf_{session.python}_sponge_log.xml"
     # test against main
+    print("testing against library at `main`...")
     session.install("-e", str(clone_dir))
     session.run(
         "py.test",
@@ -138,8 +139,10 @@ def performance_regression(session, percent_threshold=10):
         f"--junitxml={main_file_name}",
         str(CURRENT_DIRECTORY),
         *session.posargs,
+        success_codes=[1,0], # don't report failures at this step
     )
     # test head
+    print("testing against library at `HEAD`...")
     session.install("-e", str(REPO_ROOT_DIRECTORY))
     session.run(
         "py.test",
@@ -148,6 +151,7 @@ def performance_regression(session, percent_threshold=10):
         f"--junitxml={head_file_name}",
         str(CURRENT_DIRECTORY),
         *session.posargs,
+        success_codes=[1,0], # don't report failures at this step
     )
     # print results
     main_results = get_junitxml_results(main_file_name, print_results=False)
