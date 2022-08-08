@@ -112,7 +112,7 @@ def performance_regression(session, percent_threshold=10):
 
     if  not os.path.exists(clone_dir):
         print("downloading copy of repo at `main`")
-        session.run("git", "clone", repo_url, CLONE_REPO_DIR)
+        session.run("git", "clone", REPO_URL, CLONE_REPO_DIR)
 
     # Use pre-release gRPC for performance tests.
     session.install("--pre", "grpcio")

@@ -31,15 +31,11 @@ env | grep KOKORO
 
 
 # Install nox
-python3.9 -m pip install --upgrade --quiet nox
-
-# Setup service account credentials.
-export GOOGLE_APPLICATION_CREDENTIALS=${KOKORO_GFILE_DIR}/service-account.json
-gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+python3 -m pip install --upgrade --quiet nox
 
 # run performance tests
 set +e
-python3.9 -m nox -s performance
+python3 -m nox
 TEST_STATUS_CODE=$?
 
 # Workaround for Kokoro permissions issue: delete secrets
