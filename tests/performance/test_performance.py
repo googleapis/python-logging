@@ -13,21 +13,14 @@
 # limitations under the License.
 
 import logging
-import pytest
 import unittest
-import math
 import mock
 import time
-import itertools
 import io
-import logging
-from pathlib import Path
 
 import pandas as pd
 import cProfile
 import pstats
-from rich.console import Console
-from rich.markdown import Markdown
 from rich.panel import Panel
 import rich
 
@@ -40,7 +33,6 @@ from google.cloud.logging_v2.handlers.transports import BackgroundThreadTranspor
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging.handlers import CloudLoggingHandler
 from google.cloud.logging.handlers import StructuredLogHandler
-from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2._http import _LoggingAPI
 import google.auth.credentials
 from google.cloud.logging_v2 import _gapic
@@ -129,7 +121,6 @@ def _make_client(mock_network=True, use_grpc=True, mock_latency=0.01):
         mock_http = MockHttpAPI(client, latency=mock_latency)
         client._logging_api = mock_http
     logger = client.logger(name="test_logger")
-    end = time.perf_counter()
     return client, logger
 
 
@@ -143,7 +134,6 @@ class TestPerformance(unittest.TestCase):
         Print profile and benchmark results ater completing performance tests
         Returns the combined time for all tests
         """
-        console = Console()
         # print header
         print()
         rich.print(Panel(f"[blue]{title} Performance Tests"))

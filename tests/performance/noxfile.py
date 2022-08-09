@@ -18,8 +18,6 @@ from __future__ import absolute_import
 import os
 import pathlib
 import re
-import shutil
-import warnings
 from colorlog.escape_codes import parse_colors
 
 import nox
@@ -36,7 +34,7 @@ REPO_URL = "https://github.com/googleapis/python-logging.git"
 CLONE_REPO_DIR = "python-logging-main"
 
 # 'docfx' is excluded since it only needs to run in 'docs-presubmit'
-nox.options.sessions = ["performance", "performance_regression", "print_last_results"]
+nox.options.sessions = ["performance", "performance_regression"]
 
 # Error if a python version is missing
 nox.options.error_on_missing_interpreters = True
@@ -89,8 +87,8 @@ def get_junitxml_results(file_path, print_results=True):
             total = 0
             results = {}
             for entry in data.split("testcase classname")[1:]:
-                name = re.search('name="+(\w+)', entry)[1]
-                time = re.search('time="+([0-9\.]+)', entry)[1]
+                name = re.search(r'name="+(\w+)', entry)[1]
+                time = re.search(r'time="+([0-9\.]+)', entry)[1]
                 total += float(time)
                 if print_results:
                     print(f"\t{name}: {time}s")
