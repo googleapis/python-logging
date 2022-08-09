@@ -36,14 +36,11 @@ REPO_URL = "https://github.com/googleapis/python-logging.git"
 CLONE_REPO_DIR = "python-logging-main"
 
 # 'docfx' is excluded since it only needs to run in 'docs-presubmit'
-nox.options.sessions = [
-    "performance",
-    "performance_regression",
-    "print_last_results"
-]
+nox.options.sessions = ["performance", "performance_regression", "print_last_results"]
 
 # Error if a python version is missing
 nox.options.error_on_missing_interpreters = True
+
 
 @nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
 def performance(session):
@@ -73,11 +70,13 @@ def performance(session):
     )
     get_junitxml_results(file_path)
 
+
 @nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
 def print_last_results(session):
     """Print results from last performance test session."""
     file_path = f"perf_{session.python}_sponge_log.xml"
     get_junitxml_results(file_path)
+
 
 def get_junitxml_results(file_path, print_results=True):
     """Print results from specified results file."""
@@ -86,12 +85,12 @@ def get_junitxml_results(file_path, print_results=True):
         if print_results:
             print(f"{file_path} results:")
         with open(file_path, "r") as file:
-            data = file.read().replace('\n', '')
+            data = file.read().replace("\n", "")
             total = 0
             results = {}
             for entry in data.split("testcase classname")[1:]:
                 name = re.search('name="+(\w+)', entry)[1]
-                time =  re.search('time="+([0-9\.]+)', entry)[1]
+                time = re.search('time="+([0-9\.]+)', entry)[1]
                 total += float(time)
                 if print_results:
                     print(f"\t{name}: {time}s")
@@ -102,13 +101,14 @@ def get_junitxml_results(file_path, print_results=True):
         print(f"error: {file_path} not found")
     return results
 
+
 @nox.session(python=PERFORMANCE_TEST_PYTHON_VERSIONS)
 def performance_regression(session, percent_threshold=10):
     """Check performance against repo main."""
 
     clone_dir = os.path.join(CURRENT_DIRECTORY, CLONE_REPO_DIR)
 
-    if  not os.path.exists(clone_dir):
+    if not os.path.exists(clone_dir):
         print("downloading copy of repo at `main`")
         session.run("git", "clone", REPO_URL, CLONE_REPO_DIR)
 
@@ -137,7 +137,7 @@ def performance_regression(session, percent_threshold=10):
         f"--junitxml={main_file_name}",
         str(CURRENT_DIRECTORY),
         *session.posargs,
-        success_codes=[1,0], # don't report failures at this step
+        success_codes=[1, 0],  # don't report failures at this step
     )
     # test head
     print("testing against library at `HEAD`...")
@@ -149,7 +149,7 @@ def performance_regression(session, percent_threshold=10):
         f"--junitxml={head_file_name}",
         str(CURRENT_DIRECTORY),
         *session.posargs,
-        success_codes=[1,0], # don't report failures at this step
+        success_codes=[1, 0],  # don't report failures at this step
     )
     # print results
     main_results = get_junitxml_results(main_file_name, print_results=False)
@@ -159,16 +159,18 @@ def performance_regression(session, percent_threshold=10):
         if test in main_results:
             prev_time = main_results[test]
             diff = time - prev_time
-            percent_diff = diff/prev_time
-            test_passes = percent_diff*100 < percent_threshold
+            percent_diff = diff / prev_time
+            test_passes = percent_diff * 100 < percent_threshold
             all_pass = all_pass and test_passes
             if not test_passes:
-                color = parse_colors('red')
+                color = parse_colors("red")
             elif diff > 0:
-                color = parse_colors('yellow')
+                color = parse_colors("yellow")
             else:
                 color = parse_colors("green")
-            print(f"{test}: {color} {diff:+.3f}s ({percent_diff:+.1%}){parse_colors('reset')}")
+            print(
+                f"{test}: {color} {diff:+.3f}s ({percent_diff:+.1%}){parse_colors('reset')}"
+            )
         else:
             print(f"{test}: ???")
     if not all_pass:
