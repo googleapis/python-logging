@@ -82,6 +82,13 @@ s.replace(
     'pass_down_envvars+=(\n    "ENVIRONMENT"\n    "RUNTIME"'
 )
 
+for test_type in ["continuous", "presubmit", "release", "samples", "docs"]:
+    s.move(
+        ".kokoro/common_env_vars.cfg",
+        f".kokoro/{test_type}/common.cfg",
+        merge=lambda src, dst, _, : f"{dst}\n{src}",
+    )
+
 # don't lint environment tests
 s.replace(
     ".flake8",
