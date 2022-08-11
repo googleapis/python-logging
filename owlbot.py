@@ -110,7 +110,7 @@ python.configure_previous_major_version_branches()
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)
 
 # add shared environment variables to test configs
-sample_test_dirs = [f"samples/python{v}" for v in ["3.10","3.9", "3.8", "3.7"]]:
+sample_test_dirs = [f"samples/python{v}" for v in ["3.10","3.9", "3.8", "3.7"]]
 for test_type in ["continuous", "presubmit", "release", "samples/lint", "docs"] + sample_test_dirs:
     s.move(
         ".kokoro/common_env_vars.cfg",
