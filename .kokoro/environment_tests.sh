@@ -53,7 +53,7 @@ gcloud auth configure-docker -q
 python3 -m pip uninstall --yes --quiet nox-automation
 
 # Install nox
-pip3 install --upgrade --quiet nox
+python3 -m pip install --upgrade --user --quiet nox
 python3 -m nox --version
 
 # Install kubectl
