@@ -49,11 +49,10 @@ gcloud config set compute/zone us-central1-b
 # authenticate docker
 gcloud auth configure-docker -q
 
-# Remove old nox
-python3 -m pip uninstall --yes --quiet nox-automation
-
 # Install nox
-python3 -m pip install --upgrade --user --quiet nox
+virtualenv .venv
+source .venv/bin/activate
+python3 -m pip install --upgrade --quiet nox
 python3 -m nox --version
 
 # Install kubectl
