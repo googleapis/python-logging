@@ -50,11 +50,11 @@ gcloud config set compute/zone us-central1-b
 gcloud auth configure-docker -q
 
 # Remove old nox
-python3.6 -m pip uninstall --yes --quiet nox-automation
+python3 -m pip uninstall --yes --quiet nox-automation
 
 # Install nox
-python3.6 -m pip install --upgrade --quiet nox
-python3.6 -m nox --version
+python3 -m pip install --upgrade --quiet nox
+python3 -m nox --version
 
 # Install kubectl
 if [[ "${ENVIRONMENT}" == "kubernetes" ]]; then
@@ -73,7 +73,7 @@ echo $ENVCTL_ID
 # Run the specified environment test
 set +e
 
-python3.6 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
+python3 -m nox --session "tests(language='python', platform='$ENVIRONMENT')"
 TEST_STATUS_CODE=$?
 
 # destroy resources
