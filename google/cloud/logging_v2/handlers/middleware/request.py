@@ -33,37 +33,17 @@ def _get_django_request():
     return getattr(_thread_locals, "request", None)
 
 
-import asyncio
-from django.utils.decorators import sync_and_async_middleware
-
-@sync_and_async_middleware
 def RequestMiddleware(get_response):
     """Saves the request in thread local"""
 
-    if asyncio.iscoroutinefunction(get_response):
-        async def middleware(request):
-            """Called on each request, before Django decides which view to execute.
+    def middleware(request):
+        """Called on each request, before Django decides which view to execute.
 
-            Args:
-                request(django.http.request.HttpRequest):
-                    Django http request.
-            """
-            print(type(request))
-            print(request)
-            _thread_locals.request = request
-            response = await get_response(request)
-            return response
-    else:
-        def middleware(request):
-            """Called on each request, before Django decides which view to execute.
-
-            Args:
-                request(django.http.request.HttpRequest):
-                    Django http request.
-            """
-            print(type(request))
-            print(request)
-            _thread_locals.request = request
-            response = get_response(request)
-            return response
+        Args:
+            request(django.http.request.HttpRequest):
+                Django http request.
+        """
+        _thread_locals.request = request
+        response = get_response(request)
+        return response
     return middleware
