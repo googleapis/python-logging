@@ -48,4 +48,5 @@ def RequestMiddleware(get_response):
             return get_response(request)
         else:
             return None
+
     return middleware
