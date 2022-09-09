@@ -33,23 +33,37 @@ def _get_django_request():
     return getattr(_thread_locals, "request", None)
 
 
-try:
-    from django.utils.deprecation import MiddlewareMixin
-except ImportError:  # pragma: NO COVER
-    MiddlewareMixin = object
+import asyncio
+from django.utils.decorators import sync_and_async_middleware
 
-
-class RequestMiddleware(MiddlewareMixin):
+@sync_and_async_middleware
+def RequestMiddleware(get_response):
     """Saves the request in thread local"""
 
-    def __init__(self, get_response):
-        self.get_response = get_response
+    if asyncio.iscoroutinefunction(get_response):
+        async def middleware(request):
+            """Called on each request, before Django decides which view to execute.
 
-    def process_request(self, request):
-        """Called on each request, before Django decides which view to execute.
+            Args:
+                request(django.http.request.HttpRequest):
+                    Django http request.
+            """
+            print(type(request))
+            print(request)
+            _thread_locals.request = request
+            response = await get_response(request)
+            return response
+    else:
+        def middleware(request):
+            """Called on each request, before Django decides which view to execute.
 
-        Args:
-            request(django.http.request.HttpRequest):
-                Django http request.
-        """
-        _thread_locals.request = request
+            Args:
+                request(django.http.request.HttpRequest):
+                    Django http request.
+            """
+            print(type(request))
+            print(request)
+            _thread_locals.request = request
+            response = get_response(request)
+            return response
+    return middleware
