@@ -44,6 +44,8 @@ def RequestMiddleware(get_response):
                 Django http request.
         """
         _thread_locals.request = request
-        response = get_response(request)
-        return response
+        if get_response:
+            return get_response(request)
+        else:
+            return None
     return middleware
