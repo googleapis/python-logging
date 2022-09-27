@@ -36,13 +36,24 @@ GCP_FORMAT = (
     "}"
 )
 
-GCP_STRUCTURED_LOGGING_FIELDS = frozenset({
-    "severity", "httpRequest", "time", "timestamp",
-    "timestampSeconds", "timestampNanos", "logging.googleapis.com/insertId",
-    "logging.googleapis.com/labels", "logging.googleapis.com/operation",
-    "logging.googleapis.com/sourceLocation", "logging.googleapis.com/spanId",
-    "logging.googleapis.com/trace", "logging.googleapis.com/trace_sampled"
-    })
+GCP_STRUCTURED_LOGGING_FIELDS = frozenset(
+    {
+        "severity",
+        "httpRequest",
+        "time",
+        "timestamp",
+        "timestampSeconds",
+        "timestampNanos",
+        "logging.googleapis.com/insertId",
+        "logging.googleapis.com/labels",
+        "logging.googleapis.com/operation",
+        "logging.googleapis.com/sourceLocation",
+        "logging.googleapis.com/spanId",
+        "logging.googleapis.com/trace",
+        "logging.googleapis.com/trace_sampled",
+    }
+)
+
 
 class StructuredLogHandler(logging.StreamHandler):
     """Handler to format logs into the Cloud Logging structured log format,
