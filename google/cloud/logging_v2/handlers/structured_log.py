@@ -73,7 +73,7 @@ class StructuredLogHandler(logging.StreamHandler):
             # if input is a dictionary, encode it as a json string
             encoded_msg = json.dumps(message, ensure_ascii=False)
             # strip out open and close parentheses
-            payload = encoded_msg.lstrip("{").rstrip("}") + ","
+            payload = encoded_msg[1:-1] + ","
         elif message:
             # properly break any formatting in string to make it json safe
             encoded_message = json.dumps(message, ensure_ascii=False)
@@ -95,5 +95,5 @@ class StructuredLogHandler(logging.StreamHandler):
 
     def emit_instrumentation_info(self):
         google.cloud.logging_v2._instrumentation_emitted = True
-        diagnostic_object = _create_diagnostic_entry().to_api_repr()
-        logging.info(diagnostic_object)
+        diagnostic_object = _create_diagnostic_entry()
+        logging.info(diagnostic_object.payload)
