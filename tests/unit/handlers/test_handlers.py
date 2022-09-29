@@ -579,7 +579,6 @@ class TestCloudLoggingHandler(unittest.TestCase):
         """
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
         import logging
-        import json
 
         client = _Client(self.PROJECT)
         handler = self._make_one(
