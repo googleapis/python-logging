@@ -447,7 +447,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         import json
 
         handler = self._make_one()
-        json_fields = {"outer": {"inner":{"hello":"world"}}}
+        json_fields = {"outer": {"inner": {"hello": "world"}}}
         record = logging.LogRecord(
             None,
             logging.INFO,
@@ -491,6 +491,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         import logging
         import mock
         import json
+
         with mock.patch.object(logging, "info") as mock_log:
             handler = self._make_one()
             handler.emit_instrumentation_info()
@@ -503,9 +504,15 @@ class TestStructuredLogHandler(unittest.TestCase):
             self.assertEqual(len(inst_source_dict.keys()), 1)
             self.assertIn("instrumentation_source", inst_source_dict.keys())
             source_list = inst_source_dict["instrumentation_source"]
-            self.assertEqual(len(source_list), 1, "expected single instrumentation source")
+            self.assertEqual(
+                len(source_list), 1, "expected single instrumentation source"
+            )
             for source_dict in source_list:
-                self.assertEqual(len(source_dict.keys()), 2, f"expected two keys in payload: {source_dict.keys()}")
+                self.assertEqual(
+                    len(source_dict.keys()),
+                    2,
+                    f"expected two keys in payload: {source_dict.keys()}",
+                )
                 self.assertIn("name", source_dict.keys())
                 self.assertIn("version", source_dict.keys())
                 self.assertEqual(source_dict["name"], "python")
@@ -522,7 +529,8 @@ class TestStructuredLogHandler(unittest.TestCase):
             record.created = None
             handler.filter(record)
             result = json.loads(handler.format(record))
-            self.assertEqual(result["logging.googleapis.com/diagnostic"], inst_source_dict, "instrumentation payload not logged properly")
-
-
-
+            self.assertEqual(
+                result["logging.googleapis.com/diagnostic"],
+                inst_source_dict,
+                "instrumentation payload not logged properly",
+            )

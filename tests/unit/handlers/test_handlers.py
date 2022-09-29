@@ -573,7 +573,6 @@ class TestCloudLoggingHandler(unittest.TestCase):
             ),
         )
 
-
     def test_format_with_nested_json(self):
         """
         JSON can contain nested dictionaries of data
@@ -581,13 +580,14 @@ class TestCloudLoggingHandler(unittest.TestCase):
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
         import logging
         import json
+
         client = _Client(self.PROJECT)
         handler = self._make_one(
             client,
             transport=_Transport,
             resource=_GLOBAL_RESOURCE,
         )
-        json_fields = {"outer": {"inner":{"hello":"world"}}}
+        json_fields = {"outer": {"inner": {"hello": "world"}}}
         record = logging.LogRecord(
             None,
             logging.INFO,
@@ -612,9 +612,8 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 False,
                 None,
                 None,
-            )
+            ),
         )
-
 
     def test_emit_with_encoded_json(self):
         """

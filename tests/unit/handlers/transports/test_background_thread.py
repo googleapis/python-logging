@@ -78,7 +78,7 @@ class TestBackgroundThreadHandler(unittest.TestCase):
         transport, _ = self._make_one(client, name)
 
         python_logger_name = "mylogger"
-        message = {"hello": {"world":"!"}}
+        message = {"hello": {"world": "!"}}
 
         record = logging.LogRecord(
             python_logger_name, logging.INFO, None, None, message, None, None

@@ -309,7 +309,7 @@ class TestLogger(unittest.TestCase):
             detect_resource,
         )
 
-        STRUCT = {"message": "MESSAGE", "weather": "cloudy", "nested":{"one":2}}
+        STRUCT = {"message": "MESSAGE", "weather": "cloudy", "nested": {"one": 2}}
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
         ENTRIES = [
             {
