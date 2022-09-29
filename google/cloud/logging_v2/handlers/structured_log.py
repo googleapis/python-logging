@@ -36,6 +36,8 @@ GCP_FORMAT = (
     "}"
 )
 
+# reserved fields taken from Structured Logging documentation:
+# https://cloud.google.com/logging/docs/structured-logging
 GCP_STRUCTURED_LOGGING_FIELDS = frozenset(
     {
         "severity",
