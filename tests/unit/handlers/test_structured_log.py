@@ -222,6 +222,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             "logging.googleapis.com/trace_sampled": True,
             "time": "none",
             "extra": extra,
+            "SEVERITY": "error",
         }
         record = logging.LogRecord(
             None,
@@ -237,6 +238,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_payload = {
             "message": message,
             "severity": "INFO",
+            "SEVERITY": "error",
             "logging.googleapis.com/trace": "",
             "logging.googleapis.com/spanId": "",
             "logging.googleapis.com/trace_sampled": False,
