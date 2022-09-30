@@ -315,6 +315,7 @@ def _sink_bigquery_setup(client):
     client.update_dataset(dataset, ["access_entries"])  # API call
     # [END sink_dataset_permissions]
 
+    # create callback wrapper to delete dataset when done
     class DatasetDeleter:
         def delete(self):
             client.delete_dataset(dataset, delete_contents=True)
