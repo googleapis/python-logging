@@ -36,6 +36,26 @@ GCP_FORMAT = (
     "}"
 )
 
+# reserved fields taken from Structured Logging documentation:
+# https://cloud.google.com/logging/docs/structured-logging
+GCP_STRUCTURED_LOGGING_FIELDS = frozenset(
+    {
+        "severity",
+        "httpRequest",
+        "time",
+        "timestamp",
+        "timestampSeconds",
+        "timestampNanos",
+        "logging.googleapis.com/insertId",
+        "logging.googleapis.com/labels",
+        "logging.googleapis.com/operation",
+        "logging.googleapis.com/sourceLocation",
+        "logging.googleapis.com/spanId",
+        "logging.googleapis.com/trace",
+        "logging.googleapis.com/trace_sampled",
+    }
+)
+
 
 class StructuredLogHandler(logging.StreamHandler):
     """Handler to format logs into the Cloud Logging structured log format,
@@ -70,10 +90,16 @@ class StructuredLogHandler(logging.StreamHandler):
         message = _format_and_parse_message(record, super(StructuredLogHandler, self))
 
         if isinstance(message, collections.abc.Mapping):
+            # remove any special fields
+            for key in list(message.keys()):
+                if key in GCP_STRUCTURED_LOGGING_FIELDS:
+                    del message[key]
             # if input is a dictionary, encode it as a json string
             encoded_msg = json.dumps(message, ensure_ascii=False)
-            # strip out open and close parentheses
-            payload = encoded_msg.lstrip("{").rstrip("}") + ","
+            # all json.dumps strings should start and end with parentheses
+            # strip them out to embed these fields in the larger JSON payload
+            if len(encoded_msg) > 2:
+                payload = encoded_msg[1:-1] + ","
         elif message:
             # properly break any formatting in string to make it json safe
             encoded_message = json.dumps(message, ensure_ascii=False)
@@ -95,5 +121,5 @@ class StructuredLogHandler(logging.StreamHandler):
 
     def emit_instrumentation_info(self):
         google.cloud.logging_v2._instrumentation_emitted = True
-        diagnostic_object = _create_diagnostic_entry().to_api_repr()
-        logging.info(diagnostic_object)
+        diagnostic_object = _create_diagnostic_entry()
+        logging.info(diagnostic_object.payload)
