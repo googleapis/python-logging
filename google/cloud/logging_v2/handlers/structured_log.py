@@ -97,7 +97,8 @@ class StructuredLogHandler(logging.StreamHandler):
             # if input is a dictionary, encode it as a json string
             encoded_msg = json.dumps(message, ensure_ascii=False)
             # strip out open and close parentheses
-            payload = encoded_msg[1:-1] + ","
+            if len(encoded_msg) > 2:
+                payload = encoded_msg[1:-1] + ","
         elif message:
             # properly break any formatting in string to make it json safe
             encoded_message = json.dumps(message, ensure_ascii=False)
