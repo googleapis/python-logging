@@ -4,6 +4,15 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+
+## [3.2.5](https://github.com/googleapis/python-logging/compare/v3.2.4...v3.2.5) (2022-10-10)
+
+
+### Bug Fixes
+
+* **deps:** Allow protobuf 3.19.5 ([#644](https://github.com/googleapis/python-logging/issues/644)) ([12f3001](https://github.com/googleapis/python-logging/commit/12f3001d834e858dbbbcdaab5894ec25a14c6820))
+
+
 ## [3.2.4](https://github.com/googleapis/python-logging/compare/v3.2.3...v3.2.4) (2022-10-04)
 
 
