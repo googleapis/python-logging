@@ -15,6 +15,7 @@
 """Define API Loggers."""
 
 import collections
+import re
 
 from google.cloud.logging_v2._helpers import _add_defaults_to_filter
 from google.cloud.logging_v2.entries import LogEntry
@@ -24,6 +25,9 @@ from google.cloud.logging_v2.entries import TextEntry
 from google.cloud.logging_v2.resource import Resource
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
 from google.cloud.logging_v2._instrumentation import _add_instrumentation
+
+from google.api_core.exceptions import InvalidArgument
+from google.rpc.error_details_pb2 import DebugInfo
 
 import google.protobuf.message
 
@@ -457,6 +461,25 @@ class Batch(object):
             kwargs["labels"] = self.logger.labels
 
         entries = [entry.to_api_repr() for entry in self.entries]
-
-        client.logging_api.write_entries(entries, **kwargs)
+        try:
+            client.logging_api.write_entries(entries, partial_success=partial_success, **kwargs)
+        except InvalidArgument as e:
+            # InvalidArgument is often sent when a log is too large
+            # attempt to attach extra contex on which log caused error
+            try:
+                # find debug info proto if in details
+                debug_info = next(x for x in e.details if isinstance(x, DebugInfo))
+                # parse out the index of the faulty entry
+                error_idx = re.search('(?<=key: )[0-9]+', debug_info.detail).group(0)
+                # find the faulty entry object
+                found_entry = entries[int(error_idx)]
+                # modify error message to contain extra context
+                e.message = f"{e.message}: {str(found_entry):.1000}"
+                if e.metadata is None:
+                    e.metadata = {}
+                e.metadata["log_entry"] = found_entry
+            except:
+                pass
+            finally:
+                raise e
         del self.entries[:]
