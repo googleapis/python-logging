@@ -490,7 +490,7 @@ class Batch(object):
             # find the faulty entry object
             found_entry = self.entries[int(error_idx)]
             # modify error message to contain extra context
-            err.message = f"{err.message}: {str(found_entry):.2000}"
+            err.message = f"{err.message}: {str(found_entry):.2000}..."
         except:
-            # abort changes and leave err unmodified
+            # if parsing fails, abort changes and leave err unmodified
             pass
