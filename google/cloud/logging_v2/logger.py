@@ -462,24 +462,35 @@ class Batch(object):
 
         entries = [entry.to_api_repr() for entry in self.entries]
         try:
-            client.logging_api.write_entries(entries, partial_success=partial_success, **kwargs)
+            client.logging_api.write_entries(entries, partial_success=True, **kwargs)
         except InvalidArgument as e:
             # InvalidArgument is often sent when a log is too large
             # attempt to attach extra contex on which log caused error
-            try:
-                # find debug info proto if in details
-                debug_info = next(x for x in e.details if isinstance(x, DebugInfo))
-                # parse out the index of the faulty entry
-                error_idx = re.search('(?<=key: )[0-9]+', debug_info.detail).group(0)
-                # find the faulty entry object
-                found_entry = entries[int(error_idx)]
-                # modify error message to contain extra context
-                e.message = f"{e.message}: {str(found_entry):.1000}"
-                if e.metadata is None:
-                    e.metadata = {}
-                e.metadata["log_entry"] = found_entry
-            except:
-                pass
-            finally:
-                raise e
+            self._append_context_to_error(e)
+            raise e
         del self.entries[:]
+
+    def _append_context_to_error(self, err):
+        """
+        Attempts to Modify `write_entries` exception messages to contain
+        context on which log in the batch caused the error.
+
+        Best-effort basis. If another exception occurs while processing the
+        input exception, the input will be left unmodified
+
+        Args:
+            err (~google.api_core.exceptions.InvalidArgument):
+                The original exception object
+        """
+        try:
+            # find debug info proto if in details
+            debug_info = next(x for x in err.details if isinstance(x, DebugInfo))
+            # parse out the index of the faulty entry
+            error_idx = re.search('(?<=key: )[0-9]+', debug_info.detail).group(0)
+            # find the faulty entry object
+            found_entry = self.entries[int(error_idx)]
+            # modify error message to contain extra context
+            err.message = f"{err.message}: {str(found_entry):.2000}"
+        except:
+            # abort changes and leave err unmodified
+            pass
