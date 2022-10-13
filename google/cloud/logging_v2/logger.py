@@ -489,8 +489,9 @@ class Batch(object):
             error_idx = re.search('(?<=key: )[0-9]+', debug_info.detail).group(0)
             # find the faulty entry object
             found_entry = self.entries[int(error_idx)]
+            str_entry = str(found_entry.to_api_repr())
             # modify error message to contain extra context
-            err.message = f"{err.message}: {str(found_entry):.2000}..."
-        except:
+            err.message = f"{err.message}: {str_entry:.2000}..."
+        except Exception:
             # if parsing fails, abort changes and leave err unmodified
             pass
