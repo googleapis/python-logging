@@ -486,7 +486,7 @@ class Batch(object):
             # find debug info proto if in details
             debug_info = next(x for x in err.details if isinstance(x, DebugInfo))
             # parse out the index of the faulty entry
-            error_idx = re.search('(?<=key: )[0-9]+', debug_info.detail).group(0)
+            error_idx = re.search("(?<=key: )[0-9]+", debug_info.detail).group(0)
             # find the faulty entry object
             found_entry = self.entries[int(error_idx)]
             str_entry = str(found_entry.to_api_repr())
