@@ -17,7 +17,7 @@ from collections import OrderedDict
 import functools
 import re
 from typing import Dict, Mapping, Optional, Sequence, Tuple, Type, Union
-import pkg_resources
+
 
 from google.api_core.client_options import ClientOptions
 from google.api_core import exceptions as core_exceptions
@@ -3094,14 +3094,8 @@ class ConfigServiceV2AsyncClient:
         await self.transport.close()
 
 
-try:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
-        gapic_version=pkg_resources.get_distribution(
-            "google-cloud-logging",
-        ).version,
-    )
-except pkg_resources.DistributionNotFound:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo()
+
+DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo()
 
 
 __all__ = ("ConfigServiceV2AsyncClient",)

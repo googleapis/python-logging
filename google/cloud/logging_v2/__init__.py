@@ -21,7 +21,6 @@ try:
 except pkg_resources.DistributionNotFound:
     __version__ = None
 
-
 from google.cloud.logging_v2.client import Client
 from google.cloud.logging_v2.entries import logger_name_from_path
 from google.cloud.logging_v2.entries import LogEntry
@@ -36,6 +35,7 @@ from google.cloud.logging_v2.resource import Resource
 from google.cloud.logging_v2.sink import Sink
 from google.cloud.logging_v2 import types
 
+import importlib.metadata as importlib_metadata
 
 ASCENDING = "timestamp asc"
 """Query string to order by ascending timestamps."""

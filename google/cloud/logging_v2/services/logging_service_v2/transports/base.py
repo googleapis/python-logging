@@ -15,7 +15,7 @@
 #
 import abc
 from typing import Awaitable, Callable, Dict, Optional, Sequence, Union
-import pkg_resources
+
 
 import google.auth  # type: ignore
 import google.api_core
@@ -28,14 +28,7 @@ from google.oauth2 import service_account  # type: ignore
 from google.cloud.logging_v2.types import logging
 from google.protobuf import empty_pb2  # type: ignore
 
-try:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
-        gapic_version=pkg_resources.get_distribution(
-            "google-cloud-logging",
-        ).version,
-    )
-except pkg_resources.DistributionNotFound:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo()
+DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo()
 
 
 class LoggingServiceV2Transport(abc.ABC):

@@ -28,7 +28,7 @@ from typing import (
     Type,
     Union,
 )
-import pkg_resources
+
 
 from google.api_core.client_options import ClientOptions
 from google.api_core import exceptions as core_exceptions
