@@ -1778,7 +1778,7 @@ class TestBatch(unittest.TestCase):
         )
         # test with missing key
         err = InvalidArgument(
-            starting_message, details=["padding", DebugInfo(detail=f"no k e y here")]
+            starting_message, details=["padding", DebugInfo(detail="no k e y here")]
         )
         batch._append_context_to_error(err)
         self.assertEqual(
@@ -1786,7 +1786,7 @@ class TestBatch(unittest.TestCase):
         )
         # test with key out of range
         err = InvalidArgument(
-            starting_message, details=["padding", DebugInfo(detail=f"key: 100")]
+            starting_message, details=["padding", DebugInfo(detail="key: 100")]
         )
         batch._append_context_to_error(err)
         self.assertEqual(
@@ -1810,7 +1810,7 @@ class TestBatch(unittest.TestCase):
         client = _Client(project=self.PROJECT)
         starting_message = "hello"
         exception = InvalidArgument(
-            starting_message, details=[DebugInfo(detail=f"key: 1")]
+            starting_message, details=[DebugInfo(detail="key: 1")]
         )
         client.logging_api = _DummyLoggingExceptionAPI(exception)
         batch = self._make_one(logger, client=client)
