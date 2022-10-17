@@ -460,5 +460,7 @@ class Batch(object):
 
         entries = [entry.to_api_repr() for entry in self.entries]
 
-        client.logging_api.write_entries(entries, partial_success=partial_success, **kwargs)
+        client.logging_api.write_entries(
+            entries, partial_success=partial_success, **kwargs
+        )
         del self.entries[:]
