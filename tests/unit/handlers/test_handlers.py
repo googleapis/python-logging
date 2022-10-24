@@ -864,6 +864,7 @@ class TestFormatAndParseMessage(unittest.TestCase):
                 value, json_fields[key], f"expected_payload[{key}] != result[{key}]"
             )
 
+
 class TestSetupLogging(unittest.TestCase):
     def _call_fut(self, handler, excludes=None):
         from google.cloud.logging.handlers import setup_logging

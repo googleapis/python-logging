@@ -514,7 +514,6 @@ class TestStructuredLogHandler(unittest.TestCase):
     def test_json_fields_input_unmodified(self):
         # Related issue: https://github.com/googleapis/python-logging/issues/652
         import logging
-        import json
 
         handler = self._make_one()
         message = "hello world"
