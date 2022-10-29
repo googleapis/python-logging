@@ -1035,7 +1035,7 @@ def test_write_log_entries_flattened():
         # using the keyword arguments to the method.
         client.write_log_entries(
             log_name="log_name_value",
-            resource=monitored_resource_pb2.MonitoredResource(type="type__value"),
+            resource=monitored_resource_pb2.MonitoredResource(type="type_value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
@@ -1048,7 +1048,7 @@ def test_write_log_entries_flattened():
         mock_val = "log_name_value"
         assert arg == mock_val
         arg = args[0].resource
-        mock_val = monitored_resource_pb2.MonitoredResource(type="type__value")
+        mock_val = monitored_resource_pb2.MonitoredResource(type="type_value")
         assert arg == mock_val
         arg = args[0].labels
         mock_val = {"key_value": "value_value"}
@@ -1069,7 +1069,7 @@ def test_write_log_entries_flattened_error():
         client.write_log_entries(
             logging.WriteLogEntriesRequest(),
             log_name="log_name_value",
-            resource=monitored_resource_pb2.MonitoredResource(type="type__value"),
+            resource=monitored_resource_pb2.MonitoredResource(type="type_value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
@@ -1095,7 +1095,7 @@ async def test_write_log_entries_flattened_async():
         # using the keyword arguments to the method.
         response = await client.write_log_entries(
             log_name="log_name_value",
-            resource=monitored_resource_pb2.MonitoredResource(type="type__value"),
+            resource=monitored_resource_pb2.MonitoredResource(type="type_value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
@@ -1108,7 +1108,7 @@ async def test_write_log_entries_flattened_async():
         mock_val = "log_name_value"
         assert arg == mock_val
         arg = args[0].resource
-        mock_val = monitored_resource_pb2.MonitoredResource(type="type__value")
+        mock_val = monitored_resource_pb2.MonitoredResource(type="type_value")
         assert arg == mock_val
         arg = args[0].labels
         mock_val = {"key_value": "value_value"}
@@ -1130,7 +1130,7 @@ async def test_write_log_entries_flattened_error_async():
         await client.write_log_entries(
             logging.WriteLogEntriesRequest(),
             log_name="log_name_value",
-            resource=monitored_resource_pb2.MonitoredResource(type="type__value"),
+            resource=monitored_resource_pb2.MonitoredResource(type="type_value"),
             labels={"key_value": "value_value"},
             entries=[log_entry.LogEntry(log_name="log_name_value")],
         )
