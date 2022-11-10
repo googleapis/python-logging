@@ -16,7 +16,17 @@
 from collections import OrderedDict
 import functools
 import re
-from typing import Dict, Mapping, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Dict,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 import pkg_resources
 
 from google.api_core.client_options import ClientOptions
@@ -161,9 +171,9 @@ class MetricsServiceV2AsyncClient:
     def __init__(
         self,
         *,
-        credentials: ga_credentials.Credentials = None,
+        credentials: Optional[ga_credentials.Credentials] = None,
         transport: Union[str, MetricsServiceV2Transport] = "grpc_asyncio",
-        client_options: ClientOptions = None,
+        client_options: Optional[ClientOptions] = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
     ) -> None:
         """Instantiates the metrics service v2 client.
@@ -207,11 +217,11 @@ class MetricsServiceV2AsyncClient:
 
     async def list_log_metrics(
         self,
-        request: Union[logging_metrics.ListLogMetricsRequest, dict] = None,
+        request: Optional[Union[logging_metrics.ListLogMetricsRequest, dict]] = None,
         *,
-        parent: str = None,
+        parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListLogMetricsAsyncPager:
         r"""Lists logs-based metrics.
@@ -244,7 +254,7 @@ class MetricsServiceV2AsyncClient:
                     print(response)
 
         Args:
-            request (Union[google.cloud.logging_v2.types.ListLogMetricsRequest, dict]):
+            request (Optional[Union[google.cloud.logging_v2.types.ListLogMetricsRequest, dict]]):
                 The request object. The parameters to ListLogMetrics.
             parent (:class:`str`):
                 Required. The name of the project containing the
@@ -335,11 +345,11 @@ class MetricsServiceV2AsyncClient:
 
     async def get_log_metric(
         self,
-        request: Union[logging_metrics.GetLogMetricRequest, dict] = None,
+        request: Optional[Union[logging_metrics.GetLogMetricRequest, dict]] = None,
         *,
-        metric_name: str = None,
+        metric_name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_metrics.LogMetric:
         r"""Gets a logs-based metric.
@@ -371,7 +381,7 @@ class MetricsServiceV2AsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.logging_v2.types.GetLogMetricRequest, dict]):
+            request (Optional[Union[google.cloud.logging_v2.types.GetLogMetricRequest, dict]]):
                 The request object. The parameters to GetLogMetric.
             metric_name (:class:`str`):
                 Required. The resource name of the desired metric:
@@ -461,12 +471,12 @@ class MetricsServiceV2AsyncClient:
 
     async def create_log_metric(
         self,
-        request: Union[logging_metrics.CreateLogMetricRequest, dict] = None,
+        request: Optional[Union[logging_metrics.CreateLogMetricRequest, dict]] = None,
         *,
-        parent: str = None,
-        metric: logging_metrics.LogMetric = None,
+        parent: Optional[str] = None,
+        metric: Optional[logging_metrics.LogMetric] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_metrics.LogMetric:
         r"""Creates a logs-based metric.
@@ -503,7 +513,7 @@ class MetricsServiceV2AsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.logging_v2.types.CreateLogMetricRequest, dict]):
+            request (Optional[Union[google.cloud.logging_v2.types.CreateLogMetricRequest, dict]]):
                 The request object. The parameters to CreateLogMetric.
             parent (:class:`str`):
                 Required. The resource name of the project in which to
@@ -593,12 +603,12 @@ class MetricsServiceV2AsyncClient:
 
     async def update_log_metric(
         self,
-        request: Union[logging_metrics.UpdateLogMetricRequest, dict] = None,
+        request: Optional[Union[logging_metrics.UpdateLogMetricRequest, dict]] = None,
         *,
-        metric_name: str = None,
-        metric: logging_metrics.LogMetric = None,
+        metric_name: Optional[str] = None,
+        metric: Optional[logging_metrics.LogMetric] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_metrics.LogMetric:
         r"""Creates or updates a logs-based metric.
@@ -635,7 +645,7 @@ class MetricsServiceV2AsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.logging_v2.types.UpdateLogMetricRequest, dict]):
+            request (Optional[Union[google.cloud.logging_v2.types.UpdateLogMetricRequest, dict]]):
                 The request object. The parameters to UpdateLogMetric.
             metric_name (:class:`str`):
                 Required. The resource name of the metric to update:
@@ -737,11 +747,11 @@ class MetricsServiceV2AsyncClient:
 
     async def delete_log_metric(
         self,
-        request: Union[logging_metrics.DeleteLogMetricRequest, dict] = None,
+        request: Optional[Union[logging_metrics.DeleteLogMetricRequest, dict]] = None,
         *,
-        metric_name: str = None,
+        metric_name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a logs-based metric.
@@ -770,7 +780,7 @@ class MetricsServiceV2AsyncClient:
                 await client.delete_log_metric(request=request)
 
         Args:
-            request (Union[google.cloud.logging_v2.types.DeleteLogMetricRequest, dict]):
+            request (Optional[Union[google.cloud.logging_v2.types.DeleteLogMetricRequest, dict]]):
                 The request object. The parameters to DeleteLogMetric.
             metric_name (:class:`str`):
                 Required. The resource name of the metric to delete:
