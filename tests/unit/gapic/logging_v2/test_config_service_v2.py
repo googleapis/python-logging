@@ -98,16 +98,23 @@ def test__get_default_mtls_endpoint():
         ConfigServiceV2Client._get_default_mtls_endpoint(non_googleapi) == non_googleapi
     )
 
+
 def test_config_default_client_info_headers():
     import re
     import pkg_resources
+
     # test that DEFAULT_CLIENT_INFO contains the expected gapic headers
     # go/cloud-api-headers-2019
-    gapic_header_regex = re.compile(r'gapic\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gl-python\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+')
-    detected_info = google.cloud.logging_v2.services.config_service_v2.transports.base.DEFAULT_CLIENT_INFO
+    gapic_header_regex = re.compile(
+        r"gapic\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gl-python\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+"
+    )
+    detected_info = (
+        google.cloud.logging_v2.services.config_service_v2.transports.base.DEFAULT_CLIENT_INFO
+    )
     assert detected_info is not None
     detected_agent = " ".join(sorted(detected_info.to_user_agent().split(" ")))
     assert gapic_header_regex.match(detected_agent)
+
 
 @pytest.mark.parametrize(
     "client_class,transport_name",

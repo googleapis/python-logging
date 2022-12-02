@@ -22,7 +22,10 @@ import unittest
 
 import mock
 
-VENEER_HEADER_REGEX = re.compile(r'gapic\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+ gl-python\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+')
+VENEER_HEADER_REGEX = re.compile(
+    r"gapic\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+ gl-python\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+"
+)
+
 
 def _make_credentials():
     import google.auth.credentials
@@ -158,21 +161,29 @@ class TestClient(unittest.TestCase):
         # ensure client info is set on client object
         client = self._make_one(project=self.PROJECT, credentials=creds, _use_grpc=True)
         self.assertIsNotNone(client._client_info)
-        user_agent_sorted = " ".join(sorted(client._client_info.to_user_agent().split(" ")))
+        user_agent_sorted = " ".join(
+            sorted(client._client_info.to_user_agent().split(" "))
+        )
         self.assertTrue(VENEER_HEADER_REGEX.match(user_agent_sorted))
         # ensure client info is propagated to gapic wrapped methods
         patch = mock.patch("google.api_core.gapic_v1.method.wrap_method")
         with patch as gapic_mock:
-            client.logging_api # initialize logging api
-            client.metrics_api # initialize metrics api
-            client.sinks_api # initialize sinks api
+            client.logging_api  # initialize logging api
+            client.metrics_api  # initialize metrics api
+            client.sinks_api  # initialize sinks api
             wrapped_call_list = gapic_mock.call_args_list
-            num_api_calls = 37 # expected number of distinct APIs in all gapic services (logging,metrics,sinks)
-            self.assertGreaterEqual(len(wrapped_call_list), num_api_calls, "unexpected number of APIs wrapped")
+            num_api_calls = 37  # expected number of distinct APIs in all gapic services (logging,metrics,sinks)
+            self.assertGreaterEqual(
+                len(wrapped_call_list),
+                num_api_calls,
+                "unexpected number of APIs wrapped",
+            )
             for call in wrapped_call_list:
                 client_info = call.kwargs["client_info"]
                 self.assertIsNotNone(client_info)
-                wrapped_user_agent_sorted = " ".join(sorted(client_info.to_user_agent().split(" ")))
+                wrapped_user_agent_sorted = " ".join(
+                    sorted(client_info.to_user_agent().split(" "))
+                )
                 self.assertTrue(VENEER_HEADER_REGEX.match(wrapped_user_agent_sorted))
 
     def test_veneer_http_headers(self):
@@ -181,14 +192,20 @@ class TestClient(unittest.TestCase):
         # go/cloud-api-headers-2019
         creds = _make_credentials()
         # ensure client info is set on client object
-        client = self._make_one(project=self.PROJECT, credentials=creds, _use_grpc=False)
+        client = self._make_one(
+            project=self.PROJECT, credentials=creds, _use_grpc=False
+        )
         self.assertIsNotNone(client._client_info)
-        user_agent_sorted = " ".join(sorted(client._client_info.to_user_agent().split(" ")))
+        user_agent_sorted = " ".join(
+            sorted(client._client_info.to_user_agent().split(" "))
+        )
         self.assertTrue(VENEER_HEADER_REGEX.match(user_agent_sorted))
         # ensure client info is propagated to _connection object
         connection_user_agent = client._connection._client_info.to_user_agent()
         self.assertIsNotNone(connection_user_agent)
-        connection_user_agent_sorted = " ".join(sorted(connection_user_agent.split(" ")))
+        connection_user_agent_sorted = " ".join(
+            sorted(connection_user_agent.split(" "))
+        )
         self.assertTrue(VENEER_HEADER_REGEX.match(connection_user_agent_sorted))
 
     def test_no_gapic_ctor(self):
