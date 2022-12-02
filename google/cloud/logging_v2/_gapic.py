@@ -592,9 +592,7 @@ def make_logging_api(client):
         _LoggingAPI: A metrics API instance with the proper credentials.
     """
     info = client._client_info
-    if (not isinstance(info, gapic_v1.client_info.ClientInfo)) and isinstance(
-        info, client_info.ClientInfo
-    ):
+    if type(info) == client_info.ClientInfo:
         # convert into gapic-compatible subclass
         info = _client_info_to_gapic(info)
 
@@ -617,9 +615,7 @@ def make_metrics_api(client):
         _MetricsAPI: A metrics API instance with the proper credentials.
     """
     info = client._client_info
-    if (not isinstance(info, gapic_v1.client_info.ClientInfo)) and isinstance(
-        info, client_info.ClientInfo
-    ):
+    if type(info) == client_info.ClientInfo:
         # convert into gapic-compatible subclass
         info = _client_info_to_gapic(info)
 
@@ -642,9 +638,7 @@ def make_sinks_api(client):
         _SinksAPI: A metrics API instance with the proper credentials.
     """
     info = client._client_info
-    if (not isinstance(info, gapic_v1.client_info.ClientInfo)) and isinstance(
-        info, client_info.ClientInfo
-    ):
+    if type(info) == client_info.ClientInfo:
         # convert into gapic-compatible subclass
         info = _client_info_to_gapic(info)
 
