@@ -16,11 +16,13 @@ from copy import deepcopy
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
+import re
 
 import unittest
 
 import mock
 
+VENEER_HEADER_REGEX = re.compile(r'gapic\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+ gl-python\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+')
 
 def _make_credentials():
     import google.auth.credentials
@@ -147,6 +149,31 @@ class TestClient(unittest.TestCase):
         # API instance is cached
         again = client.logging_api
         self.assertIs(again, api)
+
+    def test_veneer_grpc_headers(self):
+        creds = _make_credentials()
+        # ensure client info is set on client object
+        client = self._make_one(project=self.PROJECT, credentials=creds, _use_grpc=True)
+        self.assertIsNotNone(client._client_info)
+        user_agent_sorted = " ".join(sorted(client._client_info.to_user_agent().split(" ")))
+        self.assertTrue(VENEER_HEADER_REGEX.match(user_agent_sorted))
+        # ensure client info is propagated to gapic wrapped methods
+        patch = mock.patch("google.api_core.gapic_v1.method.wrap_method")
+        with patch as gapic_mock:
+            api = client.logging_api
+            client_info = gapic_mock.call_args.kwargs["client_info"]
+            self.assertIsNotNone(client_info)
+            wrapped_user_agent_sorted = " ".join(sorted(client_info.to_user_agent().split(" ")))
+            self.assertTrue(VENEER_HEADER_REGEX.match(wrapped_user_agent_sorted))
+
+    def test_veneer_http_headers(self):
+        creds = _make_credentials()
+        patch = mock.patch("google.api_core.gapic_v1.method.wrap_method")
+        with patch as http_mock:
+            client = self._make_one(project=self.PROJECT, credentials=creds, _use_grpc=False)
+            user_agent = client._connection._client_info.to_user_agent()
+            user_agent_sorted = " ".join(sorted(user_agent.split(" ")))
+            self.assertTrue(VENEER_HEADER_REGEX.match(user_agent_sorted))
 
     def test_no_gapic_ctor(self):
         from google.cloud.logging_v2._http import _LoggingAPI
