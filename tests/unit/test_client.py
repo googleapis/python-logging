@@ -160,11 +160,17 @@ class TestClient(unittest.TestCase):
         # ensure client info is propagated to gapic wrapped methods
         patch = mock.patch("google.api_core.gapic_v1.method.wrap_method")
         with patch as gapic_mock:
-            api = client.logging_api
-            client_info = gapic_mock.call_args.kwargs["client_info"]
-            self.assertIsNotNone(client_info)
-            wrapped_user_agent_sorted = " ".join(sorted(client_info.to_user_agent().split(" ")))
-            self.assertTrue(VENEER_HEADER_REGEX.match(wrapped_user_agent_sorted))
+            client.logging_api # initialize logging api
+            client.metrics_api # initialize metrics api
+            client.sinks_api # initialize sinks api
+            wrapped_call_list = gapic_mock.call_args_list
+            num_api_calls = 37 # expected number of distinct APIs in all gapic services (logging,metrics,sinks)
+            self.assertGreaterEqual(len(wrapped_call_list), num_api_calls, "unexpected number of APIs wrapped")
+            for call in wrapped_call_list:
+                client_info = call.kwargs["client_info"]
+                self.assertIsNotNone(client_info)
+                wrapped_user_agent_sorted = " ".join(sorted(client_info.to_user_agent().split(" ")))
+                self.assertTrue(VENEER_HEADER_REGEX.match(wrapped_user_agent_sorted))
 
     def test_veneer_http_headers(self):
         creds = _make_credentials()
