@@ -156,7 +156,6 @@ class TestClient(unittest.TestCase):
     def test_veneer_grpc_headers(self):
         # test that client APIs have client_info populated with the expected veneer headers
         # required for proper instrumentation
-        # go/cloud-api-headers-2019
         creds = _make_credentials()
         # ensure client info is set on client object
         client = self._make_one(project=self.PROJECT, credentials=creds, _use_grpc=True)
@@ -189,7 +188,6 @@ class TestClient(unittest.TestCase):
     def test_veneer_http_headers(self):
         # test that http APIs have client_info populated with the expected veneer headers
         # required for proper instrumentation
-        # go/cloud-api-headers-2019
         creds = _make_credentials()
         # ensure client info is set on client object
         client = self._make_one(

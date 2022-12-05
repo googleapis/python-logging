@@ -104,7 +104,6 @@ def test_metrics_default_client_info_headers():
     import pkg_resources
 
     # test that DEFAULT_CLIENT_INFO contains the expected gapic headers
-    # go/cloud-api-headers-2019
     gapic_header_regex = re.compile(
         r"gapic\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gl-python\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+"
     )
