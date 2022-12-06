@@ -27,7 +27,8 @@ from typing import (
     Type,
     Union,
 )
-import pkg_resources
+
+from google.cloud.logging_v2 import gapic_version as package_version
 
 from google.api_core.client_options import ClientOptions
 from google.api_core import exceptions as core_exceptions
@@ -236,7 +237,7 @@ class ConfigServiceV2AsyncClient:
         *,
         parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListBucketsAsyncPager:
         r"""Lists log buckets.
@@ -359,7 +360,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.GetBucketRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogBucket:
         r"""Gets a log bucket.
@@ -438,7 +439,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.CreateBucketRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogBucket:
         r"""Creates a log bucket that can be used to store log
@@ -520,7 +521,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.UpdateBucketRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogBucket:
         r"""Updates a log bucket. This method replaces the following fields
@@ -610,7 +611,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.DeleteBucketRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a log bucket.
@@ -682,7 +683,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.UndeleteBucketRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Undeletes a log bucket. A bucket that has been
@@ -752,7 +753,7 @@ class ConfigServiceV2AsyncClient:
         *,
         parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListViewsAsyncPager:
         r"""Lists views on a log bucket.
@@ -867,7 +868,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.GetViewRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogView:
         r"""Gets a view on a log bucket..
@@ -946,7 +947,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.CreateViewRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogView:
         r"""Creates a view over log entries in a log bucket. A
@@ -1027,7 +1028,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.UpdateViewRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogView:
         r"""Updates a view on a log bucket. This method replaces the
@@ -1110,7 +1111,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.DeleteViewRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a view on a log bucket. If an ``UNAVAILABLE`` error is
@@ -1181,7 +1182,7 @@ class ConfigServiceV2AsyncClient:
         *,
         parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListSinksAsyncPager:
         r"""Lists sinks.
@@ -1312,7 +1313,7 @@ class ConfigServiceV2AsyncClient:
         *,
         sink_name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogSink:
         r"""Gets a sink.
@@ -1444,7 +1445,7 @@ class ConfigServiceV2AsyncClient:
         parent: Optional[str] = None,
         sink: Optional[logging_config.LogSink] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogSink:
         r"""Creates a sink that exports specified log entries to a
@@ -1582,7 +1583,7 @@ class ConfigServiceV2AsyncClient:
         sink: Optional[logging_config.LogSink] = None,
         update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogSink:
         r"""Updates a sink. This method replaces the following fields in the
@@ -1757,7 +1758,7 @@ class ConfigServiceV2AsyncClient:
         *,
         sink_name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a sink. If the sink has a unique ``writer_identity``,
@@ -1871,7 +1872,7 @@ class ConfigServiceV2AsyncClient:
         *,
         parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListExclusionsAsyncPager:
         r"""Lists all the exclusions on the \_Default sink in a parent
@@ -2003,7 +2004,7 @@ class ConfigServiceV2AsyncClient:
         *,
         name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogExclusion:
         r"""Gets the description of an exclusion in the \_Default sink.
@@ -2131,7 +2132,7 @@ class ConfigServiceV2AsyncClient:
         parent: Optional[str] = None,
         exclusion: Optional[logging_config.LogExclusion] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogExclusion:
         r"""Creates a new exclusion in the \_Default sink in a specified
@@ -2268,7 +2269,7 @@ class ConfigServiceV2AsyncClient:
         exclusion: Optional[logging_config.LogExclusion] = None,
         update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.LogExclusion:
         r"""Changes one or more properties of an existing exclusion in the
@@ -2416,7 +2417,7 @@ class ConfigServiceV2AsyncClient:
         *,
         name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes an exclusion in the \_Default sink.
@@ -2526,7 +2527,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.GetCmekSettingsRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.CmekSettings:
         r"""Gets the Logging CMEK settings for the given resource.
@@ -2628,7 +2629,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.UpdateCmekSettingsRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.CmekSettings:
         r"""Updates the Log Router CMEK settings for the given resource.
@@ -2736,7 +2737,7 @@ class ConfigServiceV2AsyncClient:
         *,
         name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.Settings:
         r"""Gets the Log Router settings for the given resource.
@@ -2870,7 +2871,7 @@ class ConfigServiceV2AsyncClient:
         settings: Optional[logging_config.Settings] = None,
         update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_config.Settings:
         r"""Updates the Log Router settings for the given resource.
@@ -3011,7 +3012,7 @@ class ConfigServiceV2AsyncClient:
         request: Optional[Union[logging_config.CopyLogEntriesRequest, dict]] = None,
         *,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> operation_async.AsyncOperation:
         r"""Copies a set of log entries from a log bucket to a
@@ -3043,7 +3044,7 @@ class ConfigServiceV2AsyncClient:
 
                 print("Waiting for operation to complete...")
 
-                response = await operation.result()
+                response = (await operation).result()
 
                 # Handle the response
                 print(response)
@@ -3104,14 +3105,9 @@ class ConfigServiceV2AsyncClient:
         await self.transport.close()
 
 
-try:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
-        gapic_version=pkg_resources.get_distribution(
-            "google-cloud-logging",
-        ).version,
-    )
-except pkg_resources.DistributionNotFound:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo()
+DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
+    gapic_version=package_version.__version__
+)
 
 
 __all__ = ("ConfigServiceV2AsyncClient",)

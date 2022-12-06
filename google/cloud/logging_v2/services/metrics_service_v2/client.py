@@ -28,7 +28,8 @@ from typing import (
     Union,
     cast,
 )
-import pkg_resources
+
+from google.cloud.logging_v2 import gapic_version as package_version
 
 from google.api_core import client_options as client_options_lib
 from google.api_core import exceptions as core_exceptions
@@ -443,7 +444,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         *,
         parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListLogMetricsPager:
         r"""Lists logs-based metrics.
@@ -560,7 +561,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         *,
         metric_name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_metrics.LogMetric:
         r"""Gets a logs-based metric.
@@ -676,7 +677,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         parent: Optional[str] = None,
         metric: Optional[logging_metrics.LogMetric] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_metrics.LogMetric:
         r"""Creates a logs-based metric.
@@ -808,7 +809,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         metric_name: Optional[str] = None,
         metric: Optional[logging_metrics.LogMetric] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> logging_metrics.LogMetric:
         r"""Creates or updates a logs-based metric.
@@ -940,7 +941,7 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         *,
         metric_name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Optional[float] = None,
+        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a logs-based metric.
@@ -1042,14 +1043,9 @@ class MetricsServiceV2Client(metaclass=MetricsServiceV2ClientMeta):
         self.transport.close()
 
 
-try:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
-        gapic_version=pkg_resources.get_distribution(
-            "google-cloud-logging",
-        ).version,
-    )
-except pkg_resources.DistributionNotFound:
-    DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo()
+DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
+    gapic_version=package_version.__version__
+)
 
 
 __all__ = ("MetricsServiceV2Client",)
