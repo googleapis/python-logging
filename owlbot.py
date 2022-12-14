@@ -29,10 +29,39 @@ clean_up_generated_samples = True
 # Load the default version defined in .repo-metadata.json.
 default_version = json.load(open(".repo-metadata.json", "rt")).get("default_version")
 
+def place_before(path, text, *before_text, escape=None):
+    replacement = "\n".join(before_text) + "\n" + text
+    if escape:
+        for c in escape:
+            text = text.replace(c, '\\' + c)
+    s.replace([path], text, replacement)
+
+test_metrics_default_client_info_headers = \
+"""def test_metrics_default_client_info_headers():
+    import re
+
+    # test that DEFAULT_CLIENT_INFO contains the expected gapic headers
+    gapic_header_regex = re.compile(
+        r"gapic\\\\/[0-9]+\\.[\\\\w.-]+ gax\\/[0-9]+\.[\\\\w.-]+ gl-python\\/[0-9]+\\.[\\\\w.-]+ grpc\\/[0-9]+\.[\\\\w.-]+"
+    )
+    detected_info = (
+        google.cloud.logging_v2.services.metrics_service_v2.transports.base.DEFAULT_CLIENT_INFO
+    )
+    assert detected_info is not None
+    detected_agent = " ".join(sorted(detected_info.to_user_agent().split(" ")))
+    assert gapic_header_regex.match(detected_agent)\n\n\n"""
+
 for library in s.get_staging_dirs(default_version):
     if clean_up_generated_samples:
         shutil.rmtree("samples/generated_samples", ignore_errors=True)
         clean_up_generated_samples = False
+
+    place_before(
+        library / "tests/unit/gapic/logging_v2/test_metrics_service_v2.py",
+        "def test_metrics_service_v2_client_get_transport_class()",
+        test_metrics_default_client_info_headers,
+        escape="()",
+    )
 
     s.move([library], excludes=[
             "**/gapic_version.py",
