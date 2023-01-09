@@ -1051,14 +1051,7 @@ class TestLogger(unittest.TestCase):
         google.cloud.logging_v2._instrumentation_emitted = False
         DEFAULT_LABELS = {"foo": "spam"}
         resource = detect_resource(self.PROJECT)
-        instrumentation_entry = _create_diagnostic_entry(
-            resource=resource,
-            labels=DEFAULT_LABELS,
-        ).to_api_repr()
-        instrumentation_entry["logName"] = "projects/%s/logs/%s" % (
-            self.PROJECT,
-            self.LOGGER_NAME,
-        )
+        instrumentation_entry = _create_diagnostic_entry().to_api_repr()
         ENTRIES = [
             instrumentation_entry,
             {
