@@ -26,6 +26,8 @@ class TestInstrumentation(unittest.TestCase):
     # LONG_VERSION > 16 characters
     LONG_VERSION = TEST_VERSION + "6789ABCDEF12"
 
+    TEST_PROJECT = "MY_PROJ"
+
     def _get_diagonstic_value(self, entry, key):
         return entry.payload[i._DIAGNOSTIC_INFO_KEY][i._INSTRUMENTATION_SOURCE_KEY][-1][
             key
@@ -40,10 +42,13 @@ class TestInstrumentation(unittest.TestCase):
         self.assertEqual(
             i._LIBRARY_VERSION, self._get_diagonstic_value(entry, "version")
         )
+        self.assertEqual(
+            i._DIAGNOSTIC_INFO_KEY, entry.log_name
+        )
 
     def test_custom_diagnostic_info(self):
         entry = i._create_diagnostic_entry(
-            name=self.TEST_NAME, version=self.TEST_VERSION
+            project_id=self.TEST_PROJECT, name=self.TEST_NAME, version=self.TEST_VERSION
         )
         self.assertEqual(
             self.TEST_NAME,
@@ -51,6 +56,9 @@ class TestInstrumentation(unittest.TestCase):
         )
         self.assertEqual(
             self.TEST_VERSION, self._get_diagonstic_value(entry, "version")
+        )
+        self.assertEqual(
+            f"projects/{self.TEST_PROJECT}/logs/{i._DIAGNOSTIC_INFO_KEY}", entry.log_name
         )
 
     def test_truncate_long_values(self):
