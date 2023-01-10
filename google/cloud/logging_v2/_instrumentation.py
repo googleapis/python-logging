@@ -27,7 +27,7 @@ _MAX_VERSION_LENGTH = 14
 _MAX_INSTRUMENTATION_ENTRIES = 3
 
 
-def _add_instrumentation(entries, **kw):
+def _add_instrumentation(entries, project_id):
     """Add instrumentation information to a list of entries
 
         A new diagnostic entry is prepended to the list of
@@ -36,18 +36,18 @@ def _add_instrumentation(entries, **kw):
     Args:
        entries (Sequence[Mapping[str, ...]]): sequence of mappings representing
             the log entry resources to log.
+        project_id (str): The project to associate the diagnostic with
 
     Returns:
         Sequence[Mapping[str, ...]]: entries with instrumentation info added to
         the beginning of list.
     """
-
-    diagnostic_entry = _create_diagnostic_entry(**kw)
+    diagnostic_entry = _create_diagnostic_entry(project_id)
     entries.insert(0, diagnostic_entry.to_api_repr())
     return entries
 
 
-def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION, **kw):
+def _create_diagnostic_entry(project_id=None, name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION):
     """Create a diagnostic log entry describing this library
 
         The diagnostic log consists of a list of library name and version objects
@@ -56,6 +56,7 @@ def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
         {logging.googleapis.com/diagnostic: {instrumentation_source: [{name: "python", version: "3.0.0"}]}}
 
     Args:
+        project_id(str): The project to associate the diagnostic with
         name(str): The name of this library (e.g. 'python')
         version(str) The version of this library (e.g. '3.0.0')
 
@@ -67,7 +68,11 @@ def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
             _INSTRUMENTATION_SOURCE_KEY: [_get_instrumentation_source(name, version)]
         }
     }
-    entry = StructEntry(payload=payload, severity="INFO")
+    if project_id is None:
+        log_name = _DIAGNOSTIC_INFO_KEY
+    else:
+        log_name = f"projects/{project_id}/logs/{_DIAGNOSTIC_INFO_KEY}"
+    entry = StructEntry(payload=payload, severity="INFO", log_name=log_name)
     return entry
 
 

@@ -162,7 +162,7 @@ class Logger(object):
         api_repr = entry.to_api_repr()
         entries = [api_repr]
         if google.cloud.logging_v2._instrumentation_emitted is False:
-            entries = _add_instrumentation(entries, **kw)
+            entries = _add_instrumentation(entries, self.project)
             google.cloud.logging_v2._instrumentation_emitted = True
         # partial_success is true to avoid dropping instrumentation logs
         client.logging_api.write_entries(entries, partial_success=True)
