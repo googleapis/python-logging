@@ -1076,17 +1076,16 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_instrumentation_uses_custom_logname(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import (
-            detect_resource,
-        )
         from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
         import google.cloud.logging_v2
 
         google.cloud.logging_v2._instrumentation_emitted = False
         instrumentation_entry = _create_diagnostic_entry("PROJ")
         self.assertEqual(
-            "projects/PROJ/logs/logging.googleapis.com/diagnostic", instrumentation_entry.log_name
+            "projects/PROJ/logs/logging.googleapis.com/diagnostic",
+            instrumentation_entry.log_name,
         )
+
 
 class TestBatch(unittest.TestCase):
 

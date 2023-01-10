@@ -47,7 +47,9 @@ def _add_instrumentation(entries, project_id):
     return entries
 
 
-def _create_diagnostic_entry(project_id=None, name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION):
+def _create_diagnostic_entry(
+    project_id=None, name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
+):
     """Create a diagnostic log entry describing this library
 
         The diagnostic log consists of a list of library name and version objects

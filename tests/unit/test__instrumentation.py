@@ -42,9 +42,7 @@ class TestInstrumentation(unittest.TestCase):
         self.assertEqual(
             i._LIBRARY_VERSION, self._get_diagonstic_value(entry, "version")
         )
-        self.assertEqual(
-            i._DIAGNOSTIC_INFO_KEY, entry.log_name
-        )
+        self.assertEqual(i._DIAGNOSTIC_INFO_KEY, entry.log_name)
 
     def test_custom_diagnostic_info(self):
         entry = i._create_diagnostic_entry(
@@ -58,7 +56,8 @@ class TestInstrumentation(unittest.TestCase):
             self.TEST_VERSION, self._get_diagonstic_value(entry, "version")
         )
         self.assertEqual(
-            f"projects/{self.TEST_PROJECT}/logs/{i._DIAGNOSTIC_INFO_KEY}", entry.log_name
+            f"projects/{self.TEST_PROJECT}/logs/{i._DIAGNOSTIC_INFO_KEY}",
+            entry.log_name,
         )
 
     def test_truncate_long_values(self):
