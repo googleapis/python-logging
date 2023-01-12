@@ -69,7 +69,10 @@ class TestInstrumentation(unittest.TestCase):
         test_logname = "test-name"
         test_labels = {"hello": "world"}
         entry = i._create_diagnostic_entry(
-            name=self.LONG_NAME, version=self.LONG_VERSION, log_name=test_logname, labels=test_labels,
+            name=self.LONG_NAME,
+            version=self.LONG_VERSION,
+            log_name=test_logname,
+            labels=test_labels,
         )
         self.assertEqual(entry.log_name, test_logname)
         self.assertIsNone(entry.labels)
