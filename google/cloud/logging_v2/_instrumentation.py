@@ -67,8 +67,12 @@ def _create_diagnostic_entry(name=_PYTHON_LIBRARY_NAME, version=_LIBRARY_VERSION
             _INSTRUMENTATION_SOURCE_KEY: [_get_instrumentation_source(name, version)]
         }
     }
-    kw["severity"] = "INFO"
-    entry = StructEntry(payload=payload, **kw)
+    active_kws = {"severity": "INFO"}
+    # only keep the log_name and resource from the parent log
+    for key in ["log_name", "resource"]:
+        if key in kw.keys():
+            active_kws[key] = kw[key]
+    entry = StructEntry(payload=payload, **active_kws)
     return entry
 
 
