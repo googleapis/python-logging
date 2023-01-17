@@ -76,3 +76,6 @@ class TestInstrumentation(unittest.TestCase):
         )
         self.assertEqual(entry.log_name, test_logname)
         self.assertIsNone(entry.labels)
+        # ensure only expected fields exist in entry
+        expected_keys = set(["logName", "resource", "jsonPayload"])
+        self.assertEqual(set(entry.to_api_repr().keys()), expected_keys)
