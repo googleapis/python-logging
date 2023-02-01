@@ -314,7 +314,7 @@ class Test_Resource_Detection(unittest.TestCase):
 
     def test_detect_partial_data(self):
         """
-        Test if the metadata server retrus partial data
+        Test case where the metadata server returns partial data
         """
         patch = mock.patch(
             "google.cloud.logging_v2.handlers._monitored_resources.retrieve_metadata_server",
