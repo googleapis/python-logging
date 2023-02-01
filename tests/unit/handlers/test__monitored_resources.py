@@ -207,10 +207,18 @@ class Test_Create_Resources(unittest.TestCase):
         )
         with patch:
             _global_resource_patched = functools.partial(_create_global_resource, None)
-            resource_fns = [_global_resource_patched, _create_app_engine_resource, _create_cloud_run_resource, _create_compute_resource, _create_kubernetes_resource, _create_functions_resource]
+            resource_fns = [
+                _global_resource_patched,
+                _create_app_engine_resource,
+                _create_cloud_run_resource,
+                _create_compute_resource,
+                _create_kubernetes_resource,
+                _create_functions_resource,
+            ]
             for fn in resource_fns:
                 resource = fn()
                 self.assertEqual(resource.labels["project_id"], "")
+
 
 class Test_Resource_Detection(unittest.TestCase):
 
