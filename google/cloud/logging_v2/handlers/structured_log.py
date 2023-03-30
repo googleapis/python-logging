@@ -125,7 +125,7 @@ class StructuredLogHandler(logging.StreamHandler):
             payload = '"message": {},'.format(encoded_message)
 
         record._payload_str = payload or ""
-        # convert to GCP structred logging format
+        # convert to GCP structured logging format
         gcp_payload = self._gcp_formatter.format(record)
         return gcp_payload
 
