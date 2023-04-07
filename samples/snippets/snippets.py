@@ -29,6 +29,8 @@ from google.cloud import logging
 # [START logging_write_log_entry]
 def write_entry(logger_name):
     """Writes log entries to the given logger."""
+    from google.logging.type import log_severity_pb2
+
     logging_client = logging.Client()
 
     # This log can be found in the Cloud Logging console under 'Custom Logs'.
@@ -46,7 +48,10 @@ def write_entry(logger_name):
             "name": "King Arthur",
             "quest": "Find the Holy Grail",
             "favorite_color": "Blue",
-        }
+        },
+        # Available severities are DEFAULT, DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY.
+        # The default is INFO.
+        severity=log_severity_pb2.LogSeverity.INFO,
     )
 
     print("Wrote logs to {}.".format(logger.name))
