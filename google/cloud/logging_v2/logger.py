@@ -17,16 +17,19 @@
 import collections
 import re
 
-import google.protobuf.message
-from google.api_core.exceptions import InvalidArgument
 from google.cloud.logging_v2._helpers import _add_defaults_to_filter
-from google.cloud.logging_v2._instrumentation import _add_instrumentation
-from google.cloud.logging_v2.entries import (LogEntry, ProtobufEntry,
-                                             StructEntry, TextEntry)
-from google.cloud.logging_v2.handlers._monitored_resources import \
-    detect_resource
+from google.cloud.logging_v2.entries import LogEntry
+from google.cloud.logging_v2.entries import ProtobufEntry
+from google.cloud.logging_v2.entries import StructEntry
+from google.cloud.logging_v2.entries import TextEntry
 from google.cloud.logging_v2.resource import Resource
+from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
+from google.cloud.logging_v2._instrumentation import _add_instrumentation
+
+from google.api_core.exceptions import InvalidArgument
 from google.rpc.error_details_pb2 import DebugInfo
+
+import google.protobuf.message
 
 _GLOBAL_RESOURCE = Resource(type="global", labels={})
 
