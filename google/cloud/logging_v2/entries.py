@@ -18,19 +18,16 @@ import collections
 import json
 import re
 
-from google.protobuf.any_pb2 import Any
-from google.protobuf.json_format import MessageToDict
-from google.protobuf.json_format import Parse
-
-from google.cloud.logging_v2.resource import Resource
-from google.cloud._helpers import _name_from_project_path
-from google.cloud._helpers import _rfc3339_nanos_to_datetime
-from google.cloud._helpers import _datetime_to_rfc3339
-
+import google.cloud.appengine_logging  # noqa: F401
 # import officially supported proto definitions
 import google.cloud.audit.audit_log_pb2  # noqa: F401
-import google.cloud.appengine_logging  # noqa: F401
+from google.cloud._helpers import (_datetime_to_rfc3339,
+                                   _name_from_project_path,
+                                   _rfc3339_nanos_to_datetime)
+from google.cloud.logging_v2.resource import Resource
 from google.iam.v1.logging import audit_data_pb2  # noqa: F401
+from google.protobuf.any_pb2 import Any
+from google.protobuf.json_format import MessageToDict, Parse
 
 _GLOBAL_RESOURCE = Resource(type="global", labels={})
 
@@ -229,7 +226,10 @@ class LogEntry(_LogEntryTuple):
         if self.insert_id is not None:
             info["insertId"] = self.insert_id
         if self.severity is not None:
-            info["severity"] = self.severity
+            if isinstance(self.severity, str):
+                info["severity"] = self.severity.upper()
+            else:
+                info["severity"] = self.severity
         if self.http_request is not None:
             info["httpRequest"] = self.http_request
         if self.timestamp is not None:
