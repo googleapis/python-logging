@@ -104,8 +104,9 @@ class TestLogger(unittest.TestCase):
         self.assertIs(batch.client, client2)
 
     def test_log_empty_defaults_w_default_labels(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
@@ -183,8 +184,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_text_defaults(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
         TEXT = "TEXT"
@@ -206,8 +208,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_text_w_unicode_and_default_labels(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         TEXT = "TEXT"
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
@@ -291,8 +294,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_struct_defaults(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
@@ -314,8 +318,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_nested_struct(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         STRUCT = {"message": "MESSAGE", "weather": "cloudy", "nested": {"one": 2}}
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
@@ -337,8 +342,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_struct_w_default_labels(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         RESOURCE = detect_resource(self.PROJECT)._to_dict()
@@ -426,8 +432,9 @@ class TestLogger(unittest.TestCase):
         LogEntry fields in _STRUCT_EXTRACTABLE_FIELDS should be inferred from
         the payload data if not passed as a parameter
         """
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         STRUCT = {
             "message": "System test: test_log_struct_logentry_data",
@@ -490,8 +497,9 @@ class TestLogger(unittest.TestCase):
         """
         lower case severity strings should be accepted
         """
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         for lower_severity in [
             "default",
@@ -527,8 +535,9 @@ class TestLogger(unittest.TestCase):
     def test_log_proto_defaults(self):
         import json
 
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct, Value
 
@@ -553,8 +562,9 @@ class TestLogger(unittest.TestCase):
     def test_log_proto_w_default_labels(self):
         import json
 
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct, Value
 
@@ -642,8 +652,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_inference_empty(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         DEFAULT_LABELS = {"foo": "spam"}
         ENTRIES = [
@@ -664,8 +675,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_inference_text(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         TEXT = "TEXT"
         ENTRIES = [
@@ -686,8 +698,9 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_log_inference_struct(self):
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         STRUCT = {"message": "MESSAGE", "weather": "cloudy"}
         ENTRIES = [
@@ -710,8 +723,9 @@ class TestLogger(unittest.TestCase):
     def test_log_inference_proto(self):
         import json
 
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
         from google.protobuf.json_format import MessageToJson
         from google.protobuf.struct_pb2 import Struct, Value
 
@@ -903,8 +917,13 @@ class TestLogger(unittest.TestCase):
         )
 
     def test_list_entries_limit(self):
-        from google.cloud.logging import (DESCENDING, Client, Logger,
-                                          ProtobufEntry, StructEntry)
+        from google.cloud.logging import (
+            DESCENDING,
+            Client,
+            Logger,
+            ProtobufEntry,
+            StructEntry,
+        )
 
         PROJECT1 = "PROJECT1"
         PROJECT2 = "PROJECT2"
@@ -1026,10 +1045,10 @@ class TestLogger(unittest.TestCase):
 
     def test_first_log_emits_instrumentation(self):
         import google.cloud.logging_v2
-        from google.cloud.logging_v2._instrumentation import \
-            _create_diagnostic_entry
-        from google.cloud.logging_v2.handlers._monitored_resources import \
-            detect_resource
+        from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
 
         google.cloud.logging_v2._instrumentation_emitted = False
         DEFAULT_LABELS = {"foo": "spam"}
