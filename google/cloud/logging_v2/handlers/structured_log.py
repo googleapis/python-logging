@@ -19,10 +19,12 @@ import json
 import logging
 import logging.handlers
 
-from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
-from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 import google.cloud.logging_v2
 from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
+from google.cloud.logging_v2.handlers.handlers import (
+    CloudLoggingFilter,
+    _format_and_parse_message,
+)
 
 GCP_FORMAT = (
     "{%(_payload_str)s"
@@ -136,3 +138,62 @@ class StructuredLogHandler(logging.StreamHandler):
         struct_logger.setLevel(logging.INFO)
         struct_logger.info(diagnostic_object.payload)
         struct_logger.handlers.clear()
+
+
+class AppendLabelLoggingAdapter(logging.LoggerAdapter):
+    """
+    Logging adapter that allows to add required
+    constant key/value to the labels part of log record.
+    Example:
+
+    .. code-block:: python
+
+        import logging
+        from google.cloud.logging_v2.handlers.structured_log import AppendLabelLoggingAdapter
+        from google.cloud.logging_v2.handlers.structured_log import StructuredLogHandler
+        logging.root.setLevel(logging.INFO)
+        logging.root.handlers = [StructuredLogHandler()]
+        first_adapter = AppendLabelLoggingAdapter(logging.root, {'a': 5, 'b': 6})
+        first_adapter.info('first info')
+        {
+            "message": "first info",
+            "severity": "INFO",
+            "logging.googleapis.com/labels": {"python_logger": "root", "a": 5, "b": 6}
+            [...]
+        }
+        # Could be stacked
+        second_adapter=AppendLabelLoggingAdapter(first_adapter, {'hello': 'world'})
+        second_adapter.info('second info')
+        {
+            "message": "second info",
+            "severity": "INFO",
+            "logging.googleapis.com/labels": {"python_logger": "root", "hello": "world", "a": 5, "b": 6}
+            [...]
+        }
+    """
+
+    def __init__(self, logger, append_labels):
+        """
+        Args:
+            logger (~logging.Logger):
+                The Logger for this adapter to use.
+            append_labels (~typing.Dict[str, str]): the required data to be added to logger "labels" field.
+        """
+        self.append_labels = append_labels
+        super().__init__(logger, None)
+
+    def process(self, msg, kwargs):
+        """
+        Args:
+            msg (str):
+                Log message
+            kwargs (dict):
+                logging kwargs
+        """
+        extra = kwargs.get("extra", {})
+        labels = extra.get("labels", {})
+        for label_key, label_value in self.append_labels.items():
+            labels.setdefault(label_key, label_value)
+        extra["labels"] = labels
+        kwargs["extra"] = extra
+        return msg, kwargs
