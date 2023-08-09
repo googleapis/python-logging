@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2018 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import warnings
 
 import nox
 
+FLAKE8_VERSION = "flake8==6.1.0"
 BLACK_VERSION = "black==22.3.0"
 ISORT_VERSION = "isort==5.10.1"
 LINT_PATHS = ["docs", "google", "tests", "noxfile.py", "setup.py"]
@@ -90,7 +91,7 @@ def lint(session):
     Returns a failure if the linters find linting errors or sufficiently
     serious code quality issues.
     """
-    session.install("flake8", BLACK_VERSION)
+    session.install(FLAKE8_VERSION, BLACK_VERSION)
     session.run(
         "black",
         "--check",
@@ -313,10 +314,9 @@ def docfx(session):
 
     session.install("-e", ".")
     session.install(
-        "sphinx==4.0.1",
+        "gcp-sphinx-docfx-yaml",
         "alabaster",
         "recommonmark",
-        "gcp-sphinx-docfx-yaml",
     )
 
     shutil.rmtree(os.path.join("docs", "_build"), ignore_errors=True)
@@ -388,6 +388,7 @@ def prerelease_deps(session):
         "grpcio!=1.52.0rc1",
         "grpcio-status",
         "google-api-core",
+        "google-auth",
         "proto-plus",
         "google-cloud-testutils",
         # dependencies of google-cloud-testutils"
@@ -400,7 +401,6 @@ def prerelease_deps(session):
     # Remaining dependencies
     other_deps = [
         "requests",
-        "google-auth",
     ]
     session.install(*other_deps)
 
@@ -409,6 +409,7 @@ def prerelease_deps(session):
         "python", "-c", "import google.protobuf; print(google.protobuf.__version__)"
     )
     session.run("python", "-c", "import grpc; print(grpc.__version__)")
+    session.run("python", "-c", "import google.auth; print(google.auth.__version__)")
 
     session.run("py.test", "tests/unit")
 
