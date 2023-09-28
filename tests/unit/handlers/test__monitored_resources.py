@@ -172,7 +172,7 @@ class Test_Create_Resources(unittest.TestCase):
         os.environ[_monitored_resources._CLOUD_RUN_REVISION_ID] = self.VERSION
         os.environ[_monitored_resources._CLOUD_RUN_CONFIGURATION_ID] = self.CONFIG
         with patch:
-            resource = _create_cloud_run_resource()
+            resource = _create_cloud_run_service_resource()
             self.assertIsInstance(resource, Resource)
             self.assertEqual(resource.type, "cloud_run_revision")
             self.assertEqual(resource.labels["project_id"], self.PROJECT)
@@ -191,7 +191,7 @@ class Test_Create_Resources(unittest.TestCase):
         os.environ[_monitored_resources._CLOUD_RUN_TASK_INDEX] = self.CONFIG
         os.environ[_monitored_resources._CLOUD_RUN_TASK_ATTEMPT] = self.CLUSTER
         with patch:
-            resource = _create_cloud_run_resource()
+            resource = _create_cloud_run_job_resource()
             self.assertIsInstance(resource, Resource)
             self.assertEqual(resource.type, "cloud_run_job")
             self.assertEqual(resource.labels["project_id"], self.PROJECT)
@@ -234,7 +234,8 @@ class Test_Create_Resources(unittest.TestCase):
             resource_fns = [
                 _global_resource_patched,
                 _create_app_engine_resource,
-                _create_cloud_run_resource,
+                _create_cloud_run_service_resource,
+                _create_cloud_run_job_resource,
                 _create_compute_resource,
                 _create_kubernetes_resource,
                 _create_functions_resource,
