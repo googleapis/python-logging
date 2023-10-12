@@ -337,10 +337,11 @@ class ProtobufEntry(LogEntry):
         """API repr (JSON format) for entry."""
         info = super(ProtobufEntry, self).to_api_repr()
         proto_payload = None
-        if self.payload_json:
-            proto_payload = dict(self.payload_json)
-        elif self.payload_pb:
-            proto_payload = MessageToDict(self.payload_pb)
+        if self.payload is not None:
+            try:
+                proto_payload = MessageToDict(self.payload)
+            except Exception:
+                proto_payload = dict(self.payload)
         info["protoPayload"] = proto_payload
         return info
 
