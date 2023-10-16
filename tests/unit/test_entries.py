@@ -738,7 +738,7 @@ class TestProtobufEntry(unittest.TestCase):
             "resource": _GLOBAL_RESOURCE._to_dict(),
         }
         self.assertEqual(entry.to_api_repr(), expected)
-    
+
     def test_to_api_repr_proto_inner_struct_field(self):
         from google.protobuf.json_format import MessageToDict
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
@@ -756,7 +756,7 @@ class TestProtobufEntry(unittest.TestCase):
             "resource": _GLOBAL_RESOURCE._to_dict(),
         }
         self.assertEqual(entry.to_api_repr(), expected)
-    
+
     def test_to_api_repr_proto_inner_list_field(self):
         from google.protobuf.json_format import MessageToDict
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
@@ -765,7 +765,9 @@ class TestProtobufEntry(unittest.TestCase):
         from google.protobuf.struct_pb2 import Value
 
         LOG_NAME = "test.log"
-        lines = ListValue(values=[Value(string_value="line1"), Value(string_value="line2")])
+        lines = ListValue(
+            values=[Value(string_value="line1"), Value(string_value="line2")]
+        )
         message = Struct(fields={"lines": Value(list_value=lines)})
 
         entry = self._make_one(log_name=LOG_NAME, payload=message)

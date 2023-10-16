@@ -192,9 +192,7 @@ class TestLogging(unittest.TestCase):
             "methodName": "test",
             "resourceName": "test",
             "serviceName": "test",
-            "requestMetadata": {
-                "callerIp": "127.0.0.1"
-            }
+            "requestMetadata": {"callerIp": "127.0.0.1"},
         }
         audit_struct = self._dict_to_struct(audit_dict)
 
@@ -227,8 +225,10 @@ class TestLogging(unittest.TestCase):
                 audit_dict["methodName"],
             )
             self.assertEqual(
-                protobuf_entry.to_api_repr()["protoPayload"]["requestMetadata"]["callerIp"],
-                audit_dict["requestMetadata"]["callerIp"]
+                protobuf_entry.to_api_repr()["protoPayload"]["requestMetadata"][
+                    "callerIp"
+                ],
+                audit_dict["requestMetadata"]["callerIp"],
             )
 
     def test_list_entry_with_requestlog(self):
