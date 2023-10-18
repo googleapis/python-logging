@@ -325,7 +325,7 @@ class ProtobufEntry(LogEntry):
 
     @property
     def payload_pb(self):
-        if isinstance(self.payload, Message) or isinstance:
+        if isinstance(self.payload, Message):
             return self.payload
 
     @property
