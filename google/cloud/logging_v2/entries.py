@@ -18,7 +18,6 @@ import collections
 import json
 import re
 
-from google.protobuf.any_pb2 import Any
 from google.protobuf.json_format import MessageToDict
 from google.protobuf.json_format import Parse
 from google.protobuf.message import Message
@@ -326,7 +325,7 @@ class ProtobufEntry(LogEntry):
 
     @property
     def payload_pb(self):
-        if isinstance(self.payload, Message):
+        if isinstance(self.payload, Message) or isinstance:
             return self.payload
 
     @property
