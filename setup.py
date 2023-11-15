@@ -59,8 +59,6 @@ packages = [
     if package.startswith("google")
 ]
 
-print(f'Packages are: {packages}')
-
 setuptools.setup(
     name=name,
     version=version,
