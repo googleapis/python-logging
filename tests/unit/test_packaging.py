@@ -50,7 +50,7 @@ def test_namespace_package_compat(tmp_path):
     ]:
         cmd = [sys.executable, "-c", f"import {pkg}"]
         subprocess.check_output(cmd, env=env)
-    
+
     for module in ["google.othermod", "google.cloud.othermod"]:
         cmd = [sys.executable, "-m", module]
         subprocess.check_output(cmd, env=env)
