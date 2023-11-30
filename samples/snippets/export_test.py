@@ -23,7 +23,7 @@ import pytest
 import export
 
 
-BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+BUCKET = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_SINK_NAME_TMPL = "example_sink_{}"
 TEST_SINK_FILTER = "severity>=CRITICAL"
 
