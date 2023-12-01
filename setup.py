@@ -55,13 +55,9 @@ with io.open(readme_filename, encoding="utf-8") as readme_file:
 
 packages = [
     package
-    for package in setuptools.PEP420PackageFinder.find()
+    for package in setuptools.find_namespace_packages()
     if package.startswith("google")
 ]
-
-namespaces = ["google"]
-if "google.cloud" in packages:
-    namespaces.append("google.cloud")
 
 setuptools.setup(
     name=name,
@@ -83,13 +79,13 @@ setuptools.setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
         "Topic :: Internet",
     ],
     platforms="Posix; MacOS X; Windows",
     packages=packages,
     python_requires=">=3.7",
-    namespace_packages=namespaces,
     install_requires=dependencies,
     include_package_data=True,
     zip_safe=False,
