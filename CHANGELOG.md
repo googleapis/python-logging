@@ -4,7 +4,7 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
-## [3.9.0](https://github.com/googleapis/python-logging/compare/v3.8.0...v3.9.0) (2023-12-08)
+## [3.9.0rc1](https://github.com/googleapis/python-logging/compare/v3.8.0...v3.9.0rc1) (2023-12-08)
 
 
 ### Features
