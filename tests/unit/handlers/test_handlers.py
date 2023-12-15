@@ -897,7 +897,7 @@ class TestSetupLogging(unittest.TestCase):
         excluded_logger = logging.getLogger(EXCLUDED_LOGGER_NAME)
         self.assertNotIn(handler, excluded_logger.handlers)
         self.assertFalse(excluded_logger.propagate)
-    
+
     def test_setup_logging_internal_loggers_no_excludes(self):
         handler = _Handler(logging.INFO)
         self._call_fut(handler, excludes=())
@@ -908,10 +908,10 @@ class TestSetupLogging(unittest.TestCase):
             logger = logging.getLogger(logger_name)
             self.assertNotIn(handler, logger.handlers)
             self.assertFalse(logger.propagate)
-        
+
         logger = logging.getLogger("logging")
         self.assertTrue(logger.propagate)
-        
+
         for logger_name in EXCLUDED_LOGGER_DEFAULTS:
             logger = logging.getLogger(logger_name)
             self.assertTrue(logger.propagate)
@@ -973,7 +973,6 @@ class TestSetupLogging(unittest.TestCase):
 
         # restore the old logging manager.
         logging.Logger.manager = self._logger_manager
-
 
 
 class _Handler(object):
