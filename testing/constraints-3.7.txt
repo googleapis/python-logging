@@ -8,3 +8,8 @@ google-api-core==1.33.2
 proto-plus==1.22.0
 protobuf==3.19.5
 google-cloud-core==2.0.0
+
+# Lower bound testing for optional dependencies
+django==3.2
+flask==2.0.0
+werkzeug==2.0.0
