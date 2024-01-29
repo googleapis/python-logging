@@ -20,6 +20,7 @@ import logging
 import logging.handlers
 
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
+from google.cloud.logging_v2.handlers.handlers import DEFAULT_LOGGER_NAME
 from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 import google.cloud.logging_v2
 from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
@@ -63,10 +64,19 @@ class StructuredLogHandler(logging.StreamHandler):
     """
 
     def __init__(
-        self, *, labels=None, stream=None, project_id=None, json_encoder_cls=None
+        self,
+        *,
+        name=DEFAULT_LOGGER_NAME,
+        resource=None,
+        labels=None,
+        stream=None,
+        project_id=None,
+        json_encoder_cls=None
     ):
         """
         Args:
+            name (Optional[str]): Placeholder for setup_logging consistency. Does nothing.
+            resource (Optional[dict]): Placeholder for setup_logging consistency. Does nothing.
             labels (Optional[dict]): Additional labels to attach to logs.
             stream (Optional[IO]): Stream to be used by the handler.
             project (Optional[str]): Project Id associated with the logs.
