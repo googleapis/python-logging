@@ -20,7 +20,6 @@ import logging
 import logging.handlers
 
 from google.cloud.logging_v2.handlers.handlers import CloudLoggingFilter
-from google.cloud.logging_v2.handlers.handlers import DEFAULT_LOGGER_NAME
 from google.cloud.logging_v2.handlers.handlers import _format_and_parse_message
 import google.cloud.logging_v2
 from google.cloud.logging_v2._instrumentation import _create_diagnostic_entry
