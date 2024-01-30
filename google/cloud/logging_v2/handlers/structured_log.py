@@ -66,12 +66,11 @@ class StructuredLogHandler(logging.StreamHandler):
     def __init__(
         self,
         *,
-        name=DEFAULT_LOGGER_NAME,
-        resource=None,
         labels=None,
         stream=None,
         project_id=None,
-        json_encoder_cls=None
+        json_encoder_cls=None,
+        **kwargs
     ):
         """
         Args:
