@@ -73,8 +73,6 @@ class StructuredLogHandler(logging.StreamHandler):
     ):
         """
         Args:
-            name (Optional[str]): Placeholder for setup_logging consistency. Does nothing.
-            resource (Optional[dict]): Placeholder for setup_logging consistency. Does nothing.
             labels (Optional[dict]): Additional labels to attach to logs.
             stream (Optional[IO]): Stream to be used by the handler.
             project (Optional[str]): Project Id associated with the logs.
