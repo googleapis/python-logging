@@ -494,26 +494,17 @@ def dict_config(client):
         "handlers": {
             "cloud_logging": {
                 "class": "google.cloud.logging.handlers.CloudLoggingHandler",
-                "client": client
+                "client": client,
             },
             "structured_log": {
                 "class": "google.cloud.logging.handlers.StructuredLogHandler"
-            }
-        },
-        "root": {
-            "handlers": ["console"],
-            "level": "WARNING"
-        },
-        "loggers": {
-            "my_logger": {
-                "handlers": ["cloud_logging"],
-                "level": "INFO"
             },
-            "my_other_logger": {
-                "handlers": ["structured_log"],
-                "level": "INFO"
-            }
-        }
+        },
+        "root": {"handlers": ["console"], "level": "WARNING"},
+        "loggers": {
+            "my_logger": {"handlers": ["cloud_logging"], "level": "INFO"},
+            "my_other_logger": {"handlers": ["structured_log"], "level": "INFO"},
+        },
     }
     # [END dict_config]
 
