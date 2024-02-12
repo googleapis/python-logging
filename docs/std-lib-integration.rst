@@ -47,8 +47,8 @@ There are two supported handler classes to choose from:
 Handler classes can also be specified via `dictConfig <https://docs.python.org/3/library/logging.config.html#logging-config-dictschema>`_:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
-    :start-after: [START dict_config]
-    :end-before: [END dict_config]
+    :start-after: [START logging_dict_config]
+    :end-before: [END logging_dict_config]
     :dedent: 4
 
 Note that since :class:`~google.cloud.logging_v2.handlers.handlers.CloudLoggingHandler` requires an already initialized :class:`~google.cloud.logging_v2.client.Client`,

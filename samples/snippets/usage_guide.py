@@ -485,10 +485,10 @@ def setup_logging(client):
 
 
 @snippet
-def dict_config(client):
+def logging_dict_config(client):
     import logging.config
 
-    # [START dict_config]
+    # [START logging_dict_config]
     LOGGING = {
         "version": 1,
         "handlers": {
@@ -506,7 +506,7 @@ def dict_config(client):
             "my_other_logger": {"handlers": ["structured_log"], "level": "INFO"},
         },
     }
-    # [END dict_config]
+    # [END logging_dict_config]
 
     logging.config.dictConfig(LOGGING)
 
