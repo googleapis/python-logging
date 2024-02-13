@@ -489,6 +489,10 @@ def logging_dict_config(client):
     import logging.config
 
     # [START logging_dict_config]
+    import google.cloud.logging
+
+    client = google.cloud.logging.Client()
+
     LOGGING = {
         "version": 1,
         "handlers": {
