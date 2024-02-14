@@ -9,9 +9,9 @@ automatically populate `LogEntry fields <https://cloud.google.com/logging/docs/r
 Django
 ------
 
-Django integration has been tested to work with each of the Django/Python versions listed `here <https://docs.djangoproject.com/en/5.0/faq/install/#what-python-version-can-i-use-with-django>`_. 
+Django integration has been tested to work with each of the Django/Python versions listed `here <https://docs.djangoproject.com/en/stable/faq/install/#what-python-version-can-i-use-with-django>`_. 
 To enable Django integration, add `google.cloud.logging_v2.handlers.middleware.RequestMiddleware` to the list of `MIDDLEWARE`
-in your `settings <https://docs.djangoproject.com/en/5.0/topics/settings/>`_ file. Also be sure to :doc:`set up logging </std-lib-integration>` in your settings file.
+in your `settings <https://docs.djangoproject.com/en/stable/topics/settings/>`_ file. Also be sure to :doc:`set up logging </std-lib-integration>` in your settings file.
 
 Flask
 -----
