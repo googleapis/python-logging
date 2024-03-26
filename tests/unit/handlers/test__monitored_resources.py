@@ -14,32 +14,22 @@
 
 import unittest
 
+import logging
 import mock
 import os
 import functools
 
 from google.cloud.logging_v2.handlers._monitored_resources import (
-    _create_functions_resource,
-)
-from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_app_engine_resource,
-)
-from google.cloud.logging_v2.handlers._monitored_resources import (
+    _create_functions_resource,
     _create_kubernetes_resource,
-)
-from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_cloud_run_service_resource,
-)
-from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_cloud_run_job_resource,
-)
-from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_compute_resource,
-)
-from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_global_resource,
+    detect_resource,
+    add_environment_labels
 )
-from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
 from google.cloud.logging_v2.handlers import _monitored_resources
 from google.cloud.logging_v2.resource import Resource
 
@@ -353,3 +343,37 @@ class Test_Resource_Detection(unittest.TestCase):
             # project id not returned from metadata serve
             # should be empty string
             self.assertEqual(resource.labels["project_id"], "")
+
+
+class Test_Add_Environmental_Labels(Test_Resource_Detection):
+
+    def setUp(self):
+        super().setUp()
+        self.record = logging.LogRecord("logname", None, None, None, "test", None, None)
+
+    def add_environment_labels_test_flow(self, resource_type, expected_labels):
+        resource = Resource(type=resource_type, labels={})
+        actual_labels = add_environment_labels(resource, self.record)
+        self.assertDictEqual(actual_labels, expected_labels)
+
+    def test_gae_label(self):
+        trace_id = "trace_id"
+        setattr(self.record, "_trace", trace_id)
+        self.add_environment_labels_test_flow(_monitored_resources._GAE_RESOURCE_TYPE, {
+            _monitored_resources._GAE_TRACE_ID_LABEL: trace_id
+        })
+
+    def test_cloud_run_job_label(self):
+        test_execution_id = "test_job_12345"
+        test_task_index = "1"
+        test_task_attempt = "12"
+
+        os.environ[_monitored_resources._CLOUD_RUN_EXECUTION_ID] = test_execution_id
+        os.environ[_monitored_resources._CLOUD_RUN_TASK_INDEX] = test_task_index
+        os.environ[_monitored_resources._CLOUD_RUN_TASK_ATTEMPT] = test_task_attempt
+
+        self.add_environment_labels_test_flow(_monitored_resources._CLOUD_RUN_JOB_RESOURCE_TYPE, {
+            _monitored_resources._CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL: test_execution_id,
+            _monitored_resources._CLOUD_RUN_JOBS_TASK_INDEX_LABEL: test_task_index,
+            _monitored_resources._CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL: test_task_attempt
+        })

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
 
 from google.cloud.logging_v2.resource import Resource
@@ -66,6 +67,20 @@ _GKE_CLUSTER_LOCATION = "instance/attributes/cluster-location"
 
 _PROJECT_NAME = "project/project-id"
 """Attribute in metadata server when in GKE environment."""
+
+_GAE_RESOURCE_TYPE = "gae_app"
+"""Resource type for App Engine environment."""
+
+_CLOUD_RUN_JOB_RESOURCE_TYPE = "cloud_run_job"
+"""Resource type for Cloud Run Jobs."""
+
+_GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
+"""Extra trace label to be added on App Engine environments"""
+
+_CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL = "run.googleapis.com/execution_name"
+_CLOUD_RUN_JOBS_TASK_INDEX_LABEL = "run.googleapis.com/task_index"
+_CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL = "run.googleapis.com/task_attempt"
+"""Extra labels for Cloud Run environments to be recognized by Cloud Run Jobs web UI."""
 
 
 def _create_functions_resource():
@@ -159,7 +174,7 @@ def _create_cloud_run_job_resource():
     region = retrieve_metadata_server(_REGION_ID)
     project = retrieve_metadata_server(_PROJECT_NAME)
     resource = Resource(
-        type="cloud_run_job",
+        type=_CLOUD_RUN_JOB_RESOURCE_TYPE,
         labels={
             "project_id": project if project else "",
             "job_name": os.environ.get(_CLOUD_RUN_JOB_ID, ""),
@@ -177,7 +192,7 @@ def _create_app_engine_resource():
     zone = retrieve_metadata_server(_ZONE_ID)
     project = retrieve_metadata_server(_PROJECT_NAME)
     resource = Resource(
-        type="gae_app",
+        type=_GAE_RESOURCE_TYPE,
         labels={
             "project_id": project if project else "",
             "module_id": os.environ.get(_GAE_SERVICE_ENV, ""),
@@ -233,3 +248,30 @@ def detect_resource(project=""):
     else:
         # use generic global resource
         return _create_global_resource(project)
+
+
+def add_environment_labels(resource: Resource, record: logging.LogRecord):
+    """Returns additional labels to be appended on to a LogRecord object based on the
+    local environment. Defaults to an empty dictionary if none apply. This is only to be
+    used for CloudLoggingHandler, as the structured logging daemon already does this.
+
+    Args:
+        resource (google.cloud.logging.Resource): Resource based on the environment
+        record (logging.LogRecord): A LogRecord object representing a log record
+    Returns:
+        Dict[str, str]: New labels to append to the labels of the LogRecord
+    """
+    additional_labels = {}
+    def set_item(key, val):
+        if val:
+            additional_labels[key] = val
+
+    if resource:
+        if resource.type == _GAE_RESOURCE_TYPE:
+            set_item(_GAE_TRACE_ID_LABEL, record._trace)
+        elif resource.type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
+            set_item(_CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL, os.environ.get(_CLOUD_RUN_EXECUTION_ID, ""))
+            set_item(_CLOUD_RUN_JOBS_TASK_INDEX_LABEL, os.environ.get(_CLOUD_RUN_TASK_INDEX, ""))
+            set_item(_CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL, os.environ.get(_CLOUD_RUN_TASK_ATTEMPT, ""))
+
+    return additional_labels
