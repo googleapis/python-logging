@@ -38,7 +38,7 @@ _INTERNAL_LOGGERS = (
 )
 
 """These environments require us to remove extra handlers on setup"""
-_CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
+_CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function", "cloud_run_revision")
 
 """Extra trace label to be added on App Engine environments"""
 _GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
