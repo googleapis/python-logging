@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+## [3.10.1](https://github.com/googleapis/python-logging/compare/v3.10.0...v3.10.1) (2024-03-27)
+
+
+### Documentation
+
+* Changed table in web-framework-integration to bulleted list ([#875](https://github.com/googleapis/python-logging/issues/875)) ([a4aa3a7](https://github.com/googleapis/python-logging/commit/a4aa3a7cf1e3bb32ec2772084a7dc6c16e1454ff))
+
 ## [3.10.0](https://github.com/googleapis/python-logging/compare/v3.9.0...v3.10.0) (2024-03-13)
 
 
