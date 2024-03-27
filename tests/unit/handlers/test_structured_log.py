@@ -667,3 +667,96 @@ class TestStructuredLogHandler(unittest.TestCase):
                 inst_source_dict,
                 "instrumentation payload not logged properly",
             )
+
+    def test_append_labels_adapter(self):
+        import logging
+
+        import mock
+
+        from google.cloud.logging_v2.handlers.structured_log import (
+            AppendLabelLoggingAdapter,
+        )
+
+        logger = logging.getLogger("google.cloud.logging_v2.handlers.structured_log")
+        handler = self._make_one()
+        with mock.patch.object(handler, "emit_instrumentation_info"):
+            with mock.patch.object(logger, "_log") as mock_log:
+                logger.addHandler(handler)
+                logger.setLevel(logging.INFO)
+                adapted_logger = AppendLabelLoggingAdapter(
+                    logger, append_labels={"service_id": 1, "another_value": "foo"}
+                )
+                adapted_logger.info("test message")
+                mock_log.assert_called_once()
+                self.assertEqual(
+                    mock_log.call_args_list[0].kwargs,
+                    {"extra": {"labels": {"service_id": 1, "another_value": "foo"}}},
+                )
+
+    def test_append_labels_adapter_override_defaults(self):
+        import logging
+
+        import mock
+
+        from google.cloud.logging_v2.handlers.structured_log import (
+            AppendLabelLoggingAdapter,
+        )
+
+        logger = logging.getLogger("google.cloud.logging_v2.handlers.structured_log")
+        handler = self._make_one()
+        with mock.patch.object(handler, "emit_instrumentation_info"):
+            with mock.patch.object(logger, "_log") as mock_log:
+                logger.addHandler(handler)
+                logger.setLevel(logging.INFO)
+                adapted_logger = AppendLabelLoggingAdapter(
+                    logger, append_labels={"service_id": 1, "another_value": "foo"}
+                )
+                adapted_logger.info(
+                    "test message", extra={"labels": {"another_value": "baz"}}
+                )
+                mock_log.assert_called_once()
+                # the default value was overridden
+                self.assertEqual(
+                    mock_log.call_args_list[0].kwargs,
+                    {"extra": {"labels": {"service_id": 1, "another_value": "baz"}}},
+                )
+
+    def test_append_labels_adapter_stacked(self):
+        import logging
+
+        import mock
+
+        from google.cloud.logging_v2.handlers.structured_log import (
+            AppendLabelLoggingAdapter,
+        )
+
+        logger = logging.getLogger("google.cloud.logging_v2.handlers.structured_log")
+        handler = self._make_one()
+        with mock.patch.object(handler, "emit_instrumentation_info"):
+            with mock.patch.object(logger, "_log") as mock_log:
+                logger.addHandler(handler)
+                logger.setLevel(logging.INFO)
+                adapted_logger = AppendLabelLoggingAdapter(
+                    logger, append_labels={"service_id": 1, "another_value": "foo"}
+                )
+                twice_adapted_logger = AppendLabelLoggingAdapter(
+                    adapted_logger,
+                    # one fields is new, another was adapted already
+                    append_labels={"new_field": "new_value", "another_value": "baz"},
+                )
+                twice_adapted_logger.info(
+                    "test message", extra={"labels": {"another_value": "baz"}}
+                )
+                mock_log.assert_called_once()
+                self.assertEqual(
+                    mock_log.call_args_list[0].kwargs,
+                    {
+                        "extra": {
+                            "labels": {
+                                "another_value": "baz",  # value is changed by the second adapter
+                                "new_field": "new_value",  # introduced by the second adapter
+                                "service_id": 1,  # left as is from the first adapter configuration
+                            }
+                        }
+                    },
+                )
