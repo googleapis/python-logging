@@ -262,6 +262,7 @@ def add_environment_labels(resource: Resource, record: logging.LogRecord):
         Dict[str, str]: New labels to append to the labels of the LogRecord
     """
     additional_labels = {}
+
     def set_item(key, val):
         if val:
             additional_labels[key] = val
@@ -270,8 +271,17 @@ def add_environment_labels(resource: Resource, record: logging.LogRecord):
         if resource.type == _GAE_RESOURCE_TYPE:
             set_item(_GAE_TRACE_ID_LABEL, record._trace)
         elif resource.type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
-            set_item(_CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL, os.environ.get(_CLOUD_RUN_EXECUTION_ID, ""))
-            set_item(_CLOUD_RUN_JOBS_TASK_INDEX_LABEL, os.environ.get(_CLOUD_RUN_TASK_INDEX, ""))
-            set_item(_CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL, os.environ.get(_CLOUD_RUN_TASK_ATTEMPT, ""))
+            set_item(
+                _CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL,
+                os.environ.get(_CLOUD_RUN_EXECUTION_ID, ""),
+            )
+            set_item(
+                _CLOUD_RUN_JOBS_TASK_INDEX_LABEL,
+                os.environ.get(_CLOUD_RUN_TASK_INDEX, ""),
+            )
+            set_item(
+                _CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL,
+                os.environ.get(_CLOUD_RUN_TASK_ATTEMPT, ""),
+            )
 
     return additional_labels

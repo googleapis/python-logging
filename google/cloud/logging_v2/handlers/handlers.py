@@ -20,7 +20,8 @@ import logging
 
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import (
-    detect_resource, add_environment_labels
+    detect_resource,
+    add_environment_labels,
 )
 from google.cloud.logging_v2.handlers._helpers import get_request_data
 

@@ -28,7 +28,7 @@ from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_compute_resource,
     _create_global_resource,
     detect_resource,
-    add_environment_labels
+    add_environment_labels,
 )
 from google.cloud.logging_v2.handlers import _monitored_resources
 from google.cloud.logging_v2.resource import Resource
@@ -346,7 +346,6 @@ class Test_Resource_Detection(unittest.TestCase):
 
 
 class Test_Add_Environmental_Labels(Test_Resource_Detection):
-
     def setUp(self):
         super().setUp()
         self.record = logging.LogRecord("logname", None, None, None, "test", None, None)
@@ -359,9 +358,10 @@ class Test_Add_Environmental_Labels(Test_Resource_Detection):
     def test_gae_label(self):
         trace_id = "trace_id"
         setattr(self.record, "_trace", trace_id)
-        self.add_environment_labels_test_flow(_monitored_resources._GAE_RESOURCE_TYPE, {
-            _monitored_resources._GAE_TRACE_ID_LABEL: trace_id
-        })
+        self.add_environment_labels_test_flow(
+            _monitored_resources._GAE_RESOURCE_TYPE,
+            {_monitored_resources._GAE_TRACE_ID_LABEL: trace_id},
+        )
 
     def test_cloud_run_job_label(self):
         test_execution_id = "test_job_12345"
@@ -372,8 +372,11 @@ class Test_Add_Environmental_Labels(Test_Resource_Detection):
         os.environ[_monitored_resources._CLOUD_RUN_TASK_INDEX] = test_task_index
         os.environ[_monitored_resources._CLOUD_RUN_TASK_ATTEMPT] = test_task_attempt
 
-        self.add_environment_labels_test_flow(_monitored_resources._CLOUD_RUN_JOB_RESOURCE_TYPE, {
-            _monitored_resources._CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL: test_execution_id,
-            _monitored_resources._CLOUD_RUN_JOBS_TASK_INDEX_LABEL: test_task_index,
-            _monitored_resources._CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL: test_task_attempt
-        })
+        self.add_environment_labels_test_flow(
+            _monitored_resources._CLOUD_RUN_JOB_RESOURCE_TYPE,
+            {
+                _monitored_resources._CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL: test_execution_id,
+                _monitored_resources._CLOUD_RUN_JOBS_TASK_INDEX_LABEL: test_task_index,
+                _monitored_resources._CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL: test_task_attempt,
+            },
+        )
