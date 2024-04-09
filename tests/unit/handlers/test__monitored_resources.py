@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
 import unittest
 
 import logging
@@ -345,38 +346,51 @@ class Test_Resource_Detection(unittest.TestCase):
             self.assertEqual(resource.labels["project_id"], "")
 
 
-class Test_Add_Environmental_Labels(Test_Resource_Detection):
-    def setUp(self):
-        super().setUp()
-        self.record = logging.LogRecord("logname", None, None, None, "test", None, None)
-
-    def add_environment_labels_test_flow(self, resource_type, expected_labels):
-        resource = Resource(type=resource_type, labels={})
-        actual_labels = add_environment_labels(resource, self.record)
-        self.assertDictEqual(actual_labels, expected_labels)
-
-    def test_gae_label(self):
-        trace_id = "trace_id"
-        setattr(self.record, "_trace", trace_id)
-        self.add_environment_labels_test_flow(
+@pytest.mark.parametrize(
+    "resource_type,os_environ,record_attrs,expected_labels",
+    [
+        (
             _monitored_resources._GAE_RESOURCE_TYPE,
-            {_monitored_resources._GAE_TRACE_ID_LABEL: trace_id},
-        )
-
-    def test_cloud_run_job_label(self):
-        test_execution_id = "test_job_12345"
-        test_task_index = "1"
-        test_task_attempt = "12"
-
-        os.environ[_monitored_resources._CLOUD_RUN_EXECUTION_ID] = test_execution_id
-        os.environ[_monitored_resources._CLOUD_RUN_TASK_INDEX] = test_task_index
-        os.environ[_monitored_resources._CLOUD_RUN_TASK_ATTEMPT] = test_task_attempt
-
-        self.add_environment_labels_test_flow(
+            {},
+            {"_trace": "trace_id"},
+            {_monitored_resources._GAE_TRACE_ID_LABEL: "trace_id"}
+        ),
+        (
             _monitored_resources._CLOUD_RUN_JOB_RESOURCE_TYPE,
             {
-                _monitored_resources._CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL: test_execution_id,
-                _monitored_resources._CLOUD_RUN_JOBS_TASK_INDEX_LABEL: test_task_index,
-                _monitored_resources._CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL: test_task_attempt,
+                _monitored_resources._CLOUD_RUN_EXECUTION_ID: "test_job_12345",
+                _monitored_resources._CLOUD_RUN_TASK_INDEX: "1",
+                _monitored_resources._CLOUD_RUN_TASK_ATTEMPT: "12",
             },
+            {},
+            {
+                _monitored_resources._CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL: "test_job_12345",
+                _monitored_resources._CLOUD_RUN_JOBS_TASK_INDEX_LABEL: "1",
+                _monitored_resources._CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL: "12",
+            }
+        ),
+        (
+            "global",
+            {},
+            {},
+            {}
         )
+    ]
+)
+def test_add_environment_labels(resource_type, os_environ, record_attrs, expected_labels):
+    os.environ.clear()
+    record = logging.LogRecord("logname", None, None, None, "test", None, None)
+
+    resource = Resource(type=resource_type, labels={})
+
+    for attr, val in record_attrs.items():
+        setattr(record, attr, val)
+    
+    os.environ.update(os_environ)
+
+    labels = add_environment_labels(resource, record)
+
+    try:
+        assert expected_labels == labels
+    finally:
+        _monitored_resources._ADDITIONAL_ENV_LABELS = None

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
 
 from google.cloud.logging_v2.resource import Resource
@@ -81,6 +82,8 @@ _CLOUD_RUN_JOBS_TASK_INDEX_LABEL = "run.googleapis.com/task_index"
 _CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL = "run.googleapis.com/task_attempt"
 """Extra labels for Cloud Run environments to be recognized by Cloud Run Jobs web UI."""
 
+_ADDITIONAL_ENV_LABELS = None
+"""Additional environmental labels placeholder, to be only evaluated once"""
 
 def _create_functions_resource():
     """Create a standardized Cloud Functions resource.
@@ -260,27 +263,19 @@ def add_environment_labels(resource: Resource, record: logging.LogRecord):
     Returns:
         Dict[str, str]: New labels to append to the labels of the LogRecord
     """
-    additional_labels = {}
+    global _ADDITIONAL_ENV_LABELS
+    if _ADDITIONAL_ENV_LABELS is None:
+        _ADDITIONAL_ENV_LABELS = {}
+        def set_item(key, val):
+            if val:
+                _ADDITIONAL_ENV_LABELS[key] = val
 
-    def set_item(key, val):
-        if val:
-            additional_labels[key] = val
+        if resource:
+            if resource.type == _GAE_RESOURCE_TYPE:
+                set_item(_GAE_TRACE_ID_LABEL, record._trace)
+            elif resource.type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
+                set_item(_CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL, os.environ.get(_CLOUD_RUN_EXECUTION_ID, ""))
+                set_item(_CLOUD_RUN_JOBS_TASK_INDEX_LABEL, os.environ.get(_CLOUD_RUN_TASK_INDEX, ""))
+                set_item(_CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL, os.environ.get(_CLOUD_RUN_TASK_ATTEMPT, ""))
 
-    if resource:
-        if resource.type == _GAE_RESOURCE_TYPE:
-            set_item(_GAE_TRACE_ID_LABEL, record._trace)
-        elif resource.type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
-            set_item(
-                _CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL,
-                os.environ.get(_CLOUD_RUN_EXECUTION_ID, ""),
-            )
-            set_item(
-                _CLOUD_RUN_JOBS_TASK_INDEX_LABEL,
-                os.environ.get(_CLOUD_RUN_TASK_INDEX, ""),
-            )
-            set_item(
-                _CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL,
-                os.environ.get(_CLOUD_RUN_TASK_ATTEMPT, ""),
-            )
-
-    return additional_labels
+    return _ADDITIONAL_ENV_LABELS
