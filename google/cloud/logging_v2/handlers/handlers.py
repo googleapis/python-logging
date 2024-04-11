@@ -21,7 +21,7 @@ import logging
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import (
     detect_resource,
-    add_environment_labels,
+    add_resource_labels,
 )
 from google.cloud.logging_v2.handlers._helpers import get_request_data
 
@@ -203,7 +203,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         labels = record._labels
         message = _format_and_parse_message(record, self)
 
-        labels = {**add_environment_labels(resource, record), **(labels or {})} or None
+        labels = {**add_resource_labels(resource, record), **(labels or {})} or None
 
         # send off request
         self.transport.send(

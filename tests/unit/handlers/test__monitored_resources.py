@@ -29,7 +29,7 @@ from google.cloud.logging_v2.handlers._monitored_resources import (
     _create_compute_resource,
     _create_global_resource,
     detect_resource,
-    add_environment_labels,
+    add_resource_labels,
 )
 from google.cloud.logging_v2.handlers import _monitored_resources
 from google.cloud.logging_v2.resource import Resource
@@ -377,7 +377,7 @@ class Test_Resource_Detection(unittest.TestCase):
         )
     ]
 )
-def test_add_environment_labels(resource_type, os_environ, record_attrs, expected_labels):
+def test_add_resource_labels(resource_type, os_environ, record_attrs, expected_labels):
     os.environ.clear()
     record = logging.LogRecord("logname", None, None, None, "test", None, None)
 
@@ -388,9 +388,6 @@ def test_add_environment_labels(resource_type, os_environ, record_attrs, expecte
     
     os.environ.update(os_environ)
 
-    labels = add_environment_labels(resource, record)
+    labels = add_resource_labels(resource, record)
 
-    try:
-        assert expected_labels == labels
-    finally:
-        _monitored_resources._ADDITIONAL_ENV_LABELS = None
+    assert expected_labels == labels

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import functools
 import logging
 import os
 
@@ -82,8 +83,6 @@ _CLOUD_RUN_JOBS_TASK_INDEX_LABEL = "run.googleapis.com/task_index"
 _CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL = "run.googleapis.com/task_attempt"
 """Extra labels for Cloud Run environments to be recognized by Cloud Run Jobs web UI."""
 
-_ADDITIONAL_ENV_LABELS = None
-"""Additional environmental labels placeholder, to be only evaluated once"""
 
 def _create_functions_resource():
     """Create a standardized Cloud Functions resource.
@@ -252,7 +251,35 @@ def detect_resource(project=""):
         return _create_global_resource(project)
 
 
-def add_environment_labels(resource: Resource, record: logging.LogRecord):
+@functools.lru_cache(maxsize=None)
+def _get_environmental_labels(resource_type):
+    """Builds a dictionary of labels to be inserted into a LogRecord of the given resource type.
+    This function should only build a dict of items that are consistent across multiple logging statements
+    of the same resource type, such as environment variables.
+
+    Returns:
+        dict:
+            A dict representation of labels and the values of those labels
+    """
+    labels = {}
+
+    def set_item(key, environ_var):
+        val = os.environ.get(environ_var, "")
+        if val:
+            labels[key] = val
+
+    if resource_type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
+        set_item(
+            _CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL,
+            _CLOUD_RUN_EXECUTION_ID,
+        )
+        set_item(_CLOUD_RUN_JOBS_TASK_INDEX_LABEL, _CLOUD_RUN_TASK_INDEX)
+        set_item(_CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL, _CLOUD_RUN_TASK_ATTEMPT)
+
+    return labels
+
+
+def add_resource_labels(resource: Resource, record: logging.LogRecord):
     """Returns additional labels to be appended on to a LogRecord object based on the
     local environment. Defaults to an empty dictionary if none apply. This is only to be
     used for CloudLoggingHandler, as the structured logging daemon already does this.
@@ -263,19 +290,14 @@ def add_environment_labels(resource: Resource, record: logging.LogRecord):
     Returns:
         Dict[str, str]: New labels to append to the labels of the LogRecord
     """
-    global _ADDITIONAL_ENV_LABELS
-    if _ADDITIONAL_ENV_LABELS is None:
-        _ADDITIONAL_ENV_LABELS = {}
-        def set_item(key, val):
-            if val:
-                _ADDITIONAL_ENV_LABELS[key] = val
+    if not resource:
+        return None
 
-        if resource:
-            if resource.type == _GAE_RESOURCE_TYPE:
-                set_item(_GAE_TRACE_ID_LABEL, record._trace)
-            elif resource.type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
-                set_item(_CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL, os.environ.get(_CLOUD_RUN_EXECUTION_ID, ""))
-                set_item(_CLOUD_RUN_JOBS_TASK_INDEX_LABEL, os.environ.get(_CLOUD_RUN_TASK_INDEX, ""))
-                set_item(_CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL, os.environ.get(_CLOUD_RUN_TASK_ATTEMPT, ""))
+    # Get environmental labels from the resource type
+    labels = _get_environmental_labels(resource.type)
 
-    return _ADDITIONAL_ENV_LABELS
+    # Add labels from log record
+    if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
+        labels[_GAE_TRACE_ID_LABEL] = record._trace
+
+    return labels
