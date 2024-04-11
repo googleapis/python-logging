@@ -353,7 +353,7 @@ class Test_Resource_Detection(unittest.TestCase):
             _monitored_resources._GAE_RESOURCE_TYPE,
             {},
             {"_trace": "trace_id"},
-            {_monitored_resources._GAE_TRACE_ID_LABEL: "trace_id"}
+            {_monitored_resources._GAE_TRACE_ID_LABEL: "trace_id"},
         ),
         (
             _monitored_resources._CLOUD_RUN_JOB_RESOURCE_TYPE,
@@ -367,15 +367,10 @@ class Test_Resource_Detection(unittest.TestCase):
                 _monitored_resources._CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL: "test_job_12345",
                 _monitored_resources._CLOUD_RUN_JOBS_TASK_INDEX_LABEL: "1",
                 _monitored_resources._CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL: "12",
-            }
+            },
         ),
-        (
-            "global",
-            {},
-            {},
-            {}
-        )
-    ]
+        ("global", {}, {}, {}),
+    ],
 )
 def test_add_resource_labels(resource_type, os_environ, record_attrs, expected_labels):
     os.environ.clear()
@@ -385,7 +380,7 @@ def test_add_resource_labels(resource_type, os_environ, record_attrs, expected_l
 
     for attr, val in record_attrs.items():
         setattr(record, attr, val)
-    
+
     os.environ.update(os_environ)
 
     labels = add_resource_labels(resource, record)
