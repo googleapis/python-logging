@@ -255,26 +255,26 @@ def detect_resource(project=""):
 def _get_environmental_labels(resource_type):
     """Builds a dictionary of labels to be inserted into a LogRecord of the given resource type.
     This function should only build a dict of items that are consistent across multiple logging statements
-    of the same resource type, such as environment variables.
+    of the same resource type, such as environment variables. Th
 
     Returns:
         dict:
             A dict representation of labels and the values of those labels
     """
     labels = {}
+    environ_vars = {
+        _CLOUD_RUN_JOB_RESOURCE_TYPE: {
+            _CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL: _CLOUD_RUN_EXECUTION_ID,
+            _CLOUD_RUN_JOBS_TASK_INDEX_LABEL: _CLOUD_RUN_TASK_INDEX,
+            _CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL: _CLOUD_RUN_TASK_ATTEMPT
+        }
+    }
 
-    def set_item(key, environ_var):
-        val = os.environ.get(environ_var, "")
-        if val:
-            labels[key] = val
-
-    if resource_type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
-        set_item(
-            _CLOUD_RUN_JOBS_EXECUTION_NAME_LABEL,
-            _CLOUD_RUN_EXECUTION_ID,
-        )
-        set_item(_CLOUD_RUN_JOBS_TASK_INDEX_LABEL, _CLOUD_RUN_TASK_INDEX)
-        set_item(_CLOUD_RUN_JOBS_TASK_ATTEMPT_LABEL, _CLOUD_RUN_TASK_ATTEMPT)
+    if resource_type in environ_vars:
+        for key, env_var in environ_vars[resource_type].items():
+            val = os.environ.get(env_var, "")
+            if val:
+                labels[key] = val
 
     return labels
 
