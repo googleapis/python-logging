@@ -510,9 +510,9 @@ def logging_dict_config(client):
             "my_other_logger": {"handlers": ["structured_log"], "level": "INFO"},
         },
     }
-    # [END logging_dict_config]
 
     logging.config.dictConfig(LOGGING)
+    # [END logging_dict_config]
 
 
 def _line_no(func):
