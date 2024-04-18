@@ -506,13 +506,10 @@ def logging_dict_config(client):
         },
         "root": {"handlers": [], "level": "WARNING"},
         "loggers": {
-            "cloud_logger": {
-                "handlers": ["cloud_logging_handler"],
-                "level": "INFO"
-            },
+            "cloud_logger": {"handlers": ["cloud_logging_handler"], "level": "INFO"},
             "structured_logger": {
                 "handlers": ["structured_log_handler"],
-                "level": "INFO"
+                "level": "INFO",
             },
         },
     }
