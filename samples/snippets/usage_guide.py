@@ -508,13 +508,11 @@ def logging_dict_config(client):
         "loggers": {
             "cloud_logger": {
                 "handlers": ["cloud_logging_handler"],
-                "level": "INFO",
-                "propagate": False,
+                "level": "INFO"
             },
             "structured_logger": {
                 "handlers": ["structured_log_handler"],
-                "level": "INFO",
-                "propagate": False,
+                "level": "INFO"
             },
         },
     }
