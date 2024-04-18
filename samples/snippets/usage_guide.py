@@ -504,7 +504,7 @@ def logging_dict_config(client):
                 "class": "google.cloud.logging.handlers.StructuredLogHandler"
             },
         },
-        "root": {"handlers": ["console"], "level": "WARNING"},
+        "root": {"handlers": ["cloud_logging", "structured_log"], "level": "WARNING"},
         "loggers": {
             "my_logger": {"handlers": ["cloud_logging"], "level": "INFO"},
             "my_other_logger": {"handlers": ["structured_log"], "level": "INFO"},
