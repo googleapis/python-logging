@@ -486,9 +486,9 @@ def setup_logging(client):
 
 @snippet
 def logging_dict_config(client):
+    # [START logging_dict_config]
     import logging.config
 
-    # [START logging_dict_config]
     import google.cloud.logging
 
     client = google.cloud.logging.Client()
