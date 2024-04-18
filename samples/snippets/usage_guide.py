@@ -496,18 +496,18 @@ def logging_dict_config(client):
     LOGGING = {
         "version": 1,
         "handlers": {
-            "cloud_logging": {
+            "cloud_logging_handler": {
                 "class": "google.cloud.logging.handlers.CloudLoggingHandler",
                 "client": client,
             },
-            "structured_log": {
+            "structured_log_handler": {
                 "class": "google.cloud.logging.handlers.StructuredLogHandler"
             },
         },
-        "root": {"handlers": ["cloud_logging", "structured_log"], "level": "WARNING"},
+        "root": {"handlers": [], "level": "WARNING"},
         "loggers": {
-            "my_logger": {"handlers": ["cloud_logging"], "level": "INFO"},
-            "my_other_logger": {"handlers": ["structured_log"], "level": "INFO"},
+            "cloud_logger": {"handlers": ["cloud_logging_handler"], "level": "INFO", "propagate": False},
+            "structured_logger": {"handlers": ["structured_log_handler"], "level": "INFO", "propagate": False},
         },
     }
 
