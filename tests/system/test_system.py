@@ -682,8 +682,6 @@ class TestLogging(unittest.TestCase):
             expected_trace_id = trace.format_trace_id(context.trace_id)
             expected_span_id = trace.format_span_id(context.span_id)
 
-            
-
     def test_create_metric(self):
         METRIC_NAME = "test-create-metric%s" % (_RESOURCE_ID,)
         metric = Config.CLIENT.metric(
