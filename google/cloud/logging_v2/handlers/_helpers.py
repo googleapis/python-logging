@@ -236,6 +236,7 @@ def get_request_data():
 
     return None, None, None, False
 
+
 def get_request_and_trace_data():
     """Helper to get http_request and trace data from supported web
     frameworks (currently supported: Flask and Django), as well as OpenTelemetry. Attempts
@@ -251,8 +252,17 @@ def get_request_and_trace_data():
             for the request. All fields will be None if a http request isn't found.
     """
 
-    otel_trace_id, otel_span_id, otel_trace_sampled = _parse_current_open_telemetry_span()
-    http_request, request_trace_id, request_span_id, request_trace_sampled = get_request_data()
+    (
+        otel_trace_id,
+        otel_span_id,
+        otel_trace_sampled,
+    ) = _parse_current_open_telemetry_span()
+    (
+        http_request,
+        request_trace_id,
+        request_span_id,
+        request_trace_sampled,
+    ) = get_request_data()
 
     # otel_trace_id existing means the other return values are non-null
     if otel_trace_id:
