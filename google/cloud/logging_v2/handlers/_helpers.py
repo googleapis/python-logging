@@ -24,6 +24,8 @@ try:
 except ImportError:  # pragma: NO COVER
     flask = None
 
+import opentelemetry.trace
+
 from google.cloud.logging_v2.handlers.middleware.request import _get_django_request
 
 _DJANGO_CONTENT_LENGTH = "CONTENT_LENGTH"
@@ -191,9 +193,31 @@ def _parse_xcloud_trace(header):
     return trace_id, span_id, trace_sampled
 
 
+def _parse_current_open_telemetry_span():
+    """Helper to extract trace, span ID, and trace sampled information from the current
+    OpenTelemetry span.
+
+    Returns:
+        Tuple[Optional[str], Optional[str], bool]:
+            Data related to the current trace_id, span_id, and trace_sampled for the
+            current OpenTelemetry span. If a span is not found, return None/False for all
+            fields.
+    """
+    span = opentelemetry.trace.get_current_span()
+    if span != opentelemetry.trace.span.INVALID_SPAN:
+        context = span.get_span_context()
+        trace_id = opentelemetry.trace.format_trace_id(context.trace_id)
+        span_id = opentelemetry.trace.format_span_id(context.span_id)
+        trace_sampled = context.trace_flags.sampled
+
+        return trace_id, span_id, trace_sampled
+
+    return None, None, False
+
+
 def get_request_data():
     """Helper to get http_request and trace data from supported web
-    frameworks (currently supported: Flask and Django).
+    frameworks (currently supported: Flask and Django)
 
     Returns:
         Tuple[Optional[dict], Optional[str], Optional[str], bool]:
@@ -211,3 +235,27 @@ def get_request_data():
             return http_request, trace_id, span_id, trace_sampled
 
     return None, None, None, False
+
+def get_request_and_trace_data():
+    """Helper to get http_request and trace data from supported web
+    frameworks (currently supported: Flask and Django), as well as OpenTelemetry. Attempts
+    to parse trace/spanID from OpenTelemetry first, before going to Traceparent then XCTC.
+    HTTP request data is taken from a supporting web framework (currently Flask or Django).
+    Because HTTP request data is decoupled from OpenTelemetry, it is possible to get as a
+    return value the HTTP request from the web framework of choice, and trace/span data from
+    OpenTelemetry, even if trace data is present in the HTTP request headers.
+
+    Returns:
+        Tuple[Optional[dict], Optional[str], Optional[str], bool]:
+            Data related to the current http request, trace_id, span_id, and trace_sampled
+            for the request. All fields will be None if a http request isn't found.
+    """
+
+    otel_trace_id, otel_span_id, otel_trace_sampled = _parse_current_open_telemetry_span()
+    http_request, request_trace_id, request_span_id, request_trace_sampled = get_request_data()
+
+    # otel_trace_id existing means the other return values are non-null
+    if otel_trace_id:
+        return http_request, otel_trace_id, otel_span_id, otel_trace_sampled
+    else:
+        return http_request, request_trace_id, request_span_id, request_trace_sampled

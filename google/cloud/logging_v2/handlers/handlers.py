@@ -20,7 +20,7 @@ import logging
 
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
-from google.cloud.logging_v2.handlers._helpers import get_request_data
+from google.cloud.logging_v2.handlers._helpers import get_request_and_trace_data
 
 DEFAULT_LOGGER_NAME = "python"
 
@@ -91,7 +91,7 @@ class CloudLoggingFilter(logging.Filter):
             inferred_trace,
             inferred_span,
             inferred_sampled,
-        ) = get_request_data()
+        ) = get_request_and_trace_data()
         if inferred_trace is not None and self.project is not None:
             # add full path for detected trace
             inferred_trace = f"projects/{self.project}/traces/{inferred_trace}"

@@ -14,7 +14,13 @@
 
 import unittest
 
+import contextlib
 import mock
+
+import opentelemetry.context
+import opentelemetry.trace
+
+from opentelemetry.trace.span import TraceFlags
 
 _FLASK_TRACE_ID = "flask0id"
 _FLASK_SPAN_ID = "span0flask"
@@ -22,6 +28,14 @@ _FLASK_HTTP_REQUEST = {"requestUrl": "https://flask.palletsprojects.com/en/1.1.x
 _DJANGO_TRACE_ID = "django0id"
 _DJANGO_SPAN_ID = "span0django"
 _DJANGO_HTTP_REQUEST = {"requestUrl": "https://www.djangoproject.com/"}
+
+_OTEL_SPAN_CONTEXT_TRACE_ID = 0x123456789123456789
+_OTEL_SPAN_CONTEXT_SPAN_ID = 0x123456789
+_OTEL_SPAN_CONTEXT_TRACEFLAGS = TraceFlags(TraceFlags.SAMPLED)
+
+_EXPECTED_OTEL_TRACE_ID = "00000000000000123456789123456789"
+_EXPECTED_OTEL_SPAN_ID = "0000000123456789"
+_EXPECTED_OTEL_TRACESAMPLED = True
 
 
 class Test_get_request_data_from_flask(unittest.TestCase):
@@ -477,3 +491,132 @@ class Test__parse_trace_parent(unittest.TestCase):
             self.assertIsNone(trace_id)
             self.assertIsNone(span_id)
             self.assertEqual(sampled, False)
+
+
+@contextlib.contextmanager
+def _setup_otel_span_context():
+    """Sets up a nonrecording OpenTelemetry span with a mock span context that gets returned 
+    by opentelemetry.trace.get_current_span, and returns it as a contextmanager
+    """
+    span_context = opentelemetry.trace.SpanContext(
+        _OTEL_SPAN_CONTEXT_TRACE_ID,
+        _OTEL_SPAN_CONTEXT_SPAN_ID,
+        False,
+        trace_flags=_OTEL_SPAN_CONTEXT_TRACEFLAGS,
+    )
+    span = opentelemetry.trace.NonRecordingSpan(span_context)
+    with mock.patch("opentelemetry.trace.get_current_span", return_value=span) as m:
+        yield m
+
+
+class Test__parse_open_telemetry_data(unittest.TestCase):
+    @staticmethod
+    def _call_fut():
+        from google.cloud.logging_v2.handlers import _helpers
+
+        trace, span, sampled = _helpers._parse_current_open_telemetry_span()
+        return trace, span, sampled
+
+    def test_no_op(self):
+        trace_id, span_id, sampled = self._call_fut()
+        self.assertIsNone(trace_id)
+        self.assertIsNone(span_id)
+        self.assertEqual(sampled, False)
+
+    def test_span_exists(self):
+        with _setup_otel_span_context() as _:
+            trace_id, span_id, sampled = self._call_fut()
+            self.assertEqual(trace_id, _EXPECTED_OTEL_TRACE_ID)
+            self.assertEqual(span_id, _EXPECTED_OTEL_SPAN_ID)
+            self.assertEqual(sampled, _EXPECTED_OTEL_TRACESAMPLED)
+
+
+class Test_get_request_and_trace_data(Test_get_request_data):
+    @staticmethod
+    def _call_fut():
+        from google.cloud.logging_v2.handlers import _helpers
+
+        http, trace, span, sampled = _helpers.get_request_and_trace_data()
+        return http, trace, span, sampled
+
+    def test_otel_span_exists_no_request(self):
+        flask_expected = (None, None, None, False)
+        django_expected = (None, None, None, False)
+
+        with _setup_otel_span_context() as _:
+            _, _, output = self._helper(django_expected, flask_expected)
+            self.assertEqual(output, (None, _EXPECTED_OTEL_TRACE_ID, _EXPECTED_OTEL_SPAN_ID, _EXPECTED_OTEL_TRACESAMPLED))
+
+    def test_otel_span_exists_django_request(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (None, None, None, False)
+
+        with _setup_otel_span_context() as _:
+            _, _, output = self._helper(django_expected, flask_expected)
+            self.assertEqual(output, (_DJANGO_HTTP_REQUEST, _EXPECTED_OTEL_TRACE_ID, _EXPECTED_OTEL_SPAN_ID, _EXPECTED_OTEL_TRACESAMPLED))
+
+    def test_otel_span_exists_flask_request(self):
+        django_expected = (None, None, None, False)
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+
+        with _setup_otel_span_context() as _:
+            _, _, output = self._helper(django_expected, flask_expected)
+            self.assertEqual(output, (_FLASK_HTTP_REQUEST, _EXPECTED_OTEL_TRACE_ID, _EXPECTED_OTEL_SPAN_ID, _EXPECTED_OTEL_TRACESAMPLED))
+
+    def test_otel_span_exists_both_django_and_flask(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+
+        with _setup_otel_span_context() as _:
+            _, _, output = self._helper(django_expected, flask_expected)
+
+            # Django wins
+            self.assertEqual(output, (_DJANGO_HTTP_REQUEST, _EXPECTED_OTEL_TRACE_ID, _EXPECTED_OTEL_SPAN_ID, _EXPECTED_OTEL_TRACESAMPLED))
+    
+    def test_no_otel_span_no_requests(self):
+        flask_expected = (None, None, None, False)
+        django_expected = (None, None, None, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+        self.assertEqual(output, (None, None, None, False))
+
+    def test_no_otel_span_django_request(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (None, None, None, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+        self.assertEqual(output, django_expected)
+
+    def test_no_otel_span_flask_request(self):
+        django_expected = (None, None, None, False)
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+
+        # Django wins
+        self.assertEqual(output, flask_expected)
+
+    def test_no_otel_span_both_django_and_flask(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+
+        # Django wins
+        self.assertEqual(output, django_expected)

@@ -40,6 +40,14 @@ from google.cloud.logging_v2.entries import TextEntry
 
 from google.protobuf.struct_pb2 import Struct, Value, ListValue, NullValue
 
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import (
+    BatchSpanProcessor,
+    ConsoleSpanExporter,
+)
+
+
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
 from test_utils.system import unique_resource_id
@@ -661,6 +669,20 @@ class TestLogging(unittest.TestCase):
 
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
+
+    def test_log_handler_otel_integration(self):
+        # Set up OTel SDK
+        provider = TracerProvider()
+        processor = BatchSpanProcessor(ConsoleSpanExporter())
+        provider.add_span_processor(processor)
+
+        tracer = trace.get_tracer("test_system", tracer_provider=provider)
+        with tracer.start_as_current_span("test-span") as span:
+            context = span.get_span_context()
+            expected_trace_id = trace.format_trace_id(context.trace_id)
+            expected_span_id = trace.format_span_id(context.span_id)
+
+            
 
     def test_create_metric(self):
         METRIC_NAME = "test-create-metric%s" % (_RESOURCE_ID,)
