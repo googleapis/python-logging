@@ -47,7 +47,6 @@ from opentelemetry.sdk.trace.export import (
     ConsoleSpanExporter,
 )
 
-
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
 from test_utils.system import unique_resource_id
@@ -671,6 +670,17 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(entries[0].payload, expected_payload)
 
     def test_log_handler_otel_integration(self):
+        LOG_MESSAGE = "This is a test of OpenTelemetry"
+        LOGGER_NAME = "otel-integration"
+        handler_name = self._logger_name(LOGGER_NAME)
+
+        handler = CloudLoggingHandler(
+            Config.CLIENT, name=handler_name, transport=SyncTransport
+        )
+        # only create the logger to delete, hidden otherwise
+        logger = Config.CLIENT.logger(handler.name)
+        self.to_delete.append(logger)
+
         # Set up OTel SDK
         provider = TracerProvider()
         processor = BatchSpanProcessor(ConsoleSpanExporter())
@@ -679,9 +689,20 @@ class TestLogging(unittest.TestCase):
         tracer = trace.get_tracer("test_system", tracer_provider=provider)
         with tracer.start_as_current_span("test-span") as span:
             context = span.get_span_context()
-            expected_trace_id = trace.format_trace_id(context.trace_id)
+            expected_trace_id = f"projects/{Config.CLIENT.project}/traces/{trace.format_trace_id(context.trace_id)}"
             expected_span_id = trace.format_span_id(context.span_id)
+            expected_tracesampled = context.trace_flags.sampled
 
+            cloud_logger = logging.getLogger(LOGGER_NAME)
+            cloud_logger.addHandler(handler)
+            cloud_logger.warning(LOG_MESSAGE)
+
+            entries = _list_entries(logger)
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0].trace, expected_trace_id)
+            self.assertEqual(entries[0].span_id, expected_span_id)
+            self.assertTrue(entries[0].trace_sampled, expected_tracesampled)
+    
     def test_create_metric(self):
         METRIC_NAME = "test-create-metric%s" % (_RESOURCE_ID,)
         metric = Config.CLIENT.metric(

@@ -14,13 +14,7 @@
 
 import unittest
 
-import contextlib
 import mock
-
-import opentelemetry.context
-import opentelemetry.trace
-
-from opentelemetry.trace.span import TraceFlags
 
 _FLASK_TRACE_ID = "flask0id"
 _FLASK_SPAN_ID = "span0flask"
@@ -29,13 +23,12 @@ _DJANGO_TRACE_ID = "django0id"
 _DJANGO_SPAN_ID = "span0django"
 _DJANGO_HTTP_REQUEST = {"requestUrl": "https://www.djangoproject.com/"}
 
-_OTEL_SPAN_CONTEXT_TRACE_ID = 0x123456789123456789
-_OTEL_SPAN_CONTEXT_SPAN_ID = 0x123456789
-_OTEL_SPAN_CONTEXT_TRACEFLAGS = TraceFlags(TraceFlags.SAMPLED)
-
-_EXPECTED_OTEL_TRACE_ID = "00000000000000123456789123456789"
-_EXPECTED_OTEL_SPAN_ID = "0000000123456789"
-_EXPECTED_OTEL_TRACESAMPLED = True
+from tests.unit.handlers import (
+    _setup_otel_span_context,
+    _EXPECTED_OTEL_TRACE_ID,
+    _EXPECTED_OTEL_SPAN_ID,
+    _EXPECTED_OTEL_TRACESAMPLED
+)
 
 
 class Test_get_request_data_from_flask(unittest.TestCase):
@@ -493,22 +486,6 @@ class Test__parse_trace_parent(unittest.TestCase):
             self.assertEqual(sampled, False)
 
 
-@contextlib.contextmanager
-def _setup_otel_span_context():
-    """Sets up a nonrecording OpenTelemetry span with a mock span context that gets returned
-    by opentelemetry.trace.get_current_span, and returns it as a contextmanager
-    """
-    span_context = opentelemetry.trace.SpanContext(
-        _OTEL_SPAN_CONTEXT_TRACE_ID,
-        _OTEL_SPAN_CONTEXT_SPAN_ID,
-        False,
-        trace_flags=_OTEL_SPAN_CONTEXT_TRACEFLAGS,
-    )
-    span = opentelemetry.trace.NonRecordingSpan(span_context)
-    with mock.patch("opentelemetry.trace.get_current_span", return_value=span) as m:
-        yield m
-
-
 class Test__parse_open_telemetry_data(unittest.TestCase):
     @staticmethod
     def _call_fut():
@@ -524,7 +501,7 @@ class Test__parse_open_telemetry_data(unittest.TestCase):
         self.assertEqual(sampled, False)
 
     def test_span_exists(self):
-        with _setup_otel_span_context() as _:
+        with _setup_otel_span_context():
             trace_id, span_id, sampled = self._call_fut()
             self.assertEqual(trace_id, _EXPECTED_OTEL_TRACE_ID)
             self.assertEqual(span_id, _EXPECTED_OTEL_SPAN_ID)
@@ -543,7 +520,7 @@ class Test_get_request_and_trace_data(Test_get_request_data):
         flask_expected = (None, None, None, False)
         django_expected = (None, None, None, False)
 
-        with _setup_otel_span_context() as _:
+        with _setup_otel_span_context():
             _, _, output = self._helper(django_expected, flask_expected)
             self.assertEqual(
                 output,
@@ -564,7 +541,7 @@ class Test_get_request_and_trace_data(Test_get_request_data):
         )
         flask_expected = (None, None, None, False)
 
-        with _setup_otel_span_context() as _:
+        with _setup_otel_span_context():
             _, _, output = self._helper(django_expected, flask_expected)
             self.assertEqual(
                 output,
@@ -580,7 +557,7 @@ class Test_get_request_and_trace_data(Test_get_request_data):
         django_expected = (None, None, None, False)
         flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
 
-        with _setup_otel_span_context() as _:
+        with _setup_otel_span_context():
             _, _, output = self._helper(django_expected, flask_expected)
             self.assertEqual(
                 output,
@@ -601,7 +578,7 @@ class Test_get_request_and_trace_data(Test_get_request_data):
         )
         flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
 
-        with _setup_otel_span_context() as _:
+        with _setup_otel_span_context():
             _, _, output = self._helper(django_expected, flask_expected)
 
             # Django wins
