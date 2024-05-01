@@ -16,19 +16,19 @@ import unittest
 
 import mock
 
-_FLASK_TRACE_ID = "flask0id"
-_FLASK_SPAN_ID = "span0flask"
-_FLASK_HTTP_REQUEST = {"requestUrl": "https://flask.palletsprojects.com/en/1.1.x/"}
-_DJANGO_TRACE_ID = "django0id"
-_DJANGO_SPAN_ID = "span0django"
-_DJANGO_HTTP_REQUEST = {"requestUrl": "https://www.djangoproject.com/"}
-
 from tests.unit.handlers import (
     _setup_otel_span_context,
     _EXPECTED_OTEL_TRACE_ID,
     _EXPECTED_OTEL_SPAN_ID,
     _EXPECTED_OTEL_TRACESAMPLED,
 )
+
+_FLASK_TRACE_ID = "flask0id"
+_FLASK_SPAN_ID = "span0flask"
+_FLASK_HTTP_REQUEST = {"requestUrl": "https://flask.palletsprojects.com/en/1.1.x/"}
+_DJANGO_TRACE_ID = "django0id"
+_DJANGO_SPAN_ID = "span0django"
+_DJANGO_HTTP_REQUEST = {"requestUrl": "https://www.djangoproject.com/"}
 
 
 class Test_get_request_data_from_flask(unittest.TestCase):

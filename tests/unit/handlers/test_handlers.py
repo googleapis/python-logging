@@ -258,7 +258,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
             self.assertEqual(record._trace_str, _EXPECTED_OTEL_TRACE_ID)
             self.assertEqual(record._span_id, _EXPECTED_OTEL_SPAN_ID)
             self.assertEqual(record._span_id_str, _EXPECTED_OTEL_SPAN_ID)
-            self.assertTrue(record._trace_sampled)
+            self.assertEqual(record._trace_sampled, _EXPECTED_OTEL_TRACESAMPLED)
             self.assertEqual(record._trace_sampled_str, "true")
             self.assertIsNone(record._http_request)
             self.assertEqual(record._http_request_str, "{}")
@@ -303,7 +303,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
                 self.assertEqual(record._trace_str, _EXPECTED_OTEL_TRACE_ID)
                 self.assertEqual(record._span_id, _EXPECTED_OTEL_SPAN_ID)
                 self.assertEqual(record._span_id_str, _EXPECTED_OTEL_SPAN_ID)
-                self.assertTrue(record._trace_sampled)
+                self.assertEqual(record._trace_sampled, _EXPECTED_OTEL_TRACESAMPLED)
                 self.assertEqual(record._trace_sampled_str, "true")
 
                 self.assertEqual(record._http_request, expected_request)
