@@ -32,6 +32,7 @@ _EXPECTED_OTEL_TRACE_ID = "00000000000000123456789123456789"
 _EXPECTED_OTEL_SPAN_ID = "0000000123456789"
 _EXPECTED_OTEL_TRACESAMPLED = True
 
+
 @contextlib.contextmanager
 def _setup_otel_span_context():
     """Sets up a nonrecording OpenTelemetry span with a mock span context that gets returned

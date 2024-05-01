@@ -27,7 +27,7 @@ from tests.unit.handlers import (
     _setup_otel_span_context,
     _EXPECTED_OTEL_TRACE_ID,
     _EXPECTED_OTEL_SPAN_ID,
-    _EXPECTED_OTEL_TRACESAMPLED
+    _EXPECTED_OTEL_TRACESAMPLED,
 )
 
 

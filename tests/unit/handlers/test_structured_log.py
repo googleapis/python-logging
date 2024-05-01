@@ -520,7 +520,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             _setup_otel_span_context,
             _EXPECTED_OTEL_TRACE_ID,
             _EXPECTED_OTEL_SPAN_ID,
-            _EXPECTED_OTEL_TRACESAMPLED
+            _EXPECTED_OTEL_TRACESAMPLED,
         )
 
         handler = self._make_one()
@@ -530,7 +530,7 @@ class TestStructuredLogHandler(unittest.TestCase):
         expected_payload = {
             "logging.googleapis.com/trace": _EXPECTED_OTEL_TRACE_ID,
             "logging.googleapis.com/spanId": _EXPECTED_OTEL_SPAN_ID,
-            "logging.googleapis.com/trace_sampled": _EXPECTED_OTEL_TRACESAMPLED
+            "logging.googleapis.com/trace_sampled": _EXPECTED_OTEL_TRACESAMPLED,
         }
 
         with _setup_otel_span_context():
@@ -547,7 +547,7 @@ class TestStructuredLogHandler(unittest.TestCase):
             _setup_otel_span_context,
             _EXPECTED_OTEL_TRACE_ID,
             _EXPECTED_OTEL_SPAN_ID,
-            _EXPECTED_OTEL_TRACESAMPLED
+            _EXPECTED_OTEL_TRACESAMPLED,
         )
 
         handler = self._make_one()

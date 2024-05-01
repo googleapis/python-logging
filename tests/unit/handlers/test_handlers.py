@@ -32,8 +32,9 @@ from tests.unit.handlers import (
     _setup_otel_span_context,
     _EXPECTED_OTEL_TRACE_ID,
     _EXPECTED_OTEL_SPAN_ID,
-    _EXPECTED_OTEL_TRACESAMPLED
+    _EXPECTED_OTEL_TRACESAMPLED,
 )
+
 
 class TestCloudLoggingFilter(unittest.TestCase):
     PROJECT = "PROJECT"
@@ -359,7 +360,9 @@ class TestCloudLoggingFilter(unittest.TestCase):
                 self.assertEqual(record._span_id, overwritten_span)
                 self.assertEqual(record._span_id_str, overwritten_span)
                 self.assertFalse(record._trace_sampled)
-                self.assertEqual(record._trace_sampled_str, json.dumps(overwritten_tracesampled))
+                self.assertEqual(
+                    record._trace_sampled_str, json.dumps(overwritten_tracesampled)
+                )
 
                 self.assertEqual(record._http_request, expected_request)
                 self.assertEqual(record._http_request_str, json.dumps(expected_request))

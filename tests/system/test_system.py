@@ -702,7 +702,7 @@ class TestLogging(unittest.TestCase):
             self.assertEqual(entries[0].trace, expected_trace_id)
             self.assertEqual(entries[0].span_id, expected_span_id)
             self.assertTrue(entries[0].trace_sampled, expected_tracesampled)
-    
+
     def test_create_metric(self):
         METRIC_NAME = "test-create-metric%s" % (_RESOURCE_ID,)
         metric = Config.CLIENT.metric(
