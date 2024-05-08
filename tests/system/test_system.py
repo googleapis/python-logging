@@ -42,10 +42,6 @@ from google.protobuf.struct_pb2 import Struct, Value, ListValue, NullValue
 
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import (
-    BatchSpanProcessor,
-    ConsoleSpanExporter,
-)
 
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
@@ -683,10 +679,8 @@ class TestLogging(unittest.TestCase):
 
         # Set up OTel SDK
         provider = TracerProvider()
-        processor = BatchSpanProcessor(ConsoleSpanExporter())
-        provider.add_span_processor(processor)
 
-        tracer = trace.get_tracer("test_system", tracer_provider=provider)
+        tracer = provider.get_tracer("test_system")
         with tracer.start_as_current_span("test-span") as span:
             context = span.get_span_context()
             expected_trace_id = f"projects/{Config.CLIENT.project}/traces/{trace.format_trace_id(context.trace_id)}"

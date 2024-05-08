@@ -491,7 +491,7 @@ class Test__parse_open_telemetry_data(unittest.TestCase):
     def _call_fut():
         from google.cloud.logging_v2.handlers import _helpers
 
-        trace, span, sampled = _helpers._parse_current_open_telemetry_span()
+        trace, span, sampled = _helpers._retrieve_current_open_telemetry_span()
         return trace, span, sampled
 
     def test_no_op(self):

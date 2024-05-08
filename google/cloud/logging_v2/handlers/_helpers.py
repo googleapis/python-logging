@@ -193,8 +193,8 @@ def _parse_xcloud_trace(header):
     return trace_id, span_id, trace_sampled
 
 
-def _parse_current_open_telemetry_span():
-    """Helper to extract trace, span ID, and trace sampled information from the current
+def _retrieve_current_open_telemetry_span():
+    """Helper to retrieve trace, span ID, and trace sampled information from the current
     OpenTelemetry span.
 
     Returns:
@@ -240,7 +240,7 @@ def get_request_data():
 def get_request_and_trace_data():
     """Helper to get http_request and trace data from supported web
     frameworks (currently supported: Flask and Django), as well as OpenTelemetry. Attempts
-    to parse trace/spanID from OpenTelemetry first, before going to Traceparent then XCTC.
+    to retrieve trace/spanID from OpenTelemetry first, before going to Traceparent then XCTC.
     HTTP request data is taken from a supporting web framework (currently Flask or Django).
     Because HTTP request data is decoupled from OpenTelemetry, it is possible to get as a
     return value the HTTP request from the web framework of choice, and trace/span data from
@@ -256,7 +256,7 @@ def get_request_and_trace_data():
         otel_trace_id,
         otel_span_id,
         otel_trace_sampled,
-    ) = _parse_current_open_telemetry_span()
+    ) = _retrieve_current_open_telemetry_span()
     (
         http_request,
         request_trace_id,

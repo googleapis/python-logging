@@ -17,11 +17,11 @@
 # suites.
 
 import contextlib
-import mock
 
 import opentelemetry.context
 import opentelemetry.trace
 
+from opentelemetry.trace import NonRecordingSpan
 from opentelemetry.trace.span import TraceFlags
 
 _OTEL_SPAN_CONTEXT_TRACE_ID = 0x123456789123456789
@@ -44,6 +44,13 @@ def _setup_otel_span_context():
         False,
         trace_flags=_OTEL_SPAN_CONTEXT_TRACEFLAGS,
     )
-    span = opentelemetry.trace.NonRecordingSpan(span_context)
-    with mock.patch("opentelemetry.trace.get_current_span", return_value=span) as m:
-        yield m
+    ctx = opentelemetry.trace.set_span_in_context(NonRecordingSpan(span_context))
+    tracer = opentelemetry.trace.NoOpTracer()
+    token = opentelemetry.context.attach(ctx)
+    try:
+        with tracer.start_as_current_span('test-span', context=ctx) as span:
+            print("testubg 123")
+            print(opentelemetry.trace.get_current_span().get_span_context().span_id)
+            yield
+    finally:
+        opentelemetry.context.detach(token)
