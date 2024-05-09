@@ -48,9 +48,7 @@ def _setup_otel_span_context():
     tracer = opentelemetry.trace.NoOpTracer()
     token = opentelemetry.context.attach(ctx)
     try:
-        with tracer.start_as_current_span("test-span", context=ctx) as span:
-            print("testubg 123")
-            print(opentelemetry.trace.get_current_span().get_span_context().span_id)
+        with tracer.start_as_current_span("test-span", context=ctx):
             yield
     finally:
         opentelemetry.context.detach(token)
