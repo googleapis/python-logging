@@ -19,6 +19,7 @@ import logging
 import numbers
 import os
 import pytest
+import sys
 import unittest
 import uuid
 
@@ -39,9 +40,6 @@ from google.cloud.logging_v2.resource import Resource
 from google.cloud.logging_v2.entries import TextEntry
 
 from google.protobuf.struct_pb2 import Struct, Value, ListValue, NullValue
-
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
 
 from test_utils.retry import RetryErrors
 from test_utils.retry import RetryResult
@@ -119,6 +117,22 @@ skip_for_mtls = pytest.mark.skipif(
     Config.use_mtls == "always", reason="Skip the test case for mTLS testing"
 )
 
+def _cleanup_otel_sdk_modules(f):
+    """
+    Decorator to delete all references to opentelemetry SDK modules after a
+    testcase is run. Test case should import opentelemetry SDK modules inside
+    the function. This is to test situations where the opentelemetry SDK
+    is not imported at all.
+    """
+    def wrapped(*args, **kwargs):
+        f(*args, **kwargs)
+
+        # Deleting from sys.modules should be good enough in this use case
+        for module_name in list(sys.modules.keys()):
+            if module_name.startswith('opentelemetry.sdk'):
+                sys.modules.pop(module_name)
+
+    return wrapped
 
 class TestLogging(unittest.TestCase):
     JSON_PAYLOAD = {
@@ -665,7 +679,12 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, expected_payload)
 
+    @_cleanup_otel_sdk_modules
     def test_log_handler_otel_integration(self):
+        # Doing OTel imports here to not taint the other tests with OTel SDK imports
+        from opentelemetry import trace
+        from opentelemetry.sdk.trace import TracerProvider
+    
         LOG_MESSAGE = "This is a test of OpenTelemetry"
         LOGGER_NAME = "otel-integration"
         handler_name = self._logger_name(LOGGER_NAME)
