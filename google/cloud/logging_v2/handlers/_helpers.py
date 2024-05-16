@@ -217,28 +217,6 @@ def _retrieve_current_open_telemetry_span():
 
 def get_request_data():
     """Helper to get http_request and trace data from supported web
-    frameworks (currently supported: Flask and Django)
-
-    Returns:
-        Tuple[Optional[dict], Optional[str], Optional[str], bool]:
-            Data related to the current http request, trace_id, span_id, and trace_sampled
-            for the request. All fields will be None if a http request isn't found.
-    """
-    checkers = (
-        get_request_data_from_django,
-        get_request_data_from_flask,
-    )
-
-    for checker in checkers:
-        http_request, trace_id, span_id, trace_sampled = checker()
-        if http_request is not None:
-            return http_request, trace_id, span_id, trace_sampled
-
-    return None, None, None, False
-
-
-def get_request_and_trace_data():
-    """Helper to get http_request and trace data from supported web
     frameworks (currently supported: Flask and Django), as well as OpenTelemetry. Attempts
     to retrieve trace/spanID from OpenTelemetry first, before going to Traceparent then XCTC.
     HTTP request data is taken from a supporting web framework (currently Flask or Django).
@@ -257,15 +235,24 @@ def get_request_and_trace_data():
         otel_span_id,
         otel_trace_sampled,
     ) = _retrieve_current_open_telemetry_span()
-    (
-        http_request,
-        request_trace_id,
-        request_span_id,
-        request_trace_sampled,
-    ) = get_request_data()
+
+    # Get HTTP request data
+    checkers = (
+        get_request_data_from_django,
+        get_request_data_from_flask,
+    )
+
+    http_request, http_trace_id, http_span_id, http_trace_sampled = None, None, None, False
+
+    for checker in checkers:
+        http_request, http_trace_id, http_span_id, http_trace_sampled = checker()
+        if http_request is None:
+            http_trace_id, http_span_id, http_trace_sampled = None, None, False
+        else:
+            break
 
     # otel_trace_id existing means the other return values are non-null
     if otel_trace_id:
         return http_request, otel_trace_id, otel_span_id, otel_trace_sampled
     else:
-        return http_request, request_trace_id, request_span_id, request_trace_sampled
+        return http_request, http_trace_id, http_span_id, http_trace_sampled
