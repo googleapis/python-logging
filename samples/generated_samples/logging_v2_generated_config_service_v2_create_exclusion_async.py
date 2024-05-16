@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,14 +36,14 @@ from google.cloud import logging_v2
 
 async def sample_create_exclusion():
     # Create a client
-    client = logging_v2.ConfigServiceV2AsyncClient()
+    client = logging_v2.services.config_service_v2.ConfigServiceV2AsyncClient()
 
     # Initialize request argument(s)
-    exclusion = logging_v2.LogExclusion()
+    exclusion = logging_v2.types.LogExclusion()
     exclusion.name = "name_value"
     exclusion.filter = "filter_value"
 
-    request = logging_v2.CreateExclusionRequest(
+    request = logging_v2.types.CreateExclusionRequest(
         parent="parent_value",
         exclusion=exclusion,
     )

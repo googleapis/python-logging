@@ -19,28 +19,29 @@ import json
 import logging
 
 from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
-from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
+from google.cloud.logging_v2.handlers._monitored_resources import (
+    detect_resource,
+    add_resource_labels,
+)
 from google.cloud.logging_v2.handlers._helpers import get_request_data
 
 DEFAULT_LOGGER_NAME = "python"
 
-"""Exclude internal logs from propagating through handlers"""
+"""Defaults for filtering out noisy loggers"""
 EXCLUDED_LOGGER_DEFAULTS = (
-    "google.cloud",
-    "google.auth",
-    "google_auth_httplib2",
     "google.api_core.bidi",
     "werkzeug",
 )
 
+"""Exclude internal logs from propagating through handlers"""
+_INTERNAL_LOGGERS = (
+    "google.cloud",
+    "google.auth",
+    "google_auth_httplib2",
+)
+
 """These environments require us to remove extra handlers on setup"""
 _CLEAR_HANDLER_RESOURCE_TYPES = ("gae_app", "cloud_function")
-
-"""Extra trace label to be added on App Engine environments"""
-_GAE_TRACE_ID_LABEL = "appengine.googleapis.com/trace_id"
-
-"""Resource name for App Engine environments"""
-_GAE_RESOURCE_TYPE = "gae_app"
 
 
 class CloudLoggingFilter(logging.Filter):
@@ -70,7 +71,7 @@ class CloudLoggingFilter(logging.Filter):
                 ("function", "funcName"),
             ]
             output = {}
-            for (gcp_name, std_lib_name) in name_map:
+            for gcp_name, std_lib_name in name_map:
                 value = getattr(record, std_lib_name, None)
                 if value is not None:
                     output[gcp_name] = value
@@ -153,6 +154,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         resource=None,
         labels=None,
         stream=None,
+        **kwargs,
     ):
         """
         Args:
@@ -201,9 +203,8 @@ class CloudLoggingHandler(logging.StreamHandler):
         labels = record._labels
         message = _format_and_parse_message(record, self)
 
-        if resource.type == _GAE_RESOURCE_TYPE and record._trace is not None:
-            # add GAE-specific label
-            labels = {_GAE_TRACE_ID_LABEL: record._trace, **(labels or {})}
+        labels = {**add_resource_labels(resource, record), **(labels or {})} or None
+
         # send off request
         self.transport.send(
             record,
@@ -291,7 +292,7 @@ def setup_logging(
         log_level (Optional[int]): Python logging log level. Defaults to
             :const:`logging.INFO`.
     """
-    all_excluded_loggers = set(excluded_loggers + EXCLUDED_LOGGER_DEFAULTS)
+    all_excluded_loggers = set(excluded_loggers + _INTERNAL_LOGGERS)
     logger = logging.getLogger()
 
     # remove built-in handlers on App Engine or Cloud Functions environments

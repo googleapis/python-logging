@@ -79,7 +79,6 @@ class Test__int_or_none(unittest.TestCase):
 
 
 class TestLogEntry(unittest.TestCase):
-
     PROJECT = "PROJECT"
     LOGGER_NAME = "LOGGER_NAME"
 
@@ -201,14 +200,14 @@ class TestLogEntry(unittest.TestCase):
 
     def test_from_api_repr_w_loggers_no_logger_match(self):
         from datetime import datetime
-        from google.cloud._helpers import UTC
+        from datetime import timezone
         from google.cloud.logging import Resource
 
         klass = self._get_target_class()
         client = _Client(self.PROJECT)
         SEVERITY = "CRITICAL"
         IID = "IID"
-        NOW = datetime.utcnow().replace(tzinfo=UTC)
+        NOW = datetime.now(timezone.utc)
         TIMESTAMP = _datetime_to_rfc3339_w_nanos(NOW)
         LOG_NAME = "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME)
         LABELS = {"foo": "bar", "baz": "qux"}
@@ -284,11 +283,11 @@ class TestLogEntry(unittest.TestCase):
     def test_from_api_repr_w_loggers_w_logger_match(self):
         from datetime import datetime
         from datetime import timedelta
-        from google.cloud._helpers import UTC
+        from datetime import timezone
 
         client = _Client(self.PROJECT)
         IID = "IID"
-        NOW = datetime.utcnow().replace(tzinfo=UTC)
+        NOW = datetime.now(timezone.utc)
         LATER = NOW + timedelta(seconds=1)
         TIMESTAMP = _datetime_to_rfc3339_w_nanos(NOW)
         RECEIVED = _datetime_to_rfc3339_w_nanos(LATER)
@@ -342,11 +341,11 @@ class TestLogEntry(unittest.TestCase):
     def test_from_api_repr_w_folder_path(self):
         from datetime import datetime
         from datetime import timedelta
-        from google.cloud._helpers import UTC
+        from datetime import timezone
 
         client = _Client(self.PROJECT)
         IID = "IID"
-        NOW = datetime.utcnow().replace(tzinfo=UTC)
+        NOW = datetime.now(timezone.utc)
         LATER = NOW + timedelta(seconds=1)
         TIMESTAMP = _datetime_to_rfc3339_w_nanos(NOW)
         RECEIVED = _datetime_to_rfc3339_w_nanos(LATER)
@@ -469,7 +468,6 @@ class TestLogEntry(unittest.TestCase):
 
 
 class TestTextEntry(unittest.TestCase):
-
     PROJECT = "PROJECT"
     LOGGER_NAME = "LOGGER_NAME"
 
@@ -557,7 +555,6 @@ class TestTextEntry(unittest.TestCase):
 
 
 class TestStructEntry(unittest.TestCase):
-
     PROJECT = "PROJECT"
     LOGGER_NAME = "LOGGER_NAME"
 
@@ -659,7 +656,6 @@ class TestStructEntry(unittest.TestCase):
 
 
 class TestProtobufEntry(unittest.TestCase):
-
     PROJECT = "PROJECT"
     LOGGER_NAME = "LOGGER_NAME"
 
@@ -734,6 +730,45 @@ class TestProtobufEntry(unittest.TestCase):
 
         LOG_NAME = "test.log"
         message = Struct(fields={"foo": Value(bool_value=True)})
+
+        entry = self._make_one(log_name=LOG_NAME, payload=message)
+        expected = {
+            "logName": LOG_NAME,
+            "protoPayload": MessageToDict(message),
+            "resource": _GLOBAL_RESOURCE._to_dict(),
+        }
+        self.assertEqual(entry.to_api_repr(), expected)
+
+    def test_to_api_repr_proto_inner_struct_field(self):
+        from google.protobuf.json_format import MessageToDict
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+        from google.protobuf.struct_pb2 import Struct
+        from google.protobuf.struct_pb2 import Value
+
+        LOG_NAME = "test.log"
+        inner_struct = Struct(fields={"foo": Value(string_value="bar")})
+        message = Struct(fields={"inner": Value(struct_value=inner_struct)})
+
+        entry = self._make_one(log_name=LOG_NAME, payload=message)
+        expected = {
+            "logName": LOG_NAME,
+            "protoPayload": MessageToDict(message),
+            "resource": _GLOBAL_RESOURCE._to_dict(),
+        }
+        self.assertEqual(entry.to_api_repr(), expected)
+
+    def test_to_api_repr_proto_inner_list_field(self):
+        from google.protobuf.json_format import MessageToDict
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+        from google.protobuf.struct_pb2 import ListValue
+        from google.protobuf.struct_pb2 import Struct
+        from google.protobuf.struct_pb2 import Value
+
+        LOG_NAME = "test.log"
+        lines = ListValue(
+            values=[Value(string_value="line1"), Value(string_value="line2")]
+        )
+        message = Struct(fields={"lines": Value(list_value=lines)})
 
         entry = self._make_one(log_name=LOG_NAME, payload=message)
         expected = {

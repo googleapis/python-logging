@@ -118,7 +118,6 @@ skip_for_mtls = pytest.mark.skipif(
 
 
 class TestLogging(unittest.TestCase):
-
     JSON_PAYLOAD = {
         "message": "System test: test_log_struct",
         "weather": {
@@ -193,6 +192,7 @@ class TestLogging(unittest.TestCase):
             "methodName": "test",
             "resourceName": "test",
             "serviceName": "test",
+            "requestMetadata": {"callerIp": "127.0.0.1"},
         }
         audit_struct = self._dict_to_struct(audit_dict)
 
@@ -223,6 +223,12 @@ class TestLogging(unittest.TestCase):
             self.assertEqual(
                 protobuf_entry.to_api_repr()["protoPayload"]["methodName"],
                 audit_dict["methodName"],
+            )
+            self.assertEqual(
+                protobuf_entry.to_api_repr()["protoPayload"]["requestMetadata"][
+                    "callerIp"
+                ],
+                audit_dict["requestMetadata"]["callerIp"],
             )
 
     def test_list_entry_with_requestlog(self):
@@ -330,7 +336,7 @@ class TestLogging(unittest.TestCase):
         text_payload = "System test: test_log_text_with_timestamp"
         gapic_logger = Config.CLIENT.logger(self._logger_name("log_text_ts"))
         http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_ts_http"))
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         loggers = (
             [gapic_logger]
             if Config.use_mtls == "always"
@@ -350,7 +356,7 @@ class TestLogging(unittest.TestCase):
 
         gapic_logger = Config.CLIENT.logger(self._logger_name("log_text_res"))
         http_logger = Config.HTTP_CLIENT.logger(self._logger_name("log_text_res_http"))
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         loggers = (
             [gapic_logger]
             if Config.use_mtls == "always"
@@ -599,7 +605,7 @@ class TestLogging(unittest.TestCase):
             "resource": Resource(type="cloudiot_device", labels={}),
             "labels": {"test-label": "manual"},
         }
-        cloud_logger.warn(LOG_MESSAGE, extra=extra)
+        cloud_logger.warning(LOG_MESSAGE, extra=extra)
 
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
@@ -628,7 +634,7 @@ class TestLogging(unittest.TestCase):
         cloud_logger = logging.getLogger(LOGGER_NAME)
         cloud_logger.addHandler(handler)
         extra = {"json_fields": {"hello": "world", "two": 2}}
-        cloud_logger.warn(LOG_MESSAGE, extra=extra)
+        cloud_logger.warning(LOG_MESSAGE, extra=extra)
 
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
@@ -807,7 +813,7 @@ class TestLogging(unittest.TestCase):
         # Stackdriver Logging to write into it.
         retry = RetryErrors((TooManyRequests, BadGateway, ServiceUnavailable))
         bigquery_client = bigquery.Client()
-        dataset_ref = bigquery_client.dataset(dataset_name)
+        dataset_ref = bigquery.DatasetReference(Config.CLIENT.project, dataset_name)
         dataset = retry(bigquery_client.create_dataset)(bigquery.Dataset(dataset_ref))
         self.to_delete.append((bigquery_client, dataset))
         bigquery_client.get_dataset(dataset)

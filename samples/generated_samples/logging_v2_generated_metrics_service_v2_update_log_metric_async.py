@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,14 +36,14 @@ from google.cloud import logging_v2
 
 async def sample_update_log_metric():
     # Create a client
-    client = logging_v2.MetricsServiceV2AsyncClient()
+    client = logging_v2.services.metrics_service_v2.MetricsServiceV2AsyncClient()
 
     # Initialize request argument(s)
-    metric = logging_v2.LogMetric()
+    metric = logging_v2.types.LogMetric()
     metric.name = "name_value"
     metric.filter = "filter_value"
 
-    request = logging_v2.UpdateLogMetricRequest(
+    request = logging_v2.types.UpdateLogMetricRequest(
         metric_name="metric_name_value",
         metric=metric,
     )

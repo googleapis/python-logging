@@ -484,6 +484,40 @@ def setup_logging(client):
     # [END setup_logging_excludes]
 
 
+@snippet
+def logging_dict_config(client):
+    # [START logging_dict_config]
+    import logging.config
+
+    import google.cloud.logging
+
+    client = google.cloud.logging.Client()
+
+    LOGGING = {
+        "version": 1,
+        "handlers": {
+            "cloud_logging_handler": {
+                "class": "google.cloud.logging.handlers.CloudLoggingHandler",
+                "client": client,
+            },
+            "structured_log_handler": {
+                "class": "google.cloud.logging.handlers.StructuredLogHandler"
+            },
+        },
+        "root": {"handlers": [], "level": "WARNING"},
+        "loggers": {
+            "cloud_logger": {"handlers": ["cloud_logging_handler"], "level": "INFO"},
+            "structured_logger": {
+                "handlers": ["structured_log_handler"],
+                "level": "INFO",
+            },
+        },
+    }
+
+    logging.config.dictConfig(LOGGING)
+    # [END logging_dict_config]
+
+
 def _line_no(func):
     return func.__code__.co_firstlineno
 

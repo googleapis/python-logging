@@ -24,7 +24,6 @@ def _make_credentials():
 
 
 class TestConnection(unittest.TestCase):
-
     PROJECT = "project"
     FILTER = "logName:syslog AND severity>=ERROR"
 
@@ -96,7 +95,6 @@ class TestConnection(unittest.TestCase):
 
 
 class Test_LoggingAPI(unittest.TestCase):
-
     PROJECT = "project"
     PROJECT_PATH = "projects/project"
     LIST_ENTRIES_PATH = "entries:list"
@@ -124,9 +122,9 @@ class Test_LoggingAPI(unittest.TestCase):
     @staticmethod
     def _make_timestamp():
         import datetime
-        from google.cloud._helpers import UTC
+        from datetime import timezone
 
-        NOW = datetime.datetime.utcnow().replace(tzinfo=UTC)
+        NOW = datetime.datetime.now(timezone.utc)
         return NOW, _datetime_to_rfc3339_w_nanos(NOW)
 
     def test_list_entries_with_limits(self):
@@ -354,7 +352,6 @@ class Test_LoggingAPI(unittest.TestCase):
 
 
 class Test_SinksAPI(unittest.TestCase):
-
     PROJECT = "project"
     PROJECT_PATH = "projects/project"
     FILTER = "logName:syslog AND severity>=ERROR"
@@ -636,7 +633,6 @@ class Test_SinksAPI(unittest.TestCase):
 
 
 class Test_MetricsAPI(unittest.TestCase):
-
     PROJECT = "project"
     FILTER = "logName:syslog AND severity>=ERROR"
     LIST_METRICS_PATH = "projects/%s/metrics" % (PROJECT,)
@@ -865,7 +861,6 @@ class Test_MetricsAPI(unittest.TestCase):
 
 
 class _Connection(object):
-
     _called_with = None
     _raise_conflict = False
 

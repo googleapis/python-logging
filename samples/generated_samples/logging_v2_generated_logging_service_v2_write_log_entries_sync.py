@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,13 +36,13 @@ from google.cloud import logging_v2
 
 def sample_write_log_entries():
     # Create a client
-    client = logging_v2.LoggingServiceV2Client()
+    client = logging_v2.services.logging_service_v2.LoggingServiceV2Client()
 
     # Initialize request argument(s)
-    entries = logging_v2.LogEntry()
+    entries = logging_v2.types.LogEntry()
     entries.log_name = "log_name_value"
 
-    request = logging_v2.WriteLogEntriesRequest(
+    request = logging_v2.types.WriteLogEntriesRequest(
         entries=entries,
     )
 
