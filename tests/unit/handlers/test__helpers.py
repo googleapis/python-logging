@@ -362,7 +362,7 @@ class Test_get_request_data(unittest.TestCase):
     def test_wo_libraries(self):
         output = self._call_fut()
         self.assertEqual(output, (None, None, None, False))
-    
+
     def test_otel_span_exists_no_request(self):
         flask_expected = (None, None, None, False)
         django_expected = (None, None, None, False)
@@ -476,7 +476,6 @@ class Test_get_request_data(unittest.TestCase):
 
         # Django wins
         self.assertEqual(output, django_expected)
-
 
 
 class Test__parse_xcloud_trace(unittest.TestCase):

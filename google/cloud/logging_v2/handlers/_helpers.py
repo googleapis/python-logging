@@ -242,7 +242,12 @@ def get_request_data():
         get_request_data_from_flask,
     )
 
-    http_request, http_trace_id, http_span_id, http_trace_sampled = None, None, None, False
+    http_request, http_trace_id, http_span_id, http_trace_sampled = (
+        None,
+        None,
+        None,
+        False,
+    )
 
     for checker in checkers:
         http_request, http_trace_id, http_span_id, http_trace_sampled = checker()
