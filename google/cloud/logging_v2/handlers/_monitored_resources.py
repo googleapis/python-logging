@@ -60,6 +60,9 @@ _ZONE_ID = "instance/zone"
 _GCE_INSTANCE_ID = "instance/id"
 """Attribute in metadata server for compute region and instance."""
 
+_GKE_RESOURCE_TYPE = "k8s_container"
+"""Resource type for the GKE environment."""
+
 _GKE_CLUSTER_NAME = "instance/attributes/cluster-name"
 """Attribute in metadata server when in GKE environment."""
 
@@ -71,6 +74,12 @@ _PROJECT_NAME = "project/project-id"
 
 _GAE_RESOURCE_TYPE = "gae_app"
 """Resource type for App Engine environment."""
+
+_GCF_RESOURCE_TYPE = "cloud_function"
+"""Resource type for Cloud Functions environment."""
+
+_RUN_RESOURCE_TYPE = "cloud_run_revision"
+"""Resource type for Cloud Run environment."""
 
 _CLOUD_RUN_JOB_RESOURCE_TYPE = "cloud_run_job"
 """Resource type for Cloud Run Jobs."""
