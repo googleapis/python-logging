@@ -803,7 +803,9 @@ class TestClient(unittest.TestCase):
     def test_get_default_handler_cloud_run_jobs(self):
         import os
         from google.cloud._testing import _Monkey
-        from google.cloud.logging_v2.handlers._monitored_resources import _CLOUD_RUN_JOB_ENV_VARS
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            _CLOUD_RUN_JOB_ENV_VARS,
+        )
         from google.cloud.logging.handlers import StructuredLogHandler
 
         credentials = _make_credentials()

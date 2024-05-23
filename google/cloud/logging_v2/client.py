@@ -38,7 +38,7 @@ from google.cloud.logging_v2.handlers._monitored_resources import (
     _GKE_RESOURCE_TYPE,
     _GCF_RESOURCE_TYPE,
     _RUN_RESOURCE_TYPE,
-    _CLOUD_RUN_JOB_RESOURCE_TYPE
+    _CLOUD_RUN_JOB_RESOURCE_TYPE,
 )
 
 from google.cloud.logging_v2.logger import Logger
