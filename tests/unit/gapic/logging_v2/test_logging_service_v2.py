@@ -2194,10 +2194,10 @@ def test_list_log_entries_pager(transport_name: str = "grpc"):
             RuntimeError,
         )
 
-        metadata = ()
+        expected_metadata = ()
         pager = client.list_log_entries(request={})
 
-        assert pager._metadata == metadata
+        assert pager._metadata == expected_metadata
 
         results = list(pager)
         assert len(results) == 6
@@ -2625,10 +2625,10 @@ def test_list_monitored_resource_descriptors_pager(transport_name: str = "grpc")
             RuntimeError,
         )
 
-        metadata = ()
+        expected_metadata = ()
         pager = client.list_monitored_resource_descriptors(request={})
 
-        assert pager._metadata == metadata
+        assert pager._metadata == expected_metadata
 
         results = list(pager)
         assert len(results) == 6
@@ -3198,13 +3198,13 @@ def test_list_logs_pager(transport_name: str = "grpc"):
             RuntimeError,
         )
 
-        metadata = ()
-        metadata = tuple(metadata) + (
+        expected_metadata = ()
+        expected_metadata = tuple(expected_metadata) + (
             gapic_v1.routing_header.to_grpc_metadata((("parent", ""),)),
         )
         pager = client.list_logs(request={})
 
-        assert pager._metadata == metadata
+        assert pager._metadata == expected_metadata
 
         results = list(pager)
         assert len(results) == 6
