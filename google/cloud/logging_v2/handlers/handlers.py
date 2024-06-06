@@ -21,7 +21,10 @@ import logging
 from typing import Optional, IO
 
 from google.cloud.logging_v2.client import Client
-from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport, Transport
+from google.cloud.logging_v2.handlers.transports import (
+    BackgroundThreadTransport,
+    Transport,
+)
 from google.cloud.logging_v2.handlers._monitored_resources import (
     detect_resource,
     add_resource_labels,
@@ -154,11 +157,11 @@ class CloudLoggingHandler(logging.StreamHandler):
         self,
         client: Client,
         *,
-        name: str=DEFAULT_LOGGER_NAME,
-        transport: Transport=BackgroundThreadTransport,
-        resource: Resource=None,
-        labels: Optional[dict]=None,
-        stream: Optional[IO]=None,
+        name: str = DEFAULT_LOGGER_NAME,
+        transport: Transport = BackgroundThreadTransport,
+        resource: Resource = None,
+        labels: Optional[dict] = None,
+        stream: Optional[IO] = None,
         **kwargs,
     ):
         """
