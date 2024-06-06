@@ -20,7 +20,6 @@ import logging
 
 from typing import Optional, IO
 
-from google.cloud.logging_v2.client import Client
 from google.cloud.logging_v2.handlers.transports import (
     BackgroundThreadTransport,
     Transport,
@@ -155,7 +154,7 @@ class CloudLoggingHandler(logging.StreamHandler):
 
     def __init__(
         self,
-        client: Client,
+        client,
         *,
         name: str = DEFAULT_LOGGER_NAME,
         transport: Transport = BackgroundThreadTransport,
