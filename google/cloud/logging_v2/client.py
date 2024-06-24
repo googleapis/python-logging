@@ -380,18 +380,21 @@ class Client(ClientWithProject):
             _GAE_RESOURCE_TYPE,
             _GKE_RESOURCE_TYPE,
             _GCF_RESOURCE_TYPE,
-            _RUN_RESOURCE_TYPE
+            _RUN_RESOURCE_TYPE,
         ]
 
-        if isinstance(monitored_resource, Resource) and monitored_resource.type in _structured_log_types:
+        if (
+            isinstance(monitored_resource, Resource)
+            and monitored_resource.type in _structured_log_types
+        ):
             if monitored_resource.type == _GCF_RESOURCE_TYPE:
                 # __stdout__ stream required to support structured logging on Python 3.7
                 kw["stream"] = kw.get("stream", sys.__stdout__)
-            
+
             handler = StructuredLogHandler(**kw, project_id=self.project)
         else:
             handler = CloudLoggingHandler(self, resource=monitored_resource, **kw)
-        
+
         return handler
 
     def setup_logging(
