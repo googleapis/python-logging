@@ -38,6 +38,10 @@ _WORKER_THREAD_NAME = "google.cloud.logging.Worker"
 _WORKER_TERMINATOR = object()
 _LOGGER = logging.getLogger(__name__)
 
+_CLOSE_THREAD_SHUTDOWN_ERROR_MSG = "CloudLoggingHandler shutting down, cannot send logs entries to Cloud Logging due to " \
+    "inconsistent threading behavior at shutdown. To avoid this issue, flush the logging handler " \
+    "manually or switch to StructuredLogHandler."
+
 
 def _get_many(queue_, *, max_items=None, max_latency=0):
     """Get multiple items from a Queue.
@@ -140,9 +144,11 @@ class _Worker(object):
                 else:
                     batch.log(**item)
 
-            self._safely_commit_batch(batch)
+            # We cannot commit logs upstream if the main thread is shutting down
+            if threading.main_thread().is_alive():
+                self._safely_commit_batch(batch)
 
-            for _ in items:
+            for it in items:
                 self._queue.task_done()
 
         _LOGGER.debug("Background thread exited gracefully.")
@@ -162,7 +168,7 @@ class _Worker(object):
             )
             self._thread.daemon = True
             self._thread.start()
-            atexit.register(self._main_thread_terminated)
+            atexit.register(self._close)
 
     def stop(self, *, grace_period=None):
         """Signals the background thread to stop.
@@ -202,25 +208,34 @@ class _Worker(object):
 
             return success
 
-    def _main_thread_terminated(self):
+    def _close(self):
         """Callback that attempts to send pending logs before termination."""
         if not self.is_alive:
             return
-
+        
+        # Print different messages to the user depending on whether or not the
+        # program is shutting down. This is because this function now handles both
+        # the atexit handler and the regular close.
         if not self._queue.empty():
-            print(
-                "Program shutting down, attempting to send %d queued log "
-                "entries to Cloud Logging..." % (self._queue.qsize(),),
-                file=sys.stderr,
-            )
+            if threading.main_thread().is_alive():
+                print(
+                    "Background thread shutting down, attempting to send %d queued log "
+                    "entries to Cloud Logging..." % (self._queue.qsize(),),
+                    file=sys.stderr,
+                )
+            else:
+                print(_CLOSE_THREAD_SHUTDOWN_ERROR_MSG,file=sys.stderr,)
 
-        if self.stop(grace_period=self._grace_period):
+        if self.stop(grace_period=self._grace_period) and threading.main_thread().is_alive():
             print("Sent all pending logs.", file=sys.stderr)
         else:
+            print(f"Thread main is alive: {threading.main_thread().is_alive()}", file=sys.stderr)
             print(
                 "Failed to send %d pending logs." % (self._queue.qsize(),),
                 file=sys.stderr,
             )
+        
+        self._thread = None
 
     def enqueue(self, record, message, **kwargs):
         """Queues a log entry to be written by the background thread.
@@ -251,6 +266,13 @@ class _Worker(object):
         """Submit any pending log records."""
         self._queue.join()
 
+    def close(self):
+        """Signals the worker thread to stop, then closes the transport thread.
+        
+        This call should be followed up by disowning the transport object.
+        """
+        atexit.unregister(self._close)
+        self._close()
 
 class BackgroundThreadTransport(Transport):
     """Asynchronous transport that uses a background thread."""
@@ -285,6 +307,7 @@ class BackgroundThreadTransport(Transport):
         """
         self.client = client
         logger = self.client.logger(name, resource=resource)
+        self.grace_period = grace_period
         self.worker = _Worker(
             logger,
             grace_period=grace_period,
@@ -307,3 +330,7 @@ class BackgroundThreadTransport(Transport):
     def flush(self):
         """Submit any pending log records."""
         self.worker.flush()
+
+    def close(self):
+        """Closes the worker thread."""
+        self.worker.stop(grace_period=self.grace_period)

@@ -468,6 +468,17 @@ class TestCloudLoggingHandler(unittest.TestCase):
             self.assertIsNone(handler.labels)
             self.assertIs(handler.stream, sys.stderr)
 
+    def test_add_handler_to_client_handlers(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client,
+            transport=_Transport,
+            resource=_GLOBAL_RESOURCE,
+        )
+        self.assertIn(handler, client._handlers)
+
     def test_ctor_explicit(self):
         import io
         from google.cloud.logging import Resource
@@ -789,6 +800,56 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 None,
             ),
         )
+    
+    def test_emit_after_close(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE
+        )
+        logname = "loggername"
+        message = "hello world"
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, message, None, None
+        )
+        handler.handle(record)
+        old_transport = handler.transport
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                {"python_logger": logname},
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
+
+        handler.close()
+        self.assertIsNone(handler.transport)
+
+        handler.handle(record)
+        self.assertIsNotNone(handler)
+        self.assertNotEqual(handler.transport, old_transport)
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                {"python_logger": logname},
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
 
     def test_format_with_arguments(self):
         """
@@ -824,6 +885,20 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 None,
             ),
         )
+    
+    def test_close(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client,
+            transport=_Transport,
+            resource=_GLOBAL_RESOURCE,
+        )
+        old_transport = handler.transport
+        handler.close()
+        self.assertIsNone(handler.transport)
+        self.assertTrue(old_transport.close_called)
 
 
 class TestFormatAndParseMessage(unittest.TestCase):
@@ -1127,12 +1202,14 @@ class _Handler(object):
 class _Client(object):
     def __init__(self, project):
         self.project = project
+        self._handlers = set()
 
 
 class _Transport(object):
     def __init__(self, client, name, resource=None):
         self.client = client
         self.name = name
+        self.close_called = False
 
     def send(
         self,
@@ -1157,3 +1234,6 @@ class _Transport(object):
             http_request,
             source_location,
         )
+    
+    def close(self):
+        self.close_called = True
