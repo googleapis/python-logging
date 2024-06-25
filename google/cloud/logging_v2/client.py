@@ -378,20 +378,35 @@ class Client(ClientWithProject):
         monitored_resource = kw.pop("resource", detect_resource(self.project))
         print(monitored_resource)
 
-        if isinstance(monitored_resource, Resource):
-            if monitored_resource.type == _GAE_RESOURCE_TYPE:
-                return CloudLoggingHandler(self, resource=monitored_resource, **kw)
-            elif monitored_resource.type == _GKE_RESOURCE_TYPE:
-                return StructuredLogHandler(**kw, project_id=self.project)
-            elif monitored_resource.type == _GCF_RESOURCE_TYPE:
+        _structured_log_types = [
+            _GAE_RESOURCE_TYPE,
+            _GKE_RESOURCE_TYPE,
+            _GCF_RESOURCE_TYPE,
+            _RUN_RESOURCE_TYPE,
+        ]
+
+        if (
+            isinstance(monitored_resource, Resource)
+            and monitored_resource.type in _structured_log_types
+        ):
+            if monitored_resource.type == _GCF_RESOURCE_TYPE:
                 # __stdout__ stream required to support structured logging on Python 3.7
                 kw["stream"] = kw.get("stream", sys.__stdout__)
+<<<<<<< HEAD
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _RUN_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
             elif monitored_resource.type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
                 return StructuredLogHandler(**kw, project_id=self.project)
         return CloudLoggingHandler(self, resource=monitored_resource, **kw)
+=======
+
+            handler = StructuredLogHandler(**kw, project_id=self.project)
+        else:
+            handler = CloudLoggingHandler(self, resource=monitored_resource, **kw)
+
+        return handler
+>>>>>>> f92c9b8 (feat!: Use StructuredLogHandler on App Engine instead of CloudLoggingHandler (#908))
 
     def setup_logging(
         self, *, log_level=logging.INFO, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, **kw
