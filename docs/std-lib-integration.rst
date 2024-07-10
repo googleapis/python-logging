@@ -102,16 +102,17 @@ The Google Cloud Logging library attempts to detect and attach additional
 The following fields are currently supported:
 
 - labels
-- trace*
-- span_id*
-- trace_sampled*
-- http_request*
+- trace
+- span_id
+- trace_sampled
+- http_request
 - source_location
 - resource
 - :ref:`json_fields<JSON>`
 
 .. note::
-    Fields marked with "*" require a :doc:`supported Python web framework </web-framework-integration>`.
+    | More information about `trace`, `span_id`, `trace_sampled` can be found :doc:`here </auto-trace-span-extraction>`.
+    | `http_request` requires a :doc:`supported Python web framework </web-framework-integration>`.
 
 Manual Metadata Using the `extra` Argument
 --------------------------------------------
