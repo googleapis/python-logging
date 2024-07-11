@@ -12,7 +12,7 @@ OpenTelemetry Integration
 -------------------------
 
 If you have the OpenTelemetry SDK package installed and are logging from within an active OpenTelemetry span, that log entry will automatically
-have the `trace`, `span_id`, and `trace_sampled` fields populated with metadata from that span. More information about OpenTelemetry can be found 
+have the `trace`, `span_id`, and `trace_sampled` fields populated from that span. More information about OpenTelemetry can be found 
 `here <https://opentelemetry.io/docs/languages/python/>`_.
 
 HTTP headers
