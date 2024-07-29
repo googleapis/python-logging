@@ -376,7 +376,6 @@ class Client(ClientWithProject):
             logging.Handler: The default log handler based on the environment
         """
         monitored_resource = kw.pop("resource", detect_resource(self.project))
-        print(monitored_resource)
 
         _structured_log_types = [
             _GAE_RESOURCE_TYPE,
