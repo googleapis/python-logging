@@ -229,7 +229,6 @@ class _Worker(object):
         if self.stop(grace_period=self._grace_period) and threading.main_thread().is_alive():
             print("Sent all pending logs.", file=sys.stderr)
         else:
-            print(f"Thread main is alive: {threading.main_thread().is_alive()}", file=sys.stderr)
             print(
                 "Failed to send %d pending logs." % (self._queue.qsize(),),
                 file=sys.stderr,
