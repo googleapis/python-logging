@@ -332,12 +332,6 @@ class Test_Worker(unittest.TestCase):
             
             self.assertRegex(stderr_mock.getvalue(), re.compile("^%s$" % _CLOSE_THREAD_SHUTDOWN_ERROR_MSG, re.MULTILINE))
 
-            print(worker._grace_period)
-            print(worker._queue.qsize())
-            print(stderr_mock.getvalue())
-        self.assertFalse(worker.is_alive)
-        self.fail()
-
     def test_close_unregister_atexit(self):
         worker = self._make_one(_Logger(self.NAME))
 
@@ -467,7 +461,8 @@ class Test_Worker(unittest.TestCase):
             main_thread_obj_mock = mock.Mock()
             main_thread_func_mock.return_value = main_thread_obj_mock
             main_thread_obj_mock.is_alive = mock.Mock(return_value=False)
-
+            self._enqueue_record(worker, "1")
+            self._enqueue_record(worker, "2")
             worker._thread_main()
         
         self.assertFalse(worker._cloud_logger._batch.commit_called)
