@@ -392,21 +392,12 @@ class Client(ClientWithProject):
             if monitored_resource.type == _GCF_RESOURCE_TYPE:
                 # __stdout__ stream required to support structured logging on Python 3.7
                 kw["stream"] = kw.get("stream", sys.__stdout__)
-<<<<<<< HEAD
-                return StructuredLogHandler(**kw, project_id=self.project)
-            elif monitored_resource.type == _RUN_RESOURCE_TYPE:
-                return StructuredLogHandler(**kw, project_id=self.project)
-            elif monitored_resource.type == _CLOUD_RUN_JOB_RESOURCE_TYPE:
-                return StructuredLogHandler(**kw, project_id=self.project)
-        return CloudLoggingHandler(self, resource=monitored_resource, **kw)
-=======
 
             handler = StructuredLogHandler(**kw, project_id=self.project)
         else:
             handler = CloudLoggingHandler(self, resource=monitored_resource, **kw)
 
         return handler
->>>>>>> f92c9b8 (feat!: Use StructuredLogHandler on App Engine instead of CloudLoggingHandler (#908))
 
     def setup_logging(
         self, *, log_level=logging.INFO, excluded_loggers=EXCLUDED_LOGGER_DEFAULTS, **kw
