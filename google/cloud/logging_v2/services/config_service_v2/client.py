@@ -914,6 +914,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
             method=rpc,
             request=request,
             response=response,
+            retry=retry,
+            timeout=timeout,
             metadata=metadata,
         )
 
@@ -1631,6 +1633,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
             method=rpc,
             request=request,
             response=response,
+            retry=retry,
+            timeout=timeout,
             metadata=metadata,
         )
 
@@ -2073,6 +2077,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
             method=rpc,
             request=request,
             response=response,
+            retry=retry,
+            timeout=timeout,
             metadata=metadata,
         )
 
@@ -2999,6 +3005,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
             method=rpc,
             request=request,
             response=response,
+            retry=retry,
+            timeout=timeout,
             metadata=metadata,
         )
 
@@ -3227,6 +3235,8 @@ class ConfigServiceV2Client(metaclass=ConfigServiceV2ClientMeta):
             method=rpc,
             request=request,
             response=response,
+            retry=retry,
+            timeout=timeout,
             metadata=metadata,
         )
 
