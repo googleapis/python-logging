@@ -148,7 +148,7 @@ class Client(ClientWithProject):
             self._use_grpc = _USE_GRPC
         else:
             self._use_grpc = _use_grpc
-        
+
         self._handlers = set()
 
     @property

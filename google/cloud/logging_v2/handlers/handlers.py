@@ -216,8 +216,10 @@ class CloudLoggingHandler(logging.StreamHandler):
 
         # send off request
         if self.transport is None:
-            self.transport = self._transport_cls(self.client, self.name, resource=self.resource)
-        
+            self.transport = self._transport_cls(
+                self.client, self.name, resource=self.resource
+            )
+
         self.transport.send(
             record,
             message,
@@ -238,12 +240,12 @@ class CloudLoggingHandler(logging.StreamHandler):
         super(CloudLoggingHandler, self).flush()
         if self.transport is not None:
             self.transport.flush()
-    
+
     def close(self):
-        """Closes the log handler and cleans up all Transport objects used.
-        """
+        """Closes the log handler and cleans up all Transport objects used."""
         self.transport.close()
         self.transport = None
+
 
 def _format_and_parse_message(record, formatter_handler):
     """

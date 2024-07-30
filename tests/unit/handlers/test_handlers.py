@@ -799,7 +799,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 None,
             ),
         )
-    
+
     def test_emit_after_close(self):
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 
@@ -884,7 +884,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 None,
             ),
         )
-    
+
     def test_close(self):
         from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 
@@ -1233,6 +1233,6 @@ class _Transport(object):
             http_request,
             source_location,
         )
-    
+
     def close(self):
         self.close_called = True
