@@ -32,8 +32,14 @@ from google.cloud.logging_v2.handlers import StructuredLogHandler
 from google.cloud.logging_v2.handlers import setup_logging
 from google.cloud.logging_v2.handlers.handlers import EXCLUDED_LOGGER_DEFAULTS
 from google.cloud.logging_v2.resource import Resource
-from google.cloud.logging_v2.handlers._monitored_resources import detect_resource
-
+from google.cloud.logging_v2.handlers._monitored_resources import (
+    detect_resource,
+    _GAE_RESOURCE_TYPE,
+    _GKE_RESOURCE_TYPE,
+    _GCF_RESOURCE_TYPE,
+    _RUN_RESOURCE_TYPE,
+    _CLOUD_RUN_JOB_RESOURCE_TYPE,
+)
 
 from google.cloud.logging_v2.logger import Logger
 from google.cloud.logging_v2.metric import Metric
@@ -55,11 +61,6 @@ except ImportError:  # pragma: NO COVER
     _gapic = None
 
 _USE_GRPC = _HAVE_GRPC and not _DISABLE_GRPC
-
-_GAE_RESOURCE_TYPE = "gae_app"
-_GKE_RESOURCE_TYPE = "k8s_container"
-_GCF_RESOURCE_TYPE = "cloud_function"
-_RUN_RESOURCE_TYPE = "cloud_run_revision"
 
 
 class Client(ClientWithProject):
@@ -381,6 +382,7 @@ class Client(ClientWithProject):
             _GKE_RESOURCE_TYPE,
             _GCF_RESOURCE_TYPE,
             _RUN_RESOURCE_TYPE,
+            _CLOUD_RUN_JOB_RESOURCE_TYPE,
         ]
 
         if (
