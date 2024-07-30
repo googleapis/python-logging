@@ -932,7 +932,7 @@ class TestClient(unittest.TestCase):
         }
         self.assertEqual(kwargs, expected_kwargs)
         self.assertIn(handler, client._handlers)
-    
+
     def test_flush_handlers_cloud_logging_handler(self):
         import io
         from google.cloud.logging.handlers import CloudLoggingHandler
@@ -958,11 +958,11 @@ class TestClient(unittest.TestCase):
 
         (handler,) = args
         self.assertIsInstance(handler, CloudLoggingHandler)
-        
+
         handler.flush = mock.Mock()
         client.flush_handlers()
         handler.flush.assert_called_once_with()
-    
+
     def test_flush_handlers_cloud_logging_handler_no_setup_logging(self):
         from google.cloud.logging.handlers import CloudLoggingHandler
 
@@ -973,7 +973,7 @@ class TestClient(unittest.TestCase):
 
         handler = CloudLoggingHandler(client)
         self.assertIn(handler, client._handlers)
-        
+
         handler.flush = mock.Mock()
         client.flush_handlers()
         handler.flush.assert_called_once_with()
@@ -1035,7 +1035,7 @@ class TestClient(unittest.TestCase):
 
         (handler,) = args
         self.assertIsInstance(handler, CloudLoggingHandler)
-        
+
         handler.close = mock.Mock()
         with contextlib.closing(client):
             pass
@@ -1053,7 +1053,7 @@ class TestClient(unittest.TestCase):
 
         handler = CloudLoggingHandler(client)
         self.assertIn(handler, client._handlers)
-        
+
         handler.close = mock.Mock()
         with contextlib.closing(client):
             pass

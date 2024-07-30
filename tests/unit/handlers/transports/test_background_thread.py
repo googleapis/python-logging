@@ -182,6 +182,7 @@ class Test_Worker(unittest.TestCase):
 
     def setUp(self):
         import sys
+
         print("In method", self._testMethodName, file=sys.stderr)
 
     @staticmethod
@@ -197,14 +198,16 @@ class Test_Worker(unittest.TestCase):
         with mock.patch("threading.Thread", new=_Thread) as thread_mock:
             worker.start()
             return thread_mock
-    
+
     @staticmethod
     @contextlib.contextmanager
     def _init_atexit_mock():
         atexit_mock = _AtexitMock()
-        with mock.patch.multiple("atexit", register=atexit_mock.register, unregister=atexit_mock.unregister):
+        with mock.patch.multiple(
+            "atexit", register=atexit_mock.register, unregister=atexit_mock.unregister
+        ):
             yield atexit_mock
-    
+
     @staticmethod
     @contextlib.contextmanager
     def _init_main_thread_is_alive_mock(is_alive):
@@ -213,7 +216,6 @@ class Test_Worker(unittest.TestCase):
             main_thread_func_mock.return_value = main_thread_obj_mock
             main_thread_obj_mock.is_alive = mock.Mock(return_value=is_alive)
             yield
-
 
     def test_constructor(self):
         logger = _Logger(self.NAME)
@@ -320,7 +322,10 @@ class Test_Worker(unittest.TestCase):
         self.assertFalse(worker.is_alive)
 
     def test__close_main_thread_not_alive(self):
-        from google.cloud.logging_v2.handlers.transports.background_thread import _CLOSE_THREAD_SHUTDOWN_ERROR_MSG
+        from google.cloud.logging_v2.handlers.transports.background_thread import (
+            _CLOSE_THREAD_SHUTDOWN_ERROR_MSG,
+        )
+
         worker = self._make_one(_Logger(self.NAME))
 
         with mock.patch("sys.stderr", new_callable=StringIO) as stderr_mock:
@@ -329,8 +334,11 @@ class Test_Worker(unittest.TestCase):
                     self._start_with_thread_patch(worker)
                     self._enqueue_record(worker, "test")
                     worker._close()
-            
-            self.assertRegex(stderr_mock.getvalue(), re.compile("^%s$" % _CLOSE_THREAD_SHUTDOWN_ERROR_MSG, re.MULTILINE))
+
+            self.assertRegex(
+                stderr_mock.getvalue(),
+                re.compile("^%s$" % _CLOSE_THREAD_SHUTDOWN_ERROR_MSG, re.MULTILINE),
+            )
 
     def test_close_unregister_atexit(self):
         worker = self._make_one(_Logger(self.NAME))
@@ -340,7 +348,6 @@ class Test_Worker(unittest.TestCase):
             self.assertIn(worker._close, atexit_mock.registered_funcs)
             worker.close()
             self.assertNotIn(worker._close, atexit_mock.registered_funcs)
-
 
     @staticmethod
     def _enqueue_record(worker, message, levelno=logging.INFO, **kw):
@@ -464,7 +471,7 @@ class Test_Worker(unittest.TestCase):
             self._enqueue_record(worker, "1")
             self._enqueue_record(worker, "2")
             worker._thread_main()
-        
+
         self.assertFalse(worker._cloud_logger._batch.commit_called)
 
     @mock.patch("time.time", autospec=True, return_value=1)
@@ -635,9 +642,9 @@ class _Client(object):
 class _AtexitMock(object):
     def __init__(self):
         self.registered_funcs = set()
-    
+
     def register(self, func):
         self.registered_funcs.add(func)
-    
+
     def unregister(self, func):
         self.registered_funcs.remove(func)

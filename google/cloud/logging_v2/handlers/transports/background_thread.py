@@ -38,9 +38,11 @@ _WORKER_THREAD_NAME = "google.cloud.logging.Worker"
 _WORKER_TERMINATOR = object()
 _LOGGER = logging.getLogger(__name__)
 
-_CLOSE_THREAD_SHUTDOWN_ERROR_MSG = "CloudLoggingHandler shutting down, cannot send logs entries to Cloud Logging due to " \
-    "inconsistent threading behavior at shutdown. To avoid this issue, flush the logging handler " \
+_CLOSE_THREAD_SHUTDOWN_ERROR_MSG = (
+    "CloudLoggingHandler shutting down, cannot send logs entries to Cloud Logging due to "
+    "inconsistent threading behavior at shutdown. To avoid this issue, flush the logging handler "
     "manually or switch to StructuredLogHandler."
+)
 
 
 def _get_many(queue_, *, max_items=None, max_latency=0):
@@ -212,7 +214,7 @@ class _Worker(object):
         """Callback that attempts to send pending logs before termination."""
         if not self.is_alive:
             return
-        
+
         # Print different messages to the user depending on whether or not the
         # program is shutting down. This is because this function now handles both
         # the atexit handler and the regular close.
@@ -224,16 +226,22 @@ class _Worker(object):
                     file=sys.stderr,
                 )
             else:
-                print(_CLOSE_THREAD_SHUTDOWN_ERROR_MSG,file=sys.stderr,)
+                print(
+                    _CLOSE_THREAD_SHUTDOWN_ERROR_MSG,
+                    file=sys.stderr,
+                )
 
-        if self.stop(grace_period=self._grace_period) and threading.main_thread().is_alive():
+        if (
+            self.stop(grace_period=self._grace_period)
+            and threading.main_thread().is_alive()
+        ):
             print("Sent all pending logs.", file=sys.stderr)
         else:
             print(
                 "Failed to send %d pending logs." % (self._queue.qsize(),),
                 file=sys.stderr,
             )
-        
+
         self._thread = None
 
     def enqueue(self, record, message, **kwargs):
@@ -267,11 +275,12 @@ class _Worker(object):
 
     def close(self):
         """Signals the worker thread to stop, then closes the transport thread.
-        
+
         This call should be followed up by disowning the transport object.
         """
         atexit.unregister(self._close)
         self._close()
+
 
 class BackgroundThreadTransport(Transport):
     """Asynchronous transport that uses a background thread."""
