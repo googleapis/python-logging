@@ -330,7 +330,7 @@ class Test_Worker(unittest.TestCase):
 
         with mock.patch("sys.stderr", new_callable=StringIO) as stderr_mock:
             with self._init_main_thread_is_alive_mock(False):
-                with self._init_atexit_mock() as atexit_mock:
+                with self._init_atexit_mock():
                     self._start_with_thread_patch(worker)
                     self._enqueue_record(worker, "test")
                     worker._close()
@@ -640,6 +640,8 @@ class _Client(object):
 
 
 class _AtexitMock(object):
+    """_AtexitMock is a simulation of registering/unregistering functions in atexit using a dummy set."""
+
     def __init__(self):
         self.registered_funcs = set()
 
