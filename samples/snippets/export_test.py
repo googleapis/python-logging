@@ -32,7 +32,7 @@ TIMESTAMP = int(time.time())
 
 # Threshold beyond which the cleanup_old_sinks fixture will delete
 # old sink, in seconds
-CLEANUP_THRESHOLD = 7200 # 2 hours
+CLEANUP_THRESHOLD = 7200  # 2 hours
 
 
 def _random_id():
@@ -51,10 +51,12 @@ def _delete_sink(sink):
 
 
 # Runs once for entire test suite
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def cleanup_old_sinks():
     client = logging.Client()
-    test_sink_name_regex = "^" + TEST_SINK_NAME_TMPL.format("(\d+)","[A-Z0-9]{6}") + "$"
+    test_sink_name_regex = (
+        "^" + TEST_SINK_NAME_TMPL.format("(\d+)", "[A-Z0-9]{6}") + "$"
+    )
     for sink in client.list_sinks():
         match = re.match(test_sink_name_regex, sink.name)
         if match:
