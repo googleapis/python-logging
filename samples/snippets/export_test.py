@@ -45,7 +45,7 @@ def _create_sink_name():
     return TEST_SINK_NAME_TMPL.format(TIMESTAMP, _random_id())
 
 
-@backoff.on_exception(backoff.expo, Exception, max_time=60)
+@backoff.on_exception(backoff.expo, Exception, max_time=60, raise_on_giveup=False)
 def _delete_sink(sink):
     sink.delete()
 
@@ -55,7 +55,7 @@ def _delete_sink(sink):
 def cleanup_old_sinks():
     client = logging.Client()
     test_sink_name_regex = (
-        "^" + TEST_SINK_NAME_TMPL.format("(\d+)", "[A-Z0-9]{6}") + "$"
+        r"^" + TEST_SINK_NAME_TMPL.format(r"(\d+)",r"[A-Z0-9]{6}") + r"$"
     )
     for sink in client.list_sinks():
         match = re.match(test_sink_name_regex, sink.name)
