@@ -35,16 +35,17 @@ def _random_id():
     )
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def cleanup_old_sinks():
     client = logging.Client()
-    test_sink_name_regex = TEST_SINK_NAME_TMPL.format('[A-Z0-9]{6}$')
+    test_sink_name_regex = TEST_SINK_NAME_TMPL.format("[A-Z0-9]{6}$")
     for sink in client.list_sinks():
         if re.match(test_sink_name_regex, sink.name):
             try:
                 sink.delete()
             except Exception:
                 pass
+
 
 @pytest.fixture
 def example_sink(cleanup_old_sinks):
