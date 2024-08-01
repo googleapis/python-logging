@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import re
 import random
 import string
 
@@ -34,8 +35,16 @@ def _random_id():
     )
 
 
+@pytest.fixture(scope='module')
+def cleanup_old_sinks():
+    client = logging.Client()
+    test_sink_name_regex = TEST_SINK_NAME_TMPL.format('[A-Z0-9]{6}$')
+    for sink in client.list_sinks():
+        if re.match(test_sink_name_regex, sink.name):
+            sink.delete()
+
 @pytest.fixture
-def example_sink():
+def example_sink(cleanup_old_sinks):
     client = logging.Client()
 
     sink = client.sink(
@@ -48,10 +57,7 @@ def example_sink():
 
     yield sink
 
-    try:
-        sink.delete()
-    except Exception:
-        pass
+    sink.delete()
 
 
 def test_list(example_sink, capsys):
