@@ -55,7 +55,7 @@ def _delete_sink(sink):
 def cleanup_old_sinks():
     client = logging.Client()
     test_sink_name_regex = (
-        r"^" + TEST_SINK_NAME_TMPL.format(r"(\d+)",r"[A-Z0-9]{6}") + r"$"
+        r"^" + TEST_SINK_NAME_TMPL.format(r"(\d+)", r"[A-Z0-9]{6}") + r"$"
     )
     for sink in client.list_sinks():
         match = re.match(test_sink_name_regex, sink.name)
