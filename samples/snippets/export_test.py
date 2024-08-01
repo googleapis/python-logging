@@ -41,7 +41,10 @@ def cleanup_old_sinks():
     test_sink_name_regex = TEST_SINK_NAME_TMPL.format('[A-Z0-9]{6}$')
     for sink in client.list_sinks():
         if re.match(test_sink_name_regex, sink.name):
-            sink.delete()
+            try:
+                sink.delete()
+            except Exception:
+                pass
 
 @pytest.fixture
 def example_sink(cleanup_old_sinks):
@@ -57,7 +60,10 @@ def example_sink(cleanup_old_sinks):
 
     yield sink
 
-    sink.delete()
+    try:
+        sink.delete()
+    except Exception:
+        pass
 
 
 def test_list(example_sink, capsys):
