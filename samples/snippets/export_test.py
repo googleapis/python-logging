@@ -16,6 +16,7 @@ import os
 import re
 import random
 import string
+import time
 
 import backoff
 from google.cloud import logging
@@ -25,8 +26,13 @@ import export
 
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
-TEST_SINK_NAME_TMPL = "example_sink_{}"
+TEST_SINK_NAME_TMPL = "example_sink_{}_{}"
 TEST_SINK_FILTER = "severity>=CRITICAL"
+TIMESTAMP = int(time.time())
+
+# Threshold beyond which the cleanup_old_sinks fixture will delete
+# old sink, in seconds
+CLEANUP_THRESHOLD = 7200 # 2 hours
 
 
 def _random_id():
@@ -35,16 +41,26 @@ def _random_id():
     )
 
 
-@pytest.fixture(scope="module")
+def _create_sink_name():
+    return TEST_SINK_NAME_TMPL.format(TIMESTAMP, _random_id())
+
+
+@backoff.on_exception(backoff.expo, Exception, max_time=60)
+def _delete_sink(sink):
+    sink.delete()
+
+
+# Runs once for entire test suite
+@pytest.fixture(scope='module')
 def cleanup_old_sinks():
     client = logging.Client()
-    test_sink_name_regex = TEST_SINK_NAME_TMPL.format("[A-Z0-9]{6}$")
+    test_sink_name_regex = "^" + TEST_SINK_NAME_TMPL.format("(\d+)","[A-Z0-9]{6}") + "$"
     for sink in client.list_sinks():
-        if re.match(test_sink_name_regex, sink.name):
-            try:
-                sink.delete()
-            except Exception:
-                pass
+        match = re.match(test_sink_name_regex, sink.name)
+        if match:
+            sink_timestamp = int(match.group(1))
+            if TIMESTAMP - sink_timestamp > CLEANUP_THRESHOLD:
+                _delete_sink(sink)
 
 
 @pytest.fixture
@@ -52,7 +68,7 @@ def example_sink(cleanup_old_sinks):
     client = logging.Client()
 
     sink = client.sink(
-        TEST_SINK_NAME_TMPL.format(_random_id()),
+        _create_sink_name(),
         filter_=TEST_SINK_FILTER,
         destination="storage.googleapis.com/{bucket}".format(bucket=BUCKET),
     )
@@ -61,10 +77,7 @@ def example_sink(cleanup_old_sinks):
 
     yield sink
 
-    try:
-        sink.delete()
-    except Exception:
-        pass
+    _delete_sink(sink)
 
 
 def test_list(example_sink, capsys):
@@ -78,16 +91,13 @@ def test_list(example_sink, capsys):
 
 
 def test_create(capsys):
-    sink_name = TEST_SINK_NAME_TMPL.format(_random_id())
+    sink_name = _create_sink_name()
 
     try:
         export.create_sink(sink_name, BUCKET, TEST_SINK_FILTER)
     # Clean-up the temporary sink.
     finally:
-        try:
-            logging.Client().sink(sink_name).delete()
-        except Exception:
-            pass
+        _delete_sink(logging.Client().sink(sink_name))
 
     out, _ = capsys.readouterr()
     assert sink_name in out
