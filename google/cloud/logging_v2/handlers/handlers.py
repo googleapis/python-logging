@@ -157,7 +157,7 @@ class CloudLoggingHandler(logging.StreamHandler):
         client,
         *,
         name: str = DEFAULT_LOGGER_NAME,
-        transport: Transport = BackgroundThreadTransport,
+        transport: type[Transport] = BackgroundThreadTransport,
         resource: Resource = None,
         labels: Optional[dict] = None,
         stream: Optional[IO] = None,
