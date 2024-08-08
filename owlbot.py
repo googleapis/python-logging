@@ -268,11 +268,11 @@ for subdir in tracked_subdirs:
 
 place_before(
     "noxfile.py",
-    """
+    """\
 @nox.session(python=DEFAULT_PYTHON_VERSION)
 def lint(session):
 """,
-'''
+'''\
 @nox.session(python=DEFAULT_PYTHON_VERSION)
 def mypy(session):
     """Verify type hints are mypy compatible."""
