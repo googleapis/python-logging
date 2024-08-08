@@ -67,7 +67,6 @@ for library in s.get_staging_dirs(default_version):
     s.move([library], excludes=[
             "**/gapic_version.py",
             "setup.py",
-            "noxfile.py",
             "testing/constraints-3.7.txt",
             "testing/constraints-3.8.txt",
             "README.rst",
