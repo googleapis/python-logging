@@ -265,3 +265,22 @@ for subdir in tracked_subdirs:
                     file_path,
                     merge=lambda src, dst, _,: f"{dst}\n{src}",
                 )
+
+place_before(
+    "noxfile.py",
+    """
+@nox.session(python=DEFAULT_PYTHON_VERSION)
+def lint(session):
+""",
+'''
+@nox.session(python=DEFAULT_PYTHON_VERSION)
+def mypy(session):
+    """Verify type hints are mypy compatible."""
+    session.install("-e", ".")
+    session.install("mypy", "types-setuptools")
+    # TODO: also verify types on tests and logging_v2
+    session.run("mypy", "-p", "google.cloud.logging", "--no-incremental")
+
+
+''',
+)
