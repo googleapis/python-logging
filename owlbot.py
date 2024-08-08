@@ -64,28 +64,10 @@ for library in s.get_staging_dirs(default_version):
         escape="()",
     )
 
-    place_before(
-    library / "noxfile.py",
-    """\
-@nox.session(python=DEFAULT_PYTHON_VERSION)
-def lint(session):
-""",
-'''\
-@nox.session(python=DEFAULT_PYTHON_VERSION)
-def mypy(session):
-    """Verify type hints are mypy compatible."""
-    session.install("-e", ".")
-    session.install("mypy", "types-setuptools")
-    # TODO: also verify types on tests and logging_v2
-    session.run("mypy", "-p", "google.cloud.logging", "--no-incremental")
-
-
-''',
-)
-
     s.move([library], excludes=[
             "**/gapic_version.py",
             "setup.py",
+            "noxfile.py",
             "testing/constraints-3.7.txt",
             "testing/constraints-3.8.txt",
             "README.rst",
@@ -153,6 +135,29 @@ s.replace(
     """},
   "semanticCommits": "enabled"
 }""",
+)
+
+# Add mypy to noxfile.
+# TODO: Remove this once this functionality gets added in synthtool
+s.replace(
+    "noxfile.py",
+    """\
+@nox.session\(python=DEFAULT_PYTHON_VERSION\)
+def lint_setup_py\(session\):
+""",
+'''\
+@nox.session(python=DEFAULT_PYTHON_VERSION)
+def mypy(session):
+    """Verify type hints are mypy compatible."""
+    session.install("-e", ".")
+    session.install("mypy", "types-setuptools")
+    # TODO: also verify types on tests and logging_v2, big undertakings
+    session.run("mypy", "-p", "google.cloud.logging", "--no-incremental")
+
+    
+@nox.session(python=DEFAULT_PYTHON_VERSION)
+def lint_setup_py(session):
+'''
 )
 
 # --------------------------------------------------------------------------
