@@ -660,7 +660,7 @@ class LoggingServiceV2Client(metaclass=LoggingServiceV2ClientMeta):
                 Type[LoggingServiceV2Transport],
                 Callable[..., LoggingServiceV2Transport],
             ] = (
-                type(self).get_transport_class(transport)
+                LoggingServiceV2Client.get_transport_class(transport)
                 if isinstance(transport, str) or transport is None
                 else cast(Callable[..., LoggingServiceV2Transport], transport)
             )
