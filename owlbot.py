@@ -69,6 +69,7 @@ for library in s.get_staging_dirs(default_version):
             "setup.py",
             "testing/constraints-3.7.txt",
             "testing/constraints-3.8.txt",
+            "testing/constraints-3.9.txt",
             "README.rst",
             "google/cloud/logging/__init__.py",  # generated types are hidden from users
             "google/cloud/logging_v2/__init__.py",
