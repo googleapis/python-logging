@@ -67,9 +67,7 @@ for library in s.get_staging_dirs(default_version):
     s.move([library], excludes=[
             "**/gapic_version.py",
             "setup.py",
-            "testing/constraints-3.7.txt",
-            "testing/constraints-3.8.txt",
-            "testing/constraints-3.9.txt",
+            "testing/constraints*.txt",
             "README.rst",
             "google/cloud/logging/__init__.py",  # generated types are hidden from users
             "google/cloud/logging_v2/__init__.py",
