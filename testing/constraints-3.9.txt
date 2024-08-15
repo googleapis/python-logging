@@ -9,7 +9,7 @@ google-cloud-core==2.0.0
 google-cloud-appengine-logging==0.1.0
 google-cloud-audit-log==0.1.1
 grpc-google-iam-v1==0.12.4
-opentelemetry-api==1.0.0
+opentelemetry-api==1.9.0
 
 # Lower bound testing for optional dependencies
 django==3.2
