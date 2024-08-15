@@ -109,6 +109,13 @@ s.move(templated_files,
         "README.rst", # This repo has a customized README
     ],
 )
+s.replace("noxfile.py",
+"""prerel_deps = \[
+        "protobuf",""",
+"""prerel_deps = [
+        "google-cloud-audit-log",
+        "protobuf",""",
+)
 
 # adjust .trampolinerc for environment tests
 s.replace(".trampolinerc", "required_envvars[^\)]*\)", "required_envvars+=()")

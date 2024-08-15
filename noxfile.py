@@ -419,6 +419,7 @@ def prerelease_deps(session, protobuf_implementation):
     session.install(*constraints_deps)
 
     prerel_deps = [
+        "google-cloud-audit-log",
         "protobuf",
         # dependency of grpc
         "six",
