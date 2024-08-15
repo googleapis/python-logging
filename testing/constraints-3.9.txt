@@ -4,7 +4,7 @@
 google-api-core
 google-auth
 proto-plus
-protobuf==5.26.0
+protobuf
 google-cloud-core
 google-cloud-appengine-logging
 google-cloud-audit-log
