@@ -461,6 +461,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
             self.assertEqual(handler.name, DEFAULT_LOGGER_NAME)
             self.assertIs(handler.client, client)
             self.assertIsInstance(handler.transport, _Transport)
+            self.assertTrue(handler.transport_open)
             self.assertIs(handler.transport.client, client)
             self.assertEqual(handler.transport.name, DEFAULT_LOGGER_NAME)
             global_resource = _create_global_resource(self.PROJECT)
@@ -831,10 +832,10 @@ class TestCloudLoggingHandler(unittest.TestCase):
         )
 
         handler.close()
-        self.assertIsNone(handler.transport)
+        self.assertFalse(handler.transport_open)
 
         handler.handle(record)
-        self.assertIsNotNone(handler)
+        self.assertTrue(handler.transport_open)
         self.assertNotEqual(handler.transport, old_transport)
         self.assertEqual(
             handler.transport.send_called_with,
@@ -897,7 +898,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         )
         old_transport = handler.transport
         handler.close()
-        self.assertIsNone(handler.transport)
+        self.assertFalse(handler.transport_open)
         self.assertTrue(old_transport.close_called)
 
 

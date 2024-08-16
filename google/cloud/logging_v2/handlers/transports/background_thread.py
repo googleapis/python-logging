@@ -41,7 +41,8 @@ _LOGGER = logging.getLogger(__name__)
 _CLOSE_THREAD_SHUTDOWN_ERROR_MSG = (
     "CloudLoggingHandler shutting down, cannot send logs entries to Cloud Logging due to "
     "inconsistent threading behavior at shutdown. To avoid this issue, flush the logging handler "
-    "manually or switch to StructuredLogHandler."
+    "manually or switch to StructuredLogHandler. You can also close the CloudLoggingHandler manually "
+    "via handler.close or client.close."
 )
 
 
