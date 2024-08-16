@@ -420,7 +420,7 @@ def prerelease_deps(session, protobuf_implementation):
 
     prerel_deps = [
         "google-cloud-audit-log",
-        "protobuf<5.28",
+        "protobuf",
         # dependency of grpc
         "six",
         "grpc-google-iam-v1",
