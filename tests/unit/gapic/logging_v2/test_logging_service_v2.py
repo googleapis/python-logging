@@ -30,6 +30,13 @@ from google.api_core import api_core_version
 from proto.marshal.rules.dates import DurationRule, TimestampRule
 from proto.marshal.rules import wrappers
 
+try:
+    from google.auth.aio import credentials as ga_credentials_async
+
+    HAS_GOOGLE_AUTH_AIO = True
+except ImportError:  # pragma: NO COVER
+    HAS_GOOGLE_AUTH_AIO = False
+
 from google.api import monitored_resource_pb2  # type: ignore
 from google.api_core import client_options
 from google.api_core import exceptions as core_exceptions
@@ -59,8 +66,22 @@ from google.protobuf import timestamp_pb2  # type: ignore
 import google.auth
 
 
+async def mock_async_gen(data, chunk_size=1):
+    for i in range(0, len(data)):  # pragma: NO COVER
+        chunk = data[i : i + chunk_size]
+        yield chunk.encode("utf-8")
+
+
 def client_cert_source_callback():
     return b"cert bytes", b"key bytes"
+
+
+# TODO: use async auth anon credentials by default once the minimum version of google-auth is upgraded.
+# See related issue: https://github.com/googleapis/gapic-generator-python/issues/2107.
+def async_anonymous_credentials():
+    if HAS_GOOGLE_AUTH_AIO:
+        return ga_credentials_async.AnonymousCredentials()
+    return ga_credentials.AnonymousCredentials()
 
 
 # If default endpoint is localhost, then default mtls endpoint will be the same.
@@ -1160,25 +1181,6 @@ def test_delete_log(request_type, transport: str = "grpc"):
     assert response is None
 
 
-def test_delete_log_empty_call():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2Client(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client.transport.delete_log), "__call__") as call:
-        call.return_value.name = (
-            "foo"  # operation_request.operation in compute client(s) expect a string.
-        )
-        client.delete_log()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.DeleteLogRequest()
-
-
 def test_delete_log_non_empty_request_with_auto_populated_field():
     # This test is a coverage failsafe to make sure that UUID4 fields are
     # automatically populated, according to AIP-4235, with non-empty requests.
@@ -1243,31 +1245,12 @@ def test_delete_log_use_cached_wrapped_rpc():
 
 
 @pytest.mark.asyncio
-async def test_delete_log_empty_call_async():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc_asyncio",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client.transport.delete_log), "__call__") as call:
-        # Designate an appropriate return value for the call.
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
-        response = await client.delete_log()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.DeleteLogRequest()
-
-
-@pytest.mark.asyncio
 async def test_delete_log_async_use_cached_wrapped_rpc(transport: str = "grpc_asyncio"):
     # Clients should use _prep_wrapped_messages to create cached wrapped rpcs,
     # instead of constructing them on each call
     with mock.patch("google.api_core.gapic_v1.method_async.wrap_method") as wrapper_fn:
         client = LoggingServiceV2AsyncClient(
-            credentials=ga_credentials.AnonymousCredentials(),
+            credentials=async_anonymous_credentials(),
             transport=transport,
         )
 
@@ -1306,7 +1289,7 @@ async def test_delete_log_async(
     transport: str = "grpc_asyncio", request_type=logging.DeleteLogRequest
 ):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -1367,7 +1350,7 @@ def test_delete_log_field_headers():
 @pytest.mark.asyncio
 async def test_delete_log_field_headers_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Any value that is part of the HTTP/1.1 URI should be sent as
@@ -1435,7 +1418,7 @@ def test_delete_log_flattened_error():
 @pytest.mark.asyncio
 async def test_delete_log_flattened_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -1462,7 +1445,7 @@ async def test_delete_log_flattened_async():
 @pytest.mark.asyncio
 async def test_delete_log_flattened_error_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Attempting to call a method with both a request object and flattened
@@ -1507,27 +1490,6 @@ def test_write_log_entries(request_type, transport: str = "grpc"):
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, logging.WriteLogEntriesResponse)
-
-
-def test_write_log_entries_empty_call():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2Client(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client.transport.write_log_entries), "__call__"
-    ) as call:
-        call.return_value.name = (
-            "foo"  # operation_request.operation in compute client(s) expect a string.
-        )
-        client.write_log_entries()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.WriteLogEntriesRequest()
 
 
 def test_write_log_entries_non_empty_request_with_auto_populated_field():
@@ -1598,29 +1560,6 @@ def test_write_log_entries_use_cached_wrapped_rpc():
 
 
 @pytest.mark.asyncio
-async def test_write_log_entries_empty_call_async():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc_asyncio",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client.transport.write_log_entries), "__call__"
-    ) as call:
-        # Designate an appropriate return value for the call.
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
-            logging.WriteLogEntriesResponse()
-        )
-        response = await client.write_log_entries()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.WriteLogEntriesRequest()
-
-
-@pytest.mark.asyncio
 async def test_write_log_entries_async_use_cached_wrapped_rpc(
     transport: str = "grpc_asyncio",
 ):
@@ -1628,7 +1567,7 @@ async def test_write_log_entries_async_use_cached_wrapped_rpc(
     # instead of constructing them on each call
     with mock.patch("google.api_core.gapic_v1.method_async.wrap_method") as wrapper_fn:
         client = LoggingServiceV2AsyncClient(
-            credentials=ga_credentials.AnonymousCredentials(),
+            credentials=async_anonymous_credentials(),
             transport=transport,
         )
 
@@ -1667,7 +1606,7 @@ async def test_write_log_entries_async(
     transport: str = "grpc_asyncio", request_type=logging.WriteLogEntriesRequest
 ):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -1758,7 +1697,7 @@ def test_write_log_entries_flattened_error():
 @pytest.mark.asyncio
 async def test_write_log_entries_flattened_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -1801,7 +1740,7 @@ async def test_write_log_entries_flattened_async():
 @pytest.mark.asyncio
 async def test_write_log_entries_flattened_error_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Attempting to call a method with both a request object and flattened
@@ -1850,25 +1789,6 @@ def test_list_log_entries(request_type, transport: str = "grpc"):
     # Establish that the response is the type that we expect.
     assert isinstance(response, pagers.ListLogEntriesPager)
     assert response.next_page_token == "next_page_token_value"
-
-
-def test_list_log_entries_empty_call():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2Client(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client.transport.list_log_entries), "__call__") as call:
-        call.return_value.name = (
-            "foo"  # operation_request.operation in compute client(s) expect a string.
-        )
-        client.list_log_entries()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.ListLogEntriesRequest()
 
 
 def test_list_log_entries_non_empty_request_with_auto_populated_field():
@@ -1941,29 +1861,6 @@ def test_list_log_entries_use_cached_wrapped_rpc():
 
 
 @pytest.mark.asyncio
-async def test_list_log_entries_empty_call_async():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc_asyncio",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client.transport.list_log_entries), "__call__") as call:
-        # Designate an appropriate return value for the call.
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
-            logging.ListLogEntriesResponse(
-                next_page_token="next_page_token_value",
-            )
-        )
-        response = await client.list_log_entries()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.ListLogEntriesRequest()
-
-
-@pytest.mark.asyncio
 async def test_list_log_entries_async_use_cached_wrapped_rpc(
     transport: str = "grpc_asyncio",
 ):
@@ -1971,7 +1868,7 @@ async def test_list_log_entries_async_use_cached_wrapped_rpc(
     # instead of constructing them on each call
     with mock.patch("google.api_core.gapic_v1.method_async.wrap_method") as wrapper_fn:
         client = LoggingServiceV2AsyncClient(
-            credentials=ga_credentials.AnonymousCredentials(),
+            credentials=async_anonymous_credentials(),
             transport=transport,
         )
 
@@ -2010,7 +1907,7 @@ async def test_list_log_entries_async(
     transport: str = "grpc_asyncio", request_type=logging.ListLogEntriesRequest
 ):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -2095,7 +1992,7 @@ def test_list_log_entries_flattened_error():
 @pytest.mark.asyncio
 async def test_list_log_entries_flattened_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -2132,7 +2029,7 @@ async def test_list_log_entries_flattened_async():
 @pytest.mark.asyncio
 async def test_list_log_entries_flattened_error_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Attempting to call a method with both a request object and flattened
@@ -2241,7 +2138,7 @@ def test_list_log_entries_pages(transport_name: str = "grpc"):
 @pytest.mark.asyncio
 async def test_list_log_entries_async_pager():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -2291,7 +2188,7 @@ async def test_list_log_entries_async_pager():
 @pytest.mark.asyncio
 async def test_list_log_entries_async_pages():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -2375,27 +2272,6 @@ def test_list_monitored_resource_descriptors(request_type, transport: str = "grp
     assert response.next_page_token == "next_page_token_value"
 
 
-def test_list_monitored_resource_descriptors_empty_call():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2Client(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client.transport.list_monitored_resource_descriptors), "__call__"
-    ) as call:
-        call.return_value.name = (
-            "foo"  # operation_request.operation in compute client(s) expect a string.
-        )
-        client.list_monitored_resource_descriptors()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.ListMonitoredResourceDescriptorsRequest()
-
-
 def test_list_monitored_resource_descriptors_non_empty_request_with_auto_populated_field():
     # This test is a coverage failsafe to make sure that UUID4 fields are
     # automatically populated, according to AIP-4235, with non-empty requests.
@@ -2467,31 +2343,6 @@ def test_list_monitored_resource_descriptors_use_cached_wrapped_rpc():
 
 
 @pytest.mark.asyncio
-async def test_list_monitored_resource_descriptors_empty_call_async():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc_asyncio",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client.transport.list_monitored_resource_descriptors), "__call__"
-    ) as call:
-        # Designate an appropriate return value for the call.
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
-            logging.ListMonitoredResourceDescriptorsResponse(
-                next_page_token="next_page_token_value",
-            )
-        )
-        response = await client.list_monitored_resource_descriptors()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.ListMonitoredResourceDescriptorsRequest()
-
-
-@pytest.mark.asyncio
 async def test_list_monitored_resource_descriptors_async_use_cached_wrapped_rpc(
     transport: str = "grpc_asyncio",
 ):
@@ -2499,7 +2350,7 @@ async def test_list_monitored_resource_descriptors_async_use_cached_wrapped_rpc(
     # instead of constructing them on each call
     with mock.patch("google.api_core.gapic_v1.method_async.wrap_method") as wrapper_fn:
         client = LoggingServiceV2AsyncClient(
-            credentials=ga_credentials.AnonymousCredentials(),
+            credentials=async_anonymous_credentials(),
             transport=transport,
         )
 
@@ -2539,7 +2390,7 @@ async def test_list_monitored_resource_descriptors_async(
     request_type=logging.ListMonitoredResourceDescriptorsRequest,
 ):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -2679,7 +2530,7 @@ def test_list_monitored_resource_descriptors_pages(transport_name: str = "grpc")
 @pytest.mark.asyncio
 async def test_list_monitored_resource_descriptors_async_pager():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -2734,7 +2585,7 @@ async def test_list_monitored_resource_descriptors_async_pager():
 @pytest.mark.asyncio
 async def test_list_monitored_resource_descriptors_async_pages():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -2820,25 +2671,6 @@ def test_list_logs(request_type, transport: str = "grpc"):
     assert response.next_page_token == "next_page_token_value"
 
 
-def test_list_logs_empty_call():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2Client(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client.transport.list_logs), "__call__") as call:
-        call.return_value.name = (
-            "foo"  # operation_request.operation in compute client(s) expect a string.
-        )
-        client.list_logs()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.ListLogsRequest()
-
-
 def test_list_logs_non_empty_request_with_auto_populated_field():
     # This test is a coverage failsafe to make sure that UUID4 fields are
     # automatically populated, according to AIP-4235, with non-empty requests.
@@ -2905,36 +2737,12 @@ def test_list_logs_use_cached_wrapped_rpc():
 
 
 @pytest.mark.asyncio
-async def test_list_logs_empty_call_async():
-    # This test is a coverage failsafe to make sure that totally empty calls,
-    # i.e. request == None and no flattened fields passed, work.
-    client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc_asyncio",
-    )
-
-    # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client.transport.list_logs), "__call__") as call:
-        # Designate an appropriate return value for the call.
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
-            logging.ListLogsResponse(
-                log_names=["log_names_value"],
-                next_page_token="next_page_token_value",
-            )
-        )
-        response = await client.list_logs()
-        call.assert_called()
-        _, args, _ = call.mock_calls[0]
-        assert args[0] == logging.ListLogsRequest()
-
-
-@pytest.mark.asyncio
 async def test_list_logs_async_use_cached_wrapped_rpc(transport: str = "grpc_asyncio"):
     # Clients should use _prep_wrapped_messages to create cached wrapped rpcs,
     # instead of constructing them on each call
     with mock.patch("google.api_core.gapic_v1.method_async.wrap_method") as wrapper_fn:
         client = LoggingServiceV2AsyncClient(
-            credentials=ga_credentials.AnonymousCredentials(),
+            credentials=async_anonymous_credentials(),
             transport=transport,
         )
 
@@ -2973,7 +2781,7 @@ async def test_list_logs_async(
     transport: str = "grpc_asyncio", request_type=logging.ListLogsRequest
 ):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -3041,7 +2849,7 @@ def test_list_logs_field_headers():
 @pytest.mark.asyncio
 async def test_list_logs_field_headers_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Any value that is part of the HTTP/1.1 URI should be sent as
@@ -3111,7 +2919,7 @@ def test_list_logs_flattened_error():
 @pytest.mark.asyncio
 async def test_list_logs_flattened_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -3140,7 +2948,7 @@ async def test_list_logs_flattened_async():
 @pytest.mark.asyncio
 async def test_list_logs_flattened_error_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Attempting to call a method with both a request object and flattened
@@ -3250,7 +3058,7 @@ def test_list_logs_pages(transport_name: str = "grpc"):
 @pytest.mark.asyncio
 async def test_list_logs_async_pager():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -3300,7 +3108,7 @@ async def test_list_logs_async_pager():
 @pytest.mark.asyncio
 async def test_list_logs_async_pages():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -3425,7 +3233,7 @@ async def test_tail_log_entries_async_use_cached_wrapped_rpc(
     # instead of constructing them on each call
     with mock.patch("google.api_core.gapic_v1.method_async.wrap_method") as wrapper_fn:
         client = LoggingServiceV2AsyncClient(
-            credentials=ga_credentials.AnonymousCredentials(),
+            credentials=async_anonymous_credentials(),
             transport=transport,
         )
 
@@ -3464,7 +3272,7 @@ async def test_tail_log_entries_async(
     transport: str = "grpc_asyncio", request_type=logging.TailLogEntriesRequest
 ):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -3588,17 +3396,275 @@ def test_transport_adc(transport_class):
         adc.assert_called_once()
 
 
-@pytest.mark.parametrize(
-    "transport_name",
-    [
-        "grpc",
-    ],
-)
-def test_transport_kind(transport_name):
-    transport = LoggingServiceV2Client.get_transport_class(transport_name)(
-        credentials=ga_credentials.AnonymousCredentials(),
+def test_transport_kind_grpc():
+    transport = LoggingServiceV2Client.get_transport_class("grpc")(
+        credentials=ga_credentials.AnonymousCredentials()
     )
-    assert transport.kind == transport_name
+    assert transport.kind == "grpc"
+
+
+def test_initialize_client_w_grpc():
+    client = LoggingServiceV2Client(
+        credentials=ga_credentials.AnonymousCredentials(), transport="grpc"
+    )
+    assert client is not None
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+def test_delete_log_empty_call_grpc():
+    client = LoggingServiceV2Client(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="grpc",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(type(client.transport.delete_log), "__call__") as call:
+        call.return_value = None
+        client.delete_log(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.DeleteLogRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+def test_write_log_entries_empty_call_grpc():
+    client = LoggingServiceV2Client(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="grpc",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(
+        type(client.transport.write_log_entries), "__call__"
+    ) as call:
+        call.return_value = logging.WriteLogEntriesResponse()
+        client.write_log_entries(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.WriteLogEntriesRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+def test_list_log_entries_empty_call_grpc():
+    client = LoggingServiceV2Client(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="grpc",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(type(client.transport.list_log_entries), "__call__") as call:
+        call.return_value = logging.ListLogEntriesResponse()
+        client.list_log_entries(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.ListLogEntriesRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+def test_list_monitored_resource_descriptors_empty_call_grpc():
+    client = LoggingServiceV2Client(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="grpc",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(
+        type(client.transport.list_monitored_resource_descriptors), "__call__"
+    ) as call:
+        call.return_value = logging.ListMonitoredResourceDescriptorsResponse()
+        client.list_monitored_resource_descriptors(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.ListMonitoredResourceDescriptorsRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+def test_list_logs_empty_call_grpc():
+    client = LoggingServiceV2Client(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="grpc",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(type(client.transport.list_logs), "__call__") as call:
+        call.return_value = logging.ListLogsResponse()
+        client.list_logs(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.ListLogsRequest()
+
+        assert args[0] == request_msg
+
+
+def test_transport_kind_grpc_asyncio():
+    transport = LoggingServiceV2AsyncClient.get_transport_class("grpc_asyncio")(
+        credentials=async_anonymous_credentials()
+    )
+    assert transport.kind == "grpc_asyncio"
+
+
+def test_initialize_client_w_grpc_asyncio():
+    client = LoggingServiceV2AsyncClient(
+        credentials=async_anonymous_credentials(), transport="grpc_asyncio"
+    )
+    assert client is not None
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+@pytest.mark.asyncio
+async def test_delete_log_empty_call_grpc_asyncio():
+    client = LoggingServiceV2AsyncClient(
+        credentials=async_anonymous_credentials(),
+        transport="grpc_asyncio",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(type(client.transport.delete_log), "__call__") as call:
+        # Designate an appropriate return value for the call.
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
+        await client.delete_log(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.DeleteLogRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+@pytest.mark.asyncio
+async def test_write_log_entries_empty_call_grpc_asyncio():
+    client = LoggingServiceV2AsyncClient(
+        credentials=async_anonymous_credentials(),
+        transport="grpc_asyncio",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(
+        type(client.transport.write_log_entries), "__call__"
+    ) as call:
+        # Designate an appropriate return value for the call.
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
+            logging.WriteLogEntriesResponse()
+        )
+        await client.write_log_entries(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.WriteLogEntriesRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+@pytest.mark.asyncio
+async def test_list_log_entries_empty_call_grpc_asyncio():
+    client = LoggingServiceV2AsyncClient(
+        credentials=async_anonymous_credentials(),
+        transport="grpc_asyncio",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(type(client.transport.list_log_entries), "__call__") as call:
+        # Designate an appropriate return value for the call.
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
+            logging.ListLogEntriesResponse(
+                next_page_token="next_page_token_value",
+            )
+        )
+        await client.list_log_entries(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.ListLogEntriesRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+@pytest.mark.asyncio
+async def test_list_monitored_resource_descriptors_empty_call_grpc_asyncio():
+    client = LoggingServiceV2AsyncClient(
+        credentials=async_anonymous_credentials(),
+        transport="grpc_asyncio",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(
+        type(client.transport.list_monitored_resource_descriptors), "__call__"
+    ) as call:
+        # Designate an appropriate return value for the call.
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
+            logging.ListMonitoredResourceDescriptorsResponse(
+                next_page_token="next_page_token_value",
+            )
+        )
+        await client.list_monitored_resource_descriptors(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.ListMonitoredResourceDescriptorsRequest()
+
+        assert args[0] == request_msg
+
+
+# This test is a coverage failsafe to make sure that totally empty calls,
+# i.e. request == None and no flattened fields passed, work.
+@pytest.mark.asyncio
+async def test_list_logs_empty_call_grpc_asyncio():
+    client = LoggingServiceV2AsyncClient(
+        credentials=async_anonymous_credentials(),
+        transport="grpc_asyncio",
+    )
+
+    # Mock the actual call, and fake the request.
+    with mock.patch.object(type(client.transport.list_logs), "__call__") as call:
+        # Designate an appropriate return value for the call.
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
+            logging.ListLogsResponse(
+                log_names=["log_names_value"],
+                next_page_token="next_page_token_value",
+            )
+        )
+        await client.list_logs(request=None)
+
+        # Establish that the underlying stub method was called.
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+        request_msg = logging.ListLogsRequest()
+
+        assert args[0] == request_msg
 
 
 def test_transport_grpc_default():
@@ -4161,20 +4227,6 @@ def test_client_with_default_client_info():
         prep.assert_called_once_with(client_info)
 
 
-@pytest.mark.asyncio
-async def test_transport_close_async():
-    client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
-        transport="grpc_asyncio",
-    )
-    with mock.patch.object(
-        type(getattr(client.transport, "grpc_channel")), "close"
-    ) as close:
-        async with client:
-            close.assert_not_called()
-        close.assert_called_once()
-
-
 def test_cancel_operation(transport: str = "grpc"):
     client = LoggingServiceV2Client(
         credentials=ga_credentials.AnonymousCredentials(),
@@ -4202,7 +4254,7 @@ def test_cancel_operation(transport: str = "grpc"):
 @pytest.mark.asyncio
 async def test_cancel_operation_async(transport: str = "grpc_asyncio"):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -4255,7 +4307,7 @@ def test_cancel_operation_field_headers():
 @pytest.mark.asyncio
 async def test_cancel_operation_field_headers_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Any value that is part of the HTTP/1.1 URI should be sent as
@@ -4300,7 +4352,7 @@ def test_cancel_operation_from_dict():
 @pytest.mark.asyncio
 async def test_cancel_operation_from_dict_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.cancel_operation), "__call__") as call:
@@ -4341,7 +4393,7 @@ def test_get_operation(transport: str = "grpc"):
 @pytest.mark.asyncio
 async def test_get_operation_async(transport: str = "grpc_asyncio"):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -4396,7 +4448,7 @@ def test_get_operation_field_headers():
 @pytest.mark.asyncio
 async def test_get_operation_field_headers_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Any value that is part of the HTTP/1.1 URI should be sent as
@@ -4443,7 +4495,7 @@ def test_get_operation_from_dict():
 @pytest.mark.asyncio
 async def test_get_operation_from_dict_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_operation), "__call__") as call:
@@ -4486,7 +4538,7 @@ def test_list_operations(transport: str = "grpc"):
 @pytest.mark.asyncio
 async def test_list_operations_async(transport: str = "grpc_asyncio"):
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
         transport=transport,
     )
 
@@ -4541,7 +4593,7 @@ def test_list_operations_field_headers():
 @pytest.mark.asyncio
 async def test_list_operations_field_headers_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
 
     # Any value that is part of the HTTP/1.1 URI should be sent as
@@ -4588,7 +4640,7 @@ def test_list_operations_from_dict():
 @pytest.mark.asyncio
 async def test_list_operations_from_dict_async():
     client = LoggingServiceV2AsyncClient(
-        credentials=ga_credentials.AnonymousCredentials(),
+        credentials=async_anonymous_credentials(),
     )
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.list_operations), "__call__") as call:
@@ -4604,21 +4656,29 @@ async def test_list_operations_from_dict_async():
         call.assert_called()
 
 
-def test_transport_close():
-    transports = {
-        "grpc": "_grpc_channel",
-    }
+def test_transport_close_grpc():
+    client = LoggingServiceV2Client(
+        credentials=ga_credentials.AnonymousCredentials(), transport="grpc"
+    )
+    with mock.patch.object(
+        type(getattr(client.transport, "_grpc_channel")), "close"
+    ) as close:
+        with client:
+            close.assert_not_called()
+        close.assert_called_once()
 
-    for transport, close_name in transports.items():
-        client = LoggingServiceV2Client(
-            credentials=ga_credentials.AnonymousCredentials(), transport=transport
-        )
-        with mock.patch.object(
-            type(getattr(client.transport, close_name)), "close"
-        ) as close:
-            with client:
-                close.assert_not_called()
-            close.assert_called_once()
+
+@pytest.mark.asyncio
+async def test_transport_close_grpc_asyncio():
+    client = LoggingServiceV2AsyncClient(
+        credentials=async_anonymous_credentials(), transport="grpc_asyncio"
+    )
+    with mock.patch.object(
+        type(getattr(client.transport, "_grpc_channel")), "close"
+    ) as close:
+        async with client:
+            close.assert_not_called()
+        close.assert_called_once()
 
 
 def test_client_ctx():
