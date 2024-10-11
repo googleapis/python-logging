@@ -182,13 +182,13 @@ def _parse_xcloud_trace(header):
     trace_sampled = False
 
     # As per the format described at https://cloud.google.com/trace/docs/trace-context#legacy-http-header
-	#    "X-Cloud-Trace-Context: TRACE_ID[/SPAN_ID][;o=OPTIONS]"
-	# for example:
-	#    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b12000100000/1;o=1"
-	#
-	# We expect:
-	#   * trace_id (optional, 32-bit hex string):  "105445aa7843bc8bf206b12000100000"
-	#   * span_id (optional, 16-bit hex string):   "0000000000000001" (needs to be converted into 16 bit hex string)
+    #    "X-Cloud-Trace-Context: TRACE_ID[/SPAN_ID][;o=OPTIONS]"
+    # for example:
+    #    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b12000100000/1;o=1"
+    #
+    # We expect:
+    #   * trace_id (optional, 32-bit hex string):  "105445aa7843bc8bf206b12000100000"
+    #   * span_id (optional, 16-bit hex string):   "0000000000000001" (needs to be converted into 16 bit hex string)
     #   * trace_sampled (optional, bool): 	       true
     if header:
         try:
@@ -202,7 +202,7 @@ def _parse_xcloud_trace(header):
             if span_id is not None:
                 try:
                     span_id_int = int(span_id)
-                    if span_id_int > 0 and span_id_int < 2 ** 64:
+                    if span_id_int > 0 and span_id_int < 2**64:
                         span_id = f"{span_id_int:016x}"
                     else:
                         span_id = None

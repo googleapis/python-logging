@@ -524,12 +524,9 @@ class Test__parse_xcloud_trace(unittest.TestCase):
         self.assertEqual(trace_id, expected_trace)
         self.assertEqual(span_id, expected_span)
         self.assertEqual(sampled, False)
-    
+
     def test_with_span_decimal_not_in_bounds(self):
-        input_spans = [
-            "0",
-            "9" * 100
-        ]
+        input_spans = ["0", "9" * 100]
 
         for input_span in input_spans:
             expected_trace = "12345"
