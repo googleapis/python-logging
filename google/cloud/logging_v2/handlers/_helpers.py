@@ -199,15 +199,14 @@ def _parse_xcloud_trace(header):
             trace_sampled = match.group(5) == "1"
 
             # Convert the span ID to 16-bit hexadecimal instead of decimal
-            if span_id is not None:
-                try:
-                    span_id_int = int(span_id)
-                    if span_id_int > 0 and span_id_int < 2**64:
-                        span_id = f"{span_id_int:016x}"
-                    else:
-                        span_id = None
-                except ValueError:
+            try:
+                span_id_int = int(span_id)
+                if span_id_int > 0 and span_id_int < 2 ** 64:
+                    span_id = f"{span_id_int:016x}"
+                else:
                     span_id = None
+            except (ValueError, TypeError):
+                span_id = None
 
         except IndexError:
             pass
