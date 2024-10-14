@@ -201,7 +201,7 @@ def _parse_xcloud_trace(header):
             # Convert the span ID to 16-bit hexadecimal instead of decimal
             try:
                 span_id_int = int(span_id)
-                if span_id_int > 0 and span_id_int < 2 ** 64:
+                if span_id_int > 0 and span_id_int < 2**64:
                     span_id = f"{span_id_int:016x}"
                 else:
                     span_id = None
