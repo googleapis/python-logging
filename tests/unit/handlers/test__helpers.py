@@ -530,12 +530,10 @@ class Test__parse_xcloud_trace(unittest.TestCase):
 
         for input_span in input_spans:
             expected_trace = "12345"
-            input_span = "67890"
-            expected_span = "10932".zfill(16)
             header = f"{expected_trace}/{input_span}"
             trace_id, span_id, sampled = self._call_fut(header)
             self.assertEqual(trace_id, expected_trace)
-            self.assertEqual(span_id, expected_span)
+            self.assertIsNone(span_id)
             self.assertEqual(sampled, False)
 
     def test_with_extra_characters(self):

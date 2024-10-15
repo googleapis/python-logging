@@ -187,7 +187,7 @@ def _parse_xcloud_trace(header):
     #    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b12000100000/1;o=1"
     #
     # We expect:
-    #   * trace_id (optional, 32-bit hex string):  "105445aa7843bc8bf206b12000100000"
+    #   * trace_id (optional, 128-bit hex string):  "105445aa7843bc8bf206b12000100000"
     #   * span_id (optional, 16-bit hex string):   "0000000000000001" (needs to be converted into 16 bit hex string)
     #   * trace_sampled (optional, bool): 	       true
     if header:
