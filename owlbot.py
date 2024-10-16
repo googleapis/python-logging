@@ -115,7 +115,7 @@ s.replace("noxfile.py",
         "protobuf",""",
 """prerel_deps = [
         "google-cloud-audit-log",
-        "protobuf",""",
+        "protobuf<5.28",""",
 )
 
 # adjust .trampolinerc for environment tests
