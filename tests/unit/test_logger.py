@@ -349,7 +349,6 @@ class TestLogger(unittest.TestCase):
             exception_cls, _, _ = log.records[0].exc_info
             self.assertEqual(exception_cls, ParseError)
 
-
     def test_log_nested_struct(self):
         from google.cloud.logging_v2.handlers._monitored_resources import (
             detect_resource,
@@ -1882,7 +1881,9 @@ class TestBatch(unittest.TestCase):
 
             # Check that we have logged the right message
             exc_info_exception = exc_info[1]
-            self.assertEqual(exc_info_exception.message, f"{starting_message}: {str(api_entry)}...")
+            self.assertEqual(
+                exc_info_exception.message, f"{starting_message}: {str(api_entry)}..."
+            )
 
 
 class _Logger(object):
@@ -1964,7 +1965,6 @@ class _DummyLoggingAPIGapicMockedOnly(_LoggingAPI):
             labels=labels,
             partial_success=partial_success,
         )
-
 
 
 class _Client(object):
