@@ -215,7 +215,8 @@ class Logger(object):
             info (dict):
                 the log entry information. The dict must be serializable
                 to a Protobuf Struct (map from strings to Values, see
-                https://protobuf.dev/reference/protobuf/google.protobuf/#value).
+                https://protobuf.dev/reference/protobuf/google.protobuf/#value),
+                otherwise the item will not be logged.
             client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
