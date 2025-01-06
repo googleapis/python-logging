@@ -15,6 +15,7 @@
 """Define API Loggers."""
 
 import collections
+import logging
 import re
 
 from google.cloud.logging_v2._helpers import _add_defaults_to_filter
@@ -52,6 +53,7 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
 )
 
 _STRUCT_EXTRACTABLE_FIELDS = ["severity", "trace", "span_id"]
+_LOGGER = logging.getLogger(__name__)
 
 
 class Logger(object):
@@ -162,11 +164,15 @@ class Logger(object):
 
         api_repr = entry.to_api_repr()
         entries = [api_repr]
+
         if google.cloud.logging_v2._instrumentation_emitted is False:
             entries = _add_instrumentation(entries, **kw)
             google.cloud.logging_v2._instrumentation_emitted = True
         # partial_success is true to avoid dropping instrumentation logs
-        client.logging_api.write_entries(entries, partial_success=True)
+        try:
+            client.logging_api.write_entries(entries, partial_success=True)
+        except Exception:
+            _LOGGER.error("Failed to submit log message.", exc_info=True)
 
     def log_empty(self, *, client=None, **kw):
         """Log an empty message
@@ -206,7 +212,10 @@ class Logger(object):
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
         Args:
-            info (dict): the log entry information
+            info (dict):
+                the log entry information. The dict must be serializable
+                to a Protobuf Struct (map from strings to Values, see
+                https://protobuf.dev/reference/protobuf/google.protobuf/#value).
             client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
@@ -468,11 +477,12 @@ class Batch(object):
             client.logging_api.write_entries(
                 entries, partial_success=partial_success, **kwargs
             )
-        except InvalidArgument as e:
-            # InvalidArgument is often sent when a log is too large
-            # attempt to attach extra contex on which log caused error
-            self._append_context_to_error(e)
-            raise e
+        except Exception as e:
+            if isinstance(e, InvalidArgument):
+                # InvalidArgument is often sent when a log is too large
+                # attempt to attach extra contex on which log caused error
+                self._append_context_to_error(e)
+            _LOGGER.error("Failed to submit %d log messages.", len(entries), exc_info=e)
         del self.entries[:]
 
     def _append_context_to_error(self, err):

@@ -16,6 +16,7 @@ import sys
 import unittest
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
+from google.cloud.logging_v2._gapic import _LoggingAPI
 
 import mock
 import pytest
@@ -315,6 +316,39 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(
             api._write_entries_called_with, (ENTRIES, None, None, None, True)
         )
+
+    def test_log_struct_parse_error(self):
+        from google.cloud.logging_v2.handlers._monitored_resources import (
+            detect_resource,
+        )
+        from google.protobuf.json_format import ParseError
+
+        STRUCT = {"time": datetime.now()}
+        RESOURCE = detect_resource(self.PROJECT)._to_dict()
+        DEFAULT_LABELS = {"foo": "spam"}
+        ENTRIES = [
+            {
+                "logName": "projects/%s/logs/%s" % (self.PROJECT, self.LOGGER_NAME),
+                "jsonPayload": STRUCT,
+                "resource": RESOURCE,
+                "labels": DEFAULT_LABELS,
+            }
+        ]
+        client = _Client(self.PROJECT)
+        api = client.logging_api = _DummyLoggingAPIGapicMockedOnly(client)
+        logger = self._make_one(self.LOGGER_NAME, client=client, labels=DEFAULT_LABELS)
+
+        with self.assertLogs("google.cloud.logging_v2.logger", level="ERROR") as log:
+            logger.log_struct(STRUCT)
+            self.assertEqual(
+                api._write_entries_called_with, (ENTRIES, None, None, None, True)
+            )
+            api._gapic_api.assert_not_called()
+            self.assertEqual(len(log.records), 1)
+
+            exception_cls, _, _ = log.records[0].exc_info
+            self.assertEqual(exception_cls, ParseError)
+
 
     def test_log_nested_struct(self):
         from google.cloud.logging_v2.handlers._monitored_resources import (
@@ -1836,12 +1870,19 @@ class TestBatch(unittest.TestCase):
         client.logging_api = _DummyLoggingExceptionAPI(exception)
         batch = self._make_one(logger, client=client)
         test_entries = [TextEntry(payload=str(i)) for i in range(11)]
-        batch.entries = test_entries
-        with self.assertRaises(InvalidArgument) as e:
+        batch.entries = test_entries.copy()
+        with self.assertLogs("google.cloud.logging_v2.logger", level="ERROR") as log:
             batch.commit()
             expected_log = test_entries[1]
             api_entry = expected_log.to_api_repr()
-            self.assertEqual(e.message, f"{starting_message}: {str(api_entry)}...")
+            self.assertEqual(len(log.records), 1)
+
+            exc_info = log.records[0].exc_info
+            self.assertTrue(exc_info)
+
+            # Check that we have logged the right message
+            exc_info_exception = exc_info[1]
+            self.assertEqual(exc_info_exception.message, f"{starting_message}: {str(api_entry)}...")
 
 
 class _Logger(object):
@@ -1892,6 +1933,38 @@ class _DummyLoggingExceptionAPI(object):
 
     def logger_delete(self, logger_name):
         raise self.exception
+
+
+class _DummyLoggingAPIGapicMockedOnly(_LoggingAPI):
+    _write_entries_called_with = None
+
+    def __init__(self, client):
+        super(_DummyLoggingAPIGapicMockedOnly, self).__init__(mock.Mock(), client)
+
+    def write_entries(
+        self,
+        entries,
+        *,
+        logger_name=None,
+        resource=None,
+        labels=None,
+        partial_success=False,
+    ):
+        self._write_entries_called_with = (
+            entries,
+            logger_name,
+            resource,
+            labels,
+            partial_success,
+        )
+        super(_DummyLoggingAPIGapicMockedOnly, self).write_entries(
+            entries,
+            logger_name=logger_name,
+            resource=resource,
+            labels=labels,
+            partial_success=partial_success,
+        )
+
 
 
 class _Client(object):
