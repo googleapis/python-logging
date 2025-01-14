@@ -1842,20 +1842,7 @@ class TestBatch(unittest.TestCase):
             batch.commit()
             expected_log = test_entries[1]
             api_entry = expected_log.to_api_repr()
-<<<<<<< HEAD
-            self.assertEqual(len(log.records), 1)
-
-            exc_info = log.records[0].exc_info
-            self.assertTrue(exc_info)
-
-            # Check that we have logged the right message
-            exc_info_exception = exc_info[1]
-            self.assertEqual(
-                exc_info_exception.message, f"{starting_message}: {str(api_entry)}..."
-            )
-=======
             self.assertEqual(e.message, f"{starting_message}: {str(api_entry)}...")
->>>>>>> 4751200 (Made write_entries raise ValueError on ParseErrors)
 
 
 class _Logger(object):
@@ -1908,40 +1895,6 @@ class _DummyLoggingExceptionAPI(object):
         raise self.exception
 
 
-<<<<<<< HEAD
-class _DummyLoggingAPIGapicMockedOnly(_LoggingAPI):
-    _write_entries_called_with = None
-
-    def __init__(self, client):
-        super(_DummyLoggingAPIGapicMockedOnly, self).__init__(mock.Mock(), client)
-
-    def write_entries(
-        self,
-        entries,
-        *,
-        logger_name=None,
-        resource=None,
-        labels=None,
-        partial_success=False,
-    ):
-        self._write_entries_called_with = (
-            entries,
-            logger_name,
-            resource,
-            labels,
-            partial_success,
-        )
-        super(_DummyLoggingAPIGapicMockedOnly, self).write_entries(
-            entries,
-            logger_name=logger_name,
-            resource=resource,
-            labels=labels,
-            partial_success=partial_success,
-        )
-
-
-=======
->>>>>>> 4751200 (Made write_entries raise ValueError on ParseErrors)
 class _Client(object):
     def __init__(self, project, connection=None):
         self.project = project
