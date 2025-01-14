@@ -218,7 +218,7 @@ class Logger(object):
                 ``client`` stored on the current sink.
             kw (Optional[dict]): additional keyword arguments for the entry.
                 See :class:`~logging_v2.entries.LogEntry`.
-        
+
         Raises:
             ValueError:
                 if the dictionary message provided cannot be serialized into a Protobuf
@@ -467,7 +467,7 @@ class Batch(object):
                 Whether a batch's valid entries should be written even
                 if some other entry failed due to a permanent error such
                 as INVALID_ARGUMENT or PERMISSION_DENIED.
-        
+
         Raises:
             ValueError:
                 if one of the messages in the batch cannot be successfully parsed.

@@ -187,7 +187,7 @@ class Test_LoggingAPI(unittest.TestCase):
                     "jsonPayload": {"time": datetime.now()},
                 }
                 client.write_entries([entry])
-        
+
         call.assert_not_called()
 
     def test_logger_delete(self):
