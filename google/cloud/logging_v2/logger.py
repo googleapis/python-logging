@@ -15,7 +15,6 @@
 """Define API Loggers."""
 
 import collections
-import logging
 import re
 
 from google.cloud.logging_v2._helpers import _add_defaults_to_filter
@@ -53,7 +52,6 @@ _OUTBOUND_ENTRY_FIELDS = (  # (name, default)
 )
 
 _STRUCT_EXTRACTABLE_FIELDS = ["severity", "trace", "span_id"]
-_LOGGER = logging.getLogger(__name__)
 
 
 class Logger(object):
@@ -169,10 +167,7 @@ class Logger(object):
             entries = _add_instrumentation(entries, **kw)
             google.cloud.logging_v2._instrumentation_emitted = True
         # partial_success is true to avoid dropping instrumentation logs
-        try:
-            client.logging_api.write_entries(entries, partial_success=True)
-        except Exception:
-            _LOGGER.error("Failed to submit log message.", exc_info=True)
+        client.logging_api.write_entries(entries, partial_success=True)
 
     def log_empty(self, *, client=None, **kw):
         """Log an empty message
@@ -206,22 +201,28 @@ class Logger(object):
         self._do_log(client, TextEntry, text, **kw)
 
     def log_struct(self, info, *, client=None, **kw):
-        """Log a dictionary message
+        """Logs a dictionary message.
 
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
+        The dictionary entry must be able to be serializable to a Protobuf Struct
+        (see https://protobuf.dev/reference/protobuf/google.protobuf/#value for more
+        details), otherwise it will not be logged.
+
         Args:
-            info (dict):
-                the log entry information. The dict must be serializable
-                to a Protobuf Struct (map from strings to Values, see
-                https://protobuf.dev/reference/protobuf/google.protobuf/#value),
-                otherwise the item will not be logged.
+            info (dict[str|float|int|bool|list|dict|None]):
+                the log entry information.
             client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
                 ``client`` stored on the current sink.
             kw (Optional[dict]): additional keyword arguments for the entry.
                 See :class:`~logging_v2.entries.LogEntry`.
+        
+        Raises:
+            ValueError:
+                if the dictionary message provided cannot be serialized into a Protobuf
+                struct.
         """
         for field in _STRUCT_EXTRACTABLE_FIELDS:
             # attempt to copy relevant fields from the payload into the LogEntry body
@@ -415,6 +416,11 @@ class Batch(object):
     def log_struct(self, info, **kw):
         """Add a struct entry to be logged during :meth:`commit`.
 
+        The dictionary entry must be able to be serializable to a Protobuf Struct
+        (see https://protobuf.dev/reference/protobuf/google.protobuf/#value for more
+        details), otherwise it will not be logged and a :class:`ValueError` will be
+        raised during :meth:`commit`.
+
         Args:
             info (dict): The struct entry,
             kw (Optional[dict]): Additional keyword arguments for the entry.
@@ -461,6 +467,10 @@ class Batch(object):
                 Whether a batch's valid entries should be written even
                 if some other entry failed due to a permanent error such
                 as INVALID_ARGUMENT or PERMISSION_DENIED.
+        
+        Raises:
+            ValueError:
+                if one of the messages in the batch cannot be successfully parsed.
         """
         if client is None:
             client = self.client
@@ -478,12 +488,11 @@ class Batch(object):
             client.logging_api.write_entries(
                 entries, partial_success=partial_success, **kwargs
             )
-        except Exception as e:
-            if isinstance(e, InvalidArgument):
-                # InvalidArgument is often sent when a log is too large
-                # attempt to attach extra contex on which log caused error
-                self._append_context_to_error(e)
-            _LOGGER.error("Failed to submit %d log messages.", len(entries), exc_info=e)
+        except InvalidArgument as e:
+            # InvalidArgument is often sent when a log is too large
+            # attempt to attach extra contex on which log caused error
+            self._append_context_to_error(e)
+            raise e
         del self.entries[:]
 
     def _append_context_to_error(self, err):
