@@ -16,7 +16,6 @@ import sys
 import unittest
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
-from google.cloud.logging_v2._gapic import _LoggingAPI
 
 import mock
 import pytest
