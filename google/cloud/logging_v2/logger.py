@@ -208,7 +208,7 @@ class Logger(object):
 
         The dictionary entry must be able to be serializable to a Protobuf Struct
         (see https://protobuf.dev/reference/protobuf/google.protobuf/#value for more
-        details), otherwise it will not be logged.
+        details), otherwise it will not be logged, and a :class:`ValueError` will be raised.
 
         Args:
             info (dict[str|float|int|bool|list|dict|None]):
