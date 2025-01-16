@@ -206,12 +206,22 @@ class Logger(object):
         See
         https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write
 
-        The dictionary entry must be able to be serializable to a Protobuf Struct
-        (see https://protobuf.dev/reference/protobuf/google.protobuf/#value for more
-        details), otherwise it will not be logged, and a :class:`ValueError` will be raised.
+        The message must be able to be serializable to a Protobuf Struct.
+        It must be a dictionary of strings to one of the following:
+
+            - :class:`str`
+            - :class:`int`
+            - :class:`float`
+            - :class:`bool`
+            - :class:`list[str|float|int|bool|list|dict|None]`
+            - :class:`dict[str, str|float|int|bool|list|dict|None]`
+
+        For more details on Protobuf structs, see https://protobuf.dev/reference/protobuf/google.protobuf/#value.
+        If the provided dictionary cannot be serialized into a Protobuf struct,
+        it will not be logged, and a :class:`ValueError` will be raised.
 
         Args:
-            info (dict[str|float|int|bool|list|dict|None]):
+            info (dict[str, str|float|int|bool|list|dict|None]):
                 the log entry information.
             client (Optional[~logging_v2.client.Client]):
                 The client to use.  If not passed, falls back to the
@@ -416,13 +426,22 @@ class Batch(object):
     def log_struct(self, info, **kw):
         """Add a struct entry to be logged during :meth:`commit`.
 
-        The dictionary entry must be able to be serializable to a Protobuf Struct
-        (see https://protobuf.dev/reference/protobuf/google.protobuf/#value for more
-        details), otherwise it will not be logged and a :class:`ValueError` will be
-        raised during :meth:`commit`.
+        The message must be able to be serializable to a Protobuf Struct.
+        It must be a dictionary of strings to one of the following:
+
+            - :class:`str`
+            - :class:`int`
+            - :class:`float`
+            - :class:`bool`
+            - :class:`list[str|float|int|bool|list|dict|None]`
+            - :class:`dict[str, str|float|int|bool|list|dict|None]`
+
+        For more details on Protobuf structs, see https://protobuf.dev/reference/protobuf/google.protobuf/#value.
+        If the provided dictionary cannot be serialized into a Protobuf struct,
+        it will not be logged, and a :class:`ValueError` will be raised during :meth:`commit`.
 
         Args:
-            info (dict): The struct entry,
+            info (dict[str, str|float|int|bool|list|dict|None]): The struct entry,
             kw (Optional[dict]): Additional keyword arguments for the entry.
                 See :class:`~logging_v2.entries.LogEntry`.
         """
