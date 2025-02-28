@@ -21,13 +21,13 @@ You can also set the logging level threshold of the logging handler created by :
 as well as set loggers excluded from the logger that is created:
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
-    :start-after: [START setup_logging]
-    :end-before: [END setup_logging]
+    :start-after: [START logging_setup_logging]
+    :end-before: [END logging_setup_logging]
     :dedent: 4
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
-    :start-after: [START setup_logging_excludes]
-    :end-before: [END setup_logging_excludes]
+    :start-after: [START logging_setup_logging_excludes]
+    :end-before: [END logging_setup_logging_excludes]
     :dedent: 4
 
 
