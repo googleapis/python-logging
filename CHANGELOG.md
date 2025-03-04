@@ -4,6 +4,24 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+## [3.12.0](https://github.com/googleapis/python-logging/compare/v3.11.4...v3.12.0) (2025-03-04)
+
+
+### Features
+
+* Add REST Interceptors which support reading metadata ([681bcc5](https://github.com/googleapis/python-logging/commit/681bcc5c1f983bb5a43e1d5ebcdb14e5e3f25a77))
+* Add support for opt-in debug logging ([681bcc5](https://github.com/googleapis/python-logging/commit/681bcc5c1f983bb5a43e1d5ebcdb14e5e3f25a77))
+
+
+### Bug Fixes
+
+* Fix typing issue with gRPC metadata when key ends in -bin ([681bcc5](https://github.com/googleapis/python-logging/commit/681bcc5c1f983bb5a43e1d5ebcdb14e5e3f25a77))
+
+
+### Documentation
+
+* Added documentation on log_level and excluded_loggers params in setup_logging ([#971](https://github.com/googleapis/python-logging/issues/971)) ([70d9d25](https://github.com/googleapis/python-logging/commit/70d9d25bf8c3c85a3c5523ecc7fbdbf72f08c583))
+
 ## [3.11.4](https://github.com/googleapis/python-logging/compare/v3.11.3...v3.11.4) (2025-01-22)
 
 
