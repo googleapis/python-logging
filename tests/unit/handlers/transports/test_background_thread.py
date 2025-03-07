@@ -230,6 +230,25 @@ class Test_Worker(unittest.TestCase):
         self._start_with_thread_patch(worker)
         self.assertIs(current_thread, worker._thread)
 
+    def test_start_not_registering_exit_callback(self):
+        from google.cloud.logging_v2.handlers.transports import background_thread
+
+        worker = self._make_one(_Logger(self.NAME), register_exit_callback=False)
+
+        _, atexit_mock = self._start_with_thread_patch(worker)
+
+        self.assertTrue(worker.is_alive)
+        self.assertIsNotNone(worker._thread)
+        self.assertTrue(worker._thread.daemon)
+        self.assertEqual(worker._thread._target, worker._thread_main)
+        self.assertEqual(worker._thread._name, background_thread._WORKER_THREAD_NAME)
+        atexit_mock.assert_not_called()
+
+        # Calling start again should not start a new thread.
+        current_thread = worker._thread
+        self._start_with_thread_patch(worker)
+        self.assertIs(current_thread, worker._thread)
+
     def test_stop(self):
         from google.cloud.logging_v2.handlers.transports import background_thread
 

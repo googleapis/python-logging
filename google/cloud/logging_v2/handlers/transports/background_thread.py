@@ -34,6 +34,7 @@ from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
 _DEFAULT_GRACE_PERIOD = 5.0  # Seconds
 _DEFAULT_MAX_BATCH_SIZE = 10
 _DEFAULT_MAX_LATENCY = 0  # Seconds
+_DEFAULT_REGISTER_EXIT_CALLBACK = True
 _WORKER_THREAD_NAME = "google.cloud.logging.Worker"
 _WORKER_TERMINATOR = object()
 _LOGGER = logging.getLogger(__name__)
@@ -79,6 +80,7 @@ class _Worker(object):
         grace_period=_DEFAULT_GRACE_PERIOD,
         max_batch_size=_DEFAULT_MAX_BATCH_SIZE,
         max_latency=_DEFAULT_MAX_LATENCY,
+        register_exit_callback=_DEFAULT_REGISTER_EXIT_CALLBACK,
     ):
         """
         Args:
@@ -93,11 +95,15 @@ class _Worker(object):
                 than the grace_period. This means this is effectively the longest
                 amount of time the background thread will hold onto log entries
                 before sending them to the server.
+            register_exit_callback (Optional[bool]): Whether to register the atexit callback
+                or not. Starting Python 3.12 atexit does not allow to create new threads, what
+                happens when using gRPC.
         """
         self._cloud_logger = cloud_logger
         self._grace_period = grace_period
         self._max_batch_size = max_batch_size
         self._max_latency = max_latency
+        self._register_exit_callback = register_exit_callback
         self._queue = queue.Queue(0)
         self._operational_lock = threading.Lock()
         self._thread = None
@@ -162,7 +168,8 @@ class _Worker(object):
             )
             self._thread.daemon = True
             self._thread.start()
-            atexit.register(self._main_thread_terminated)
+            if self._register_exit_callback:
+                atexit.register(self._main_thread_terminated)
 
     def stop(self, *, grace_period=None):
         """Signals the background thread to stop.
@@ -264,6 +271,7 @@ class BackgroundThreadTransport(Transport):
         batch_size=_DEFAULT_MAX_BATCH_SIZE,
         max_latency=_DEFAULT_MAX_LATENCY,
         resource=_GLOBAL_RESOURCE,
+        register_exit_callback=_DEFAULT_REGISTER_EXIT_CALLBACK,
         **kwargs,
     ):
         """
@@ -280,6 +288,9 @@ class BackgroundThreadTransport(Transport):
                 than the grace_period. This means this is effectively the longest
                 amount of time the background thread will hold onto log entries
                 before sending them to the server.
+            register_exit_callback (Optional[bool]): Whether to register the atexit callback
+                or not. Starting Python 3.12 atexit does not allow to create new threads, what
+                happens when using gRPC.
             resource (Optional[Resource|dict]): The default monitored resource to associate
                 with logs when not specified
         """
@@ -290,6 +301,7 @@ class BackgroundThreadTransport(Transport):
             grace_period=grace_period,
             max_batch_size=batch_size,
             max_latency=max_latency,
+            register_exit_callback=register_exit_callback,
         )
         self.worker.start()
 
