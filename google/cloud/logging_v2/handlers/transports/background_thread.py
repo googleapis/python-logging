@@ -171,7 +171,7 @@ class _Worker(object):
             )
             self._thread.daemon = True
             self._thread.start()
-            atexit.register(self._close)
+            atexit.register(self._handle_exit)
 
     def stop(self, *, grace_period=None):
         """Signals the background thread to stop.
@@ -211,33 +211,20 @@ class _Worker(object):
 
             return success
 
-    def _close(self):
-        """Callback that attempts to send pending logs before termination."""
+    def _close(self, close_msg):
+        """Callback that attempts to send pending logs before termination if the main thread is alive."""
         if not self.is_alive:
             return
 
-        # Print different messages to the user depending on whether or not the
-        # program is shutting down. This is because this function now handles both
-        # the atexit handler and the regular close.
         if not self._queue.empty():
-            if threading.main_thread().is_alive():
-                print(
-                    "Background thread shutting down, attempting to send %d queued log "
-                    "entries to Cloud Logging..." % (self._queue.qsize(),),
-                    file=sys.stderr,
-                )
-            else:
-                print(
-                    _CLOSE_THREAD_SHUTDOWN_ERROR_MSG,
-                    file=sys.stderr,
-                )
+            print(close_msg, file=sys.stderr)
 
         if (
+            threading.main_thread().is_alive() and
             self.stop(grace_period=self._grace_period)
-            and threading.main_thread().is_alive()
         ):
             print("Sent all pending logs.", file=sys.stderr)
-        else:
+        elif not self._queue.empty():
             print(
                 "Failed to send %d pending logs." % (self._queue.qsize(),),
                 file=sys.stderr,
@@ -277,10 +264,22 @@ class _Worker(object):
     def close(self):
         """Signals the worker thread to stop, then closes the transport thread.
 
-        This call should be followed up by disowning the transport object.
+        This call will attempt to send pending logs before termination, and
+        should be followed up by disowning the transport object.
         """
-        atexit.unregister(self._close)
-        self._close()
+        atexit.unregister(self._handle_exit)
+        self._close(
+            "Background thread shutting down, attempting to send %d queued log "
+            "entries to Cloud Logging..." % (self._queue.qsize(),)
+        )
+
+    def _handle_exit(self):
+        """Handle system exit.
+        
+        Since we cannot send pending logs during system shutdown due to thread errors,
+        log an error message to stderr to notify the user.
+        """
+        self._close(_CLOSE_THREAD_SHUTDOWN_ERROR_MSG)
 
 
 class BackgroundThreadTransport(Transport):
@@ -342,4 +341,4 @@ class BackgroundThreadTransport(Transport):
 
     def close(self):
         """Closes the worker thread."""
-        self.worker.stop(grace_period=self.grace_period)
+        self.worker.close()

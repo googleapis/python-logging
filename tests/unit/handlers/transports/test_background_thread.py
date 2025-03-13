@@ -250,7 +250,7 @@ class Test_Worker(unittest.TestCase):
         self.assertTrue(worker._thread.daemon)
         self.assertEqual(worker._thread._target, worker._thread_main)
         self.assertEqual(worker._thread._name, background_thread._WORKER_THREAD_NAME)
-        self.assertIn(worker._close, atexit_mock.registered_funcs)
+        self.assertIn(worker._handle_exit, atexit_mock.registered_funcs)
 
         # Calling start again should not start a new thread.
         current_thread = worker._thread
@@ -291,21 +291,25 @@ class Test_Worker(unittest.TestCase):
         worker = self._make_one(_Logger(self.NAME))
 
         self._start_with_thread_patch(worker)
-        worker._close()
+        worker._close("")
 
         self.assertFalse(worker.is_alive)
 
         # Calling twice should not be an error
-        worker._close()
+        worker._close("")
 
     def test__close_non_empty_queue(self):
         worker = self._make_one(_Logger(self.NAME))
+        msg = "My Message"
 
         self._start_with_thread_patch(worker)
         record = mock.Mock()
         record.created = time.time()
         worker.enqueue(record, "")
-        worker._close()
+
+        with mock.patch("sys.stderr", new_callable=StringIO) as stderr_mock:
+            worker._close(msg)
+            self.assertIn(msg, stderr_mock.getvalue())
 
         self.assertFalse(worker.is_alive)
 
@@ -317,11 +321,11 @@ class Test_Worker(unittest.TestCase):
         record = mock.Mock()
         record.created = time.time()
         worker.enqueue(record, "")
-        worker._close()
+        worker._close("")
 
         self.assertFalse(worker.is_alive)
 
-    def test__close_main_thread_not_alive(self):
+    def test__handle_exit(self):
         from google.cloud.logging_v2.handlers.transports.background_thread import (
             _CLOSE_THREAD_SHUTDOWN_ERROR_MSG,
         )
@@ -333,21 +337,45 @@ class Test_Worker(unittest.TestCase):
                 with self._init_atexit_mock():
                     self._start_with_thread_patch(worker)
                     self._enqueue_record(worker, "test")
-                    worker._close()
+                    worker._handle_exit()
 
             self.assertRegex(
                 stderr_mock.getvalue(),
                 re.compile("^%s$" % _CLOSE_THREAD_SHUTDOWN_ERROR_MSG, re.MULTILINE),
             )
 
+            self.assertRegex(
+                stderr_mock.getvalue(),
+                re.compile(r"^Failed to send %d pending logs\.$" % worker._queue.qsize(), re.MULTILINE),
+            )
+
+    def test__handle_exit_no_items(self):
+        worker = self._make_one(_Logger(self.NAME))
+
+        with mock.patch("sys.stderr", new_callable=StringIO) as stderr_mock:
+            with self._init_main_thread_is_alive_mock(False):
+                with self._init_atexit_mock():
+                    self._start_with_thread_patch(worker)
+                    worker._handle_exit()
+
+            self.assertEqual(stderr_mock.getvalue(), "")
+    
     def test_close_unregister_atexit(self):
         worker = self._make_one(_Logger(self.NAME))
 
-        with self._init_atexit_mock() as atexit_mock:
-            self._start_with_thread_patch(worker)
-            self.assertIn(worker._close, atexit_mock.registered_funcs)
-            worker.close()
-            self.assertNotIn(worker._close, atexit_mock.registered_funcs)
+        with mock.patch("sys.stderr", new_callable=StringIO) as stderr_mock:
+            with self._init_atexit_mock() as atexit_mock:
+                self._start_with_thread_patch(worker)
+                self.assertIn(worker._handle_exit, atexit_mock.registered_funcs)
+                worker.close()
+                self.assertNotIn(worker._handle_exit, atexit_mock.registered_funcs)
+
+            self.assertNotRegex(
+                stderr_mock.getvalue(),
+                re.compile(r"^Failed to send %d pending logs\.$" % worker._queue.qsize(), re.MULTILINE),
+            )
+        
+        self.assertFalse(worker.is_alive)
 
     @staticmethod
     def _enqueue_record(worker, message, levelno=logging.INFO, **kw):
