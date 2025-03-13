@@ -250,7 +250,6 @@ class CloudLoggingHandler(logging.StreamHandler):
         self.transport_open = False
 
 
-
 def _format_and_parse_message(record, formatter_handler):
     """
     Helper function to apply formatting to a LogRecord message,

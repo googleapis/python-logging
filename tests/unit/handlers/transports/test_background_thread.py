@@ -346,7 +346,10 @@ class Test_Worker(unittest.TestCase):
 
             self.assertRegex(
                 stderr_mock.getvalue(),
-                re.compile(r"^Failed to send %d pending logs\.$" % worker._queue.qsize(), re.MULTILINE),
+                re.compile(
+                    r"^Failed to send %d pending logs\.$" % worker._queue.qsize(),
+                    re.MULTILINE,
+                ),
             )
 
     def test__handle_exit_no_items(self):
@@ -359,7 +362,7 @@ class Test_Worker(unittest.TestCase):
                     worker._handle_exit()
 
             self.assertEqual(stderr_mock.getvalue(), "")
-    
+
     def test_close_unregister_atexit(self):
         worker = self._make_one(_Logger(self.NAME))
 
@@ -372,9 +375,12 @@ class Test_Worker(unittest.TestCase):
 
             self.assertNotRegex(
                 stderr_mock.getvalue(),
-                re.compile(r"^Failed to send %d pending logs\.$" % worker._queue.qsize(), re.MULTILINE),
+                re.compile(
+                    r"^Failed to send %d pending logs\.$" % worker._queue.qsize(),
+                    re.MULTILINE,
+                ),
             )
-        
+
         self.assertFalse(worker.is_alive)
 
     @staticmethod

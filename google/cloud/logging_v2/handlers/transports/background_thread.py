@@ -219,9 +219,8 @@ class _Worker(object):
         if not self._queue.empty():
             print(close_msg, file=sys.stderr)
 
-        if (
-            threading.main_thread().is_alive() and
-            self.stop(grace_period=self._grace_period)
+        if threading.main_thread().is_alive() and self.stop(
+            grace_period=self._grace_period
         ):
             print("Sent all pending logs.", file=sys.stderr)
         elif not self._queue.empty():
@@ -275,7 +274,7 @@ class _Worker(object):
 
     def _handle_exit(self):
         """Handle system exit.
-        
+
         Since we cannot send pending logs during system shutdown due to thread errors,
         log an error message to stderr to notify the user.
         """
