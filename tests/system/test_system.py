@@ -719,7 +719,7 @@ class TestLogging(unittest.TestCase):
             self.assertEqual(entries[0].trace, expected_trace_id)
             self.assertEqual(entries[0].span_id, expected_span_id)
             self.assertTrue(entries[0].trace_sampled, expected_tracesampled)
-    
+
     def test_log_handler_close(self):
         from multiprocessing import Process
 
@@ -745,14 +745,13 @@ class TestLogging(unittest.TestCase):
             cloud_logger.addHandler(handler)
             cloud_logger.warning(LOG_MESSAGE)
             handler.close()
-        
+
         proc = Process(target=subprocess_main)
         proc.start()
         proc.join()
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, LOG_MESSAGE)
-
 
     def test_log_client_flush_handlers(self):
         from multiprocessing import Process
@@ -779,14 +778,13 @@ class TestLogging(unittest.TestCase):
             cloud_logger.addHandler(handler)
             cloud_logger.warning(LOG_MESSAGE)
             Config.CLIENT.flush_handlers()
-        
+
         proc = Process(target=subprocess_main)
         proc.start()
         proc.join()
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, LOG_MESSAGE)
-
 
     def test_create_metric(self):
         METRIC_NAME = "test-create-metric%s" % (_RESOURCE_ID,)
