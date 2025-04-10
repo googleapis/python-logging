@@ -33,6 +33,9 @@ exclude =
   # Exclude environment test code.
   tests/environment/**
 
+  # Exclude environment test code.
+  tests/environment/**
+
   # Exclude generated code.
   **/proto/**
   **/gapic/**
