@@ -63,7 +63,7 @@ def cleanup_old_sinks():
             sink_timestamp = int(match.group(1))
             if TIMESTAMP - sink_timestamp > CLEANUP_THRESHOLD:
                 _delete_object(sink)
-    
+
     storage_client = storage.Client()
 
     # See _sink_storage_setup in usage_guide.py for details about how
@@ -74,7 +74,7 @@ def cleanup_old_sinks():
         if match:
             # Bucket timestamp is int(time.time() * 1000)
             bucket_timestamp = int(match.group(1))
-            if TIMESTAMP - bucket_timestamp//1000 > CLEANUP_THRESHOLD:
+            if TIMESTAMP - bucket_timestamp // 1000 > CLEANUP_THRESHOLD:
                 _delete_object(bucket)
 
 
