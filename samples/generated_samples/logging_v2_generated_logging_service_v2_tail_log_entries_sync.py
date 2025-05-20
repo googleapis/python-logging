@@ -23,7 +23,7 @@
 #   python3 -m pip install google-cloud-logging
 
 
-# [START logging_v2_generated_LoggingServiceV2_TailLogEntries_sync]
+# [START logging_tail_log_entries]
 # This snippet has been automatically generated and should be regarded as a
 # code template only.
 # It will require modifications to work:
@@ -60,4 +60,4 @@ def sample_tail_log_entries():
     for response in stream:
         print(response)
 
-# [END logging_v2_generated_LoggingServiceV2_TailLogEntries_sync]
+# [END logging_tail_log_entries]
