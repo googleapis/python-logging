@@ -34,6 +34,10 @@ TIMESTAMP = int(time.time())
 # old sink, in seconds
 CLEANUP_THRESHOLD = 7200  # 2 hours
 
+# Max buckets to delete at a time, to mitigate operation timeout
+# issues. To turn off in the future, set to None.
+MAX_BUCKETS = 1500
+
 
 def _random_id():
     return "".join(
@@ -69,7 +73,7 @@ def cleanup_old_sinks():
     # See _sink_storage_setup in usage_guide.py for details about how
     # sinks are named.
     test_bucket_name_regex = r"^sink\-storage\-(\d+)$"
-    for bucket in storage_client.list_buckets():
+    for bucket in storage_client.list_buckets(max_results=MAX_BUCKETS):
         match = re.match(test_bucket_name_regex, bucket.name)
         if match:
             # Bucket timestamp is int(time.time() * 1000)
