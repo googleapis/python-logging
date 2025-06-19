@@ -34,6 +34,7 @@ from typing import (
     Union,
     cast,
 )
+import uuid
 import warnings
 
 from google.cloud.logging_v2 import gapic_version as package_version
