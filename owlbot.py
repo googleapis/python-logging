@@ -95,7 +95,8 @@ templated_files = gcp.CommonTemplates().py_library(
         "google-cloud-testutils",
         "opentelemetry-sdk"
     ],
-    system_test_python_versions=["3.12"],
+    system_test_python_versions=["3.19"],
+    unit_test_python_versions=["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"],
     unit_test_external_dependencies=["flask", "webob", "django"],
     samples=True,
 )
