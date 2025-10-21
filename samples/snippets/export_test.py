@@ -79,6 +79,9 @@ def cleanup_old_sinks():
             # Bucket timestamp is int(time.time() * 1000)
             bucket_timestamp = int(match.group(1))
             if TIMESTAMP - bucket_timestamp // 1000 > CLEANUP_THRESHOLD:
+                # Delete all blobs in the bucket before deleting the bucket.
+                for blob in bucket.list_blobs():
+                    _delete_object(blob)
                 _delete_object(bucket)
 
 
