@@ -50,7 +50,7 @@ def _create_sink_name():
 
 
 @backoff.on_exception(backoff.expo, Exception, max_time=60, raise_on_giveup=False)
-def _delete_object(obj):
+def _delete_object(obj, force=False):
     obj.delete()
 
 
@@ -80,8 +80,7 @@ def cleanup_old_sinks():
             bucket_timestamp = int(match.group(1))
             if TIMESTAMP - bucket_timestamp // 1000 > CLEANUP_THRESHOLD:
                 # Delete all blobs in the bucket before deleting the bucket.
-                for blob in bucket.list_blobs():
-                    _delete_object(blob)
+                bucket.delete_blobs(bucket.list_blobs())
                 _delete_object(bucket)
 
 
