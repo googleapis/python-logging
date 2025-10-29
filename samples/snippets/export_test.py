@@ -50,8 +50,8 @@ def _create_sink_name():
 
 
 @backoff.on_exception(backoff.expo, Exception, max_time=60, raise_on_giveup=False)
-def _delete_object(obj, force=False):
-    obj.delete()
+def _delete_object(obj, **kwargs):
+    obj.delete(**kwargs)
 
 
 # Runs once for entire test suite
@@ -79,9 +79,7 @@ def cleanup_old_sinks():
             # Bucket timestamp is int(time.time() * 1000)
             bucket_timestamp = int(match.group(1))
             if TIMESTAMP - bucket_timestamp // 1000 > CLEANUP_THRESHOLD:
-                # Delete all blobs in the bucket before deleting the bucket.
-                bucket.delete_blobs(bucket.list_blobs())
-                _delete_object(bucket)
+                _delete_object(bucket, force=True)
 
 
 @pytest.fixture
