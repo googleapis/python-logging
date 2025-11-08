@@ -137,6 +137,29 @@ s.replace(
 }""",
 )
 
+# Add mypy to noxfile.
+# TODO: Remove this once this functionality gets added in synthtool
+s.replace(
+    "noxfile.py",
+    """\
+@nox.session\(python=DEFAULT_PYTHON_VERSION\)
+def lint_setup_py\(session\):
+""",
+'''\
+@nox.session(python=DEFAULT_PYTHON_VERSION)
+def mypy(session):
+    """Verify type hints are mypy compatible."""
+    session.install("-e", ".")
+    session.install("mypy", "types-setuptools")
+    # TODO: also verify types on tests and logging_v2, big undertakings
+    session.run("mypy", "-p", "google.cloud.logging", "--no-incremental")
+
+    
+@nox.session(python=DEFAULT_PYTHON_VERSION)
+def lint_setup_py(session):
+'''
+)
+
 # --------------------------------------------------------------------------
 # Samples templates
 # --------------------------------------------------------------------------
