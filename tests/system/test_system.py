@@ -1058,7 +1058,7 @@ class TestLogging(unittest.TestCase):
             # http and gapic results should be consistent
             self.assertEqual(gapic_list[0].insert_id, http_list[0].insert_id)
             # returned logs should be in descending order
-            self.assertEqual(gapic_list[0].payload, f"test {log_count-1}")
+            self.assertEqual(gapic_list[0].payload, f"test {log_count - 1}")
 
         RetryErrors(
             (ServiceUnavailable, InternalServerError, AssertionError),
