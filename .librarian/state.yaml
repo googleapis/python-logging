@@ -2,8 +2,10 @@ image: us-central1-docker.pkg.dev/cloud-sdk-librarian-prod/images-prod/python-li
 libraries:
   - id: google-cloud-logging
     version: 3.12.1
+    last_generated_commit: 5400ccce473c439885bd6bf2924fd242271bfcab
     apis:
       - path: google/logging/v2
+        service_config: logging_v2.yaml
     source_roots:
       - .
     preserve_regex: []
