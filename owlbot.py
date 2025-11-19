@@ -109,6 +109,7 @@ s.move(templated_files,
         ".github/workflows", # exclude gh actions as credentials are needed for tests
         ".github/auto-label.yaml",
         "README.rst", # This repo has a customized README
+        "noxfile.py",
     ],
 )
 s.replace("noxfile.py",
