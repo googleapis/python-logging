@@ -4,6 +4,14 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+## [3.12.2](https://github.com/googleapis/python-logging/compare/v3.12.1...v3.12.2) (2025-11-19)
+
+
+### Bug Fixes
+
+* Deprecate credentials_file argument ([eb189bf](https://github.com/googleapis/python-logging/commit/eb189bf712088ad5a289ca9d69f67d7647864d3b))
+* Remove setup.cfg configuration for creating universal wheels ([#981](https://github.com/googleapis/python-logging/issues/981)) ([70f612c](https://github.com/googleapis/python-logging/commit/70f612c3281f1df13f3aba6b19bc4e9397297f3d))
+
 ## [3.12.1](https://github.com/googleapis/python-logging/compare/v3.12.0...v3.12.1) (2025-04-21)
 
 
