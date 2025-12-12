@@ -723,7 +723,7 @@ class TestLogging(unittest.TestCase):
     def test_log_handler_close(self):
         import multiprocessing
 
-        ctx = multiprocessing.get_context('fork')
+        ctx = multiprocessing.get_context("fork")
         LOG_MESSAGE = "This is a test of handler.close before exiting."
         LOGGER_NAME = "close-test"
         handler_name = self._logger_name(LOGGER_NAME)
@@ -757,7 +757,7 @@ class TestLogging(unittest.TestCase):
     def test_log_client_flush_handlers(self):
         import multiprocessing
 
-        ctx = multiprocessing.get_context('fork')
+        ctx = multiprocessing.get_context("fork")
         LOG_MESSAGE = "This is a test of client.flush_handlers before exiting."
         LOGGER_NAME = "close-test"
         handler_name = self._logger_name(LOGGER_NAME)
