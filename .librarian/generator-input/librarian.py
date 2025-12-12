@@ -65,16 +65,17 @@ for library in s.get_staging_dirs(default_version):
     )
 
     s.move([library], excludes=[
-            "**/gapic_version.py",
             "setup.py",
             "testing/constraints*.txt",
             "README.rst",
             "google/cloud/logging/__init__.py",  # generated types are hidden from users
             "google/cloud/logging_v2/__init__.py",
+            "docs/conf.py",
             "docs/index.rst",
             "docs/logging_v2",  # Don't include gapic library docs. Users should use the hand-written layer instead
             "docs/multiprocessing.rst",
             "scripts/fixup_logging_v2_keywords.py",  # don't include script since it only works for generated layer
+            "noxfile.py",
         ],
     )
 
@@ -103,20 +104,12 @@ templated_files = gcp.CommonTemplates().py_library(
 s.move(templated_files, 
     excludes=[
         "docs/index.rst",
-        ".github/release-please.yml",
+        ".github/**",
+        ".kokoro/**",
         ".coveragerc",
         "docs/multiprocessing.rst",
-        ".github/workflows", # exclude gh actions as credentials are needed for tests
-        ".github/auto-label.yaml",
         "README.rst", # This repo has a customized README
     ],
-)
-s.replace("noxfile.py",
-"""prerel_deps = \[
-        "protobuf",""",
-"""prerel_deps = [
-        "google-cloud-audit-log",
-        "protobuf",""",
 )
 
 # adjust .trampolinerc for environment tests
@@ -248,21 +241,3 @@ for subpackage_name in gapic_objects:
         s.replace(sample_files, text, replacement)
 
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)
-s.shell.run(["nox", "-s", "blacken"], cwd="samples/snippets", hide_output=False)
-
-# --------------------------------------------------------------------------
-# Modify test configs
-# --------------------------------------------------------------------------
-
-# add shared environment variables to test configs
-tracked_subdirs = ["continuous", "presubmit", "samples"]
-for subdir in tracked_subdirs:
-    for path, subdirs, files in os.walk(f".kokoro/{subdir}"):
-        for name in files:
-            if name == "common.cfg":
-                file_path = os.path.join(path, name)
-                s.move(
-                    ".kokoro/common_env_vars.cfg",
-                    file_path,
-                    merge=lambda src, dst, _,: f"{dst}\n{src}",
-                )
