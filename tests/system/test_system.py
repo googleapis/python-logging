@@ -721,8 +721,9 @@ class TestLogging(unittest.TestCase):
             self.assertTrue(entries[0].trace_sampled, expected_tracesampled)
 
     def test_log_handler_close(self):
-        from multiprocessing import Process
+        import multiprocessing
 
+        ctx = multiprocessing.get_context('fork')
         LOG_MESSAGE = "This is a test of handler.close before exiting."
         LOGGER_NAME = "close-test"
         handler_name = self._logger_name(LOGGER_NAME)
@@ -746,7 +747,7 @@ class TestLogging(unittest.TestCase):
             cloud_logger.warning(LOG_MESSAGE)
             handler.close()
 
-        proc = Process(target=subprocess_main)
+        proc = ctx.Process(target=subprocess_main)
         proc.start()
         proc.join()
         entries = _list_entries(logger)
@@ -754,8 +755,9 @@ class TestLogging(unittest.TestCase):
         self.assertEqual(entries[0].payload, LOG_MESSAGE)
 
     def test_log_client_flush_handlers(self):
-        from multiprocessing import Process
+        import multiprocessing
 
+        ctx = multiprocessing.get_context('fork')
         LOG_MESSAGE = "This is a test of client.flush_handlers before exiting."
         LOGGER_NAME = "close-test"
         handler_name = self._logger_name(LOGGER_NAME)
@@ -779,7 +781,7 @@ class TestLogging(unittest.TestCase):
             cloud_logger.warning(LOG_MESSAGE)
             Config.CLIENT.flush_handlers()
 
-        proc = Process(target=subprocess_main)
+        proc = ctx.Process(target=subprocess_main)
         proc.start()
         proc.join()
         entries = _list_entries(logger)
