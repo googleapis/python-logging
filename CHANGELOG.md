@@ -4,6 +4,18 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+## [3.13.0](https://github.com/googleapis/python-logging/compare/v3.12.1...v3.13.0) (2025-12-15)
+
+
+### Features
+
+* Add support for python 3.14 (#1065) ([6be3df6aa94539cd2ab22a4fac55b343862228b2](https://github.com/googleapis/python-logging/commit/6be3df6aa94539cd2ab22a4fac55b343862228b2))
+
+
+### Bug Fixes
+
+* remove setup.cfg configuration for creating universal wheels (#981) ([70f612c3281f1df13f3aba6b19bc4e9397297f3d](https://github.com/googleapis/python-logging/commit/70f612c3281f1df13f3aba6b19bc4e9397297f3d))
+
 ## [3.12.1](https://github.com/googleapis/python-logging/compare/v3.12.0...v3.12.1) (2025-04-21)
 
 
