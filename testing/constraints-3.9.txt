@@ -3,6 +3,8 @@
 # List all library dependencies and extras in this file.
 google-api-core
 google-auth
+# cryptography is a direct dependency of google-auth
+cryptography==38.0.3
 proto-plus
 protobuf
 google-cloud-core
