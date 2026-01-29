@@ -17,8 +17,8 @@ import list_logs
 def test_list_logs(capsys):
     
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-    
     list_logs.list_logs(project_id)
 
     out, _ = capsys.readouterr()
     assert "Logs:" in out
+    

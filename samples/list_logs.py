@@ -31,13 +31,8 @@ def list_logs(project_id):
     # Creates a client
     client = logging_v2.services.logging_service_v2.LoggingServiceV2Client()
 
-    # Creates the request
-    request = logging_v2.types.ListLogsRequest(
-        parent=f"projects/{project_id}",
-    )
-
     # Lists all logs in the project
-    logs = client.list_logs(request=request)
+    logs = client.list_logs(parent=f"projects/{project_id}")
 
     print("Logs:")
     for log in logs:
@@ -55,3 +50,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     list_logs(args.project_id)
+    
