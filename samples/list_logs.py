@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Sample showing how to list available logs in a Google Cloud project."""
+
+import argparse
+
+
+def list_logs(project_id):
+    """Lists all available logs in the specified project.
+
+    Args:
+        project_id: The Google Cloud project ID.
+    """
+    # [START logging_list_logs]
+    from google.cloud import logging_v2
+
+    # Creates a client
+    client = logging_v2.services.logging_service_v2.LoggingServiceV2Client()
+
+    # Creates the request
+    request = logging_v2.types.ListLogsRequest(
+        parent=f"projects/{project_id}",
+    )
+
+    # Lists all logs in the project
+    logs = client.list_logs(request=request)
+
+    print("Logs:")
+    for log in logs:
+        print(log)
+    # [END logging_list_logs]
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("project_id", help="Your Google Cloud project ID")
+
+    args = parser.parse_args()
+
+    list_logs(args.project_id)
