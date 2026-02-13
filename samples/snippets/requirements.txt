@@ -1,4 +1,5 @@
 google-cloud-logging==3.13.0
-google-cloud-bigquery==3.40.1
+google-cloud-bigquery===3.30.0; python_version <= '3.8'
+google-cloud-bigquery==3.40.1; python_version >= '3.9'
 google-cloud-storage==3.9.0
 google-cloud-pubsub==2.35.0
