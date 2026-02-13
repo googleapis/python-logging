@@ -46,14 +46,14 @@ try:
 except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.AsyncRetry, object, None]  # type: ignore
 
-from google.api_core import operation  # type: ignore
-from google.api_core import operation_async  # type: ignore
 from google.cloud.logging_v2.services.config_service_v2 import pagers
 from google.cloud.logging_v2.types import logging_config
 from google.longrunning import operations_pb2  # type: ignore
-from google.protobuf import empty_pb2  # type: ignore
-from google.protobuf import field_mask_pb2  # type: ignore
-from google.protobuf import timestamp_pb2  # type: ignore
+import google.api_core.operation as operation  # type: ignore
+import google.api_core.operation_async as operation_async  # type: ignore
+import google.protobuf.empty_pb2 as empty_pb2  # type: ignore
+import google.protobuf.field_mask_pb2 as field_mask_pb2  # type: ignore
+import google.protobuf.timestamp_pb2 as timestamp_pb2  # type: ignore
 from .transports.base import ConfigServiceV2Transport, DEFAULT_CLIENT_INFO
 from .transports.grpc_asyncio import ConfigServiceV2GrpcAsyncIOTransport
 from .client import ConfigServiceV2Client
@@ -136,7 +136,10 @@ class ConfigServiceV2AsyncClient:
         Returns:
             ConfigServiceV2AsyncClient: The constructed client.
         """
-        return ConfigServiceV2Client.from_service_account_info.__func__(ConfigServiceV2AsyncClient, info, *args, **kwargs)  # type: ignore
+        sa_info_func = (
+            ConfigServiceV2Client.from_service_account_info.__func__  # type: ignore
+        )
+        return sa_info_func(ConfigServiceV2AsyncClient, info, *args, **kwargs)
 
     @classmethod
     def from_service_account_file(cls, filename: str, *args, **kwargs):
@@ -152,7 +155,10 @@ class ConfigServiceV2AsyncClient:
         Returns:
             ConfigServiceV2AsyncClient: The constructed client.
         """
-        return ConfigServiceV2Client.from_service_account_file.__func__(ConfigServiceV2AsyncClient, filename, *args, **kwargs)  # type: ignore
+        sa_file_func = (
+            ConfigServiceV2Client.from_service_account_file.__func__  # type: ignore
+        )
+        return sa_file_func(ConfigServiceV2AsyncClient, filename, *args, **kwargs)
 
     from_service_account_json = from_service_account_file
 
