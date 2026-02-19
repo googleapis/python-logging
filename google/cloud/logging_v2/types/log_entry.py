@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ from typing import MutableMapping, MutableSequence
 
 import proto  # type: ignore
 
-from google.api import monitored_resource_pb2  # type: ignore
-from google.logging.type import http_request_pb2  # type: ignore
-from google.logging.type import log_severity_pb2  # type: ignore
-from google.protobuf import any_pb2  # type: ignore
-from google.protobuf import struct_pb2  # type: ignore
-from google.protobuf import timestamp_pb2  # type: ignore
+import google.api.monitored_resource_pb2 as monitored_resource_pb2  # type: ignore
+import google.logging.type.http_request_pb2 as http_request_pb2  # type: ignore
+import google.logging.type.log_severity_pb2 as log_severity_pb2  # type: ignore
+import google.protobuf.any_pb2 as any_pb2  # type: ignore
+import google.protobuf.struct_pb2 as struct_pb2  # type: ignore
+import google.protobuf.timestamp_pb2 as timestamp_pb2  # type: ignore
 
 
 __protobuf__ = proto.module(
@@ -214,10 +214,10 @@ class LogEntry(proto.Message):
 
             Example values:
 
-            -  ``000000000000004a``
-            -  ``7a2190356c3fc94b``
-            -  ``0000f00300090021``
-            -  ``d39223e101960076``
+            - ``000000000000004a``
+            - ``7a2190356c3fc94b``
+            - ``0000f00300090021``
+            - ``d39223e101960076``
         trace_sampled (bool):
             Optional. The sampling decision of the trace associated with
             the log entry.

@@ -30,6 +30,7 @@ from google.cloud.logging_v2.types import LogEntry as LogEntryPB
 
 from google.protobuf.json_format import MessageToDict
 from google.protobuf.json_format import ParseDict
+from google.protobuf.json_format import ParseError
 
 from google.cloud.logging_v2._helpers import entry_from_resource
 from google.cloud.logging_v2.sink import Sink
@@ -151,7 +152,10 @@ class _LoggingAPI(object):
                 Useful for checking whether the logging API endpoints are working
                 properly before sending valuable data.
         """
-        log_entry_pbs = [_log_entry_mapping_to_pb(entry) for entry in entries]
+        try:
+            log_entry_pbs = [_log_entry_mapping_to_pb(entry) for entry in entries]
+        except ParseError as e:
+            raise ValueError(f"Invalid log entry: {str(e)}") from e
 
         request = WriteLogEntriesRequest(
             log_name=logger_name,
@@ -331,7 +335,7 @@ class _SinksAPI(object):
             dict: The sink resource returned from the API (converted from a
                   protobuf to a dictionary).
         """
-        name = sink_name.split("/")[-1]  # parse name out of full resoure name
+        name = sink_name.split("/")[-1]  # parse name out of full resource name
         sink_pb = LogSink(
             name=name,
             filter=filter_,

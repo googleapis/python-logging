@@ -28,6 +28,13 @@ from google.cloud.logging_v2.handlers._monitored_resources import (
     _GAE_ENV_VARS,
 )
 
+from tests.unit.handlers import (
+    _setup_otel_span_context,
+    _EXPECTED_OTEL_TRACE_ID,
+    _EXPECTED_OTEL_SPAN_ID,
+    _EXPECTED_OTEL_TRACESAMPLED,
+)
+
 
 class TestCloudLoggingFilter(unittest.TestCase):
     PROJECT = "PROJECT"
@@ -133,7 +140,7 @@ class TestCloudLoggingFilter(unittest.TestCase):
         self.assertIsNone(record._labels)
         self.assertEqual(record._labels_str, "{}")
 
-    def test_record_with_request(self):
+    def test_record_with_xctc_request(self):
         """
         test filter adds http request data when available
         """
@@ -154,8 +161,9 @@ class TestCloudLoggingFilter(unittest.TestCase):
         expected_path = "http://testserver/123"
         expected_agent = "Mozilla/5.0"
         expected_trace = "123"
-        expected_span = "456"
-        combined_trace = f"{expected_trace}/{expected_span};o=1"
+        input_span = "456"
+        expected_span = "1c8".zfill(16)
+        combined_trace = f"{expected_trace}/{input_span};o=1"
         expected_request = {
             "requestMethod": "GET",
             "requestUrl": expected_path,
@@ -229,6 +237,136 @@ class TestCloudLoggingFilter(unittest.TestCase):
             self.assertEqual(record._trace_sampled_str, "true")
             self.assertEqual(record._http_request, expected_request)
             self.assertEqual(record._http_request_str, json.dumps(expected_request))
+
+    def test_record_with_opentelemetry_span_no_request(self):
+        filter_obj = self._make_one()
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
+        record.created = None
+
+        with _setup_otel_span_context():
+            success = filter_obj.filter(record)
+            self.assertTrue(success)
+
+            self.assertEqual(record._trace, _EXPECTED_OTEL_TRACE_ID)
+            self.assertEqual(record._trace_str, _EXPECTED_OTEL_TRACE_ID)
+            self.assertEqual(record._span_id, _EXPECTED_OTEL_SPAN_ID)
+            self.assertEqual(record._span_id_str, _EXPECTED_OTEL_SPAN_ID)
+            self.assertEqual(record._trace_sampled, _EXPECTED_OTEL_TRACESAMPLED)
+            self.assertEqual(record._trace_sampled_str, "true")
+            self.assertIsNone(record._http_request)
+            self.assertEqual(record._http_request_str, "{}")
+
+    def test_record_with_opentelemetry_span_and_request(self):
+        filter_obj = self._make_one()
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
+        record.created = None
+        http_path = "http://testserver/123"
+        http_agent = "Mozilla/5.0"
+        http_trace = "123"
+        http_span = "456"
+        combined_trace = f"{http_trace}/{http_span};o=1"
+        expected_request = {
+            "requestMethod": "GET",
+            "requestUrl": http_path,
+            "userAgent": http_agent,
+            "protocol": "HTTP/1.1",
+        }
+
+        app = self.create_app()
+        with app.test_request_context(
+            http_path,
+            headers={
+                "User-Agent": http_agent,
+                "X_CLOUD_TRACE_CONTEXT": combined_trace,
+            },
+        ):
+            with _setup_otel_span_context():
+                success = filter_obj.filter(record)
+                self.assertTrue(success)
+
+                self.assertEqual(record._trace, _EXPECTED_OTEL_TRACE_ID)
+                self.assertEqual(record._trace_str, _EXPECTED_OTEL_TRACE_ID)
+                self.assertEqual(record._span_id, _EXPECTED_OTEL_SPAN_ID)
+                self.assertEqual(record._span_id_str, _EXPECTED_OTEL_SPAN_ID)
+                self.assertEqual(record._trace_sampled, _EXPECTED_OTEL_TRACESAMPLED)
+                self.assertEqual(record._trace_sampled_str, "true")
+
+                self.assertEqual(record._http_request, expected_request)
+                self.assertEqual(record._http_request_str, json.dumps(expected_request))
+
+    def test_record_with_opentelemetry_span_and_request_with_overrides(self):
+        """
+        sort of does what the test after this one does, but more in the context of OTel precedence
+        """
+        filter_obj = self._make_one()
+        record = logging.LogRecord(
+            None,
+            logging.INFO,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
+        record.created = None
+        http_path = "http://testserver/123"
+        http_agent = "Mozilla/5.0"
+        http_trace = "123"
+        http_span = "456"
+        combined_trace = f"{http_trace}/{http_span};o=1"
+        expected_request = {
+            "requestMethod": "GET",
+            "requestUrl": http_path,
+            "userAgent": http_agent,
+            "protocol": "HTTP/1.1",
+        }
+
+        overwritten_trace = "01234"
+        overwritten_span = "43210"
+        overwritten_tracesampled = False
+        record.trace = overwritten_trace
+        record.span_id = overwritten_span
+        record.trace_sampled = overwritten_tracesampled
+
+        app = self.create_app()
+        with app.test_request_context(
+            http_path,
+            headers={
+                "User-Agent": http_agent,
+                "X_CLOUD_TRACE_CONTEXT": combined_trace,
+            },
+        ):
+            with _setup_otel_span_context():
+                success = filter_obj.filter(record)
+                self.assertTrue(success)
+
+                self.assertEqual(record._trace, overwritten_trace)
+                self.assertEqual(record._trace_str, overwritten_trace)
+                self.assertEqual(record._span_id, overwritten_span)
+                self.assertEqual(record._span_id_str, overwritten_span)
+                self.assertFalse(record._trace_sampled)
+                self.assertEqual(
+                    record._trace_sampled_str, json.dumps(overwritten_tracesampled)
+                )
+
+                self.assertEqual(record._http_request, expected_request)
+                self.assertEqual(record._http_request_str, json.dumps(expected_request))
 
     def test_user_overrides(self):
         """
@@ -323,12 +461,24 @@ class TestCloudLoggingHandler(unittest.TestCase):
             self.assertEqual(handler.name, DEFAULT_LOGGER_NAME)
             self.assertIs(handler.client, client)
             self.assertIsInstance(handler.transport, _Transport)
+            self.assertTrue(handler._transport_open)
             self.assertIs(handler.transport.client, client)
             self.assertEqual(handler.transport.name, DEFAULT_LOGGER_NAME)
             global_resource = _create_global_resource(self.PROJECT)
             self.assertEqual(handler.resource, global_resource)
             self.assertIsNone(handler.labels)
             self.assertIs(handler.stream, sys.stderr)
+
+    def test_add_handler_to_client_handlers(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client,
+            transport=_Transport,
+            resource=_GLOBAL_RESOURCE,
+        )
+        self.assertIn(handler, client._handlers)
 
     def test_ctor_explicit(self):
         import io
@@ -435,7 +585,7 @@ class TestCloudLoggingHandler(unittest.TestCase):
         setattr(record, "span_id", expected_span)
         expected_sampled = True
         setattr(record, "trace_sampled", expected_sampled)
-        expected_http = {"reuqest_url": "manual"}
+        expected_http = {"request_url": "manual"}
         setattr(record, "http_request", expected_http)
         expected_source = {"file": "test-file"}
         setattr(record, "source_location", expected_source)
@@ -652,6 +802,56 @@ class TestCloudLoggingHandler(unittest.TestCase):
             ),
         )
 
+    def test_emit_after_close(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client, transport=_Transport, resource=_GLOBAL_RESOURCE
+        )
+        logname = "loggername"
+        message = "hello world"
+        record = logging.LogRecord(
+            logname, logging.INFO, None, None, message, None, None
+        )
+        handler.handle(record)
+        old_transport = handler.transport
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                {"python_logger": logname},
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
+
+        handler.close()
+        self.assertFalse(handler._transport_open)
+
+        handler.handle(record)
+        self.assertTrue(handler._transport_open)
+        self.assertNotEqual(handler.transport, old_transport)
+        self.assertEqual(
+            handler.transport.send_called_with,
+            (
+                record,
+                message,
+                _GLOBAL_RESOURCE,
+                {"python_logger": logname},
+                None,
+                None,
+                False,
+                None,
+                None,
+            ),
+        )
+
     def test_format_with_arguments(self):
         """
         Handler should support format string arguments
@@ -686,6 +886,24 @@ class TestCloudLoggingHandler(unittest.TestCase):
                 None,
             ),
         )
+
+    def test_close(self):
+        from google.cloud.logging_v2.logger import _GLOBAL_RESOURCE
+
+        client = _Client(self.PROJECT)
+        handler = self._make_one(
+            client,
+            transport=_Transport,
+            resource=_GLOBAL_RESOURCE,
+        )
+        old_transport = handler.transport
+        handler.close()
+        self.assertFalse(handler._transport_open)
+        self.assertTrue(old_transport.close_called)
+
+        # second call to close shouldn't throw an exception
+        handler.close()
+        self.assertFalse(handler._transport_open)
 
 
 class TestFormatAndParseMessage(unittest.TestCase):
@@ -989,12 +1207,14 @@ class _Handler(object):
 class _Client(object):
     def __init__(self, project):
         self.project = project
+        self._handlers = set()
 
 
 class _Transport(object):
     def __init__(self, client, name, resource=None):
         self.client = client
         self.name = name
+        self.close_called = False
 
     def send(
         self,
@@ -1019,3 +1239,6 @@ class _Transport(object):
             http_request,
             source_location,
         )
+
+    def close(self):
+        self.close_called = True

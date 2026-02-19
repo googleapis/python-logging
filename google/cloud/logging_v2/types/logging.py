@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ from typing import MutableMapping, MutableSequence
 
 import proto  # type: ignore
 
-from google.api import monitored_resource_pb2  # type: ignore
 from google.cloud.logging_v2.types import log_entry
-from google.protobuf import duration_pb2  # type: ignore
-from google.rpc import status_pb2  # type: ignore
+import google.api.monitored_resource_pb2 as monitored_resource_pb2  # type: ignore
+import google.protobuf.duration_pb2 as duration_pb2  # type: ignore
+import google.rpc.status_pb2 as status_pb2  # type: ignore
 
 
 __protobuf__ = proto.module(
@@ -51,10 +51,10 @@ class DeleteLogRequest(proto.Message):
         log_name (str):
             Required. The resource name of the log to delete:
 
-            -  ``projects/[PROJECT_ID]/logs/[LOG_ID]``
-            -  ``organizations/[ORGANIZATION_ID]/logs/[LOG_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]``
-            -  ``folders/[FOLDER_ID]/logs/[LOG_ID]``
+            - ``projects/[PROJECT_ID]/logs/[LOG_ID]``
+            - ``organizations/[ORGANIZATION_ID]/logs/[LOG_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]``
+            - ``folders/[FOLDER_ID]/logs/[LOG_ID]``
 
             ``[LOG_ID]`` must be URL-encoded. For example,
             ``"projects/my-project-id/logs/syslog"``,
@@ -79,10 +79,10 @@ class WriteLogEntriesRequest(proto.Message):
             all log entries in ``entries`` that do not specify a value
             for ``log_name``:
 
-            -  ``projects/[PROJECT_ID]/logs/[LOG_ID]``
-            -  ``organizations/[ORGANIZATION_ID]/logs/[LOG_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]``
-            -  ``folders/[FOLDER_ID]/logs/[LOG_ID]``
+            - ``projects/[PROJECT_ID]/logs/[LOG_ID]``
+            - ``organizations/[ORGANIZATION_ID]/logs/[LOG_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]``
+            - ``folders/[FOLDER_ID]/logs/[LOG_ID]``
 
             ``[LOG_ID]`` must be URL-encoded. For example:
 
@@ -224,17 +224,17 @@ class ListLogEntriesRequest(proto.Message):
             Required. Names of one or more parent resources from which
             to retrieve log entries:
 
-            -  ``projects/[PROJECT_ID]``
-            -  ``organizations/[ORGANIZATION_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]``
-            -  ``folders/[FOLDER_ID]``
+            - ``projects/[PROJECT_ID]``
+            - ``organizations/[ORGANIZATION_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]``
+            - ``folders/[FOLDER_ID]``
 
             May alternatively be one or more views:
 
-            -  ``projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
 
             Projects listed in the ``project_ids`` field are added to
             this list. A maximum of 100 resources may be specified in a
@@ -395,24 +395,24 @@ class ListLogsRequest(proto.Message):
         parent (str):
             Required. The resource name to list logs for:
 
-            -  ``projects/[PROJECT_ID]``
-            -  ``organizations/[ORGANIZATION_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]``
-            -  ``folders/[FOLDER_ID]``
+            - ``projects/[PROJECT_ID]``
+            - ``organizations/[ORGANIZATION_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]``
+            - ``folders/[FOLDER_ID]``
         resource_names (MutableSequence[str]):
             Optional. List of resource names to list logs for:
 
-            -  ``projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
 
             To support legacy queries, it could also be:
 
-            -  ``projects/[PROJECT_ID]``
-            -  ``organizations/[ORGANIZATION_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]``
-            -  ``folders/[FOLDER_ID]``
+            - ``projects/[PROJECT_ID]``
+            - ``organizations/[ORGANIZATION_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]``
+            - ``folders/[FOLDER_ID]``
 
             The resource name in the ``parent`` field is added to this
             list.
@@ -484,17 +484,17 @@ class TailLogEntriesRequest(proto.Message):
             Required. Name of a parent resource from which to retrieve
             log entries:
 
-            -  ``projects/[PROJECT_ID]``
-            -  ``organizations/[ORGANIZATION_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]``
-            -  ``folders/[FOLDER_ID]``
+            - ``projects/[PROJECT_ID]``
+            - ``organizations/[ORGANIZATION_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]``
+            - ``folders/[FOLDER_ID]``
 
             May alternatively be one or more views:
 
-            -  ``projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
-            -  ``folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
+            - ``folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]``
         filter (str):
             Optional. Only log entries that match the filter are
             returned. An empty filter matches all log entries in the

@@ -16,11 +16,22 @@ import unittest
 
 import mock
 
+from tests.unit.handlers import (
+    _setup_otel_span_context,
+    _EXPECTED_OTEL_TRACE_ID,
+    _EXPECTED_OTEL_SPAN_ID,
+    _EXPECTED_OTEL_TRACESAMPLED,
+)
+
 _FLASK_TRACE_ID = "flask0id"
 _FLASK_SPAN_ID = "span0flask"
+_FLASK_SPAN_ID_XCTC_DEC = "12345"
+_FLASK_SPAN_ID_XCTC_HEX = "3039".zfill(16)
 _FLASK_HTTP_REQUEST = {"requestUrl": "https://flask.palletsprojects.com/en/1.1.x/"}
 _DJANGO_TRACE_ID = "django0id"
 _DJANGO_SPAN_ID = "span0django"
+_DJANGO_SPAN_ID_XCTC_DEC = "54321"
+_DJANGO_SPAN_ID_XCTC_HEX = "d431".zfill(16)
 _DJANGO_HTTP_REQUEST = {"requestUrl": "https://www.djangoproject.com/"}
 
 
@@ -57,8 +68,9 @@ class Test_get_request_data_from_flask(unittest.TestCase):
     def test_xcloud_header(self):
         flask_trace_header = "X_CLOUD_TRACE_CONTEXT"
         expected_trace_id = _FLASK_TRACE_ID
-        expected_span_id = _FLASK_SPAN_ID
-        flask_trace_id = f"{expected_trace_id}/{expected_span_id};o=1"
+        input_span_id = _FLASK_SPAN_ID_XCTC_DEC
+        expected_span_id = _FLASK_SPAN_ID_XCTC_HEX
+        flask_trace_id = f"{expected_trace_id}/{input_span_id};o=1"
 
         app = self.create_app()
         context = app.test_request_context(
@@ -166,9 +178,10 @@ class Test_get_request_data_from_django(unittest.TestCase):
         from google.cloud.logging_v2.handlers.middleware import request
 
         django_trace_header = "HTTP_X_CLOUD_TRACE_CONTEXT"
-        expected_span_id = _DJANGO_SPAN_ID
+        input_span_id = _DJANGO_SPAN_ID_XCTC_DEC
+        expected_span_id = _DJANGO_SPAN_ID_XCTC_HEX
         expected_trace_id = _DJANGO_TRACE_ID
-        django_trace_id = f"{expected_trace_id}/{expected_span_id};o=1"
+        django_trace_id = f"{expected_trace_id}/{input_span_id};o=1"
 
         django_request = RequestFactory().get(
             "/", **{django_trace_header: django_trace_id}
@@ -356,6 +369,120 @@ class Test_get_request_data(unittest.TestCase):
         output = self._call_fut()
         self.assertEqual(output, (None, None, None, False))
 
+    def test_otel_span_exists_no_request(self):
+        flask_expected = (None, None, None, False)
+        django_expected = (None, None, None, False)
+
+        with _setup_otel_span_context():
+            _, _, output = self._helper(django_expected, flask_expected)
+            self.assertEqual(
+                output,
+                (
+                    None,
+                    _EXPECTED_OTEL_TRACE_ID,
+                    _EXPECTED_OTEL_SPAN_ID,
+                    _EXPECTED_OTEL_TRACESAMPLED,
+                ),
+            )
+
+    def test_otel_span_exists_django_request(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (None, None, None, False)
+
+        with _setup_otel_span_context():
+            _, _, output = self._helper(django_expected, flask_expected)
+            self.assertEqual(
+                output,
+                (
+                    _DJANGO_HTTP_REQUEST,
+                    _EXPECTED_OTEL_TRACE_ID,
+                    _EXPECTED_OTEL_SPAN_ID,
+                    _EXPECTED_OTEL_TRACESAMPLED,
+                ),
+            )
+
+    def test_otel_span_exists_flask_request(self):
+        django_expected = (None, None, None, False)
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+
+        with _setup_otel_span_context():
+            _, _, output = self._helper(django_expected, flask_expected)
+            self.assertEqual(
+                output,
+                (
+                    _FLASK_HTTP_REQUEST,
+                    _EXPECTED_OTEL_TRACE_ID,
+                    _EXPECTED_OTEL_SPAN_ID,
+                    _EXPECTED_OTEL_TRACESAMPLED,
+                ),
+            )
+
+    def test_otel_span_exists_both_django_and_flask(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+
+        with _setup_otel_span_context():
+            _, _, output = self._helper(django_expected, flask_expected)
+
+            # Django wins
+            self.assertEqual(
+                output,
+                (
+                    _DJANGO_HTTP_REQUEST,
+                    _EXPECTED_OTEL_TRACE_ID,
+                    _EXPECTED_OTEL_SPAN_ID,
+                    _EXPECTED_OTEL_TRACESAMPLED,
+                ),
+            )
+
+    def test_no_otel_span_no_requests(self):
+        flask_expected = (None, None, None, False)
+        django_expected = (None, None, None, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+        self.assertEqual(output, (None, None, None, False))
+
+    def test_no_otel_span_django_request(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (None, None, None, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+        self.assertEqual(output, django_expected)
+
+    def test_no_otel_span_flask_request(self):
+        django_expected = (None, None, None, False)
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+
+        # Django wins
+        self.assertEqual(output, flask_expected)
+
+    def test_no_otel_span_both_django_and_flask(self):
+        django_expected = (
+            _DJANGO_HTTP_REQUEST,
+            _DJANGO_TRACE_ID,
+            _DJANGO_SPAN_ID,
+            False,
+        )
+        flask_expected = (_FLASK_HTTP_REQUEST, _FLASK_TRACE_ID, _FLASK_SPAN_ID, False)
+        _, _, output = self._helper(django_expected, flask_expected)
+
+        # Django wins
+        self.assertEqual(output, django_expected)
+
 
 class Test__parse_xcloud_trace(unittest.TestCase):
     @staticmethod
@@ -380,25 +507,40 @@ class Test__parse_xcloud_trace(unittest.TestCase):
         self.assertEqual(sampled, False)
 
     def test_no_trace(self):
-        header = "/12345"
+        input_span = "12345"
+        expected_span = "3039".zfill(16)
+        header = f"/{input_span}"
         trace_id, span_id, sampled = self._call_fut(header)
         self.assertIsNone(trace_id)
-        self.assertEqual(span_id, "12345")
+        self.assertEqual(span_id, expected_span)
         self.assertEqual(sampled, False)
 
     def test_with_span(self):
         expected_trace = "12345"
-        expected_span = "67890"
-        header = f"{expected_trace}/{expected_span}"
+        input_span = "67890"
+        expected_span = "10932".zfill(16)
+        header = f"{expected_trace}/{input_span}"
         trace_id, span_id, sampled = self._call_fut(header)
         self.assertEqual(trace_id, expected_trace)
         self.assertEqual(span_id, expected_span)
         self.assertEqual(sampled, False)
 
+    def test_with_span_decimal_not_in_bounds(self):
+        input_spans = ["0", "9" * 100]
+
+        for input_span in input_spans:
+            expected_trace = "12345"
+            header = f"{expected_trace}/{input_span}"
+            trace_id, span_id, sampled = self._call_fut(header)
+            self.assertEqual(trace_id, expected_trace)
+            self.assertIsNone(span_id)
+            self.assertEqual(sampled, False)
+
     def test_with_extra_characters(self):
         expected_trace = "12345"
-        expected_span = "67890"
-        header = f"{expected_trace}/{expected_span};abc"
+        input_span = "67890"
+        expected_span = "10932".zfill(16)
+        header = f"{expected_trace}/{input_span};abc"
         trace_id, span_id, sampled = self._call_fut(header)
         self.assertEqual(trace_id, expected_trace)
         self.assertEqual(span_id, expected_span)
@@ -406,8 +548,9 @@ class Test__parse_xcloud_trace(unittest.TestCase):
 
     def test_with_explicit_no_sampled(self):
         expected_trace = "12345"
-        expected_span = "67890"
-        header = f"{expected_trace}/{expected_span};o=0"
+        input_span = "67890"
+        expected_span = "10932".zfill(16)
+        header = f"{expected_trace}/{input_span};o=0"
         trace_id, span_id, sampled = self._call_fut(header)
         self.assertEqual(trace_id, expected_trace)
         self.assertEqual(span_id, expected_span)
@@ -415,8 +558,9 @@ class Test__parse_xcloud_trace(unittest.TestCase):
 
     def test_with__sampled(self):
         expected_trace = "12345"
-        expected_span = "67890"
-        header = f"{expected_trace}/{expected_span};o=1"
+        input_span = "67890"
+        expected_span = "10932".zfill(16)
+        header = f"{expected_trace}/{input_span};o=1"
         trace_id, span_id, sampled = self._call_fut(header)
         self.assertEqual(trace_id, expected_trace)
         self.assertEqual(span_id, expected_span)
@@ -477,3 +621,25 @@ class Test__parse_trace_parent(unittest.TestCase):
             self.assertIsNone(trace_id)
             self.assertIsNone(span_id)
             self.assertEqual(sampled, False)
+
+
+class Test__parse_open_telemetry_data(unittest.TestCase):
+    @staticmethod
+    def _call_fut():
+        from google.cloud.logging_v2.handlers import _helpers
+
+        trace, span, sampled = _helpers._retrieve_current_open_telemetry_span()
+        return trace, span, sampled
+
+    def test_no_op(self):
+        trace_id, span_id, sampled = self._call_fut()
+        self.assertIsNone(trace_id)
+        self.assertIsNone(span_id)
+        self.assertEqual(sampled, False)
+
+    def test_span_exists(self):
+        with _setup_otel_span_context():
+            trace_id, span_id, sampled = self._call_fut()
+            self.assertEqual(trace_id, _EXPECTED_OTEL_TRACE_ID)
+            self.assertEqual(span_id, _EXPECTED_OTEL_SPAN_ID)
+            self.assertEqual(sampled, _EXPECTED_OTEL_TRACESAMPLED)

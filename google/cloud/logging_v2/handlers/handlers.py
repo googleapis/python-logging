@@ -18,12 +18,19 @@ import collections
 import json
 import logging
 
-from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
+from typing import Optional, IO, Type
+
+from google.cloud.logging_v2.handlers.transports import (
+    BackgroundThreadTransport,
+    Transport,
+)
 from google.cloud.logging_v2.handlers._monitored_resources import (
     detect_resource,
     add_resource_labels,
 )
 from google.cloud.logging_v2.handlers._helpers import get_request_data
+from google.cloud.logging_v2.resource import Resource
+
 
 DEFAULT_LOGGER_NAME = "python"
 
@@ -149,11 +156,11 @@ class CloudLoggingHandler(logging.StreamHandler):
         self,
         client,
         *,
-        name=DEFAULT_LOGGER_NAME,
-        transport=BackgroundThreadTransport,
-        resource=None,
-        labels=None,
-        stream=None,
+        name: str = DEFAULT_LOGGER_NAME,
+        transport: Type[Transport] = BackgroundThreadTransport,
+        resource: Resource = None,
+        labels: Optional[dict] = None,
+        stream: Optional[IO] = None,
         **kwargs,
     ):
         """
@@ -181,7 +188,10 @@ class CloudLoggingHandler(logging.StreamHandler):
             resource = detect_resource(client.project)
         self.name = name
         self.client = client
+        client._handlers.add(self)
         self.transport = transport(client, name, resource=resource)
+        self._transport_open = True
+        self._transport_cls = transport
         self.project_id = client.project
         self.resource = resource
         self.labels = labels
@@ -206,6 +216,12 @@ class CloudLoggingHandler(logging.StreamHandler):
         labels = {**add_resource_labels(resource, record), **(labels or {})} or None
 
         # send off request
+        if not self._transport_open:
+            self.transport = self._transport_cls(
+                self.client, self.name, resource=self.resource
+            )
+            self._transport_open = True
+
         self.transport.send(
             record,
             message,
@@ -217,6 +233,22 @@ class CloudLoggingHandler(logging.StreamHandler):
             http_request=record._http_request,
             source_location=record._source_location,
         )
+
+    def flush(self):
+        """Forces the Transport object to submit any pending log records.
+
+        For SyncTransport, this is a no-op.
+        """
+        super(CloudLoggingHandler, self).flush()
+        if self._transport_open:
+            self.transport.flush()
+
+    def close(self):
+        """Closes the log handler and cleans up all Transport objects used."""
+        if self._transport_open:
+            self.transport.close()
+            self.transport = None
+            self._transport_open = False
 
 
 def _format_and_parse_message(record, formatter_handler):
@@ -289,7 +321,8 @@ def setup_logging(
         excluded_loggers (Optional[Tuple[str]]): The loggers to not attach the handler
             to. This will always include the loggers in the
             path of the logging client itself.
-        log_level (Optional[int]): Python logging log level. Defaults to
+        log_level (Optional[int]): The logging level threshold of the attached logger,
+            as set by the :meth:`logging.Logger.setLevel` method. Defaults to
             :const:`logging.INFO`.
     """
     all_excluded_loggers = set(excluded_loggers + _INTERNAL_LOGGERS)

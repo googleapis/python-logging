@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ from typing import MutableMapping, MutableSequence
 
 import proto  # type: ignore
 
-from google.protobuf import field_mask_pb2  # type: ignore
-from google.protobuf import timestamp_pb2  # type: ignore
+import google.protobuf.field_mask_pb2 as field_mask_pb2  # type: ignore
+import google.protobuf.timestamp_pb2 as timestamp_pb2  # type: ignore
 
 
 __protobuf__ = proto.module(
@@ -350,9 +350,9 @@ class LogView(proto.Message):
             Filters are restricted to be a logical AND of ==/!= of any
             of the following:
 
-            -  originating project/folder/organization/billing account.
-            -  resource type
-            -  log id
+            - originating project/folder/organization/billing account.
+            - resource type
+            - log id
 
             For example:
 
@@ -1300,14 +1300,14 @@ class UpdateSinkRequest(proto.Message):
             the updated sink depends on both the old and new values of
             this field:
 
-            -  If the old and new values of this field are both false or
-               both true, then there is no change to the sink's
-               ``writer_identity``.
-            -  If the old value is false and the new value is true, then
-               ``writer_identity`` is changed to a unique service
-               account.
-            -  It is an error if the old value is true and the new value
-               is set to false or defaulted to false.
+            - If the old and new values of this field are both false or
+              both true, then there is no change to the sink's
+              ``writer_identity``.
+            - If the old value is false and the new value is true, then
+              ``writer_identity`` is changed to a unique service
+              account.
+            - It is an error if the old value is true and the new value
+              is set to false or defaulted to false.
         update_mask (google.protobuf.field_mask_pb2.FieldMask):
             Optional. Field mask that specifies the fields in ``sink``
             that need an update. A sink field will be overwritten if,

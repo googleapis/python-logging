@@ -16,6 +16,21 @@ call :meth:`~google.cloud.logging_v2.client.Client.setup_logging` on a :class:`~
     :end-before: [END logging_handler_setup]
     :dedent: 4
 
+
+You can also set the logging level threshold of the logging handler created by :meth:`~google.cloud.logging_v2.client.Client.setup_logging`,
+as well as set loggers excluded from the logger that is created:
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logging_setup_logging]
+    :end-before: [END logging_setup_logging]
+    :dedent: 4
+
+.. literalinclude:: ../samples/snippets/usage_guide.py
+    :start-after: [START logging_setup_logging_excludes]
+    :end-before: [END logging_setup_logging_excludes]
+    :dedent: 4
+
+
 This :meth:`~google.cloud.logging_v2.client.Client.setup_logging` function chooses the best configurations for the environment your
 code is running on. For more information, see the `Google Cloud Logging documentation <https://cloud.google.com/logging/docs/setup/python>`_.
 
@@ -102,31 +117,35 @@ The Google Cloud Logging library attempts to detect and attach additional
 The following fields are currently supported:
 
 - labels
-- trace*
-- span_id*
-- trace_sampled*
-- http_request*
+- trace
+- span_id
+- trace_sampled
+- http_request
 - source_location
 - resource
 - :ref:`json_fields<JSON>`
 
 .. note::
-    Fields marked with "*" require a :doc:`supported Python web framework </web-framework-integration>`.
+    | More information about `trace`, `span_id`, and `trace_sampled` can be found :doc:`here </auto-trace-span-extraction>`.
+    | `http_request` requires a :doc:`supported Python web framework </web-framework-integration>`.
+
 
 Manual Metadata Using the `extra` Argument
 --------------------------------------------
 
+.. _Manual-Metadata:
+
 The Python :mod:`logging` standard library accepts `an "extra" argument <https://docs.python.org/3/library/logging.html#logging.Logger.debug>`_ when
 writing logs. You can use this argument to populate LogRecord objects with user-defined
 key-value pairs. Google Cloud Logging uses the `extra` field as a way to pass in additional
-metadata to populate `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_.
+metadata to populate `LogEntry fields`_.
 
 .. literalinclude:: ../samples/snippets/usage_guide.py
     :start-after: [START logging_extras]
     :end-before: [END logging_extras]
     :dedent: 4
 
-All of the `LogEntry fields <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry>`_
+All of the `LogEntry fields`_
 that can be :ref:`autodetected<Autodetection>` can also be set manually through the `extra` argument. Fields sent explicitly through the `extra`
 argument override any :ref:`automatically detected<Autodetection>` fields.
 
@@ -153,3 +172,5 @@ You can use both transport options over :doc:`gRPC or HTTP</grpc-vs-http>`.
 .. note::
     :class:`~google.cloud.logging_v2.handlers.structured_log.StructuredLogHandler`
     prints logs as formatted JSON to standard output, and does not use a Transport class.
+
+.. _LogEntry fields: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry

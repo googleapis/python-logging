@@ -1,0 +1,41 @@
+image: us-central1-docker.pkg.dev/cloud-sdk-librarian-prod/images-prod/python-librarian-generator@sha256:a38add811f7f139d6a385b22d283ad09ef305b8cf50382ef62f0ce690787f021
+libraries:
+  - id: google-cloud-logging
+    version: 3.13.0
+    last_generated_commit: 5400ccce473c439885bd6bf2924fd242271bfcab
+    apis:
+      - path: google/logging/v2
+        service_config: logging_v2.yaml
+    source_roots:
+      - .
+    preserve_regex: []
+    remove_regex:
+      - ^.coveragerc
+      - ^.flake8
+      - ^.pre-commit-config.yaml
+      - ^.trampolinerc
+      - ^.repo-metadata.json
+      - ^LICENSE
+      - ^MANIFEST.in
+      - ^SECURITY.md
+      - ^mypy.ini
+      - ^noxfile.py
+      - ^renovate.json
+      - ^setup.py
+      - ^docs/summary_overview.md
+      - ^docs/_static/custom.css
+      - ^docs/_templates
+      - ^google/cloud/logging_v2/services
+      - ^google/cloud/logging_v2/types
+      - ^google/cloud/logging_v2/gapic_version.py
+      - ^google/cloud/logging_v2/gapic_metadata.json
+      - ^google/cloud/logging_v2/py.typed
+      - ^google/cloud/logging/gapic_version.py
+      - ^google/cloud/logging/py.typed
+      - ^samples/AUTHORING_GUIDE.md
+      - ^samples/CONTRIBUTING.md
+      - ^samples/generated_samples
+      - ^tests/__init__.py
+      - ^tests/unit/__init__.py
+      - ^tests/unit/gapic
+    tag_format: v{version}

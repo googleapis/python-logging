@@ -14,7 +14,7 @@
 
 """Transport for Python logging handler.
 
-Logs directly to the the Cloud Logging API with a synchronous call.
+Logs directly to the Cloud Logging API with a synchronous call.
 """
 from google.cloud.logging_v2 import _helpers
 from google.cloud.logging_v2.handlers.transports.base import Transport
@@ -59,3 +59,10 @@ class SyncTransport(Transport):
             labels=labels,
             **kwargs,
         )
+
+    def close(self):
+        """Closes the transport and cleans up resources used by it.
+
+        This call is usually followed up by cleaning up the reference to the transport.
+        """
+        self.logger = None

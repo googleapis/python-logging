@@ -4,6 +4,102 @@
 
 [1]: https://pypi.org/project/google-cloud-logging/#history
 
+## [3.13.0](https://github.com/googleapis/python-logging/compare/v3.12.1...v3.13.0) (2025-12-15)
+
+
+### Features
+
+* Add support for python 3.14 (#1065) ([6be3df6aa94539cd2ab22a4fac55b343862228b2](https://github.com/googleapis/python-logging/commit/6be3df6aa94539cd2ab22a4fac55b343862228b2))
+
+
+### Bug Fixes
+
+* remove setup.cfg configuration for creating universal wheels (#981) ([70f612c3281f1df13f3aba6b19bc4e9397297f3d](https://github.com/googleapis/python-logging/commit/70f612c3281f1df13f3aba6b19bc4e9397297f3d))
+
+## [3.12.1](https://github.com/googleapis/python-logging/compare/v3.12.0...v3.12.1) (2025-04-21)
+
+
+### Bug Fixes
+
+* Make logging handler close conditional to having the transport opened ([#990](https://github.com/googleapis/python-logging/issues/990)) ([66c6b91](https://github.com/googleapis/python-logging/commit/66c6b91725eb479a0af138a2be13f3c25f369d7e))
+
+## [3.12.0](https://github.com/googleapis/python-logging/compare/v3.11.4...v3.12.0) (2025-04-10)
+
+
+### Features
+
+* Add REST Interceptors which support reading metadata ([681bcc5](https://github.com/googleapis/python-logging/commit/681bcc5c1f983bb5a43e1d5ebcdb14e5e3f25a77))
+* Add support for opt-in debug logging ([681bcc5](https://github.com/googleapis/python-logging/commit/681bcc5c1f983bb5a43e1d5ebcdb14e5e3f25a77))
+* Added flushes/close functionality to logging handlers ([#917](https://github.com/googleapis/python-logging/issues/917)) ([d179304](https://github.com/googleapis/python-logging/commit/d179304b344277e349456f72cd90c56f28011286))
+
+
+### Bug Fixes
+
+* Allow protobuf 6.x ([#977](https://github.com/googleapis/python-logging/issues/977)) ([6757890](https://github.com/googleapis/python-logging/commit/675789001344fdae68ee20ec14e14c11c83a0433))
+* **deps:** Require google-cloud-audit-log &gt;= 0.3.1 ([#979](https://github.com/googleapis/python-logging/issues/979)) ([1cc00ec](https://github.com/googleapis/python-logging/commit/1cc00ecf646a7a36eb32afd2e5df3d9aa7f564b1))
+* Fix typing issue with gRPC metadata when key ends in -bin ([681bcc5](https://github.com/googleapis/python-logging/commit/681bcc5c1f983bb5a43e1d5ebcdb14e5e3f25a77))
+
+
+### Documentation
+
+* Added documentation on log_level and excluded_loggers params in setup_logging ([#971](https://github.com/googleapis/python-logging/issues/971)) ([70d9d25](https://github.com/googleapis/python-logging/commit/70d9d25bf8c3c85a3c5523ecc7fbdbf72f08c583))
+* Update README to break infinite redirect loop ([#972](https://github.com/googleapis/python-logging/issues/972)) ([52cd907](https://github.com/googleapis/python-logging/commit/52cd907bb313df2766ec11e3d24c7e10cda31ca7))
+
+## [3.11.4](https://github.com/googleapis/python-logging/compare/v3.11.3...v3.11.4) (2025-01-22)
+
+
+### Bug Fixes
+
+* Made `write_entries` raise `ValueError` on `ParseError`s ([#958](https://github.com/googleapis/python-logging/issues/958)) ([5309478](https://github.com/googleapis/python-logging/commit/5309478c054d0f2b9301817fd835f2098f51dc3a))
+* Require proto-plus &gt;= 1.25 for Python 3.13 ([#955](https://github.com/googleapis/python-logging/issues/955)) ([7baed8e](https://github.com/googleapis/python-logging/commit/7baed8e968f0bfa6abdbf0715dc43822f2fba8ba))
+* Require proto-plus &gt;= 1.25 for Python 3.13 ([#955](https://github.com/googleapis/python-logging/issues/955)) ([002b1fc](https://github.com/googleapis/python-logging/commit/002b1fcb395d77d94d7216560c30015b9aefca81))
+
+## [3.11.3](https://github.com/googleapis/python-logging/compare/v3.11.2...v3.11.3) (2024-10-15)
+
+
+### Bug Fixes
+
+* 16-bit hexadecimal formatting for XCTC span IDs ([#946](https://github.com/googleapis/python-logging/issues/946)) ([1f2b190](https://github.com/googleapis/python-logging/commit/1f2b190c0d1a7125d9412c157915d0011cdd4c47))
+
+## [3.11.2](https://github.com/googleapis/python-logging/compare/v3.11.1...v3.11.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* **deps:** Require google-cloud-appengine-logging&gt;=0.1.3 ([550abca](https://github.com/googleapis/python-logging/commit/550abca2846218d114a6b4b42cb165489e630374))
+* **deps:** Require google-cloud-audit-log &gt;= 0.2.4 ([550abca](https://github.com/googleapis/python-logging/commit/550abca2846218d114a6b4b42cb165489e630374))
+* **deps:** Require opentelemetry-api&gt;=1.9.0 ([550abca](https://github.com/googleapis/python-logging/commit/550abca2846218d114a6b4b42cb165489e630374))
+* Fixed type hinting issue with specifying Transport class ([#930](https://github.com/googleapis/python-logging/issues/930)) ([e2875d6](https://github.com/googleapis/python-logging/commit/e2875d664c153a4328bd42790dfb7b4ac36a9048))
+
+## [3.11.1](https://github.com/googleapis/python-logging/compare/v3.11.0...v3.11.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* Allow protobuf 5.x ([#888](https://github.com/googleapis/python-logging/issues/888)) ([7746e64](https://github.com/googleapis/python-logging/commit/7746e643af29b1008d6e6d6a9958c8337c958dd4))
+
+## [3.11.0](https://github.com/googleapis/python-logging/compare/v3.10.0...v3.11.0) (2024-07-15)
+
+
+### Features
+
+* OpenTelemetry trace/spanID integration for Python handlers ([#889](https://github.com/googleapis/python-logging/issues/889)) ([78168a3](https://github.com/googleapis/python-logging/commit/78168a38577b698130a861af4e4d229f42660330))
+
+
+### Bug Fixes
+
+* Added environment specific labels to client library when running in Cloud Run Jobs ([#877](https://github.com/googleapis/python-logging/issues/877)) ([9c5e8f0](https://github.com/googleapis/python-logging/commit/9c5e8f0548f88235fe6474469bc37685e2498dd1))
+* Added missing import into logger.py ([#896](https://github.com/googleapis/python-logging/issues/896)) ([9ca242d](https://github.com/googleapis/python-logging/commit/9ca242d10f9f3bca120b292f478d62f5fa1d3c06))
+* Added type hints to CloudLoggingHandler constructor ([#903](https://github.com/googleapis/python-logging/issues/903)) ([6959345](https://github.com/googleapis/python-logging/commit/69593459614be968f7a0136aa76701c4fc408834))
+
+
+### Documentation
+
+* Add summary_overview template ([#878](https://github.com/googleapis/python-logging/issues/878)) ([b60714c](https://github.com/googleapis/python-logging/commit/b60714cb1cc3aac79c86225f8f9cbd24d8ab170f))
+* Changed table in web-framework-integration to bulleted list ([#875](https://github.com/googleapis/python-logging/issues/875)) ([a4aa3a7](https://github.com/googleapis/python-logging/commit/a4aa3a7cf1e3bb32ec2772084a7dc6c16e1454ff))
+* Documentation update for OpenTelemetry ([#915](https://github.com/googleapis/python-logging/issues/915)) ([2a0539a](https://github.com/googleapis/python-logging/commit/2a0539a30e6dcf45c0970e3aacfd4a2772877526))
+* Update `dictConfig` snippet ([#885](https://github.com/googleapis/python-logging/issues/885)) ([6264107](https://github.com/googleapis/python-logging/commit/62641075042a3da9bb9c059d963bad14a1586b1c))
+
 ## [3.10.0](https://github.com/googleapis/python-logging/compare/v3.9.0...v3.10.0) (2024-03-13)
 
 

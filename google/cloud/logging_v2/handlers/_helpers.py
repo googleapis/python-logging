@@ -24,6 +24,8 @@ try:
 except ImportError:  # pragma: NO COVER
     flask = None
 
+import opentelemetry.trace
+
 from google.cloud.logging_v2.handlers.middleware.request import _get_django_request
 
 _DJANGO_CONTENT_LENGTH = "CONTENT_LENGTH"
@@ -172,13 +174,22 @@ def _parse_xcloud_trace(header):
     Args:
         header (str): the string extracted from the X_CLOUD_TRACE header
     Returns:
-        Tuple[Optional[dict], Optional[str], bool]:
+        Tuple[Optional[str], Optional[str], bool]:
             The trace_id, span_id and trace_sampled extracted from the header
             Each field will be None if not found.
     """
     trace_id = span_id = None
     trace_sampled = False
-    # see https://cloud.google.com/trace/docs/setup for X-Cloud-Trace_Context format
+
+    # As per the format described at https://cloud.google.com/trace/docs/trace-context#legacy-http-header
+    #    "X-Cloud-Trace-Context: TRACE_ID[/SPAN_ID][;o=OPTIONS]"
+    # for example:
+    #    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b12000100000/1;o=1"
+    #
+    # We expect:
+    #   * trace_id (optional, 128-bit hex string):  "105445aa7843bc8bf206b12000100000"
+    #   * span_id (optional, 16-bit hex string):   "0000000000000001" (needs to be converted into 16 bit hex string)
+    #   * trace_sampled (optional, bool): 	       true
     if header:
         try:
             regex = r"([\w-]+)?(\/?([\w-]+))?(;?o=(\d))?"
@@ -186,28 +197,87 @@ def _parse_xcloud_trace(header):
             trace_id = match.group(1)
             span_id = match.group(3)
             trace_sampled = match.group(5) == "1"
+
+            # Convert the span ID to 16-bit hexadecimal instead of decimal
+            try:
+                span_id_int = int(span_id)
+                if span_id_int > 0 and span_id_int < 2**64:
+                    span_id = f"{span_id_int:016x}"
+                else:
+                    span_id = None
+            except (ValueError, TypeError):
+                span_id = None
+
         except IndexError:
             pass
     return trace_id, span_id, trace_sampled
 
 
+def _retrieve_current_open_telemetry_span():
+    """Helper to retrieve trace, span ID, and trace sampled information from the current
+    OpenTelemetry span.
+
+    Returns:
+        Tuple[Optional[str], Optional[str], bool]:
+            Data related to the current trace_id, span_id, and trace_sampled for the
+            current OpenTelemetry span. If a span is not found, return None/False for all
+            fields.
+    """
+    span = opentelemetry.trace.get_current_span()
+    if span != opentelemetry.trace.span.INVALID_SPAN:
+        context = span.get_span_context()
+        trace_id = opentelemetry.trace.format_trace_id(context.trace_id)
+        span_id = opentelemetry.trace.format_span_id(context.span_id)
+        trace_sampled = context.trace_flags.sampled
+
+        return trace_id, span_id, trace_sampled
+
+    return None, None, False
+
+
 def get_request_data():
     """Helper to get http_request and trace data from supported web
-    frameworks (currently supported: Flask and Django).
+    frameworks (currently supported: Flask and Django), as well as OpenTelemetry. Attempts
+    to retrieve trace/spanID from OpenTelemetry first, before going to Traceparent then XCTC.
+    HTTP request data is taken from a supporting web framework (currently Flask or Django).
+    Because HTTP request data is decoupled from OpenTelemetry, it is possible to get as a
+    return value the HTTP request from the web framework of choice, and trace/span data from
+    OpenTelemetry, even if trace data is present in the HTTP request headers.
 
     Returns:
         Tuple[Optional[dict], Optional[str], Optional[str], bool]:
             Data related to the current http request, trace_id, span_id, and trace_sampled
             for the request. All fields will be None if a http request isn't found.
     """
+
+    (
+        otel_trace_id,
+        otel_span_id,
+        otel_trace_sampled,
+    ) = _retrieve_current_open_telemetry_span()
+
+    # Get HTTP request data
     checkers = (
         get_request_data_from_django,
         get_request_data_from_flask,
     )
 
-    for checker in checkers:
-        http_request, trace_id, span_id, trace_sampled = checker()
-        if http_request is not None:
-            return http_request, trace_id, span_id, trace_sampled
+    http_request, http_trace_id, http_span_id, http_trace_sampled = (
+        None,
+        None,
+        None,
+        False,
+    )
 
-    return None, None, None, False
+    for checker in checkers:
+        http_request, http_trace_id, http_span_id, http_trace_sampled = checker()
+        if http_request is None:
+            http_trace_id, http_span_id, http_trace_sampled = None, None, False
+        else:
+            break
+
+    # otel_trace_id existing means the other return values are non-null
+    if otel_trace_id:
+        return http_request, otel_trace_id, otel_span_id, otel_trace_sampled
+    else:
+        return http_request, http_trace_id, http_span_id, http_trace_sampled
