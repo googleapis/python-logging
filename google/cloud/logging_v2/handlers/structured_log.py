@@ -153,9 +153,12 @@ class StructuredLogHandler(logging.StreamHandler):
 
 
 class AppendLabelLoggingAdapter(logging.LoggerAdapter):
-    """
-    Logging adapter that allows to add required
-    constant key/value to the labels part of log record.
+    """A logging adapter that appends a set of constant labels to every log record.
+
+    This adapter ensures that specific key-value pairs are included in the 'labels'
+    dictionary of every log message, unless they are explicitly overridden in the
+    logging call.
+
     Example:
 
     .. code-block:: python
@@ -173,7 +176,7 @@ class AppendLabelLoggingAdapter(logging.LoggerAdapter):
             "logging.googleapis.com/labels": {"python_logger": "root", "a": 5, "b": 6}
             [...]
         }
-        # Could be stacked
+        # Adapters can be stacked
         second_adapter=AppendLabelLoggingAdapter(first_adapter, {'hello': 'world'})
         second_adapter.info('second info')
         {
@@ -187,25 +190,38 @@ class AppendLabelLoggingAdapter(logging.LoggerAdapter):
     def __init__(self, logger, append_labels):
         """
         Args:
-            logger (~logging.Logger):
-                The Logger for this adapter to use.
-            append_labels (~typing.Dict[str, str]): the required data to be added to logger "labels" field.
+            logger: The Logger or LoggerAdapter to wrap.
+            append_labels (dict): Labels to inject into every log record.
         """
-        self.append_labels = append_labels
+        # Ensure append_labels is always a dict to avoid attribute errors later
+        self.append_labels = append_labels or {}
         super().__init__(logger, None)
 
     def process(self, msg, kwargs):
-        """
-        Args:
-            msg (str):
-                Log message
-            kwargs (dict):
-                logging kwargs
-        """
-        extra = kwargs.get("extra", {})
-        labels = extra.get("labels", {})
-        for label_key, label_value in self.append_labels.items():
-            labels.setdefault(label_key, label_value)
+        # 1. Safely handle 'extra' and ensure it is a dictionary
+        # We copy to avoid mutating the original dict passed by the caller
+        extra = kwargs.get("extra")
+        if extra is None:
+            extra = {}
+        else:
+            extra = dict(extra)
+
+        # 2. Extract and copy existing labels
+        # In Google Cloud Structured Logging, 'labels' is the standard key
+        labels = extra.get("labels")
+        if not isinstance(labels, dict):
+            labels = {}
+        else:
+            labels = dict(labels)
+
+        # 3. Merging Logic
+        # Implementation choice: 'labels' from the call/inner adapter should 
+        # take precedence over 'self.append_labels' to respect specific overrides
+        # thus the unpacking order is important.
+        labels = {**self.append_labels, **labels}
+
+        # 4. Re-insert into kwargs
         extra["labels"] = labels
         kwargs["extra"] = extra
+        
         return msg, kwargs
