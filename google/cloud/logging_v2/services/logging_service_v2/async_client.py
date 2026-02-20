@@ -49,11 +49,11 @@ try:
 except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.AsyncRetry, object, None]  # type: ignore
 
-from google.api import monitored_resource_pb2  # type: ignore
 from google.cloud.logging_v2.services.logging_service_v2 import pagers
 from google.cloud.logging_v2.types import log_entry
 from google.cloud.logging_v2.types import logging
 from google.longrunning import operations_pb2  # type: ignore
+import google.api.monitored_resource_pb2 as monitored_resource_pb2  # type: ignore
 from .transports.base import LoggingServiceV2Transport, DEFAULT_CLIENT_INFO
 from .transports.grpc_asyncio import LoggingServiceV2GrpcAsyncIOTransport
 from .client import LoggingServiceV2Client
@@ -120,7 +120,10 @@ class LoggingServiceV2AsyncClient:
         Returns:
             LoggingServiceV2AsyncClient: The constructed client.
         """
-        return LoggingServiceV2Client.from_service_account_info.__func__(LoggingServiceV2AsyncClient, info, *args, **kwargs)  # type: ignore
+        sa_info_func = (
+            LoggingServiceV2Client.from_service_account_info.__func__  # type: ignore
+        )
+        return sa_info_func(LoggingServiceV2AsyncClient, info, *args, **kwargs)
 
     @classmethod
     def from_service_account_file(cls, filename: str, *args, **kwargs):
@@ -136,7 +139,10 @@ class LoggingServiceV2AsyncClient:
         Returns:
             LoggingServiceV2AsyncClient: The constructed client.
         """
-        return LoggingServiceV2Client.from_service_account_file.__func__(LoggingServiceV2AsyncClient, filename, *args, **kwargs)  # type: ignore
+        sa_file_func = (
+            LoggingServiceV2Client.from_service_account_file.__func__  # type: ignore
+        )
+        return sa_file_func(LoggingServiceV2AsyncClient, filename, *args, **kwargs)
 
     from_service_account_json = from_service_account_file
 
