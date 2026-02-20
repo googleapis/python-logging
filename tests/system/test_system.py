@@ -138,6 +138,36 @@ def _cleanup_otel_sdk_modules(f):
     return wrapped
 
 
+def _shared_subprocess_worker(handler_name, log_message, cleanup_mode="close"):
+    """
+    A top-level function to avoid duplication and PicklingErrors.
+    It creates its own Client to avoid SSL/fork corruption.
+    """
+    import logging
+    from google.cloud.logging import Client
+    from google.cloud.logging.handlers import CloudLoggingHandler
+    from google.cloud.logging.handlers.transports import BackgroundThreadTransport
+
+    # 1. Create a fresh client inside the child process
+    local_client = Client()
+    
+    # 2. Setup the handler and logger
+    handler = CloudLoggingHandler(
+        local_client, name=handler_name, transport=BackgroundThreadTransport
+    )
+    cloud_logger = logging.getLogger("subprocess_logger")
+    cloud_logger.addHandler(handler)
+    
+    # 3. Perform the log
+    cloud_logger.warning(log_message)
+    
+    # 4. Handle the specific cleanup requested by the test
+    if cleanup_mode == "close":
+        handler.close()
+    elif cleanup_mode == "flush":
+        local_client.flush_handlers()
+
+
 class TestLogging(unittest.TestCase):
     JSON_PAYLOAD = {
         "message": "System test: test_log_struct",
@@ -722,68 +752,43 @@ class TestLogging(unittest.TestCase):
 
     def test_log_handler_close(self):
         import multiprocessing
-
         ctx = multiprocessing.get_context("spawn")
+        
         LOG_MESSAGE = "This is a test of handler.close before exiting."
-        LOGGER_NAME = "close-test"
-        handler_name = self._logger_name(LOGGER_NAME)
-
-        # only create the logger to delete, hidden otherwise
+        handler_name = self._logger_name("close-test")
+        
+        # Setup for verification (parent uses its own client)
         logger = Config.CLIENT.logger(handler_name)
         self.to_delete.append(logger)
 
-        # Run a simulation of logging an entry then immediately shutting down.
-        # The .close() function before the process exits should prevent the
-        # thread shutdown error and let us log the message.
-        def subprocess_main():
-            # logger.delete and logger.list_entries work by filtering on log name, so we
-            # can create new objects with the same name and have the queries on the parent
-            # process still work.
-            handler = CloudLoggingHandler(
-                Config.CLIENT, name=handler_name, transport=BackgroundThreadTransport
-            )
-            cloud_logger = logging.getLogger(LOGGER_NAME)
-            cloud_logger.addHandler(handler)
-            cloud_logger.warning(LOG_MESSAGE)
-            handler.close()
-
-        proc = ctx.Process(target=subprocess_main)
+        proc = ctx.Process(
+            target=_shared_subprocess_worker, 
+            args=(handler_name, LOG_MESSAGE, "close")
+        )
         proc.start()
         proc.join()
+        
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, LOG_MESSAGE)
 
-    def test_log_client_flush_handlers(self):
+    def test_log_handler_flush(self):
         import multiprocessing
-
-        ctx = multiprocessing.get_context("fork")
-        LOG_MESSAGE = "This is a test of client.flush_handlers before exiting."
-        LOGGER_NAME = "close-test"
-        handler_name = self._logger_name(LOGGER_NAME)
-
-        # only create the logger to delete, hidden otherwise
+        ctx = multiprocessing.get_context("spawn")
+        
+        LOG_MESSAGE = "This is a test of client.flush_handlers."
+        handler_name = self._logger_name("flush-test")
+        
         logger = Config.CLIENT.logger(handler_name)
         self.to_delete.append(logger)
 
-        # Run a simulation of logging an entry then immediately shutting down.
-        # The .close() function before the process exits should prevent the
-        # thread shutdown error and let us log the message.
-        def subprocess_main():
-            # logger.delete and logger.list_entries work by filtering on log name, so we
-            # can create new objects with the same name and have the queries on the parent
-            # process still work.
-            handler = CloudLoggingHandler(
-                Config.CLIENT, name=handler_name, transport=BackgroundThreadTransport
-            )
-            cloud_logger = logging.getLogger(LOGGER_NAME)
-            cloud_logger.addHandler(handler)
-            cloud_logger.warning(LOG_MESSAGE)
-            Config.CLIENT.flush_handlers()
-
-        proc = ctx.Process(target=subprocess_main)
+        proc = ctx.Process(
+            target=_shared_subprocess_worker, 
+            args=(handler_name, LOG_MESSAGE, "flush")
+        )
         proc.start()
         proc.join()
+        
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, LOG_MESSAGE)
