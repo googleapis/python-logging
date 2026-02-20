@@ -34,7 +34,6 @@ from google.api_core.exceptions import ServiceUnavailable
 import google.cloud.logging
 from google.cloud._helpers import UTC
 from google.cloud.logging_v2.handlers import CloudLoggingHandler
-from google.cloud.logging_v2.handlers.transports import BackgroundThreadTransport
 from google.cloud.logging_v2.handlers.transports import SyncTransport
 from google.cloud.logging_v2 import client
 from google.cloud.logging_v2.resource import Resource
@@ -150,17 +149,17 @@ def _shared_subprocess_worker(handler_name, log_message, cleanup_mode="close"):
 
     # 1. Create a fresh client inside the child process
     local_client = Client()
-    
+
     # 2. Setup the handler and logger
     handler = CloudLoggingHandler(
         local_client, name=handler_name, transport=BackgroundThreadTransport
     )
     cloud_logger = logging.getLogger("subprocess_logger")
     cloud_logger.addHandler(handler)
-    
+
     # 3. Perform the log
     cloud_logger.warning(log_message)
-    
+
     # 4. Handle the specific cleanup requested by the test
     if cleanup_mode == "close":
         handler.close()
@@ -752,43 +751,43 @@ class TestLogging(unittest.TestCase):
 
     def test_log_handler_close(self):
         import multiprocessing
+
         ctx = multiprocessing.get_context("spawn")
-        
+
         LOG_MESSAGE = "This is a test of handler.close before exiting."
         handler_name = self._logger_name("close-test")
-        
+
         # Setup for verification (parent uses its own client)
         logger = Config.CLIENT.logger(handler_name)
         self.to_delete.append(logger)
 
         proc = ctx.Process(
-            target=_shared_subprocess_worker, 
-            args=(handler_name, LOG_MESSAGE, "close")
+            target=_shared_subprocess_worker, args=(handler_name, LOG_MESSAGE, "close")
         )
         proc.start()
         proc.join()
-        
+
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, LOG_MESSAGE)
 
     def test_log_handler_flush(self):
         import multiprocessing
+
         ctx = multiprocessing.get_context("spawn")
-        
+
         LOG_MESSAGE = "This is a test of client.flush_handlers."
         handler_name = self._logger_name("flush-test")
-        
+
         logger = Config.CLIENT.logger(handler_name)
         self.to_delete.append(logger)
 
         proc = ctx.Process(
-            target=_shared_subprocess_worker, 
-            args=(handler_name, LOG_MESSAGE, "flush")
+            target=_shared_subprocess_worker, args=(handler_name, LOG_MESSAGE, "flush")
         )
         proc.start()
         proc.join()
-        
+
         entries = _list_entries(logger)
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0].payload, LOG_MESSAGE)
