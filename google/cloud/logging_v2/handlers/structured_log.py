@@ -215,7 +215,7 @@ class AppendLabelLoggingAdapter(logging.LoggerAdapter):
             labels = dict(labels)
 
         # 3. Merging Logic
-        # Implementation choice: 'labels' from the call/inner adapter should 
+        # Implementation choice: 'labels' from the call/inner adapter should
         # take precedence over 'self.append_labels' to respect specific overrides
         # thus the unpacking order is important.
         labels = {**self.append_labels, **labels}
@@ -223,5 +223,5 @@ class AppendLabelLoggingAdapter(logging.LoggerAdapter):
         # 4. Re-insert into kwargs
         extra["labels"] = labels
         kwargs["extra"] = extra
-        
+
         return msg, kwargs
